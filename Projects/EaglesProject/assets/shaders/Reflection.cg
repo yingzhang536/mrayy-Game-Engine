@@ -1,0 +1,45 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+   float3 dir : TEXCOORD1;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION,float2 inTex: TEXCOORD0,
+			uniform float3 ViewPos,
+			uniform float4x4 ViewWorldProjMat) {
+	VS_OUTPUT Out;
+
+	Out.Pos=mul(ViewWorldProjMat,Pos);
+	Out.texCoord=inTex;
+	Out.dir=ViewPos-Pos;
+		
+	return Out;
+}
+
+//////////////////////////////////
+
+
+float4 main_fp(float3 texCoord: TEXCOORD0,float3 dir : TEXCOORD1,
+				uniform sampler tex0,
+				uniform sampler tex1,
+				uniform samplerCUBE  tex2) : COLOR 
+{
+	float4 norm=tex2D(tex1,texCoord)*2-1;
+	norm.z*=5;
+	
+	float3 Reflect=-reflect(normalize(dir),normalize(norm));
+	float4 color=0.4*tex2D(tex0,texCoord)+0.6*texCUBE(tex2,Reflect);
+	return color;
+			
+}
+
+
+
+
+
+
+
+
+

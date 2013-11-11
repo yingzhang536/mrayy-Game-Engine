@@ -1,0 +1,36 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float3 texCoord: TEXCOORD0;
+   float YCoord: TEXCOORD1;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION,
+				uniform float4x4 WorldMat,
+				uniform float4x4 ViewMat,
+				uniform float4x4 ProjMat,
+			uniform float3 ViewPos) 
+			
+{
+	VS_OUTPUT Out;
+
+	float4x4 wvp=mul(ViewMat,ProjMat);
+	wvp=mul(WorldMat,wvp);
+	Out.Pos=mul(Pos+float4(ViewPos,0)+float4(0,0.8,0,0),wvp);
+	Out.texCoord=-(normalize(Pos.xyz));
+	Out.YCoord=2*saturate(Out.texCoord.y);
+	return Out;
+}
+
+//////////////////////////////////
+
+
+float4 main_fp(float3 texCoord: TEXCOORD0,float YCoord: TEXCOORD1,
+				uniform samplerCUBE  tex0) : COLOR 
+{
+
+	float4 base=texCUBE(tex0,texCoord)+float4(0.5,0.6,0.5,1)*YCoord*YCoord;
+	return base;
+			
+}

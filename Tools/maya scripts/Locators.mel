@@ -1,0 +1,102 @@
+
+
+
+
+
+
+//mray ascii Locater exporter  Mohamad yamen saraiji //////////////////////////////////////////
+proc int bc_browse() 
+{
+ 	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+ 	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+ 	textField -e -tx $filename tf_path;
+ 	return 1; 
+} 
+proc int update_progress(int $value, int $max_value, string $status)
+{
+ 	float $divisor=(float)$max_value/(float)100;
+ 	float $percent=(float)$value/$divisor;
+ 	progressWindow -e -pr $value -st ((int)$percent+"% "+$status);
+ 	return 1; 
+}  
+
+proc int bc_exportObjects() 
+{
+ 	string $path=`textField -q -tx tf_path`;
+ 	string $filename=`substitute "(\\\\)+$" $path ""`+"\\locaters.xml";
+ 	
+ 	string $object[]=`ls -tr -sl`;
+ 		if($object[0]=="")
+ 		{
+ 			string $message="no object selected!";
+  			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+ 		}
+ 	//----------------------------------------open file
+ 	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+	{
+		string $message="directory does not exist!"; 
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+ 	} 
+
+ 	string $cmd;
+	int $loop;
+     int $objectsCount=0;
+     int $objectsArr[];
+	 
+	int $objectsCount=size($object);
+
+	fprint $fileid "<MountPoints>\n";
+
+     for($loop=0;$loop<$objectsCount;$loop++)
+     {
+		print ($object[$loop]+"\n");
+		fprint $fileid ("\t<Point name=\""+$object[$loop]+"\"");
+
+		float $oPos[]=`eval("pointPosition "+ $object[$loop])`;
+		fprint $fileid (" Pos=\""+$oPos[0]+","+$oPos[1]+","+$oPos[2]+ "\"");
+
+		float $oRot[]=`eval("getAttr "+ $object[$loop]+".rotate")`;
+		fprint $fileid (" Rot=\""+$oRot[0]+","+$oRot[1]+","+$oRot[2]+ "\"");
+
+		float $oScale[]=`eval("getAttr "+ $object[$loop]+".scale")`;
+		fprint $fileid (" scale=\""+$oScale[0]+","+$oScale[1]+","+$oScale[2]+ "\"");
+		
+		fprint $fileid "/>\n";
+	 }
+	
+
+	fprint $fileid "</MountPoints>";
+ 	 	//----------------------------------------close file
+ 	fclose $fileid;
+  	progressWindow -ep;
+ 	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p exporterwindow; 
+ 	undoInfo -state on;
+ 	return 1;
+ }
+ proc int create_EaglesObjectsExporter_gui() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+ 	if(`window -exists EaglesObjectsExporterwindow`)deleteUI EaglesObjectsExporterwindow;
+ 	window -wh 512 384 -te 100 -le 100 -s false -t "Eagles Objects Exporter" EaglesObjectsExporterwindow;
+	rowColumnLayout -nr 2 -rh 1 250 -rh 2 125 RCL1; 
+	scrollLayout -hst 0 -p RCL1 SL1;
+	rowColumnLayout -nc 2 -cw 1 85 -cw 2 385 -p SL1 RCL2; 
+	columnLayout -p RCL1 CL1; 	
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export mdl5-ascii file" -w 504 -c "bc_exportObjects()";
+ 	showWindow EaglesObjectsExporterwindow;
+ 	return 1; 
+}  
+create_EaglesObjectsExporter_gui();

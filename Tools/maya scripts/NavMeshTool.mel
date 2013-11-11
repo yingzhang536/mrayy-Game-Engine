@@ -1,0 +1,175 @@
+
+
+
+
+
+
+proc int bc_browse() 
+{
+	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+	textField -e -tx $filename tf_path;
+	return 1; 
+}
+proc int update_progress(int $value, int $max_value, string $status)
+{
+	float $divisor=(float)$max_value/(float)100;
+	float $percent=(float)$value/$divisor;
+	progressWindow -e -pr $value -st ((int)$percent+"% "+$status);
+	return 1; 
+}  
+
+
+proc int bc_export() 
+{
+	//	flushUndo;
+	//	undoInfo -state off;
+	string $path=`textField -q -tx tf_path`;
+	string $filename=`substitute "(\\\\)+$" $path ""`+"\\navMesh.txt";
+	int $count=0;
+	int $ai=0;
+	int $efi=0;
+
+	string $object[]=`ls -sl -type transform`;
+	if($object[0]=="")
+		//---------------------------------------------------------------------------------------------------warning
+	{
+		string $message="no object selected!";
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+	}
+	//----------------------------------------open file
+	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+		//-------------------------------------------------------------------------------------------------------warning 
+	{
+		string $message="directory does not exist!"; 
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+	} 
+	string $cmd;
+	int $loop;
+	int $totalObjects=size($object);
+
+	fprint $fileid ($totalObjects  + "\n");
+
+	//write objects
+	int $coll=0;
+	int $loc=0;
+	for($loop=0;$loop<size($object);$loop++)
+	{
+		print ($object[$loop] +"\n");
+
+		select $object[$loop];
+		$cmd=("polyEvaluate -v");	//vertices
+		int $numverts[]=eval($cmd);
+		$cmd=("polyEvaluate -t");	//Triangles
+		int $numtris[]=eval($cmd);
+		int $progress=0;
+		float $step=1;
+		int $max_progress=(2*$numtris[0])+($numverts[0]); 
+		progressWindow -t "exporting navmesh-ascii file..." -pr $progress -st "0%" -ii false -min 0 -max $max_progress;
+
+		//----------------------------------------write header 
+		fprint $fileid ($numverts[0]+"\n");
+		fprint $fileid ($numtris[0]+"\n");
+
+		//----------------------------------------write triangles 
+		//	fprint $fileid "triangles\n"; 
+		$step=$numtris[0]/10;if($step<1)$step=1;
+		$count=0;
+		fprint $fileid "\n";
+		while($count<$numtris[0])
+		{ 
+			string $tempstringarray[]=`polyInfo -fv ($object[$loop]+".f["+$count+"]")`; 
+			string $Attr[]=`polyQueryBlindData -id 9000 -at "face" ($object[$loop]+".f["+$count+"]")`;
+			if(size($Attr)>0){
+				fprint $fileid ($Attr[0]+"\n");
+			}else{
+				fprint $fileid ("Default\n");
+			}
+			int $list[]=return_intarray($tempstringarray[0]); 
+			if(size($list)>4)
+				//---------------------------------------------------------------------------------------------warning 	
+			{ 	
+				string $message="model is not triangulated!"; 
+				fclose $fileid; system("shell del "+$filename); 	
+				progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+				undoInfo -state on; error $message; 
+			} 	
+			fprint $fileid ($list[1]+" "+$list[2]+" "+$list[3]+"\n");
+			$count++; 
+			if($count%$step==0)update_progress($progress+=$step,$max_progress,"writing triangles..."); 
+		} 
+		$step=$numverts[0]/5;if($step<1)$step=1; 
+
+		//----------------------------------------frame name 	
+		fprint $fileid "\n";
+		//----------------------------------------bounding box 	
+		//----------------------------------------vertices+normals 
+		//	fprint $fileid "vertices\n"; 
+		$count=0;
+		while($count<$numverts[0])
+		{ 
+			float $vtx[]=`pointPosition ($object[$loop]+".vtx["+$count+"]")`; 
+			//			fprint $fileid (($vtx[0]-$oPos[0])+" "+($vtx[1]-$oPos[1])+" "+($vtx[2]-$oPos[2])+" ");
+			fprint $fileid (($vtx[0])+" "+($vtx[1])+" "+($vtx[2])+"\n");
+			$count++;
+		} 	
+	}
+
+
+	//----------------------------------------close file
+	fclose $fileid;
+	progressWindow -ep;
+	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p NavMeshToolWindow; 
+	undoInfo -state on;
+	return 1;
+}
+proc int[] return_intarray(string $intstring)
+{
+	int $intarray[];
+	int $i=0;
+	while(match("[0-9]+",$intstring)!="") 
+	{ 
+		$intarray[$i]=match("[0-9]+",$intstring);
+		$intstring=`substitute "[0-9]+" $intstring ""`;
+		$i++;
+	} 
+	return $intarray;
+} 
+
+
+proc int bc_setupAttrs()
+{
+	blindDataType -id 9000 -dt "string" -longDataName "Ground" -shortDataName "Grd";
+	return 1;
+}
+
+proc int create_gui() 
+{
+	if(`window -exists NavMeshToolWindow`)deleteUI NavMeshToolWindow;
+	window -wh 512 284 -te 100 -le 100 -s false -t "NavMesh Tool" NavMeshToolWindow;
+	rowColumnLayout -nr 2 -rh 1 1 -rh 2 125 RCL1; 
+	scrollLayout -hst 0 -p RCL1 SL1;
+	rowColumnLayout -nc 2 -cw 1 85 -cw 2 385 -p SL1 RCL2; 
+	columnLayout -p RCL1 CL1; 	
+	rowLayout -nc 1 -cw4 60 60 60 60 -p CL1 RL1;
+	button -l "SetupAttrs" -w 60 -c "bc_setupAttrs()"; 	
+	setParent CL1;	 			
+	text -l ""; 		
+	rowLayout -nc 2 -cw2 30 300 -p CL1 RL2; 			
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export mdl5-ascii file" -w 504 -c "bc_export()";
+	showWindow NavMeshToolWindow;
+	return 1; 
+}  
+create_gui();
+

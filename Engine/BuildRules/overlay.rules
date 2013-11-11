@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Overlay"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="Overlay"
+			DisplayName="Overlay"
+			CommandLine="$(SolutionDir)\bin\release\GUISchemeGenerator.exe $(InputPath) $(ProjectDir)"
+			Outputs="$(InputPath).h"
+			FileExtensions="*.gui"
+			ExecutionDescription="Compiling : $(InputName)"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

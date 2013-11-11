@@ -1,0 +1,1822 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Unicode|Win32">
+      <Configuration>Debug_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode|Win32">
+      <Configuration>Release_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C5F7308A-755F-4872-91E6-77779103E0E3}</ProjectGuid>
+    <RootNamespace>mrayEngine</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</EmbedManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</LinkIncremental>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</EmbedManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP8 %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\..\Dependencies\include;.\include;..\mrayMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MRAY_DLL_EXPORT;_CRT_SECURE_NO_DEPRECATE;_MT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>..\..\Obj\$(Configuration)</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <Version>0.99</Version>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)/mrayEngine.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP8 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>..\..\Dependencies\include;.\include;..\mrayMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_USRDLL;_MT;MRAY_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc90.pdb</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;_VC80_UPGRADE=0x0700;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <Version>0.99</Version>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;libcmt.lib;msvcp90D.lib</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Console</SubSystem>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>
+      </ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>..\..\Dependencies\include\extLibs;.\include;..\mrayMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_USRDLL;_MT;MRAY_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>..\..\Obj\$(Configuration)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;_VC80_UPGRADE=0x0700;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ijl15.lib;zziplibd.lib;libexpatMT.lib;zlibd.lib;libPng.lib;FreeImaged.lib;freetype230_d.lib;mrayMath_d.lib;winmm.lib;regex_d.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <Version>0.99</Version>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCD;LIBCMTD;MSVCRT;libcmi;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Console</SubSystem>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)mrayEngineU_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\..\Dependencies\include;.\include;..\mrayMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MRAY_DLL_EXPORT;_CRT_SECURE_NO_DEPRECATE;_MT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>..\..\Obj\$(Configuration)</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ijl15.lib;zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMathU.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <Version>0.99</Version>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)/mrayEngineU.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\FileTextureSource.h" />
+    <ClInclude Include="include\GUIElement3D.h" />
+    <ClInclude Include="include\GUIElementFactory.h" />
+    <ClInclude Include="include\GUIElementFactoryDef.h" />
+    <ClInclude Include="include\GUIElementRT.h" />
+    <ClInclude Include="include\GUIElementRT_Manager.h" />
+    <ClInclude Include="include\GUIManagerRT.h" />
+    <ClInclude Include="include\GUITreeNode.h" />
+    <ClInclude Include="include\ICustomParticleEmitter.h" />
+    <ClInclude Include="include\IGUIElementCreator.h" />
+    <ClInclude Include="include\IGUIElementRT.h" />
+    <ClInclude Include="include\IGUITreeBox.h" />
+    <ClInclude Include="include\ISerialPort.h" />
+    <ClInclude Include="include\ISQLConnection.h" />
+    <ClInclude Include="include\ISQLManager.h" />
+    <ClInclude Include="include\ISQLResult.h" />
+    <ClInclude Include="include\mrayEngine.h" />
+    <ClInclude Include="include\ISound.h" />
+    <ClInclude Include="include\ISoundEmitter.h" />
+    <ClInclude Include="include\ISoundListener.h" />
+    <ClInclude Include="include\ISoundManager.h" />
+    <ClInclude Include="include\ISoundStreamFrame.h" />
+    <ClInclude Include="include\IVoiceEncoder.h" />
+    <ClInclude Include="include\IInputSoundStream.h" />
+    <ClInclude Include="include\SoundEnums.h" />
+    <ClInclude Include="include\SoundLoggerSystem.h" />
+    <ClInclude Include="include\SoundManagerFactory.h" />
+    <ClInclude Include="include\SoundThemeManager.h" />
+    <ClInclude Include="include\BoxSoundEmitter.h" />
+    <ClInclude Include="include\LineSoundEmitter.h" />
+    <ClInclude Include="include\PointSoundEmitter.h" />
+    <ClInclude Include="include\SphereSoundEmitter.h" />
+    <ClInclude Include="include\CAdjacent.h" />
+    <ClInclude Include="include\CameraNode.h" />
+    <ClInclude Include="include\ICullable.h" />
+    <ClInclude Include="include\ICycles.h" />
+    <ClInclude Include="include\IMeshAnimator.h" />
+    <ClInclude Include="include\IMeshBuffer.h" />
+    <ClInclude Include="include\IMeshFileCreator.h" />
+    <ClInclude Include="include\IMovable.h" />
+    <ClInclude Include="include\IRenderable.h" />
+    <ClInclude Include="include\ISceneNode.h" />
+    <ClInclude Include="include\ISceneObjectsDesc.h" />
+    <ClInclude Include="include\ISceneVisitor.h" />
+    <ClInclude Include="include\ISkinCluster.h" />
+    <ClInclude Include="include\IViewNode.h" />
+    <ClInclude Include="include\LightNode.h" />
+    <ClInclude Include="include\MeshAnimatorManager.h" />
+    <ClInclude Include="include\MeshBufferData.h" />
+    <ClInclude Include="include\MeshFileCreatorManager.h" />
+    <ClInclude Include="include\MeshGenerator.h" />
+    <ClInclude Include="include\MeshSerializer.h" />
+    <ClInclude Include="include\SceneHelper.h" />
+    <ClInclude Include="include\SceneLoggerSystem.h" />
+    <ClInclude Include="include\SceneNodeCreator.h" />
+    <ClInclude Include="include\SkyBoxManager.h" />
+    <ClInclude Include="include\SMesh.h" />
+    <ClInclude Include="include\SMeshBuffer.h" />
+    <ClInclude Include="include\SMeshManipulator.h" />
+    <ClInclude Include="include\SMorphMeshBuffer.h" />
+    <ClInclude Include="include\StereoRenderer.h" />
+    <ClInclude Include="include\StreamReaderEx.h" />
+    <ClInclude Include="include\StreamWriterEx.h" />
+    <ClInclude Include="include\TangentCalculater.h" />
+    <ClInclude Include="include\ITextureSource.h" />
+    <ClInclude Include="include\TextureSourceFactory.h" />
+    <ClInclude Include="include\VideoResourceManager.h" />
+    <ClInclude Include="include\VideoTextureSource.h" />
+    <ClInclude Include="include\ViewPort.h" />
+    <ClInclude Include="include\ViewportListener.h" />
+    <ClInclude Include="include\CRotateConstraint.h" />
+    <ClInclude Include="include\IAnimators.h" />
+    <ClInclude Include="include\SAnimatorCircle.h" />
+    <ClInclude Include="include\SAnimatorDirection.h" />
+    <ClInclude Include="include\SAnimatorRotate.h" />
+    <ClInclude Include="include\SAnimatorSpline.h" />
+    <ClInclude Include="include\CUBEMapRenderNode.h" />
+    <ClInclude Include="include\GrassRenderNode.h" />
+    <ClInclude Include="include\ISkyShape.h" />
+    <ClInclude Include="include\ITerrain.h" />
+    <ClInclude Include="include\MeshRenderableNode.h" />
+    <ClInclude Include="include\MountPoint.h" />
+    <ClInclude Include="include\RoadNode.h" />
+    <ClInclude Include="include\SAnimatedSprite.h" />
+    <ClInclude Include="include\SBillboardBeam.h" />
+    <ClInclude Include="include\SBillboardChain.h" />
+    <ClInclude Include="include\SBillboardNode.h" />
+    <ClInclude Include="include\SLensEffect.h" />
+    <ClInclude Include="include\SLocator.h" />
+    <ClInclude Include="include\SLODAnimatedMesh.h" />
+    <ClInclude Include="include\spatchterrain.h" />
+    <ClInclude Include="include\SQ3BSPLevel.h" />
+    <ClInclude Include="include\SSkyBoxNode.h" />
+    <ClInclude Include="include\SSkyDomeNode.h" />
+    <ClInclude Include="include\SSkyPlaneNode.h" />
+    <ClInclude Include="include\STerrain.h" />
+    <ClCompile Include="ICameraVideoGrabber.cpp" />
+    <ClCompile Include="src\FileTextureSource.cpp" />
+    <ClCompile Include="src\GUIElement3D.cpp" />
+    <ClCompile Include="src\GUIElementFactory.cpp" />
+    <ClCompile Include="src\GUIElementRT_Manager.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <CustomBuildStep Include="include\STextNode.h" />
+    <ClInclude Include="include\CConvexQuickHull.h" />
+    <ClInclude Include="include\IConvexHull.h" />
+    <ClInclude Include="include\ISceneManager.h" />
+    <ClInclude Include="include\ISceneSpatialSpace.h" />
+    <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\SceneRegion.h" />
+    <ClInclude Include="include\BoxNodeSelector.h" />
+    <ClInclude Include="include\CTriangleSelector.h" />
+    <ClInclude Include="include\INodeSelectQuery.h" />
+    <ClInclude Include="include\RayNodeSelector.h" />
+    <ClInclude Include="include\ScreenNodeSelector.h" />
+    <ClInclude Include="include\BoneNode.h" />
+    <ClInclude Include="include\Skeleton.h" />
+    <ClInclude Include="include\IRenderGroup.h" />
+    <ClInclude Include="include\RenderGroup.h" />
+    <ClInclude Include="include\RenderManager.h" />
+    <ClInclude Include="include\RenderOperation.h" />
+    <ClInclude Include="include\XMLSceneLoader.h" />
+    <ClInclude Include="include\XMLTerrainReader.h" />
+    <ClInclude Include="include\DynamicGeometryBatch.h" />
+    <ClInclude Include="include\IGeometryBatch.h" />
+    <ClInclude Include="include\StaticGeometryBatch.h" />
+    <ClInclude Include="include\VertConstGeoInstancing.h" />
+    <ClInclude Include="include\GPUMorphAnimator.h" />
+    <ClInclude Include="include\GPUSkeletonAnimator.h" />
+    <ClInclude Include="include\IMorphAnimator.h" />
+    <ClInclude Include="include\ISkeletonAnimator.h" />
+    <ClInclude Include="include\MorphAnimator.h" />
+    <ClInclude Include="include\MorphTarget.h" />
+    <ClInclude Include="include\SkeletonAnimator.h" />
+    <ClInclude Include="include\CubeMapFaceRenderPass.h" />
+    <ClInclude Include="include\IRenderPass.h" />
+    <ClInclude Include="include\IRenderPassSubscriber.h" />
+    <ClInclude Include="include\NormalRenderPass.h" />
+    <ClInclude Include="include\ReflectionRenderPass.h" />
+    <ClInclude Include="include\ShadowRenderPass.h" />
+    <ClInclude Include="include\CurveManager.h" />
+    <ClInclude Include="include\CurveNode.h" />
+    <ClInclude Include="include\CircleTerrainBrush.h" />
+    <ClInclude Include="include\ITerrainBrush.h" />
+    <ClInclude Include="include\TerrainUtility.h" />
+    <ClInclude Include="include\RenderSceneVisitor.h" />
+    <ClInclude Include="include\RequestToRenderVisitor.h" />
+    <ClInclude Include="include\UpdateSceneVisitor.h" />
+    <ClInclude Include="include\DebugDrawManager.h" />
+    <ClInclude Include="include\IDebugDrawManager.h" />
+    <ClInclude Include="include\CPUParticleBillboardRenderer.h" />
+    <ClInclude Include="include\GPUParticleBillboardRenderer.h" />
+    <ClInclude Include="include\IParticle.h" />
+    <ClInclude Include="include\IParticleAffector.h" />
+    <ClInclude Include="include\IParticleAffectorFactory.h" />
+    <ClInclude Include="include\IParticleEmitterFactory.h" />
+    <ClInclude Include="include\IParticleRenderer.h" />
+    <ClInclude Include="include\ParticleEmitter.h" />
+    <ClInclude Include="include\SParticleSystem.h" />
+    <ClInclude Include="include\SParticleSystemFactory.h" />
+    <ClInclude Include="include\GUIElementRegion.h" />
+    <ClInclude Include="include\GUILoggerSystem.h" />
+    <ClInclude Include="include\GUIManagerFactory.h" />
+    <ClInclude Include="include\GUIOverlay.h" />
+    <ClInclude Include="include\GUIOverlayManager.h" />
+    <ClInclude Include="include\IGUIComponent.h" />
+    <ClInclude Include="include\IGUIElement.h" />
+    <ClInclude Include="include\IGUIElementVisitor.h" />
+    <ClInclude Include="include\IGUIManager.h" />
+    <ClInclude Include="include\IGUIPanelElement.h" />
+    <ClInclude Include="include\IGUISchemeBase.h" />
+    <ClInclude Include="include\IListItem.h" />
+    <ClInclude Include="include\ViewPort2D.h" />
+    <ClInclude Include="include\XMLOverlay.h" />
+    <ClInclude Include="include\GUIProfile.h" />
+    <ClInclude Include="include\GUITheme.h" />
+    <ClInclude Include="include\GUIThemeManager.h" />
+    <ClInclude Include="include\IGUITheme.h" />
+    <ClInclude Include="include\XML_GUITheme.h" />
+    <ClInclude Include="include\BaseFont.h" />
+    <ClInclude Include="include\FontAttributes.h" />
+    <CustomBuildStep Include="include\FTFont.h" />
+    <ClInclude Include="include\IFont.h" />
+    <ClInclude Include="include\ITextDecorateNode.h" />
+    <ClInclude Include="include\LanguageFontSpecification.h" />
+    <ClInclude Include="include\TexFont.h" />
+    <ClInclude Include="include\TextDecorateNodeFactory.h" />
+    <ClInclude Include="include\TextDecorator.h" />
+    <ClInclude Include="include\XML_Font.h" />
+    <ClInclude Include="include\ColorDecorateNode.h" />
+    <ClInclude Include="include\FontDecorateFont.h" />
+    <ClInclude Include="include\ImageDecorateNode.h" />
+    <ClInclude Include="include\SizeDecorateNode.h" />
+    <ClInclude Include="include\TextDecorateNode.h" />
+    <ClInclude Include="include\GUIBatchRenderer.h" />
+    <ClInclude Include="include\GUIMultiQuadRenderOperation.h" />
+    <ClInclude Include="include\GUIQuadRenderOperation.h" />
+    <ClInclude Include="include\IGUIRenderer.h" />
+    <ClInclude Include="include\IGUIRenderOperation.h" />
+    <ClInclude Include="include\GUIElementSelectorVisitor.h" />
+    <ClInclude Include="include\GUIXMLElementVisitor.h" />
+    <ClInclude Include="include\IGUIButton.h" />
+    <ClInclude Include="include\IGUICatagoryPanel.h" />
+    <ClInclude Include="include\IGUICategoryTab.h" />
+    <ClInclude Include="include\IGUICheckBox.h" />
+    <ClInclude Include="include\IGUIComboList.h" />
+    <ClInclude Include="include\IGUIEditBox.h" />
+    <ClInclude Include="include\IGUIListBox.h" />
+    <ClInclude Include="include\IGUIPanel.h" />
+    <ClInclude Include="include\IGUIPropertyGrid.h" />
+    <ClInclude Include="include\IGUIPropGridItem.h" />
+    <ClInclude Include="include\IGUISliderBar.h" />
+    <ClInclude Include="include\IGUIStackPanel.h" />
+    <ClInclude Include="include\IGUIStaticImage.h" />
+    <ClInclude Include="include\IGUIStaticText.h" />
+    <ClInclude Include="include\CLimitedStream.h" />
+    <ClInclude Include="include\CMemoryStream.h" />
+    <ClInclude Include="include\CMutexVar.h" />
+    <ClInclude Include="include\CRC.h" />
+    <ClInclude Include="include\ICondition.h" />
+    <ClInclude Include="include\IConsole.h" />
+    <ClInclude Include="include\IDirOS.h" />
+    <ClInclude Include="include\IDllManager.h" />
+    <ClInclude Include="include\IDynamicLibrary.h" />
+    <ClInclude Include="include\IFileSystem.h" />
+    <ClInclude Include="include\IMutex.h" />
+    <ClInclude Include="include\IOSClipboard.h" />
+    <ClInclude Include="include\IOSRegistry.h" />
+    <ClInclude Include="include\IOSystem.h" />
+    <ClInclude Include="include\IStream.h" />
+    <ClInclude Include="include\ISystemProcess.h" />
+    <ClInclude Include="include\IThread.h" />
+    <ClInclude Include="include\IThreadEvent.h" />
+    <ClInclude Include="include\IThreadFunction.h" />
+    <ClInclude Include="include\IThreadManager.h" />
+    <ClInclude Include="include\ITimer.h" />
+    <ClInclude Include="include\mraySystem.h" />
+    <ClInclude Include="include\MultiThreadListener.h" />
+    <ClInclude Include="include\MutexLocks.h" />
+    <ClInclude Include="include\OSLoggerSystem.h" />
+    <ClInclude Include="include\StreamReader.h" />
+    <ClInclude Include="include\StreamWriter.h" />
+    <ClInclude Include="include\ThreadBarrier.h" />
+    <ClInclude Include="include\ArchiveManager.h" />
+    <ClInclude Include="include\CPAKArchive.h" />
+    <ClInclude Include="include\CZipArchive.h" />
+    <ClInclude Include="include\IArchive.h" />
+    <ClInclude Include="include\CPakLoader.h" />
+    <ClInclude Include="include\CZipLoader.h" />
+    <ClInclude Include="include\IArchiveLoader.h" />
+    <ClInclude Include="include\NullMutex.h" />
+    <ClInclude Include="include\ChunkSerializer.h" />
+    <ClInclude Include="include\IFileLoader.h" />
+    <ClInclude Include="include\IFileWriter.h" />
+    <ClInclude Include="include\3dsLoader.h" />
+    <ClInclude Include="include\acLoader.h" />
+    <ClInclude Include="include\IMeshLoader.h" />
+    <ClInclude Include="include\IModelWriter.h" />
+    <ClInclude Include="include\MDLFileShared.h" />
+    <ClInclude Include="include\MdlLoader.h" />
+    <ClInclude Include="include\mdlLoaderV0.h" />
+    <ClInclude Include="include\mdlWriter.h" />
+    <ClInclude Include="include\MeshLoader.h" />
+    <ClInclude Include="include\MeshV2Loader.h" />
+    <ClInclude Include="include\animLoader.h" />
+    <ClInclude Include="include\animWriter.h" />
+    <ClInclude Include="include\IAnimLoader.h" />
+    <ClInclude Include="include\IAnimWriter.h" />
+    <ClInclude Include="include\ISkeletonExporter.h" />
+    <ClInclude Include="include\ISkeletonLoader.h" />
+    <ClInclude Include="include\SkeletonExporter.h" />
+    <ClInclude Include="include\SkeletonLoader.h" />
+    <ClInclude Include="include\FreeImageCodec.h" />
+    <ClInclude Include="include\CBmpLoader.h" />
+    <ClInclude Include="include\CDDSLoader.h" />
+    <ClInclude Include="include\CJPGLoader.h" />
+    <ClInclude Include="include\CPCXLoader.h" />
+    <ClInclude Include="include\CPNGLoader.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\CRawLoader.h" />
+    <ClInclude Include="include\CTargaLoader.h" />
+    <ClInclude Include="include\CustomTexLoader.h" />
+    <ClInclude Include="include\FreeImageLoader.h" />
+    <ClInclude Include="include\ITexLoader.h" />
+    <ClInclude Include="include\TexLoader.h" />
+    <ClInclude Include="include\CBmpWriter.h" />
+    <ClInclude Include="include\CJPGWriter.h" />
+    <ClInclude Include="include\CTargaWriter.h" />
+    <ClInclude Include="include\CustomTexWriter.h" />
+    <ClInclude Include="include\FreeImageWriter.h" />
+    <ClInclude Include="include\ITexWriter.h" />
+    <ClInclude Include="include\TexWriter.h" />
+    <ClInclude Include="include\ISoundLoader.h" />
+    <ClInclude Include="include\SoundLoader.h" />
+    <ClInclude Include="include\HeightMapRaw16.h" />
+    <ClInclude Include="include\HeightMapRaw8.h" />
+    <ClInclude Include="include\HeightMapTexture.h" />
+    <ClInclude Include="include\IHeightMapLoader.h" />
+    <ClInclude Include="include\PhysicsLoggerSystem.h" />
+    <ClInclude Include="include\IPhysicObject.h" />
+    <ClInclude Include="include\PhysicMesh.h" />
+    <ClInclude Include="include\PhysicObject.h" />
+    <ClInclude Include="include\IBlockerObject.h" />
+    <ClInclude Include="include\IPhysicObjectAffector.h" />
+    <ClInclude Include="include\IPOAirFan.h" />
+    <ClInclude Include="include\IPOForce.h" />
+    <ClInclude Include="include\IPOGravity.h" />
+    <ClInclude Include="include\ElasticObject.h" />
+    <ClInclude Include="include\IDeformable.h" />
+    <ClInclude Include="include\SpringSystem.h" />
+    <ClInclude Include="include\CompositeContactReporter.h" />
+    <ClInclude Include="include\ICCBoxInterface.h" />
+    <ClInclude Include="include\ICCCapsuleInterface.h" />
+    <ClInclude Include="include\ICCTypeInterface.h" />
+    <ClInclude Include="include\ICharacterController.h" />
+    <ClInclude Include="include\IPhysical3DDef.h" />
+    <ClInclude Include="include\IPhysicalCloth.h" />
+    <ClInclude Include="include\IPhysicalClothDef.h" />
+    <ClInclude Include="include\IPhysicalForceField.h" />
+    <ClInclude Include="include\IPhysicalForceFieldShapeGroup.h" />
+    <ClInclude Include="include\IPhysicalForceFieldShapes.h" />
+    <ClInclude Include="include\IPhysicalJoint.h" />
+    <ClInclude Include="include\IPhysicalNode.h" />
+    <ClInclude Include="include\IPhysicalShape.h" />
+    <ClInclude Include="include\IPhysicalTriggerReporter.h" />
+    <ClInclude Include="include\IPhysicalWheelShape.h" />
+    <ClInclude Include="include\IPhysicContactStreamIterator.h" />
+    <ClInclude Include="include\IPhysicManager.h" />
+    <ClInclude Include="include\IPhysicMaterial.h" />
+    <ClInclude Include="include\IPhysicSceneQuery.h" />
+    <ClInclude Include="include\IPhysicSceneQueryReport.h" />
+    <ClInclude Include="include\IPhysicUserContactReport.h" />
+    <ClInclude Include="include\IPhysicUserRaycaseReport.h" />
+    <ClInclude Include="include\PhComplexContactReporter.h" />
+    <ClInclude Include="include\PhTriggerReporterComplex.h" />
+    <ClInclude Include="include\PhysicalCCDesc.h" />
+    <ClInclude Include="include\PhysicalForceFieldDef.h" />
+    <ClInclude Include="include\PhysicalShapes.h" />
+    <ClInclude Include="include\PhysicContactPair.h" />
+    <ClInclude Include="include\PhysicsCCCallBack.h" />
+    <ClInclude Include="include\PhysicsGenLib.h" />
+    <ClInclude Include="include\PhysicsMaterialManager.h" />
+    <ClInclude Include="include\PhysicsRaycaseHit.h" />
+    <ClInclude Include="include\PhysicsSweepQueryHit.h" />
+    <ClInclude Include="include\PhysicXMLSerializer.h" />
+    <ClInclude Include="include\XMLShapeSerializer.h" />
+    <ClInclude Include="include\IPhysicalDebugger2D.h" />
+    <ClInclude Include="include\IPhysicalJoint2D.h" />
+    <ClInclude Include="include\IPhysicalNode2D.h" />
+    <ClInclude Include="include\IPhysicContactListener2D.h" />
+    <ClInclude Include="include\IPhysicManager2D.h" />
+    <ClInclude Include="include\IPhysics2DDef.h" />
+    <ClInclude Include="include\CustomVehicleWheel.h" />
+    <ClInclude Include="include\IVehicleWheel.h" />
+    <ClInclude Include="include\PhysicalVehicle.h" />
+    <ClInclude Include="include\RaycastVehicleWheel.h" />
+    <ClInclude Include="include\VehicleDesc.h" />
+    <ClInclude Include="include\VehicleGear.h" />
+    <ClInclude Include="include\VehicleGearDesc.h" />
+    <ClInclude Include="include\VehicleManager.h" />
+    <ClInclude Include="include\VehicleMotor.h" />
+    <ClInclude Include="include\VehicleMotorDesc.h" />
+    <ClInclude Include="include\VehicleWheelDesc.h" />
+    <ClInclude Include="include\VehicleXMLParser.h" />
+    <ClInclude Include="include\ActionsHistory.h" />
+    <ClInclude Include="include\BasicTypesGUID.h" />
+    <ClInclude Include="include\BenchmarkItem.h" />
+    <ClInclude Include="include\CatagoryManager.h" />
+    <ClInclude Include="include\CException.h" />
+    <ClInclude Include="include\CMemory.h" />
+    <ClInclude Include="include\CommandManager.h" />
+    <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\compileconfig.h" />
+    <ClInclude Include="include\CPUInfo.h" />
+    <ClInclude Include="include\DefaultEnum.h" />
+    <ClInclude Include="include\DefaultObjects.h" />
+    <ClInclude Include="include\DelegateManager.h" />
+    <ClInclude Include="include\DisableWarn.h" />
+    <ClInclude Include="include\Engine.h" />
+    <ClInclude Include="include\EnumManager.h" />
+    <ClInclude Include="include\FunctionProfileManager.h" />
+    <ClInclude Include="include\FunctionProfiler.h" />
+    <ClInclude Include="include\GUID.h" />
+    <ClInclude Include="include\ICommand.h" />
+    <ClInclude Include="include\ICursorControl.h" />
+    <ClInclude Include="include\IDGenerator.h" />
+    <ClInclude Include="include\IMessageDispatcher.h" />
+    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\IObject.h" />
+    <ClInclude Include="include\IObjectComponent.h" />
+    <ClInclude Include="include\IPlugin.h" />
+    <ClInclude Include="include\ISerializable.h" />
+    <ClInclude Include="include\ISingleton.h" />
+    <ClInclude Include="include\KEY_MAP.h" />
+    <ClInclude Include="include\KEYCode.h" />
+    <ClInclude Include="include\ListenerContainer.h" />
+    <ClInclude Include="include\Localization.h" />
+    <ClInclude Include="include\macros.h" />
+    <ClInclude Include="include\memAlign.h" />
+    <ClInclude Include="include\MessageTelegram.h" />
+    <ClInclude Include="include\MessageTelegramReciver.h" />
+    <ClInclude Include="include\ObjectFactory.h" />
+    <ClInclude Include="include\ObjectFactoryManager.h" />
+    <ClInclude Include="include\PluginManager.h" />
+    <ClInclude Include="include\RTTI.h" />
+    <ClInclude Include="include\TimeTicket.h" />
+    <ClInclude Include="include\TraceManager.h" />
+    <ClInclude Include="include\CAttribute.h" />
+    <ClInclude Include="CommonProperties.h" />
+    <ClInclude Include="include\CPropertieSet.h" />
+    <ClInclude Include="include\EGenericTypes.h" />
+    <ClInclude Include="include\IAttribute.h" />
+    <ClInclude Include="include\IProperty.h" />
+    <ClInclude Include="include\IPropertyVistor.h" />
+    <ClInclude Include="include\ObjectSerializer.h" />
+    <ClInclude Include="include\TypedProperty.h" />
+    <ClInclude Include="include\GCCollector.h" />
+    <ClInclude Include="include\GCInfo.h" />
+    <ClInclude Include="include\GCPtr.h" />
+    <ClInclude Include="include\IGCCollector.h" />
+    <ClInclude Include="include\AnimationResourceManager.h" />
+    <ClInclude Include="include\FileResourceManager.h" />
+    <ClInclude Include="include\FontResourceManager.h" />
+    <ClInclude Include="include\ImageSetResourceManager.h" />
+    <ClInclude Include="include\IResLoadListener.h" />
+    <ClInclude Include="include\IResource.h" />
+    <ClInclude Include="include\IResourceHolder.h" />
+    <ClInclude Include="include\IResourceManager.h" />
+    <ClInclude Include="include\MaterialResourceManager.h" />
+    <ClInclude Include="include\MeshResourceManager.h" />
+    <ClInclude Include="include\ResourceGroup.h" />
+    <ClInclude Include="include\ScriptResourceManager.h" />
+    <ClInclude Include="include\ShaderResourceManager.h" />
+    <ClInclude Include="include\SkeletonResourceManager.h" />
+    <ClInclude Include="include\SoundResourceManager.h" />
+    <ClInclude Include="include\TextureResourceManager.h" />
+    <ClInclude Include="include\IDelegate.h" />
+    <ClInclude Include="include\IDelegate_implement.h" />
+    <ClInclude Include="include\IDelegateContainer.h" />
+    <ClInclude Include="include\IDelegateEvent.h" />
+    <ClInclude Include="include\IDelegateSet.h" />
+    <ClInclude Include="include\IConfigDialog.h" />
+    <ClInclude Include="include\IErrorDialog.h" />
+    <ClInclude Include="include\GenericLoggerSystem.h" />
+    <ClInclude Include="include\HTMLLogger.h" />
+    <ClInclude Include="include\ILogDevice.h" />
+    <ClInclude Include="include\ILogManager.h" />
+    <ClInclude Include="include\LogManager.h" />
+    <ClInclude Include="include\LogSubsystem.h" />
+    <ClInclude Include="include\LogSubSystemManager.h" />
+    <ClInclude Include="include\StreamLogger.h" />
+    <ClInclude Include="include\ChangeModeEvent.h" />
+    <ClInclude Include="include\Event.h" />
+    <ClInclude Include="include\EventMemoryManager.h" />
+    <ClInclude Include="include\EventQueue.h" />
+    <ClInclude Include="include\GUIEvent.h" />
+    <ClInclude Include="include\IEventReciver.h" />
+    <ClInclude Include="include\JoystickEvent.h" />
+    <ClInclude Include="include\KeyboardEvent.h" />
+    <ClInclude Include="include\MouseEvent.h" />
+    <ClInclude Include="include\NetworkEvent.h" />
+    <ClInclude Include="include\ResizeEvent.h" />
+    <ClInclude Include="include\SystemEvent.h" />
+    <ClInclude Include="include\OptionContainer.h" />
+    <ClInclude Include="include\SOptionElement.h" />
+    <ClInclude Include="include\GenericValues.h" />
+    <ClInclude Include="include\IValue.h" />
+    <ClInclude Include="include\MathValues.h" />
+    <ClInclude Include="include\PropertyValue.h" />
+    <ClInclude Include="include\ValueController.h" />
+    <ClInclude Include="include\ValueProxy.h" />
+    <ClInclude Include="include\VideoValues.h" />
+    <ClInclude Include="include\CmdParams.h" />
+    <ClInclude Include="include\Param.h" />
+    <ClInclude Include="include\ISIMD_Processor.h" />
+    <ClInclude Include="include\SIMD_Default.h" />
+    <ClInclude Include="include\SIMD_Macros.h" />
+    <ClInclude Include="include\SIMD_SSE.h" />
+    <ClInclude Include="include\EventTimer.h" />
+    <ClInclude Include="include\ScheduleItems.h" />
+    <ClInclude Include="include\ScheduleManager.h" />
+    <ClInclude Include="include\EventBaseJobQueue.h" />
+    <ClInclude Include="include\IJobPiece.h" />
+    <ClInclude Include="include\IJobQueue.h" />
+    <ClInclude Include="include\JobOrder.h" />
+    <ClInclude Include="include\JobOrderPieceCollection.h" />
+    <ClInclude Include="include\JobPool.h" />
+    <ClInclude Include="include\JobQueue.h" />
+    <ClInclude Include="include\ThreadJobManager.h" />
+    <ClInclude Include="include\AsyncLoadManager.h" />
+    <ClInclude Include="include\IAsyncLoadRequest.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\crc32.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\deflate.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\inffast.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\inffixed.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\inflate.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\inftrees.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\trees.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\zconf.h" />
+    <CustomBuildStep Include="..\..\Dependencies\include\extLibs\zlib\zlib.h" />
+    <ClInclude Include="..\..\Dependencies\include\extLibs\zlib\zutil.h" />
+    <ClInclude Include="..\..\Dependencies\include\extLibs\zzip\_msvc.h" />
+    <ClInclude Include="..\..\Dependencies\include\extLibs\zzip\conf.h" />
+    <ClInclude Include="..\..\Dependencies\include\extLibs\zzip\types.h" />
+    <ClInclude Include="..\..\Dependencies\include\extLibs\zzip\zzip.h" />
+    <ClInclude Include="include\IXMLNode.h" />
+    <ClInclude Include="include\IXMLParser.h" />
+    <ClInclude Include="include\XMLComment.h" />
+    <ClInclude Include="include\XMLElement.h" />
+    <ClInclude Include="include\XMLTextNode.h" />
+    <ClInclude Include="include\XMLTree.h" />
+    <ClInclude Include="include\XMLWriter.h" />
+    <ClInclude Include="include\XMLExpatParser.h" />
+    <ClInclude Include="include\CJoysticController.h" />
+    <ClInclude Include="include\CKeyboardController.h" />
+    <ClInclude Include="include\CMouseController.h" />
+    <ClInclude Include="include\IJoysticController.h" />
+    <ClInclude Include="include\IKeyboardController.h" />
+    <ClInclude Include="include\IMouseController.h" />
+    <ClInclude Include="include\DeclarationTable.h" />
+    <ClInclude Include="include\IFunctionHandler.h" />
+    <ClInclude Include="include\IScript.h" />
+    <ClInclude Include="include\IScriptableObject.h" />
+    <ClInclude Include="include\IScriptBinder.h" />
+    <ClInclude Include="include\IScriptManager.h" />
+    <ClInclude Include="include\ScriptLoggerSystem.h" />
+    <ClInclude Include="include\ScriptParserUtilities.h" />
+    <ClInclude Include="include\ScriptRegister.h" />
+    <ClInclude Include="include\ILexical.h" />
+    <ClInclude Include="include\CTokenTranslator.h" />
+    <ClInclude Include="include\CustomTTranslater.h" />
+    <ClInclude Include="include\ITokenTranslator.h" />
+    <ClInclude Include="include\CSettingsFile.h" />
+    <ClInclude Include="include\EffectScript.h" />
+    <ClInclude Include="include\MaterialScript.h" />
+    <ClInclude Include="include\ActionAnimationTrack.h" />
+    <ClInclude Include="include\AnimationController.h" />
+    <ClInclude Include="include\AnimationLoggerSystem.h" />
+    <ClInclude Include="include\AnimationMixer.h" />
+    <ClInclude Include="include\AnimationTrackGroup.h" />
+    <ClInclude Include="include\AnimationTypes.h" />
+    <ClInclude Include="include\IAnimationMixer.h" />
+    <ClInclude Include="include\IAnimationTrack.h" />
+    <ClInclude Include="include\IKeyFrame.h" />
+    <ClInclude Include="include\KeyAnimationTrack.h" />
+    <ClInclude Include="include\LookAtAnimation.h" />
+    <ClInclude Include="include\MorphAnimationMixer.h" />
+    <ClInclude Include="include\MorphAnimationTrack.h" />
+    <ClInclude Include="include\MorphTrackGroup.h" />
+    <ClInclude Include="include\TransAnimationGroup.h" />
+    <ClInclude Include="include\TransformationAnimationMixer.h" />
+    <ClInclude Include="include\TransformationAnimationTrack.h" />
+    <ClInclude Include="include\TransformKeyFrame.h" />
+    <ClInclude Include="include\BonesJointQuery.h" />
+    <ClInclude Include="include\IJointQuery.h" />
+    <ClInclude Include="include\IInverseKinmatics.h" />
+    <ClInclude Include="include\IKSimple.h" />
+    <ClInclude Include="include\IterativeIK.h" />
+    <ClInclude Include="include\CCubeTexture.h" />
+    <ClInclude Include="include\ColorConverter.h" />
+    <ClInclude Include="include\ColorCurve.h" />
+    <ClInclude Include="include\DefaultColors.h" />
+    <ClInclude Include="include\ICameraVideoGrabber.h" />
+    <ClInclude Include="include\ImageInfo.h" />
+    <ClInclude Include="include\ImageSet.h" />
+    <ClInclude Include="include\ImageSetTexture.h" />
+    <ClInclude Include="include\IPickBuffer.h" />
+    <ClInclude Include="include\IRenderArea.h" />
+    <ClInclude Include="include\IRenderTarget.h" />
+    <ClInclude Include="include\IVideoClipManager.h" />
+    <ClInclude Include="include\IVideoGrabber.h" />
+    <ClInclude Include="include\IVideoSource.h" />
+    <ClInclude Include="include\LUTGenerator.h" />
+    <ClInclude Include="include\PixelFormat.h" />
+    <ClInclude Include="include\PixelUtil.h" />
+    <ClInclude Include="include\RenderMaterial.h" />
+    <ClInclude Include="include\RenderPass.h" />
+    <ClInclude Include="include\RenderTechnique.h" />
+    <ClInclude Include="include\RTPickBuffer.h" />
+    <ClInclude Include="include\SColor.h" />
+    <ClInclude Include="include\SVideoMode.h" />
+    <ClInclude Include="include\TextureBank.h" />
+    <ClInclude Include="include\videoCommon.h" />
+    <ClInclude Include="include\VideoGrabberTexture.h" />
+    <ClInclude Include="include\VideoLoggerSystem.h" />
+    <ClInclude Include="include\CMultiPassPP.h" />
+    <ClInclude Include="include\CShaderPP.h" />
+    <ClInclude Include="include\IPostProcessing.h" />
+    <ClInclude Include="include\ParsedShaderPP.h" />
+    <ClInclude Include="include\DeviceCapabilites.h" />
+    <ClInclude Include="include\EDeviceFeature.h" />
+    <ClInclude Include="include\EDeviceType.h" />
+    <ClInclude Include="include\IDeviceFactory.h" />
+    <ClInclude Include="include\IDeviceListener.h" />
+    <ClInclude Include="include\IMonitorDevice.h" />
+    <ClInclude Include="include\IMonitorDeviceManager.h" />
+    <ClInclude Include="include\IVideoDevice.h" />
+    <ClInclude Include="include\mrayDev.h" />
+    <ClInclude Include="include\mrayDeviceWrapper.h" />
+    <ClInclude Include="include\RenderWindow.h" />
+    <ClInclude Include="include\RenderWindowUtils.h" />
+    <ClInclude Include="include\GPUNullShaderProgram.h" />
+    <ClInclude Include="include\GPUShader.h" />
+    <ClInclude Include="include\GPUUniform.h" />
+    <ClInclude Include="include\IGPUShaderProgram.h" />
+    <ClInclude Include="include\IShaderConstantsCallback.h" />
+    <ClInclude Include="include\SemanticTableVariable.h" />
+    <ClInclude Include="include\ShaderSemanticTable.h" />
+    <ClInclude Include="include\ShaderUniformTypes.h" />
+    <ClInclude Include="include\CShaderFactory.h" />
+    <ClInclude Include="include\IGPUShaderFactory.h" />
+    <ClInclude Include="include\ITexture.h" />
+    <ClInclude Include="include\NoiseTexture.h" />
+    <ClInclude Include="include\TextureUnit.h" />
+    <ClInclude Include="include\IHardwareBuffer.h" />
+    <ClInclude Include="include\IHardwareBufferManager.h" />
+    <ClInclude Include="include\IHardwareIndexBuffer.h" />
+    <ClInclude Include="include\IHardwarePixelBuffer.h" />
+    <ClInclude Include="include\IHardwareStreamBuffer.h" />
+    <ClInclude Include="include\LockedPixelBox.h" />
+    <ClInclude Include="include\SoftwareBufferManager.h" />
+    <ClInclude Include="include\SoftwareIndexBuffer.h" />
+    <ClInclude Include="include\SoftwareStreamBuffer.h" />
+    <ClInclude Include="include\ASCIIEncoding.h" />
+    <ClInclude Include="include\BitConverter.h" />
+    <ClInclude Include="include\BitVector.h" />
+    <ClInclude Include="include\CFPS.h" />
+    <ClInclude Include="include\CKeyableAttr.h" />
+    <ClInclude Include="include\HashMap.h" />
+    <ClInclude Include="include\HeapAllocator.h" />
+    <ClInclude Include="include\heapSort.h" />
+    <ClInclude Include="include\IStringEncoding.h" />
+    <ClInclude Include="include\mArray.h" />
+    <ClInclude Include="include\MinMaxValue.h" />
+    <ClInclude Include="include\mIterator.h" />
+    <ClInclude Include="include\mString.h" />
+    <ClInclude Include="include\mTypes.h" />
+    <ClInclude Include="include\PoolMemoryAllocator.h" />
+    <ClInclude Include="include\StringConverter.h" />
+    <ClInclude Include="include\StringEncoding.h" />
+    <ClInclude Include="include\StringUtil.h" />
+    <ClInclude Include="include\TPair.h" />
+    <ClInclude Include="include\TreeDictionary.h" />
+    <ClInclude Include="include\UnicodeEncoding.h" />
+    <ClInclude Include="include\UTFString.h" />
+    <ClInclude Include="include\GZipCompress.h" />
+    <ClInclude Include="include\ICompressor.h" />
+    <ClInclude Include="include\LZWCompress.h" />
+    <ClInclude Include="include\IRDWatchInfo.h" />
+    <ClInclude Include="include\IRemoteDebugClient.h" />
+    <ClInclude Include="include\IRemoteDebugger.h" />
+    <ClInclude Include="include\RDPacketsID.h" />
+    <ClInclude Include="include\RemoteDebugClient.h" />
+    <ClInclude Include="include\RemoteDebugger.h" />
+    <ClInclude Include="include\RemoteDebugLogger.h" />
+    <ClInclude Include="include\RDLogPacket.h" />
+    <ClInclude Include="include\RDWatchPacket.h" />
+    <ClInclude Include="include\RDWRemovePacket.h" />
+    <ClInclude Include="include\RDWUpdatePacket.h" />
+    <ClInclude Include="include\CMsgbuffer.h" />
+    <ClInclude Include="include\ConnectedPeer.h" />
+    <ClInclude Include="include\HMessages.h" />
+    <ClInclude Include="include\HNetCommands.h" />
+    <ClInclude Include="include\INetwork.h" />
+    <ClInclude Include="include\IReliableSocket.h" />
+    <ClInclude Include="include\ISocket.h" />
+    <ClInclude Include="include\IUDPClient.h" />
+    <ClInclude Include="include\NetAddress.h" />
+    <ClInclude Include="include\NetDataTypes.h" />
+    <ClInclude Include="include\NetPacket.h" />
+    <ClInclude Include="include\NetworkLoggerSystem.h" />
+    <ClInclude Include="include\NetworkStream.h" />
+    <ClInclude Include="include\SendPacketQueue.h" />
+    <ClInclude Include="include\SocketListener.h" />
+    <ClInclude Include="include\UDPClientThreaded.h" />
+    <ClInclude Include="include\IWebRequest.h" />
+    <ClInclude Include="include\WebURL.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\IApplication.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GUIElementRT.cpp" />
+    <ClCompile Include="src\GUIManagerRT.cpp" />
+    <ClCompile Include="src\GUITreeNode.cpp" />
+    <ClCompile Include="src\IGUIElementRT.cpp" />
+    <ClCompile Include="src\IGUITreeBox.cpp" />
+    <ClCompile Include="src\ISerialPort.cpp" />
+    <ClCompile Include="src\MouseEvent.cpp" />
+    <ClCompile Include="src\RTTI_OBJECTS.cpp" />
+    <ClCompile Include="src\ISound.cpp" />
+    <ClCompile Include="src\IVoiceEncoder.cpp" />
+    <ClCompile Include="src\SoundManagerFactory.cpp" />
+    <ClCompile Include="src\SoundThemeManager.cpp" />
+    <ClCompile Include="src\BoxSoundEmitter.cpp" />
+    <ClCompile Include="src\LineSoundEmitter.cpp" />
+    <ClCompile Include="src\PointSoundEmitter.cpp" />
+    <ClCompile Include="src\SphereSoundEmitter.cpp" />
+    <ClCompile Include="src\CAdjacent.cpp" />
+    <ClCompile Include="src\CameraNode.cpp" />
+    <ClCompile Include="src\ICullable.cpp" />
+    <ClCompile Include="src\IMovable.cpp" />
+    <ClCompile Include="src\IRenderable.cpp" />
+    <ClCompile Include="src\iscenenode.cpp" />
+    <ClCompile Include="src\ISceneObjectsDesc.cpp" />
+    <ClCompile Include="src\ISkinCluster.cpp" />
+    <ClCompile Include="src\LightNode.cpp" />
+    <ClCompile Include="src\MeshAnimatorManager.cpp" />
+    <ClCompile Include="src\MeshBufferData.cpp" />
+    <ClCompile Include="src\MeshFileCreatorManager.cpp" />
+    <ClCompile Include="src\MeshGenerator.cpp" />
+    <ClCompile Include="src\MeshSerializer.cpp" />
+    <ClCompile Include="src\SceneHelper.cpp" />
+    <ClCompile Include="src\SceneNodeCreator.cpp" />
+    <ClCompile Include="src\SkyBoxManager.cpp" />
+    <ClCompile Include="src\SMesh.cpp" />
+    <ClCompile Include="src\smeshbuffer.cpp" />
+    <ClCompile Include="src\SMeshManipulator.cpp" />
+    <ClCompile Include="src\SMorphMeshBuffer.cpp" />
+    <ClCompile Include="src\StereoRenderer.cpp" />
+    <ClCompile Include="src\StreamReaderEx.cpp" />
+    <ClCompile Include="src\StreamWriterEx.cpp" />
+    <ClCompile Include="src\TangentCalculater.cpp" />
+    <ClCompile Include="src\TextureSourceFactory.cpp" />
+    <ClCompile Include="src\VideoResourceManager.cpp" />
+    <ClCompile Include="src\VideoTextureSource.cpp" />
+    <ClCompile Include="src\ViewPort.cpp" />
+    <ClCompile Include="src\CRotateConstraint.cpp" />
+    <ClCompile Include="src\SAnimatorCircle.cpp" />
+    <ClCompile Include="src\SAnimatorDirection.cpp" />
+    <ClCompile Include="src\SAnimatorRotate.cpp" />
+    <ClCompile Include="src\SAnimatorSpline.cpp" />
+    <ClCompile Include="src\CUBEMapRenderNode.cpp" />
+    <ClCompile Include="src\GrassRenderNode.cpp" />
+    <ClCompile Include="src\ISkyShape.cpp" />
+    <ClCompile Include="src\MeshRenderableNode.cpp" />
+    <ClCompile Include="src\MountPoint.cpp" />
+    <ClCompile Include="src\RoadNode.cpp" />
+    <ClCompile Include="src\SAnimatedSprite.cpp" />
+    <ClCompile Include="src\SBillboardBeam.cpp" />
+    <ClCompile Include="src\SBillboardChain.cpp" />
+    <ClCompile Include="src\SBillboardNode.cpp" />
+    <ClCompile Include="src\SLensEffect.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\SLocator.cpp" />
+    <ClCompile Include="src\slodanimatedmesh.cpp" />
+    <ClCompile Include="src\SPatchTerrain.cpp" />
+    <ClCompile Include="src\SQ3BSPLevel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\SSkyBoxNode.cpp" />
+    <ClCompile Include="src\SSkyDomeNode.cpp" />
+    <ClCompile Include="src\SSkyPlaneNode.cpp" />
+    <ClCompile Include="src\STerrain.cpp" />
+    <ClCompile Include="src\STextNode.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\CConvexQuickHull.cpp" />
+    <ClCompile Include="src\IConvexHull.cpp" />
+    <ClCompile Include="src\ISceneManager.cpp" />
+    <ClCompile Include="src\scenemanager.cpp" />
+    <ClCompile Include="src\SceneRegion.cpp" />
+    <ClCompile Include="src\BoxNodeSelector.cpp" />
+    <ClCompile Include="src\CTriangleSelector.cpp" />
+    <ClCompile Include="src\RayNodeSelector.cpp" />
+    <ClCompile Include="src\ScreenNodeSelector.cpp" />
+    <ClCompile Include="src\BoneNode.cpp" />
+    <ClCompile Include="src\Skeleton.cpp" />
+    <ClCompile Include="src\RenderGroup.cpp" />
+    <ClCompile Include="src\RenderManager.cpp" />
+    <ClCompile Include="src\XMLSceneLoader.cpp" />
+    <ClCompile Include="src\XMLTerrainReader.cpp" />
+    <ClCompile Include="src\DynamicGeometryBatch.cpp" />
+    <ClCompile Include="src\IGeometryBatch.cpp" />
+    <ClCompile Include="src\StaticGeometryBatch.cpp" />
+    <ClCompile Include="src\VertConstGeoInstancing.cpp" />
+    <ClCompile Include="src\GPUMorphAnimator.cpp" />
+    <ClCompile Include="src\GPUSkeletonAnimator.cpp" />
+    <ClCompile Include="src\IMorphAnimator.cpp" />
+    <ClCompile Include="src\MorphAnimator.cpp" />
+    <ClCompile Include="src\SkeletonAnimator.cpp" />
+    <ClCompile Include="src\NormalRenderPass.cpp" />
+    <ClCompile Include="src\ReflectionRenderPass.cpp" />
+    <ClCompile Include="src\ShadowRenderPass.cpp" />
+    <ClCompile Include="src\CurveManager.cpp" />
+    <ClCompile Include="src\CurveNode.cpp" />
+    <ClCompile Include="src\CircleTerrainBrush.cpp" />
+    <ClCompile Include="src\ITerrainBrush.cpp" />
+    <ClCompile Include="src\TerrainUtility.cpp" />
+    <ClCompile Include="src\RenderSceneVisitor.cpp" />
+    <ClCompile Include="src\RequestToRenderVisitor.cpp" />
+    <ClCompile Include="src\UpdateSceneVisitor.cpp" />
+    <ClCompile Include="src\DebugDrawManager.cpp" />
+    <ClCompile Include="src\CPUParticleBillboardRenderer.cpp" />
+    <ClCompile Include="src\GPUParticleBillboardRenderer.cpp" />
+    <ClCompile Include="src\IParticle.cpp" />
+    <ClCompile Include="src\IParticleAffector.cpp" />
+    <ClCompile Include="src\ParticleEmitter.cpp" />
+    <ClCompile Include="src\SParticleSystem.cpp" />
+    <ClCompile Include="src\SParticleSystemFactory.cpp" />
+    <ClCompile Include="src\GUIOverlay.cpp" />
+    <ClCompile Include="src\GUIOverlayManager.cpp" />
+    <ClCompile Include="src\IGUIElement.cpp" />
+    <ClCompile Include="src\IGUIManager.cpp" />
+    <ClCompile Include="src\IGUIPanelElement.cpp" />
+    <ClCompile Include="src\IGUISchemeBase.cpp" />
+    <ClCompile Include="src\ViewPort2D.cpp" />
+    <ClCompile Include="src\XMLOverlay.cpp" />
+    <ClCompile Include="src\GUIProfile.cpp" />
+    <ClCompile Include="src\GUITheme.cpp" />
+    <ClCompile Include="src\GUIThemeManager.cpp" />
+    <ClCompile Include="src\IGUITheme.cpp" />
+    <ClCompile Include="src\XML_GUITheme.cpp" />
+    <ClCompile Include="src\BaseFont.cpp" />
+    <ClCompile Include="src\FontAttributes.cpp" />
+    <ClCompile Include="src\FTFont.cpp" />
+    <ClCompile Include="src\IFont.cpp" />
+    <ClCompile Include="src\ITextDecorateNode.cpp" />
+    <ClCompile Include="src\LanguageFontSpecification.cpp" />
+    <ClCompile Include="src\TexFont.cpp" />
+    <ClCompile Include="src\TextDecorateNodeFactory.cpp" />
+    <ClCompile Include="src\TextDecorator.cpp" />
+    <ClCompile Include="src\XML_Font.cpp" />
+    <ClCompile Include="src\ColorDecorateNode.cpp" />
+    <ClCompile Include="src\FontDecorateFont.cpp" />
+    <ClCompile Include="src\ImageDecorateNode.cpp" />
+    <ClCompile Include="src\SizeDecorateNode.cpp" />
+    <ClCompile Include="src\TextDecorateNode.cpp" />
+    <ClCompile Include="src\GUIBatchRenderer.cpp" />
+    <ClCompile Include="src\GUIMultiQuadRenderOperation.cpp" />
+    <ClCompile Include="src\GUIQuadRenderOperation.cpp" />
+    <ClCompile Include="src\GUIElementSelectorVisitor.cpp" />
+    <ClCompile Include="src\GUIXMLElementVisitor.cpp" />
+    <ClCompile Include="src\IGUIButton.cpp" />
+    <ClCompile Include="src\IGUICatagoryPanel.cpp" />
+    <ClCompile Include="src\IGUICheckBox.cpp" />
+    <ClCompile Include="src\IGUIComboList.cpp" />
+    <ClCompile Include="src\IGUIEditBox.cpp" />
+    <ClCompile Include="src\IGUIListBox.cpp" />
+    <ClCompile Include="src\IGUIPanel.cpp" />
+    <ClCompile Include="src\IGUIPropertyGrid.cpp" />
+    <ClCompile Include="src\IGUISliderBar.cpp" />
+    <ClCompile Include="src\IGUIStackPanel.cpp" />
+    <ClCompile Include="src\IGUIStaticImage.cpp" />
+    <ClCompile Include="src\IGUIStaticText.cpp" />
+    <ClCompile Include="src\CLimitedStream.cpp" />
+    <ClCompile Include="src\CMemoryStream.cpp" />
+    <ClCompile Include="src\CRC.cpp" />
+    <ClCompile Include="src\IFileSystem.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\IStream.cpp" />
+    <ClCompile Include="src\IThreadManager.cpp" />
+    <ClCompile Include="src\mraySystem.cpp" />
+    <ClCompile Include="src\StreamReader.cpp" />
+    <ClCompile Include="src\StreamWriter.cpp" />
+    <ClCompile Include="src\ThreadBarrier.cpp" />
+    <ClCompile Include="src\ArchiveManager.cpp" />
+    <ClCompile Include="src\CPAKArchive.cpp" />
+    <ClCompile Include="src\CZipArchive.cpp" />
+    <ClCompile Include="src\CPakLoader.cpp" />
+    <ClCompile Include="src\CZipLoader.cpp" />
+    <ClCompile Include="src\ChunkSerializer.cpp" />
+    <ClCompile Include="src\3dsLoader.cpp" />
+    <ClCompile Include="src\acLoader.cpp" />
+    <ClCompile Include="src\mdlloader.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="src\mdlLoaderV0.cpp" />
+    <ClCompile Include="src\mdlWriter.cpp" />
+    <ClCompile Include="src\MeshLoader.cpp" />
+    <ClCompile Include="src\MeshV2Loader.cpp" />
+    <ClCompile Include="src\animLoader.cpp" />
+    <ClCompile Include="src\animWriter.cpp" />
+    <ClCompile Include="src\SkeletonExporter.cpp" />
+    <ClCompile Include="src\SkeletonLoader.cpp" />
+    <ClCompile Include="src\FreeImageCodec.cpp" />
+    <ClCompile Include="src\CBmpLoader.cpp" />
+    <ClCompile Include="src\CDDSLoader.cpp" />
+    <ClCompile Include="src\cjpgloader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\cpcxloader.cpp" />
+    <ClCompile Include="src\CPNGLoader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\CRawLoader.cpp" />
+    <ClCompile Include="src\CTargaLoader.cpp" />
+    <ClCompile Include="src\CustomTexLoader.cpp" />
+    <ClCompile Include="src\FreeImageLoader.cpp" />
+    <ClCompile Include="src\TexLoader.cpp" />
+    <ClCompile Include="src\CBmpWriter.cpp" />
+    <ClCompile Include="src\CJPGWriter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\CTargaWriter.cpp" />
+    <ClCompile Include="src\CustomTexWriter.cpp" />
+    <ClCompile Include="src\FreeImageWriter.cpp" />
+    <ClCompile Include="src\TexWriter.cpp" />
+    <ClCompile Include="src\SoundLoader.cpp" />
+    <ClCompile Include="src\HeightMapRaw16.cpp" />
+    <ClCompile Include="src\HeightMapRaw8.cpp" />
+    <ClCompile Include="src\HeightMapTexture.cpp" />
+    <ClCompile Include="src\IPhysicObject.cpp" />
+    <ClCompile Include="src\PhysicMesh.cpp" />
+    <ClCompile Include="src\PhysicObject.cpp" />
+    <ClCompile Include="src\IBlockerObject.cpp" />
+    <ClCompile Include="src\IPOAirFan.cpp" />
+    <ClCompile Include="src\IPOForce.cpp" />
+    <ClCompile Include="src\IPOGravity.cpp" />
+    <ClCompile Include="src\ElasticObject.cpp" />
+    <ClCompile Include="src\SpringSystem.cpp" />
+    <ClCompile Include="src\CompositeContactReporter.cpp" />
+    <ClCompile Include="src\IPhysical3DDef.cpp" />
+    <ClCompile Include="src\IPhysicalCloth.cpp" />
+    <ClCompile Include="src\IPhysicalClothDef.cpp" />
+    <ClCompile Include="src\IPhysicalJoint.cpp" />
+    <ClCompile Include="src\IPhysicalNode.cpp" />
+    <ClCompile Include="src\IPhysicManager.cpp" />
+    <ClCompile Include="src\PhComplexContactReporter.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\PhysicalShapes.cpp" />
+    <ClCompile Include="src\PhysicsMaterialManager.cpp" />
+    <ClCompile Include="src\PhysicXMLSerializer.cpp" />
+    <ClCompile Include="src\PhysicalVehicle.cpp" />
+    <ClCompile Include="src\RaycastVehicleWheel.cpp" />
+    <ClCompile Include="src\VehicleDesc.cpp" />
+    <ClCompile Include="src\VehicleGear.cpp" />
+    <ClCompile Include="src\VehicleManager.cpp" />
+    <ClCompile Include="src\VehicleMotor.cpp" />
+    <ClCompile Include="src\VehicleXMLParser.cpp" />
+    <ClCompile Include="src\ActionsHistory.cpp" />
+    <ClCompile Include="src\BasicTypesGUID.cpp" />
+    <ClCompile Include="src\BenchmarkItem.cpp" />
+    <ClCompile Include="src\CatagoryManager.cpp" />
+    <ClCompile Include="src\CException.cpp" />
+    <ClCompile Include="src\CMemory.cpp" />
+    <ClCompile Include="src\CommandManager.cpp" />
+    <ClCompile Include="src\compileConfig.cpp" />
+    <ClCompile Include="src\CPUInfo.cpp" />
+    <ClCompile Include="src\DefaultEnum.cpp" />
+    <ClCompile Include="src\DefaultObjects.cpp" />
+    <ClCompile Include="src\DelegateManager.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\EnumManager.cpp" />
+    <ClCompile Include="src\FunctionProfileManager.cpp" />
+    <ClCompile Include="src\FunctionProfiler.cpp" />
+    <ClCompile Include="src\GUID.cpp" />
+    <ClCompile Include="src\ICursorControl.cpp" />
+    <ClCompile Include="src\IObject.cpp" />
+    <ClCompile Include="src\IObjectComponent.cpp" />
+    <ClCompile Include="src\keyCode.cpp" />
+    <ClCompile Include="include\Localization.cpp" />
+    <ClCompile Include="src\MemOp.cpp" />
+    <ClCompile Include="src\PluginManager.cpp" />
+    <ClCompile Include="src\TimeTicket.cpp" />
+    <ClCompile Include="src\TraceManager.cpp" />
+    <ClCompile Include="CommonProperties.cpp" />
+    <ClCompile Include="src\CPropertieSet.cpp" />
+    <ClCompile Include="src\EGenericTypes.cpp" />
+    <ClCompile Include="src\IAttribute.cpp" />
+    <ClCompile Include="src\IProperty.cpp" />
+    <ClCompile Include="src\ObjectSerializer.cpp" />
+    <ClCompile Include="src\GCCollector.cpp" />
+    <ClCompile Include="src\GCInfo.cpp" />
+    <ClCompile Include="src\IGCCollector.cpp" />
+    <ClCompile Include="src\AnimationResourceManager.cpp" />
+    <ClCompile Include="src\FileResourceManager.cpp" />
+    <ClCompile Include="src\FontResourceManager.cpp" />
+    <ClCompile Include="src\ImageSetResourceManager.cpp" />
+    <ClCompile Include="src\IResource.cpp" />
+    <ClCompile Include="src\IResourceHolder.cpp" />
+    <ClCompile Include="src\IResourceManager.cpp" />
+    <ClCompile Include="src\MaterialResourceManager.cpp" />
+    <ClCompile Include="src\MeshResourceManager.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
+    <ClCompile Include="src\ScriptResourceManager.cpp" />
+    <ClCompile Include="src\ShaderResourceManager.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\SkeletonResourceManager.cpp" />
+    <ClCompile Include="src\SoundResourceManager.cpp" />
+    <ClCompile Include="src\TextureResourceManager.cpp" />
+    <ClCompile Include="src\HTMLLogger.cpp" />
+    <ClCompile Include="src\ILogManager.cpp" />
+    <ClCompile Include="src\LogManager.cpp" />
+    <ClCompile Include="src\LogSubsystem.cpp" />
+    <ClCompile Include="src\LogSubSystemManager.cpp" />
+    <ClCompile Include="src\RemoteDebugLogger.cpp" />
+    <ClCompile Include="src\StreamLogger.cpp" />
+    <ClCompile Include="src\Event.cpp" />
+    <ClCompile Include="src\EventMemoryManager.cpp" />
+    <ClCompile Include="src\EventQueue.cpp" />
+    <ClCompile Include="src\OptionContainer.cpp" />
+    <ClCompile Include="src\GenericValues.cpp" />
+    <ClCompile Include="src\IValue.cpp" />
+    <ClCompile Include="src\MathValues.cpp" />
+    <ClCompile Include="src\VideoValues.cpp" />
+    <ClCompile Include="src\Param.cpp" />
+    <ClCompile Include="src\ISIMD_Processor.cpp" />
+    <ClCompile Include="src\SIMD_SSE.cpp" />
+    <ClCompile Include="src\EventTimer.cpp" />
+    <ClCompile Include="src\ScheduleManager.cpp" />
+    <ClCompile Include="src\EventBaseJobQueue.cpp" />
+    <ClCompile Include="src\JobOrderPieceCollection.cpp" />
+    <ClCompile Include="src\JobPool.cpp" />
+    <ClCompile Include="src\JobQueue.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="src\ThreadJobManager.cpp" />
+    <ClCompile Include="src\AsyncLoadManager.cpp" />
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\adler32.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\compress.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\crc32.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\deflate.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\gzio.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\infback.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\inffast.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\inflate.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\inftrees.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\trees.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\uncompr.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\zlib\zutil.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">CompileAsC</CompileAs>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <StringPooling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</StringPooling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <SmallerTypeCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SmallerTypeCheck>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">CompileAsC</CompileAs>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="src\IXMLParser.cpp" />
+    <ClCompile Include="src\XMLElement.cpp" />
+    <ClCompile Include="src\XMLTree.cpp" />
+    <ClCompile Include="src\XMLWriter.cpp" />
+    <ClCompile Include="src\XMLExpatParser.cpp" />
+    <ClCompile Include="src\CJoysticController.cpp" />
+    <ClCompile Include="src\CKeyboardController.cpp" />
+    <ClCompile Include="src\CMouseController.cpp" />
+    <ClCompile Include="src\DeclarationTable.cpp" />
+    <ClCompile Include="src\IScriptManager.cpp" />
+    <ClCompile Include="src\ScriptParserUtilities.cpp" />
+    <ClCompile Include="src\ILexical.cpp" />
+    <ClCompile Include="src\CTokenTranslator.cpp" />
+    <ClCompile Include="src\CustomTTranslater.cpp" />
+    <ClCompile Include="src\CSettingsFile.cpp" />
+    <ClCompile Include="src\EffectScript.cpp" />
+    <ClCompile Include="src\MaterialScript.cpp" />
+    <ClCompile Include="src\ActionAnimationTrack.cpp" />
+    <ClCompile Include="src\AnimationController.cpp" />
+    <ClCompile Include="src\AnimationMixer.cpp" />
+    <ClCompile Include="src\AnimationTrackGroup.cpp" />
+    <ClCompile Include="src\IAnimationMixer.cpp" />
+    <ClCompile Include="src\IAnimationTrack.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\KeyAnimationTrack.cpp" />
+    <ClCompile Include="src\LookAtAnimation.cpp" />
+    <ClCompile Include="src\MorphAnimationMixer.cpp" />
+    <ClCompile Include="src\MorphAnimationTrack.cpp" />
+    <ClCompile Include="src\MorphTrackGroup.cpp" />
+    <ClCompile Include="src\TransAnimationGroup.cpp" />
+    <ClCompile Include="src\TransformationAnimationMixer.cpp" />
+    <ClCompile Include="src\TransformationAnimationTrack.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\TransformKeyFrame.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="src\BonesJointQuery.cpp" />
+    <ClCompile Include="src\IKSimple.cpp" />
+    <ClCompile Include="src\IterativeIK.cpp" />
+    <ClCompile Include="src\ColorConverter.cpp" />
+    <ClCompile Include="src\ColorCurve.cpp" />
+    <ClCompile Include="src\DefaultColors.cpp" />
+    <ClCompile Include="src\ImageInfo.cpp" />
+    <ClCompile Include="src\ImageSet.cpp" />
+    <ClCompile Include="src\ImageSetTexture.cpp" />
+    <ClCompile Include="src\IRenderTarget.cpp" />
+    <ClCompile Include="src\LockedPixelBox.cpp" />
+    <ClCompile Include="src\LUTGenerator.cpp" />
+    <ClCompile Include="src\PixelFormat.cpp" />
+    <ClCompile Include="src\PixelUtil.cpp" />
+    <ClCompile Include="src\RenderMaterial.cpp" />
+    <ClCompile Include="src\RenderPass.cpp" />
+    <ClCompile Include="src\RenderTechnique.cpp" />
+    <ClCompile Include="src\RTPickBuffer.cpp" />
+    <ClCompile Include="src\SColor.cpp" />
+    <ClCompile Include="src\TextureBank.cpp" />
+    <ClCompile Include="src\VideoGrabberTexture.cpp" />
+    <ClCompile Include="src\CMultiPassPP.cpp" />
+    <ClCompile Include="src\CShaderPP.cpp" />
+    <ClCompile Include="src\ParsedShaderPP.cpp" />
+    <ClCompile Include="src\DeviceCapabilites.cpp" />
+    <ClCompile Include="src\IDeviceFactory.cpp" />
+    <ClCompile Include="src\mrayDev.cpp" />
+    <ClCompile Include="src\RenderWindow.cpp" />
+    <ClCompile Include="src\RenderWindowUtils.cpp" />
+    <ClCompile Include="src\GPUNullShaderProgram.cpp" />
+    <ClCompile Include="src\GPUShader.cpp" />
+    <ClCompile Include="src\GPUUniform.cpp" />
+    <ClCompile Include="src\IShaderConstantsCallback.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="src\ShaderSemanticTable.cpp" />
+    <ClCompile Include="src\ShaderUniformTypes.cpp" />
+    <ClCompile Include="src\CShaderFactory.cpp" />
+    <ClCompile Include="src\ITexture.cpp" />
+    <ClCompile Include="src\NoiseTexture.cpp" />
+    <ClCompile Include="src\TextureUnit.cpp" />
+    <ClCompile Include="src\IHardwareIndexBuffer.cpp" />
+    <ClCompile Include="src\IHardwarePixelBuffer.cpp" />
+    <ClCompile Include="src\IHardwareStreamBuffer.cpp" />
+    <ClCompile Include="src\SoftwareBufferManager.cpp" />
+    <ClCompile Include="src\SoftwareIndexBuffer.cpp" />
+    <ClCompile Include="src\SoftwareStreamBuffer.cpp" />
+    <ClCompile Include="src\ASCIIEncoding.cpp" />
+    <ClCompile Include="src\BitConverter.cpp" />
+    <ClCompile Include="src\cfps.cpp" />
+    <ClCompile Include="src\mString.cpp" />
+    <ClCompile Include="src\PoolMemoryAllocator.cpp" />
+    <ClCompile Include="src\StringConverter.cpp" />
+    <ClCompile Include="src\StringEncoding.cpp" />
+    <ClCompile Include="src\StringUtil.cpp" />
+    <ClCompile Include="src\UnicodeEncoding.cpp" />
+    <ClCompile Include="src\UTFString.cpp" />
+    <ClCompile Include="src\GZipCompress.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
+    </ClCompile>
+    <ClCompile Include="src\LZWCompress.cpp" />
+    <ClCompile Include="src\RemoteDebugClient.cpp" />
+    <ClCompile Include="src\RemoteDebugger.cpp" />
+    <ClCompile Include="src\RDWatchPacket.cpp" />
+    <ClCompile Include="src\ConnectedPeer.cpp" />
+    <ClCompile Include="src\HMessage.cpp" />
+    <ClCompile Include="src\HNetCommands.cpp" />
+    <ClCompile Include="src\NetAddress.cpp" />
+    <ClCompile Include="src\NetDataTypes.cpp" />
+    <ClCompile Include="src\NetPacket.cpp" />
+    <ClCompile Include="src\NetworkStream.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\SendPacketQueue.cpp" />
+    <ClCompile Include="src\WebURL.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\TransformManipulator.cpp.old">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <None Include="include\TransformManipulator.h.old" />
+    <None Include="include\Hashmap.inl" />
+    <None Include="OverlaySchema.xsx">
+      <DependentUpon>OverlaySchema.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="OverlaySchema.xsd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Xsd>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Dependencies\NvTriStrip\src\NvTriStrip\NvTriStrip.vcxproj">
+      <Project>{175a433b-41dd-4649-a81f-5830364d8fb1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\mrayMath\mrayMath.vcxproj">
+      <Project>{3667a882-8484-4467-9e55-1ff212da9074}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

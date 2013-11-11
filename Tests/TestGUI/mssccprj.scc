@@ -1,0 +1,5 @@
+SCC = This is a Source Code Control file
+
+[TestGUI.vcproj]
+SCC_Aux_Path = "D:\Development\SourceSafe"
+SCC_Project_Name = "$/mrayEngine/Tests/TestGUI", BXAAAAAA

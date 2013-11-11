@@ -1,0 +1,26 @@
+
+
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float depth: TEXCOORD0;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, 
+				uniform float4x4 WorldMat,
+				uniform float4x4 LightViewProj) 
+{
+	VS_OUTPUT Out;
+	Out.Pos=mul(Pos,mul(WorldMat,LightViewProj));	
+	Out.depth = Out.Pos.z / Out.Pos.w ;
+	return Out;
+}
+
+//////////////////////////////////
+
+float4 main_fp(float depth: TEXCOORD0) : COLOR 
+{
+	return float4(depth,0,0,0);
+
+}

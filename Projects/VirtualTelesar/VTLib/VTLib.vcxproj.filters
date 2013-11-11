@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\CommunicationLayer">
+      <UniqueIdentifier>{3210b153-239a-4dd1-be35-3574e1e92c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{4b63d52f-c099-477b-a06d-0c5867a5f2d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{81798a70-710a-4526-8611-d7cfbb55978b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DS">
+      <UniqueIdentifier>{b14dcf2c-a058-4589-b1b8-893f3de9638d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{7669febf-4281-4e73-b21f-5815dbefe36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Components\definition">
+      <UniqueIdentifier>{9da4e3aa-30c7-42b5-9e9d-4ec21b5b2e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\definition\sensors">
+      <UniqueIdentifier>{b2701dfc-77b2-4838-a8f1-9907e5151414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Input">
+      <UniqueIdentifier>{8c82d14b-0b55-4d9d-81ed-79d576d5d349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Output">
+      <UniqueIdentifier>{5e8446c8-f62a-48ad-844a-5bdf46d9d571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\DriverLayer">
+      <UniqueIdentifier>{8bc152fd-ee31-4637-ac86-5a9556588e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Debug">
+      <UniqueIdentifier>{3fcc2914-2bb4-4028-9b50-191d8d3b24e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RTTI_OBJ.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VTLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunicationDataRecorder.cpp">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPCommunicationLayer.cpp">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunicationManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderSettings.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="IVTComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MountableComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsTransformComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotCommunicatorComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundListenerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunicationData.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunicatorScheme.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIGraphPlotElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIMotorConnector.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotCommunicator.cpp">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="PIDController.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunicationComponent.cpp">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="CoupledJointComponent.cpp">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DistanceCalculatorComponent.cpp">
+      <Filter>Source Files\Components\definition\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorCalculatorComponent.cpp">
+      <Filter>Source Files\Components\definition\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="ContactCollisionDebugger.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchSensorComponent.cpp">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="SpringTouchSensorComponent.cpp">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="GGDriver.cpp">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorCurve.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISpringTouchElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IRobotJointComponent.cpp">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIComponentTreeBox.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IControllableComponent.cpp">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KinBodyControlComponent.cpp">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkDebugComponent.cpp">
+      <Filter>Source Files\Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GGComponent.cpp">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ContactDisablerComponent.cpp">
+      <Filter>Source Files\Components\definition</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VTLib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicationDataRecorder.h">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommunicationLayer.h">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPCommunicationLayer.h">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicationManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderSettings.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachmentComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIGeneratorComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IGUIGenerator.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IVTComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MountableComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsTransformComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotCommunicatorComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundListenerComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicationData.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicatorScheme.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="VTCommon.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIGraphPlotElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIJointValueController.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIJointValueOverlay.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIMotorConnector.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MotorConnection.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotCommunicator.h">
+      <Filter>Source Files\CommunicationLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="PIDController.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicationComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="CoupledJointComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DistanceCalculatorComponent.h">
+      <Filter>Source Files\Components\definition\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorCalculatorComponent.h">
+      <Filter>Source Files\Components\definition\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="ContactCollisionDebugger.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TouchSensorComponent.h">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringTouchSensorComponent.h">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="GGDriver.h">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="mywsock.h">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="IForceFeedbackDriver.h">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorCurve.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="ISensorModulator.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="IVTDebugInterface.h">
+      <Filter>Source Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringTouchSensorImpl.h">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpringTouchElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotJointComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIComponentTreeBox.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkDebugComponent.h">
+      <Filter>Source Files\Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IControllableComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommunicatorComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="IFeedbackControl.h">
+      <Filter>Source Files\Components\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="KinBodyControlComponent.h">
+      <Filter>Source Files\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GGComponent.h">
+      <Filter>Source Files\Components\DriverLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ContactDisablerComponent.h">
+      <Filter>Source Files\Components\definition</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="GUIJointValueOverlay.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

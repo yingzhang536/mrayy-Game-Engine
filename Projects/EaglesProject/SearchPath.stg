@@ -1,0 +1,19 @@
+
+SearchPath
+{
+	Path "Assets"
+	Path "Assets/GUI"
+	Path "Assets/Fonts"
+	Path "Assets/shaders"
+	Path "Assets/textures"
+	Path "Assets/video"
+	Path "Assets/sound"
+	Path "Assets/levels"
+	Path "Assets/terrain"
+	Path "Assets/models"
+}
+
+Archive
+{
+//	Path "textures.zip"
+}

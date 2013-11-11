@@ -1,0 +1,14 @@
+
+<Level Name="testLevel">
+  <Terrain size="" numOfLOD="" lodDistance=""   heightmap="" baseTexture="" detailTexture="" detailNormal=""  />
+  <Water height=""/>
+  <Environment Ambient="" DayLength="" viewDistance="">
+    <Fog start="" end="" color="" />
+    <sun color=""/>
+    <sky path="" />
+  </Environment>
+  <player type=""  position="" rotation="" scale=""/>
+  <objects>
+    <object class="" type=""  position="" rotation="" scale=""/>
+  </objects>
+</Level>

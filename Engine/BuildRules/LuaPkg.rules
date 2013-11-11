@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Lua PKG"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="Lua pkg"
+			DisplayName="Lua pkg"
+			CommandLine="..\..\bin\release\tolua++Bin.exe -o $(InputDir)$(InputName)_pkg.cpp $(InputPath)"
+			Outputs="$(InputDir)$(InputName)_pkg.cpp"
+			FileExtensions="*.pkg"
+			ExecutionDescription="Compiling : $(InputName)_pkg"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

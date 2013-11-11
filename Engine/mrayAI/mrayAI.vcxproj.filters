@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\AI">
+      <UniqueIdentifier>{dfbc0c99-10ed-41ae-ab24-f2c98d2d6eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Movment">
+      <UniqueIdentifier>{644adeb2-49f8-451e-ba56-c4a4ecf773f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Movment\Steering">
+      <UniqueIdentifier>{51c42dc2-dd75-4d17-94dc-1b10b6670223}</UniqueIdentifier>
+      <ParseFiles>false</ParseFiles>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Source Files\AI\Movment\DynamicSolvers">
+      <UniqueIdentifier>{4140675d-b316-47c8-99a1-4ad31b34fb8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\World">
+      <UniqueIdentifier>{af5a4f59-cf6a-419d-8b44-196445982e6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\World\NavMesh">
+      <UniqueIdentifier>{b3130cbb-fc2d-4c6b-a256-3f73d48e85f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\World\Search">
+      <UniqueIdentifier>{44db7c2e-e331-4719-b093-17902dc7bf0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Goal">
+      <UniqueIdentifier>{cd80f065-9c7f-4e1b-9e96-3c3bbf8799c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Debug">
+      <UniqueIdentifier>{452abf11-53cf-4ec0-9483-f893d1b96be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Memory&amp;Perception">
+      <UniqueIdentifier>{d2f73cc4-fc2e-4502-8243-1c70dc324643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\SpacePartition">
+      <UniqueIdentifier>{191bc3ad-0a76-465d-8596-fc43ff347667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Triggers">
+      <UniqueIdentifier>{6808670c-091b-4e63-8374-e878cc3e3309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Triggers\shapes">
+      <UniqueIdentifier>{0ab56ad8-fca7-4f8b-bd22-5df9a33799cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Pathfinding">
+      <UniqueIdentifier>{fda8055b-a9d2-43e4-86e6-e1a69518af58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Message">
+      <UniqueIdentifier>{56a7da35-f298-4d0a-b802-b8799aced886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Architecture">
+      <UniqueIdentifier>{57997c04-607d-42f5-8695-43efc9ef0d88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Architecture\Samples">
+      <UniqueIdentifier>{72ad3a23-520a-4e41-826a-71b00e0fdefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\RBS">
+      <UniqueIdentifier>{2f2700c4-0902-4155-b860-33b2d813cb4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\FSM">
+      <UniqueIdentifier>{5d42ad7f-d4a9-400a-907c-2cd7bbe0b4e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Decision Making">
+      <UniqueIdentifier>{e530753f-5345-444c-97e5-f64de38b04df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Obstacles">
+      <UniqueIdentifier>{0984bc51-8e9f-4d1a-bc55-111be671d06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Fuzzy">
+      <UniqueIdentifier>{2acdd268-2012-4fb5-a484-8a1ccdb3358d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\GA">
+      <UniqueIdentifier>{56db787c-7b85-4fd3-a65e-48fd07c72bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\BehaviorTrees">
+      <UniqueIdentifier>{132a5712-d992-4c8e-a01e-b4b4b354ebfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mrayAI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AIActor.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIAgent.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDefaultGoalsTypes.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIIntializing.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMessages.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIPrediction.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AISystem.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AITypeDef.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIPhysicsProxy.h">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClInclude>
+    <ClInclude Include="IAIPhysics.h">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClInclude>
+    <ClInclude Include="IDynamicObstacleSolver.h">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClInclude>
+    <ClInclude Include="SteerController.h">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceFieldDOS.h">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyRaycastDOS.h">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAheadDOS.h">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphLink.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphNode.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="INavWorld.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="INavWorldNode.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="IWorldVisualizer.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="TacticalPointManager.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Waypoint.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointPath.h">
+      <Filter>Source Files\AI\World</Filter>
+    </ClInclude>
+    <ClInclude Include="NavAStarSearch.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavGraphLink.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavGraphNode.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavHeuristic.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshGrid.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshHeuristic.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshPolygon.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshVisualizer.h">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ICostFunction.h">
+      <Filter>Source Files\AI\World\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphSearch.h">
+      <Filter>Source Files\AI\World\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalFactoryManager.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalPipe.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalScenario.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalThinking.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="IGoal.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="IGoalEvaluator.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="IGoalFactory.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Thinking.h">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMovmentTracker.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="AIRenderDevice.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="AIVisualizeRenderNode.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderDevice.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IVisualizable.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorMemory.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentWorldSensor.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="IActorQuery.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="IPerceptionSensor.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryTicket.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorActuator.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorSet.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundMemTick.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolMemory.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="VisionMemTick.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="VisionSensor.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldSensor.h">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="GridSpacePartition.h">
+      <Filter>Source Files\AI\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="IAISpacePartition.h">
+      <Filter>Source Files\AI\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="ITrigger.h">
+      <Filter>Source Files\AI\Triggers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapedTrigger.h">
+      <Filter>Source Files\AI\Triggers</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerSystem.h">
+      <Filter>Source Files\AI\Triggers</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleTriggerShape.h">
+      <Filter>Source Files\AI\Triggers\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="CompoundTriggerShape.h">
+      <Filter>Source Files\AI\Triggers\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ITriggerShape.h">
+      <Filter>Source Files\AI\Triggers\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathEdge.h">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFindingManager.h">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFindPlanner.h">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher.h">
+      <Filter>Source Files\AI\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="AIArchitectParser.h">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="AIComponentTypes.h">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="IAIArchitect.h">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="IAIComponent.h">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericArchitect.h">
+      <Filter>Source Files\AI\Architecture\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="RBSComponent.h">
+      <Filter>Source Files\AI\RBS</Filter>
+    </ClInclude>
+    <ClInclude Include="FiniteStateMachine.h">
+      <Filter>Source Files\AI\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDesire.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="AttributesScheme.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionAttributes.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionTree.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionTreeNode.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="IDecisionAttribute.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainingDataSet.h">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentObstacle.h">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="AIObstacleCircle.h">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="AIObstacleRectangle.h">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="IAIObstacleShape.h">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="AIFuzzyComponent.h">
+      <Filter>Source Files\AI\Fuzzy</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzySystemGA.h">
+      <Filter>Source Files\AI\GA</Filter>
+    </ClInclude>
+    <ClInclude Include="BHRandomNode.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="BHRepeatDecorator.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="BHSelectorNode.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="BHSequenceNode.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="IBehaviorTree.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="IBHActionNode.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="IBHDecorator.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="IBHNode.h">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AIAgent.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIIntializing.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIPrediction.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AISystem.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="RTTI_OBJECTS.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIPhysicsProxy.cpp">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClCompile>
+    <ClCompile Include="IAIPhysics.cpp">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClCompile>
+    <ClCompile Include="SteerController.cpp">
+      <Filter>Source Files\AI\Movment</Filter>
+    </ClCompile>
+    <ClCompile Include="ArriveForce.cpp">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="FleeForce.cpp">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="ISteerForce.cpp">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="PursuitForce.cpp">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekForce.cpp">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="ForceFieldDOS.cpp">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyRaycastDOS.cpp">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="LookAheadDOS.cpp">
+      <Filter>Source Files\AI\Movment\DynamicSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="IGraphLink.cpp">
+      <Filter>Source Files\AI\World</Filter>
+    </ClCompile>
+    <ClCompile Include="TacticalPointManager.cpp">
+      <Filter>Source Files\AI\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Waypoint.cpp">
+      <Filter>Source Files\AI\World</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointPath.cpp">
+      <Filter>Source Files\AI\World</Filter>
+    </ClCompile>
+    <ClCompile Include="NavAStarSearch.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavGraphLink.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshGrid.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshPolygon.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshVisualizer.cpp">
+      <Filter>Source Files\AI\World\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalFactoryManager.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalPipe.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalScenario.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalThinking.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="IGoal.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Thinking.cpp">
+      <Filter>Source Files\AI\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="AIMovmentTracker.cpp">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="AIRenderDevice.cpp">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="AIVisualizeRenderNode.cpp">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointSceneNode.cpp">
+      <Filter>Source Files\AI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorMemory.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="AgentWorldSensor.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorActuator.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorSet.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolMemory.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="VisionSensor.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldSensor.cpp">
+      <Filter>Source Files\AI\Memory&amp;Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="GridSpacePartition.cpp">
+      <Filter>Source Files\AI\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapedTrigger.cpp">
+      <Filter>Source Files\AI\Triggers</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerSystem.cpp">
+      <Filter>Source Files\AI\Triggers</Filter>
+    </ClCompile>
+    <ClCompile Include="Path.cpp">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFindingManager.cpp">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFindPlanner.cpp">
+      <Filter>Source Files\AI\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageDispatcher.cpp">
+      <Filter>Source Files\AI\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="AIArchitectParser.cpp">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="AIComponentTypes.cpp">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="IAIArchitect.cpp">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="IAIComponent.cpp">
+      <Filter>Source Files\AI\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericArchitect.cpp">
+      <Filter>Source Files\AI\Architecture\Samples</Filter>
+    </ClCompile>
+    <ClCompile Include="RBSComponent.cpp">
+      <Filter>Source Files\AI\RBS</Filter>
+    </ClCompile>
+    <ClCompile Include="FiniteStateMachine.cpp">
+      <Filter>Source Files\AI\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="AIDesire.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="AttributesScheme.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionAttributes.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionTree.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionTreeNode.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainingDataSet.cpp">
+      <Filter>Source Files\AI\Decision Making</Filter>
+    </ClCompile>
+    <ClCompile Include="AgentObstacle.cpp">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="AIObstacleCircle.cpp">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="AIObstacleRectangle.cpp">
+      <Filter>Source Files\AI\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="AIFuzzyComponent.cpp">
+      <Filter>Source Files\AI\Fuzzy</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzySystemGA.cpp">
+      <Filter>Source Files\AI\GA</Filter>
+    </ClCompile>
+    <ClCompile Include="BHSelectorNode.cpp">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="BHSequenceNode.cpp">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="IBehaviorTree.cpp">
+      <Filter>Source Files\AI\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="ArriveForce.h">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="FleeForce.h">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="ISteerForce.h">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="PursuitForce.h">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="SeekForce.h">
+      <Filter>Source Files\AI\Movment\Steering</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="WaypointSceneNode.h">
+      <Filter>Source Files\AI\Debug</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

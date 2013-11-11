@@ -1,0 +1,1 @@
+Plugins{ Path "mrayGLDevice_d.dll" Path "mraySound_d.dll"	Path "mrayParticles_d.dll"} Materials {}

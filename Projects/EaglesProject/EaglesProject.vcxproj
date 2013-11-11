@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Unicode|Win32">
+      <Configuration>Debug_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode|Win32">
+      <Configuration>Release_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7E34C86B-63BD-4CE5-A89C-1E73077F47BC}</ProjectGuid>
+    <RootNamespace>EaglesProject</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\mrayWinApp;..\FSM\FSM;..\mrayParticles;..\mraySound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WinApp_LIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayENgine_d.lib;mrayWinApp_d.lib;mrayMath_d.lib;mrayFSM_d.lib;mrayParticles_d.lib;mraySound_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Eagles_d.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\mrayWinApp;..\FSM\FSM;..\mrayParticles;..\mraySound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WinApp_LIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayFSM.lib;mrayParticles.lib;mraySound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Eagles.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\mrayWinApp;..\FSM\FSM;..\mrayParticles;..\mraySound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WinApp_LIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayENgine_d.lib;mrayWinApp_d.lib;mrayMath_d.lib;mrayFSM_d.lib;mrayParticles_d.lib;mraySound_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Eagles_d.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\mrayWinApp;..\FSM\FSM;..\mrayParticles;..\mraySound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WinApp_LIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayFSM.lib;mrayParticles.lib;mraySound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Eagles.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EagleApplication.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\GameOptionManager.cpp" />
+    <ClCompile Include="src\ImageController.cpp" />
+    <ClCompile Include="src\ScenarioManager.cpp" />
+    <ClCompile Include="src\XMLLevelLoader.cpp" />
+    <ClCompile Include="src\AboutSenario.cpp" />
+    <ClCompile Include="src\GameSenario.cpp" />
+    <ClCompile Include="src\IntroSenario.cpp" />
+    <ClCompile Include="src\LoadingScenario.cpp" />
+    <ClCompile Include="src\MenuSenario.cpp" />
+    <ClCompile Include="src\SenarioState.cpp" />
+    <ClCompile Include="src\ImageIntroItem.cpp" />
+    <ClCompile Include="src\VideoIntroItem.cpp" />
+    <ClCompile Include="src\AirPlane.cpp" />
+    <ClCompile Include="src\AntiPlaneMissile.cpp" />
+    <ClCompile Include="src\BuildingEntity.cpp" />
+    <ClCompile Include="src\CollisionManager.cpp" />
+    <ClCompile Include="src\ControlMap.cpp" />
+    <ClCompile Include="src\DefaultObjectFactory.cpp" />
+    <ClCompile Include="src\GameLevel.cpp" />
+    <ClCompile Include="src\GameLevelManager.cpp" />
+    <ClCompile Include="src\HumanController.cpp" />
+    <ClCompile Include="src\JetParticleSystem.cpp" />
+    <ClCompile Include="src\Missile.cpp" />
+    <ClCompile Include="src\MissileLauncher.cpp" />
+    <ClCompile Include="src\ObjectFactory.cpp" />
+    <ClCompile Include="src\PlaneCamera.cpp" />
+    <ClCompile Include="src\PlaneMissile.cpp" />
+    <ClCompile Include="src\StaticEntity.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TreeEntity.cpp" />
+    <ClCompile Include="src\BloomPP.cpp" />
+    <ClCompile Include="src\GlarePP.cpp" />
+    <ClCompile Include="src\InGamePP.cpp" />
+    <ClCompile Include="src\CSoundthemeManager.cpp" />
+    <ClCompile Include="src\EnvironmentManager.cpp" />
+    <ClCompile Include="src\IDManager.cpp" />
+    <ClCompile Include="src\Sun.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\EagleApplication.h" />
+    <ClInclude Include="src\GameOptionManager.h" />
+    <ClInclude Include="src\ImageController.h" />
+    <ClInclude Include="src\IScenarioNode.h" />
+    <ClInclude Include="src\ScenarioExitCode.h" />
+    <ClInclude Include="src\ScenarioManager.h" />
+    <ClInclude Include="src\SGameInfo.h" />
+    <ClInclude Include="src\XMLLevelLoader.h" />
+    <ClInclude Include="src\AboutSenario.h" />
+    <ClInclude Include="src\GameSenario.h" />
+    <ClInclude Include="src\IntroSenario.h" />
+    <ClInclude Include="src\LoadingScenario.h" />
+    <ClInclude Include="src\MenuSenario.h" />
+    <ClInclude Include="src\ProblemScenario.h" />
+    <ClInclude Include="src\SenarioState.h" />
+    <ClInclude Include="src\ImageIntroItem.h" />
+    <ClInclude Include="src\IntroItem.h" />
+    <ClInclude Include="src\VideoIntroItem.h" />
+    <ClInclude Include="src\AirPlane.h" />
+    <ClInclude Include="src\AntiPlaneMissile.h" />
+    <ClInclude Include="src\BuildingEntity.h" />
+    <ClInclude Include="src\CollisionManager.h" />
+    <ClInclude Include="src\ControlMap.h" />
+    <ClInclude Include="src\DefaultObjectFactory.h" />
+    <ClInclude Include="src\DemoCamera.h" />
+    <ClInclude Include="src\EPlaneAction.h" />
+    <ClInclude Include="src\GameEntity.h" />
+    <ClInclude Include="src\GameLevel.h" />
+    <ClInclude Include="src\GameLevelManager.h" />
+    <ClInclude Include="src\HumanController.h" />
+    <ClInclude Include="src\ILockableEntity.h" />
+    <ClInclude Include="src\IObjectCreator.h" />
+    <ClInclude Include="src\IPlaneController.h" />
+    <ClInclude Include="src\JetParticleSystem.h" />
+    <ClInclude Include="src\Missile.h" />
+    <ClInclude Include="src\MissileGraveyard.h" />
+    <ClInclude Include="src\MissileLauncher.h" />
+    <ClInclude Include="src\ObjectFactory.h" />
+    <ClInclude Include="src\PlaneCamera.h" />
+    <ClInclude Include="src\PlaneMissile.h" />
+    <ClInclude Include="src\StaticEntity.h" />
+    <ClInclude Include="src\TextureManager.h" />
+    <ClInclude Include="src\TreeEntity.h" />
+    <ClInclude Include="src\BloomPP.h" />
+    <ClInclude Include="src\GlarePP.h" />
+    <ClInclude Include="src\InGamePP.h" />
+    <ClInclude Include="src\PostProcessing.h" />
+    <ClInclude Include="src\shadercallback.h" />
+    <ClInclude Include="src\CSoundthemeManager.h" />
+    <ClInclude Include="src\EaglesShaderCallbacks.h" />
+    <ClInclude Include="src\EnvironmentManager.h" />
+    <ClInclude Include="src\IDManager.h" />
+    <ClInclude Include="src\IEnvironemtEvent.h" />
+    <ClInclude Include="src\Sun.h" />
+    <ClInclude Include="src\userDefinedShaders.h" />
+    <ClInclude Include="src\IEaglesManager.h" />
+    <ClInclude Include="..\mrayWinApp\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrams\BaseDiagram.EAP" />
+    <None Include="..\mrayWinApp\EngineSplash.bmp" />
+    <None Include="..\mrayWinApp\EngineSplash_mask.bmp" />
+    <None Include="icon.ico" />
+    <None Include="..\mrayWinApp\simpleLogo.bmp" />
+    <None Include="..\mrayWinApp\stop-error.bmp" />
+    <None Include="Configure.stg" />
+    <None Include="Log.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="log.txt" />
+    <None Include="Resources_d.stg" />
+    <None Include="SearchPath.stg" />
+    <None Include="Assets\shaders\BBShader.cg" />
+    <None Include="Assets\shaders\BFinal.cg" />
+    <None Include="Assets\shaders\building.cg" />
+    <None Include="Assets\shaders\depthShader.cg" />
+    <None Include="Assets\shaders\Dither.cg" />
+    <None Include="Assets\shaders\GameMaterials.material" />
+    <None Include="Assets\shaders\GlareFinal.cg" />
+    <None Include="Assets\shaders\grayscale.cg" />
+    <None Include="Assets\shaders\GUI.cg" />
+    <None Include="Assets\shaders\HBlur.cg" />
+    <None Include="Assets\shaders\InGamePP.cg" />
+    <None Include="Assets\shaders\Luminance.cg" />
+    <None Include="Assets\shaders\phong.cg" />
+    <None Include="Assets\shaders\Reflection.cg" />
+    <None Include="Assets\shaders\skyBox.cg" />
+    <None Include="Assets\shaders\splash.cg" />
+    <None Include="Assets\shaders\Terrain.cg" />
+    <None Include="Assets\shaders\TreeShader.cg" />
+    <None Include="Assets\shaders\VBlur.cg" />
+    <None Include="Assets\shaders\Water.cg" />
+    <None Include="Assets\levels\levelTemplate.xml" />
+    <None Include="Assets\levels\testLevel.xml" />
+    <None Include="Assets\GUI\GameMenuOverlay.xml" />
+    <None Include="Assets\GUI\GameUIOverlay.xml" />
+    <None Include="Assets\GUI\LoadingOverlay.xml" />
+    <None Include="Assets\GUI\MenuOverlay.xml" />
+    <None Include="LevelSchema.xsx">
+      <DependentUpon>LevelSchema.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EaglesResource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="LevelSchema.xsd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Xsd>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

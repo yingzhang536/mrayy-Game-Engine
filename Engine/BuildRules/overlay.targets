@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="Overlay">
+      <Targets>_Overlay</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="Overlay"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_Overlay"
+    BeforeTargets="$(OverlayBeforeTargets)"
+    AfterTargets="$(OverlayAfterTargets)"
+    Condition="'@(Overlay)' != ''"
+    DependsOnTargets="$(OverlayDependsOn);ComputeOverlayOutput"
+    Outputs="%(Overlay.Outputs)"
+    Inputs="%(Overlay.Identity);%(Overlay.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <Overlay
+        Remove="@(Overlay)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <Overlay_tlog
+        Include="%(Overlay.Outputs)"
+        Condition="'%(Overlay.Outputs)' != '' and '%(Overlay.ExcludedFromBuild)' != 'true'">
+        <Source>@(Overlay, '|')</Source>
+      </Overlay_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(Overlay.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(Overlay_tlog)' != '' and '%(Overlay_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(Overlay_tlog.Source);@(Overlay_tlog-&gt;'%(Fullpath)')" />
+    <Overlay
+      Condition="'@(Overlay)' != '' and '%(Overlay.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(Overlay.CommandLineTemplate)"
+      AdditionalOptions="%(Overlay.AdditionalOptions)"
+      Inputs="%(Overlay.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeOverlayOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeOverlayOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeOverlayOutput"
+    Condition="'@(Overlay)' != ''">
+    <ItemGroup>
+      <OverlayDirsToMake
+        Condition="'@(Overlay)' != '' and '%(Overlay.ExcludedFromBuild)' != 'true'"
+        Include="%(Overlay.Outputs)" />
+      <Link
+        Include="%(OverlayDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(OverlayDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(OverlayDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(OverlayDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>

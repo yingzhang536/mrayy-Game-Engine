@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="OverlaySchema" targetNamespace="http://tempuri.org/OverlaySchema.xsd" elementFormDefault="qualified" xmlns="http://tempuri.org/OverlaySchema.xsd" xmlns:mstns="http://tempuri.org/OverlaySchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:group name="Element">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="type" type="xs:string" />
+      <xs:element name="pos" type="xs:string" />
+      <xs:element name="size" type="xs:string" />
+      <xs:element name="Dock" type="xs:string" />
+      <xs:element name="Color" type="xs:string" />
+      <xs:element name="Font" type="xs:string" />
+      <xs:element name="FontColor" type="xs:string" />
+      <xs:element name="FontSize" type="xs:string" />
+      <xs:element name="FontAlignment" type="xs:string" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="Overlay">
+    <xs:sequence>
+      <xs:group ref="Element" />
+      <xs:element name="Name" type="xs:string" />
+    </xs:sequence>
+  </xs:group>
+</xs:schema>

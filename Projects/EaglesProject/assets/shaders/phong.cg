@@ -1,0 +1,105 @@
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+   float4 lightDir: TEXCOORD1;
+   float3 norm: TEXCOORD2;
+   float3 halfVect: TEXCOORD3;
+   float3 Reflect: TEXCOORD5;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, 
+				  float2 texCoord: TEXCOORD0,
+				  float3 normal: NORMAL,
+				  float3 binormal: BINORMAL,
+				  float3 tangent: TANGENT,
+				//uniform float4x4 WorldViewProjMat,
+				uniform float4x4 WorldMat,
+				uniform float4x4 ViewMat,
+				uniform float4x4 ProjMat,
+				uniform float3 ViewPos,
+				uniform float3 Light0Pos) 
+{
+	VS_OUTPUT Out;
+
+	float4x4 wvp=mul(ViewMat,ProjMat);
+	wvp=mul(WorldMat,wvp);
+	Out.Pos=mul(Pos,wvp);
+	Out.texCoord=texCoord;
+	
+	float4 wpos=mul(Pos,WorldMat);
+	
+	Out.norm=mul(normal,(float3x3)WorldMat);;
+	
+	float4 ldir;
+	ldir.xyz=Light0Pos-wpos.xyz;
+	float dist=length(ldir.xyz);
+	ldir.xyz/=dist;
+	ldir.w=1;
+	
+	float3 eyeVect=normalize(ViewPos-wpos.xyz);
+	Out.halfVect=normalize(ldir.xyz+eyeVect.xyz);
+	
+	Out.lightDir=ldir;
+	
+// 	float3x3 tangentSpace;
+// 	tangentSpace[0]=tangent;
+// 	tangentSpace[1]=binormal;
+// 	tangentSpace[2]=normal;
+	
+// 	tangentSpace=mul(tangentSpace,(float3x3)WorldMat);
+// 	Out.halfVect=mul(tangentSpace,Out.halfVect);
+// 	Out.lightDir=float4(mul(tangentSpace,ldir.xyz),ldir.w);
+
+ 	Out.Reflect=-reflect(eyeVect,Out.norm);
+	
+	return Out;
+}
+
+//////////////////////////////////
+
+float4 softDiffuse(float3 normal,float4 lcolor,float4 ldir)
+{
+	float ndl=clamp(dot(normal,ldir.xyz),0.0f,1.0f);
+	
+	return (ndl)*lcolor*ldir.w;
+}
+float specular(float3 normal,float3 halfVect,float4 lcolor)
+{
+	float ndl=dot(normal,halfVect);
+	float specAttn=pow(clamp(ndl,0,1),16);
+	return specAttn*lcolor;
+}
+
+
+float4 main_fp(float2 texCoord: TEXCOORD0, 
+				float4 lightDir:TEXCOORD1,
+				float3 norm:TEXCOORD2,
+				float3 halfVect: TEXCOORD3,
+				float3 Reflect: TEXCOORD5,
+				uniform float4 Light0Diff,
+				uniform sampler baseTex,
+				uniform sampler specTex,
+				uniform sampler bumpTex,
+				uniform samplerCUBE envTex) : COLOR 
+{
+
+
+	float4 specC=tex2D(specTex,texCoord);
+	//float4 normal=tex2D(bumpTex,texCoord)*2-1;
+	float4 base=tex2D(baseTex,texCoord);
+	float3 normal=normalize(norm);
+	
+	lightDir.xyz=normalize(lightDir.xyz);
+	
+	
+	halfVect=normalize(halfVect);
+	float4 diff=softDiffuse(normal,Light0Diff,lightDir);
+	float spec=specular(normal,halfVect,Light0Diff);
+	float kd=0.6;
+	
+	float4 envColor=texCUBE(envTex,Reflect);
+	
+	return base*(0.4+diff*kd+specC*spec*8)+envColor*0.3;
+
+}

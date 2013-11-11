@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(Lua_pkgBeforeTargets)' == '' and '$(Lua_pkgAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <Lua_pkgBeforeTargets>Midl</Lua_pkgBeforeTargets>
+    <Lua_pkgAfterTargets>CustomBuild</Lua_pkgAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Lua_pkgDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(Lua_pkgDependsOn)</Lua_pkgDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Lua_pkg>
+      <CommandLineTemplate>..\..\bin\release\tolua++Bin.exe -o %(RootDir)%(Directory)%(Filename)_pkg.cpp %(FullPath)</CommandLineTemplate>
+      <Outputs>%(RootDir)%(Directory)%(Filename)_pkg.cpp</Outputs>
+      <ExecutionDescription>Compiling : %(Filename)_pkg</ExecutionDescription>
+    </Lua_pkg>
+  </ItemDefinitionGroup>
+</Project>

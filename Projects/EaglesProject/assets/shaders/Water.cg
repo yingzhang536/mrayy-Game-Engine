@@ -1,0 +1,96 @@
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float4 texCoord: TEXCOORD0;
+   
+   float2 bump0: TEXCOORD1;
+   float2 bump1: TEXCOORD2;
+   
+   float3 eyeVec: TEXCOORD3;
+   
+   float fogExponent: TEXCOORD4;
+};
+
+VS_OUTPUT main_vp(	float4 Pos: POSITION, 
+					float2 texCoord: TEXCOORD0,
+					uniform float Time,
+					uniform float4x4 WorldMat,
+					uniform float4x4 ViewMat,
+					uniform float4x4 ProjMat,
+					uniform float3 ViewPos) 
+{
+
+
+	float4 pos=Pos;
+    pos.y+=5*sin(Time*2+pos.x*200+20*pos.z);
+//     pos.x+=ViewPos.x;
+//     pos.z+=ViewPos.z;
+    
+	float4 wpos=mul(pos,WorldMat);
+	
+	float2 bumpSpeed=float2(0.04,-0.01);
+	float2 texScale=float2(50,40);
+	VS_OUTPUT Out;
+	
+	float4x4 wvp=mul(ViewMat,ProjMat);
+	wvp=mul(WorldMat,wvp);
+	
+	Out.Pos=mul(pos,wvp);
+	Out.eyeVec=normalize(ViewPos-wpos.xyz);
+	
+	float fogDistance  = max(0,length(ViewPos-Pos.xyz)-200);
+	
+	Out.fogExponent=fogDistance*0.001;
+	
+	
+	float t=fmod(Time,100.0f);	
+	Out.texCoord=Pos;
+	
+	Out.bump0.xy=texCoord*texScale+t*bumpSpeed;
+	Out.bump1.xy=texCoord*texScale-t*bumpSpeed*0.5;
+	
+	return Out;
+}
+
+//////////////////////////////////
+
+
+float4 main_fp(float4 texCoord: TEXCOORD0, 
+				float2 bump0: TEXCOORD1, 
+				float2 bump1: TEXCOORD2, 
+				float3 eyeVec: TEXCOORD3,
+				float fogExponent: TEXCOORD4,
+				uniform sampler bumpTex,
+				uniform samplerCUBE envTex) : COLOR 
+{
+	float fogFactor   = exp2(-abs(fogExponent));
+
+	float4 reflectionColor=float4(1,1,1,1);
+	float fresnelBias=0.34;
+	float reflectionAmount=0.9;
+	float waterAmount=0.5;
+
+	float4 t0=2*tex2D(bumpTex,bump0)-1;
+	float4 t1=2*tex2D(bumpTex,bump1)-1;
+	
+	
+	float3 N=(t0.xyz+t1.xyz)*0.5;
+	
+	
+	float3 E=normalize(eyeVec);
+	
+	float3 R=reflect(-E,N);
+	float targetCol = 0.3;
+	
+	float4 reflection=texCUBE(envTex,R);
+	
+	float edn=max(abs(dot(E,N)),0);
+	float facing=1-edn;
+	float fresnel=fresnelBias+(1-fresnelBias)*pow(facing,5);
+	float4 waterColor=float4(0.4,0.9,1,0);
+	//return waterColor*edn;
+	
+	float4 outer=waterColor*waterAmount + reflectionColor*reflectionAmount*fresnel;
+	outer.a=1;
+	return lerp( float4(0.4,0.7,0.9,1),outer,fogFactor);;
+}

@@ -1,0 +1,7 @@
+
+
+$#include "exportFunctions.h"
+
+void logWarn(const char*msg);
+void logErr(const char*msg);
+void logSucc(const char*msg);

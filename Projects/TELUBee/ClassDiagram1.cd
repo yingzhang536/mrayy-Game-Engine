@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="mray::Application" Collapsed="true">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAgBAAAAABAgQSgACAIAAAAAEEACgAIBAAGAAAAEAAA=</HashCode>
+      <FileName>Application.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::GUIMainMenu" Collapsed="true">
+    <Position X="15.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAACAAAgAQAAAAAAAA=</HashCode>
+      <FileName>GUIMainMenu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::GUILoginMenu" Collapsed="true">
+    <Position X="13.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAggAAAAAAAAAA=</HashCode>
+      <FileName>GUILoginMenu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::RenderingStateManager" Collapsed="true">
+    <Position X="5.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAABUgAACAAAEBBAAAAAAQSAAMgAIAAEEEACAA=</HashCode>
+      <FileName>RenderingStateManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::ApplicationMenuState" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAEBAAAAQAIAQcAAAAIAAAAEAAIA=</HashCode>
+      <FileName>ApplicationMenuState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::IApplicationState" Collapsed="true">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAQAGBAAAAAAAAQAAAAAIAAAAEAAEA=</HashCode>
+      <FileName>IApplicationState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::BaseAppState" Collapsed="true">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAEAAAAABAAAAAAAAABAAAAAAAAABCAAAAACAAAA=</HashCode>
+      <FileName>BaseAppState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::IRenderingState" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQIAAAAAAAAAAADAGAAAAAAEQAQhAAAAJgAQABABEA=</HashCode>
+      <FileName>IRenderingState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::CAppOnDoneCondition" Collapsed="true">
+    <Position X="17.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAEAAAAAAACAgAIAAAAAAAAA=</HashCode>
+      <FileName>ApplicationStateManager.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::COnDoneCondition" Collapsed="true">
+    <Position X="10.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAoAAAAAAAAEAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>RenderingStateManager.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::ApplicationStateManager" Collapsed="true">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAQAAgAAgAAAEAAAAAAAAQCAAICAAAAAAAACAA=</HashCode>
+      <FileName>ApplicationStateManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::RobotInfoManager" Collapsed="true">
+    <Position X="17.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAACAAAAAABAEAAACAAAAAAEAAAAAAAABAAAAAA=</HashCode>
+      <FileName>RobotInfoManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::IRobotInfoManagerListener" Collapsed="true">
+    <Position X="10.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAABAAA=</HashCode>
+      <FileName>RobotInfoManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::RobotInfoManagerImpl" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RobotInfoManager.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::ImageIntroItem" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBQAACAAACAAAAAAIAAAAAAAAAgAAAAAARAAAAAAEAA=</HashCode>
+      <FileName>IntroRenderingState.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::VideoIntroItem" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAASAAACAAAAAAIAAAAAAAAAAAAAAAEBACAAAAECA=</HashCode>
+      <FileName>IntroRenderingState.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::BaseRenderState" Collapsed="true">
+    <Position X="15.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAEAAAAEBAAAAAAAAABAAAAAAABAAAAAAAACAAAA=</HashCode>
+      <FileName>BaseRenderState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::ITransitionBlender" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAABIAQEAAAABAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ITransitionBlender.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::RenderBlender" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBQAAAAgAAAARIAAEAAAABACAUACAgAAAAEAAAAAAAA=</HashCode>
+      <FileName>RenderBlender.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::IntroItem" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAACCAAAAAgIAAAAAAAAAAAAAAAABACAAAAEAg=</HashCode>
+      <FileName>IntroRenderingState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::IntroRenderingState" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAAAAAAAAgAAAEAAQAAAQRAQAAAAAJgAAAAAAAA=</HashCode>
+      <FileName>IntroRenderingState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::InMapRenderState" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIBAQAgAAAAAAAAEACAAAAAQAQAAAAAJgAAAAACEA=</HashCode>
+      <FileName>InMapRenderState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::LoginScreenState" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAEAAAABEAAAQEAAAAAAQQIQIAAAAJgAoAEAAEA=</HashCode>
+      <FileName>LoginScreenState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::TBAppGlobals" Collapsed="true">
+    <Position X="12" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAgIQAIAAAAgAAAAAAAAAIAAAAAAAQAAAEAAEgAAA=</HashCode>
+      <FileName>TBAppGlobals.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::TBRobotInfo" Collapsed="true">
+    <Position X="13.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEEAAAAwAAAAAAAACAAIAAEAAAAAAAAABAAAAA=</HashCode>
+      <FileName>TBRobotInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::TBUserInfo" Collapsed="true">
+    <Position X="17.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAgAAgAAAAAAAAAAAFAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TBUserInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::TBRobotUserInfo" Collapsed="true">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAABCAAAAAAAAAAAQAAAAAAAAAAAIAA=</HashCode>
+      <FileName>TBRobotUserInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::TBee::DBConnectionCommands" Collapsed="true">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAIAAAACAAAAAAAAAAIICAgAAAAAAAAARJBAAAAA=</HashCode>
+      <FileName>DBConnectionCommands.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::xml::XMLElement" Collapsed="true">
+    <Position X="10.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\development\mrayengine\engine\mrayengine\include\xmlelement.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::GUI::GUIPageManager" Collapsed="true">
+    <Position X="17.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\development\mrayengine\plugins\mrayberkelium\guipagemanager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::db::ISQLConnection" Collapsed="true">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\development\mrayengine\engine\mrayengine\include\isqlconnection.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::db::ISQLResult" Collapsed="true">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\development\mrayengine\engine\mrayengine\include\isqlresult.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mray::db::ISQLManager" Collapsed="true">
+    <Position X="13.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\development\mrayengine\engine\mrayengine\include\isqlmanager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

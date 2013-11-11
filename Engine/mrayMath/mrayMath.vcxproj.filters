@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{e3a823df-241c-4326-9feb-ce0b92b23eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\Noise">
+      <UniqueIdentifier>{f7debec1-075d-4d46-9a1f-68c3549823c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\Curves">
+      <UniqueIdentifier>{1402f0b7-52f5-42a2-83bd-7d54863698f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\Jacobian">
+      <UniqueIdentifier>{9f519e64-4319-41a6-a212-b2e1cf7c846c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="advMath.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Box3D.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtrudedPolygon.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericMatrix.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="line2d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="line3d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix3x3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix4x4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="MinMaxPair.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="mMath.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="point2d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="point3d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Point4d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon2D.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="quaternion.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="randomizer.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray3d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle3d.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Fractal.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="FractalTypes.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise1D.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise2D.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise3D.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="SeamlessNoise.h">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="BSplineCurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="cbeziercurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="CCatmullCurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpline.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="ICurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="mCurves.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="NatCubicCurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionSpline.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="IJacobian.h">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClInclude>
+    <ClInclude Include="PsuedoJacobian.h">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClInclude>
+    <ClInclude Include="TJacobian.h">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClInclude>
+    <ClInclude Include="FastFourierTransform.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearCurve.h">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="box3d.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrudedPolygon.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericMatrix.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="line2d.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtil.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="mMath.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon2D.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="quaternion.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Randomizer.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle3d.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise1D.cpp">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise2D.cpp">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise3D.cpp">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="SeamlessNoise.cpp">
+      <Filter>Source Files\math\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaternionSpline.cpp">
+      <Filter>Source Files\math\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="IJacobian.cpp">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClCompile>
+    <ClCompile Include="PsuedoJacobian.cpp">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClCompile>
+    <ClCompile Include="TJacobian.cpp">
+      <Filter>Source Files\math\Jacobian</Filter>
+    </ClCompile>
+    <ClCompile Include="FastFourierTransform.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

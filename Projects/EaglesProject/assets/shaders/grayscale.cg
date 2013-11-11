@@ -1,0 +1,76 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, float2 texCoord: TEXCOORD0,
+				uniform float2 viewPortSize) {
+   VS_OUTPUT Out;
+   Out.Pos.xy=2*sign(Pos.xy)-1;
+   Out.Pos.z = 1.0;
+   Out.Pos.w = 1.0;
+//    
+//  	Out.texCoord.x = 0.5 * (1 + Out.Pos.x + 1.0 / viewPortSize.x);
+//  	Out.texCoord.y = 0.5 * (1 + Out.Pos.y + 1.0 / viewPortSize.y);
+   
+    Out.texCoord=texCoord;
+    Out.texCoord.y=1-Out.texCoord.y;
+   return Out;
+}
+
+const float2 samples[8] = {
+    {-1, -1},
+    {0, -1},
+    {1, -1},
+    {-1,  0},
+    {1,  0},
+    {-1,  1},
+    {0,  1},
+    {1,  1}
+};
+
+const float threshold=0.026;
+
+float4 main_fp(float2 texCoord: TEXCOORD0,
+				uniform sampler rtColor) : COLOR {
+	
+	
+   float4 sample = tex2D(rtColor, texCoord);
+   
+//    float c=dot(sample.xyz,float3(0.5,0.3,0.2));   
+// 
+// 	return float4(c,c,c,1);
+
+	float sampleDist=1.0f/512;
+   // Neighborhood average
+   float4 avg = sample;
+   for (int i = 0; i < 8; i++){
+      avg += tex2D(rtColor, texCoord + sampleDist * samples[i]);
+   }
+   avg /= 9;
+
+   // If the difference between the average and the sample is
+   // large, assume we'll assume it's noise.
+   float4 diff = abs(sample - avg);
+   float sel = dot(diff, 0.25) > threshold;
+
+	return avg;
+   /*
+   float4 FinalColor = lerp(sample, avg, sel);
+   
+   float c=dot(FinalColor.rgb,float3(0.5,0.3,0.2));   
+
+	return float4(c,c,c,1);*/
+	
+}
+
+
+
+
+
+
+
+
+

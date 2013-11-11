@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{59cfb1cb-6171-4c1d-aee3-4dc257fa7119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Items">
+      <UniqueIdentifier>{54db2f05-7c2d-461d-9450-848d7c439c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Effector">
+      <UniqueIdentifier>{c3eee921-af0c-41d4-bdfc-a56f7b1378fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Components">
+      <UniqueIdentifier>{ae98fb75-e916-4732-a835-5138be0a5e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\NewItems">
+      <UniqueIdentifier>{f05d5d0e-de2f-457c-8a7e-b2683a5ebe19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\NewItems\PropertyGrid">
+      <UniqueIdentifier>{13de39ac-6fcc-4e14-8844-f52221a9bd7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CompileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DraggableItem.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementFactoryDef.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIManager.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIWidget.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITextField.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIToolBar.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButtonComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICheckBoxComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIComboListComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIEditBoxComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIGroupComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIListBoxComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISliderbarComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIStaticTextComponent.h">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICatagoryPanel.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISliderBar.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIStackPanel.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPropCheckBoxGridItem.h">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPropComboListGridItem.h">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPropEditBoxGridItem.h">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPropGridItem.h">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPropGridStack.h">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIPaneElement.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITreeBox.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mrayGUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DraggableItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIManager.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="RTTI_Objects.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIAnimatedSprite.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="guibenchmark.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICellSprite.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICircularEffector.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIConsole.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIContextMenu.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICornerFrame.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIDebug.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIDefaultElements.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIDummy.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="guifilebox.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIGrid.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="guihistogram.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILoadingBar.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILogger.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIMenu.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIMessage.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIParticle.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIParticleSystem.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRadioButton.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRotImage.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISceneNode.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISlider.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITabPanel.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITextField.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIToolBar.cpp">
+      <Filter>Source Files\GUI\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIAnchorEffector.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIEffector.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIEffectorFactory.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIFadeEffector.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPercentAnchorEff.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPercentSizeEffector.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITranslateEffector.cpp">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButtonComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICheckBoxComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIComboListComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIEditBoxComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIGroupComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIListBoxComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISliderbarComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIStaticTextComponent.cpp">
+      <Filter>Source Files\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButton.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICatagoryPanel.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICheckBox.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIComboList.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIEditBox.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIListBox.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPanel.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropertyGrid.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISliderBar.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIStackPanel.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIStaticImage.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIStaticText.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIWindow.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropCheckBoxGridItem.cpp">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropComboListGridItem.cpp">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropEditBoxGridItem.cpp">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropGridItem.cpp">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIPropGridStack.cpp">
+      <Filter>Source Files\GUI\NewItems\PropertyGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElementContainer.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITreeBox.cpp">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="GUIElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIElementContainer.h">
+      <Filter>Source Files\GUI</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIAnchorEffector.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIAnimatedSprite.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIBenchMark.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUICellSprite.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUICircularEffector.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIConsole.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIContextMenu.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUICornerFrame.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIDebug.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIDefaultElements.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIDummy.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="guifilebox.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIGrid.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIHistogram.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUILoadingBar.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUILogger.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIMenu.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIMessage.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIParticle.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIParticleSystem.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIRadioButton.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIRotImage.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUISceneNode.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUISlider.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUITabPanel.h">
+      <Filter>Source Files\GUI\Items</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIEffector.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIEffectorFactory.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIFadeEffector.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIPercentAnchorEff.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIPercentSizeEffector.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUITranslateEffector.h">
+      <Filter>Source Files\GUI\Effector</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIButton.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUICheckBox.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIComboList.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIEditBox.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIListBox.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIPanel.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIPropertyGrid.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIStaticImage.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIStaticText.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GUIWindow.h">
+      <Filter>Source Files\GUI\NewItems</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

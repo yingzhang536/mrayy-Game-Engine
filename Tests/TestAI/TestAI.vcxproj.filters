@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="pkg">
+      <UniqueIdentifier>{25563f55-c177-43ed-8889-33a3a4269bf1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mrayWinApp\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mrayCEGUItest\Engine\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoCamera.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISceneElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessing.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketTest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stackDump.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exportFunctions.h">
+      <Filter>pkg</Filter>
+    </ClInclude>
+    <ClInclude Include="luaFunc.h">
+      <Filter>pkg</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\mrayCEGUItest\Engine\Engine.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\mrayWinApp\mrayEngineResource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\mrayWinApp\EngineSplash.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\EngineSplash_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayEngine\icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayEngine\icon2.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\simpleLogo.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\stop-error.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="log.txt">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\dll\Data\scripts\mainscript.lua">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stackDump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exportFunctions.cpp">
+      <Filter>pkg</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>pkg</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="scene.pkg">
+      <Filter>pkg</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

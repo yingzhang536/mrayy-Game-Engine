@@ -1,0 +1,50 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, uniform float2 viewPortSize, float2 texCoord: TEXCOORD0) {
+	VS_OUTPUT Out;
+	Out.Pos.xy=2*sign(Pos.xy)-1;
+	Out.Pos.z = 1.0;
+	Out.Pos.w = 1.0;
+
+    Out.texCoord=texCoord;
+    Out.texCoord.y=1-Out.texCoord.y;
+    
+// 	Out.texScaler.x=1.0 / viewPortSize.x;
+// 	Out.texScaler.y=1.0 / viewPortSize.y;
+   
+   return Out;
+}
+
+
+
+float4 main_fp(float2 texCoord: TEXCOORD0,
+				uniform float2 viewPortSize,
+				uniform float Time,
+				uniform float noiseFactor,
+				uniform sampler tex0,
+				uniform sampler tex1) : COLOR 
+
+{
+	float texScaler=1.0 / viewPortSize.x;
+	float2 tc=texCoord;
+	tc.x+=50*sin(20*Time+texCoord.y*20)*noiseFactor*texScaler;
+	
+	float4 color=tex2D(tex0,tc);//+tex2D(tex1,tc*10+float2(Time,Time*0.5))*0.2;
+	
+	return color;
+	
+}
+
+
+
+
+
+
+
+
+

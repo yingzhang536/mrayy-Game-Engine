@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Unicode|Win32">
+      <Configuration>Debug_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode|Win32">
+      <Configuration>Release_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{66A2F945-632D-4B6F-8D8E-68660CA99ED0}</ProjectGuid>
+    <RootNamespace>mrayAI</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\Lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP4 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\..\Plugins\mrayRBS;..\..\Plugins\mrayFuzzy;..\..\Plugins\mrayGA;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MRAY_AI_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayMath.lib;mrayRBS.lib;mrayFuzzy.lib;mrayGA.lib;mrayEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\..\Plugins\mrayRBS;..\..\Plugins\mrayFuzzy;..\..\Plugins\mrayGA;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MRAY_AI_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\mrayRBS;..\mrayFuzzy;..\mrayGA;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MRAY_AI_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayMath_d.lib;mrayRBSU_d.lib;mrayFuzzyU_d.lib;mrayGAU_d.lib;mrayEngineU_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\mrayEngine\include;..\mrayMath;..\..\Plugins\mrayRBS;..\..\Plugins\mrayFuzzy;..\..\Plugins\mrayGA;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MRAY_AI_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)$(TargetName)U.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h" />
+    <ClInclude Include="mrayAI.h" />
+    <ClInclude Include="AIActor.h" />
+    <ClInclude Include="AIAgent.h" />
+    <ClInclude Include="AIDefaultGoalsTypes.h" />
+    <ClInclude Include="AIIntializing.h" />
+    <ClInclude Include="AIMessages.h" />
+    <ClInclude Include="AIPrediction.h" />
+    <ClInclude Include="AISystem.h" />
+    <ClInclude Include="AITypeDef.h" />
+    <ClInclude Include="AIPhysicsProxy.h" />
+    <ClInclude Include="IAIPhysics.h" />
+    <ClInclude Include="IDynamicObstacleSolver.h" />
+    <ClInclude Include="SteerController.h" />
+    <CustomBuildStep Include="ArriveForce.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="FleeForce.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="ISteerForce.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="PursuitForce.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="SeekForce.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="ForceFieldDOS.h" />
+    <ClInclude Include="FuzzyRaycastDOS.h" />
+    <ClInclude Include="LookAheadDOS.h" />
+    <ClInclude Include="IGraphLink.h" />
+    <ClInclude Include="IGraphNode.h" />
+    <ClInclude Include="INavWorld.h" />
+    <ClInclude Include="INavWorldNode.h" />
+    <ClInclude Include="IWorldVisualizer.h" />
+    <ClInclude Include="TacticalPointManager.h" />
+    <ClInclude Include="Waypoint.h" />
+    <ClInclude Include="WaypointPath.h" />
+    <ClInclude Include="NavAStarSearch.h" />
+    <ClInclude Include="NavGraphLink.h" />
+    <ClInclude Include="NavGraphNode.h" />
+    <ClInclude Include="NavHeuristic.h" />
+    <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="NavMeshGrid.h" />
+    <ClInclude Include="NavMeshHeuristic.h" />
+    <ClInclude Include="NavMeshPolygon.h" />
+    <ClInclude Include="NavMeshVisualizer.h" />
+    <ClInclude Include="ICostFunction.h" />
+    <ClInclude Include="IGraphSearch.h" />
+    <ClInclude Include="GoalFactoryManager.h" />
+    <ClInclude Include="GoalPipe.h" />
+    <ClInclude Include="GoalScenario.h" />
+    <ClInclude Include="GoalThinking.h" />
+    <ClInclude Include="IGoal.h" />
+    <ClInclude Include="IGoalEvaluator.h" />
+    <ClInclude Include="IGoalFactory.h" />
+    <ClInclude Include="Thinking.h" />
+    <ClInclude Include="AIMovmentTracker.h" />
+    <ClInclude Include="AIRenderDevice.h" />
+    <ClInclude Include="AIVisualizeRenderNode.h" />
+    <ClInclude Include="IRenderDevice.h" />
+    <ClInclude Include="IVisualizable.h" />
+    <CustomBuildStep Include="WaypointSceneNode.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="ActorMemory.h" />
+    <ClInclude Include="AgentWorldSensor.h" />
+    <ClInclude Include="IActorQuery.h" />
+    <ClInclude Include="IPerceptionSensor.h" />
+    <ClInclude Include="MemoryTicket.h" />
+    <ClInclude Include="SensorActuator.h" />
+    <ClInclude Include="SensorSet.h" />
+    <ClInclude Include="SoundMemTick.h" />
+    <ClInclude Include="SymbolMemory.h" />
+    <ClInclude Include="VisionMemTick.h" />
+    <ClInclude Include="VisionSensor.h" />
+    <ClInclude Include="WorldSensor.h" />
+    <ClInclude Include="GridSpacePartition.h" />
+    <ClInclude Include="IAISpacePartition.h" />
+    <ClInclude Include="ITrigger.h" />
+    <ClInclude Include="ShapedTrigger.h" />
+    <ClInclude Include="TriggerSystem.h" />
+    <ClInclude Include="CircleTriggerShape.h" />
+    <ClInclude Include="CompoundTriggerShape.h" />
+    <ClInclude Include="ITriggerShape.h" />
+    <ClInclude Include="Path.h" />
+    <ClInclude Include="PathEdge.h" />
+    <ClInclude Include="PathFindingManager.h" />
+    <ClInclude Include="PathFindPlanner.h" />
+    <ClInclude Include="MessageDispatcher.h" />
+    <ClInclude Include="AIArchitectParser.h" />
+    <ClInclude Include="AIComponentTypes.h" />
+    <ClInclude Include="IAIArchitect.h" />
+    <ClInclude Include="IAIComponent.h" />
+    <ClInclude Include="GenericArchitect.h" />
+    <ClInclude Include="RBSComponent.h" />
+    <ClInclude Include="FiniteStateMachine.h" />
+    <ClInclude Include="AIDesire.h" />
+    <ClInclude Include="AttributesScheme.h" />
+    <ClInclude Include="DecisionAttributes.h" />
+    <ClInclude Include="DecisionTree.h" />
+    <ClInclude Include="DecisionTreeNode.h" />
+    <ClInclude Include="IDecisionAttribute.h" />
+    <ClInclude Include="TrainingDataSet.h" />
+    <ClInclude Include="AgentObstacle.h" />
+    <ClInclude Include="AIObstacleCircle.h" />
+    <ClInclude Include="AIObstacleRectangle.h" />
+    <ClInclude Include="IAIObstacleShape.h" />
+    <ClInclude Include="AIFuzzyComponent.h" />
+    <ClInclude Include="FuzzySystemGA.h" />
+    <ClInclude Include="BHRandomNode.h" />
+    <ClInclude Include="BHRepeatDecorator.h" />
+    <ClInclude Include="BHSelectorNode.h" />
+    <ClInclude Include="BHSequenceNode.h" />
+    <ClInclude Include="IBehaviorTree.h" />
+    <ClInclude Include="IBHActionNode.h" />
+    <ClInclude Include="IBHDecorator.h" />
+    <ClInclude Include="IBHNode.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AIAgent.cpp" />
+    <ClCompile Include="AIIntializing.cpp" />
+    <ClCompile Include="AIPrediction.cpp" />
+    <ClCompile Include="AISystem.cpp" />
+    <ClCompile Include="RTTI_OBJECTS.cpp" />
+    <ClCompile Include="AIPhysicsProxy.cpp" />
+    <ClCompile Include="IAIPhysics.cpp" />
+    <ClCompile Include="SteerController.cpp" />
+    <ClCompile Include="ArriveForce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="FleeForce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ISteerForce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="PursuitForce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="SeekForce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ForceFieldDOS.cpp" />
+    <ClCompile Include="FuzzyRaycastDOS.cpp" />
+    <ClCompile Include="LookAheadDOS.cpp" />
+    <ClCompile Include="IGraphLink.cpp" />
+    <ClCompile Include="TacticalPointManager.cpp" />
+    <ClCompile Include="Waypoint.cpp" />
+    <ClCompile Include="WaypointPath.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="NavAStarSearch.cpp" />
+    <ClCompile Include="NavGraphLink.cpp" />
+    <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="NavMeshGrid.cpp" />
+    <ClCompile Include="NavMeshPolygon.cpp" />
+    <ClCompile Include="NavMeshVisualizer.cpp" />
+    <ClCompile Include="GoalFactoryManager.cpp" />
+    <ClCompile Include="GoalPipe.cpp" />
+    <ClCompile Include="GoalScenario.cpp" />
+    <ClCompile Include="GoalThinking.cpp" />
+    <ClCompile Include="IGoal.cpp" />
+    <ClCompile Include="Thinking.cpp" />
+    <ClCompile Include="AIMovmentTracker.cpp" />
+    <ClCompile Include="AIRenderDevice.cpp" />
+    <ClCompile Include="AIVisualizeRenderNode.cpp" />
+    <ClCompile Include="WaypointSceneNode.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ActorMemory.cpp" />
+    <ClCompile Include="AgentWorldSensor.cpp" />
+    <ClCompile Include="SensorActuator.cpp" />
+    <ClCompile Include="SensorSet.cpp" />
+    <ClCompile Include="SymbolMemory.cpp" />
+    <ClCompile Include="VisionSensor.cpp" />
+    <ClCompile Include="WorldSensor.cpp" />
+    <ClCompile Include="GridSpacePartition.cpp" />
+    <ClCompile Include="ShapedTrigger.cpp" />
+    <ClCompile Include="TriggerSystem.cpp" />
+    <ClCompile Include="Path.cpp" />
+    <ClCompile Include="PathFindingManager.cpp" />
+    <ClCompile Include="PathFindPlanner.cpp" />
+    <ClCompile Include="MessageDispatcher.cpp" />
+    <ClCompile Include="AIArchitectParser.cpp" />
+    <ClCompile Include="AIComponentTypes.cpp" />
+    <ClCompile Include="IAIArchitect.cpp" />
+    <ClCompile Include="IAIComponent.cpp" />
+    <ClCompile Include="GenericArchitect.cpp" />
+    <ClCompile Include="RBSComponent.cpp" />
+    <ClCompile Include="FiniteStateMachine.cpp" />
+    <ClCompile Include="AIDesire.cpp" />
+    <ClCompile Include="AttributesScheme.cpp" />
+    <ClCompile Include="DecisionAttributes.cpp" />
+    <ClCompile Include="DecisionTree.cpp" />
+    <ClCompile Include="DecisionTreeNode.cpp" />
+    <ClCompile Include="TrainingDataSet.cpp" />
+    <ClCompile Include="AgentObstacle.cpp" />
+    <ClCompile Include="AIObstacleCircle.cpp" />
+    <ClCompile Include="AIObstacleRectangle.cpp" />
+    <ClCompile Include="AIFuzzyComponent.cpp" />
+    <ClCompile Include="FuzzySystemGA.cpp" />
+    <ClCompile Include="BHSelectorNode.cpp" />
+    <ClCompile Include="BHSequenceNode.cpp" />
+    <ClCompile Include="IBehaviorTree.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Plugins\mrayFuzzy\mrayFuzzy.vcxproj">
+      <Project>{465e73e4-03b2-4967-b7ab-166c2955a947}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\mrayGA\mrayGA.vcxproj">
+      <Project>{9ad2b2d9-f830-41f1-922f-ae97390a547c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\mrayRBS\mrayRBS.vcxproj">
+      <Project>{35f43118-7df5-4feb-873c-f5d8fd1f8817}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\mrayEngine\mrayEngine.vcxproj">
+      <Project>{c5f7308a-755f-4872-91e6-77779103e0e3}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

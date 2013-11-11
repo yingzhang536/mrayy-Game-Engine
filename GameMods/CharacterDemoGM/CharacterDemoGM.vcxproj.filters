@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Actions">
+      <UniqueIdentifier>{6c81b122-a7f0-4f75-81d0-5b3ed63b019d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Architectures">
+      <UniqueIdentifier>{c69a6fa4-1b3e-4f40-8698-5a3971314e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physicalModel">
+      <UniqueIdentifier>{6400059d-0575-43fe-835f-250292e424f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{339560da-5eaf-42a6-a4fb-f91104763c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Goals">
+      <UniqueIdentifier>{8081a207-bef1-45ee-94ce-f58f368d77fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CharacterDemoGM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraStartAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="CD_SelectTargetMain.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionModelAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="FoodAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstacleAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalCharacterAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalObjectAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionSurfaceAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotingObjectAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundAction.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="AICharacterArch.cpp">
+      <Filter>Source Files\Architectures</Filter>
+    </ClCompile>
+    <ClCompile Include="AIFoodArch.cpp">
+      <Filter>Source Files\Architectures</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGameArch.cpp">
+      <Filter>Source Files\Architectures</Filter>
+    </ClCompile>
+    <ClCompile Include="AIObstacleObject.cpp">
+      <Filter>Source Files\Architectures</Filter>
+    </ClCompile>
+    <ClCompile Include="CharControlerPM.cpp">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhCharacterPM.cpp">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalObject.cpp">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="SimplePhysics.cpp">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="AIListBoxRenderDevice.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CFood.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterCostFunction.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CHouse.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocationArrow.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalChatToFriend.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalFindFood.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalFindFriend.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalFollowPath.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalGoToObject.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalGoToPoint.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalHide.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalListenToUser.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalMakeChat.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalPlayAnimation.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalTraverseEdge.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalWait.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalWaitForChat.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoToInterstingPointEval.cpp">
+      <Filter>Source Files\Goals</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CharacterMessages.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraStartAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CD_SelectTargetMain.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionModelAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="FoodAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ObstacleAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalCharacterAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalObjectAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionSurfaceAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotingObjectAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundAction.h">
+      <Filter>Source Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="AICharacterArch.h">
+      <Filter>Source Files\Architectures</Filter>
+    </ClInclude>
+    <ClInclude Include="AIFoodArch.h">
+      <Filter>Source Files\Architectures</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGameArch.h">
+      <Filter>Source Files\Architectures</Filter>
+    </ClInclude>
+    <ClInclude Include="AIObstacleObject.h">
+      <Filter>Source Files\Architectures</Filter>
+    </ClInclude>
+    <ClInclude Include="EAgentType.h">
+      <Filter>Source Files\Architectures</Filter>
+    </ClInclude>
+    <ClInclude Include="CharControlerPM.h">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhCharacterPM.h">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalObject.h">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="SimplePhysics.h">
+      <Filter>Source Files\physicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="AIListBoxRenderDevice.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CFood.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterCostFunction.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterObject.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CHouse.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocationArrow.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalChatToFriend.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalFindFood.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalFindFriend.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalFollowPath.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalGoToObject.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalGoToPoint.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalHide.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalListenToUser.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalMakeChat.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalPlayAnimation.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalsTypeEnum.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalTraverseEdge.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalWait.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalWaitForChat.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoToInterstingPointEval.h">
+      <Filter>Source Files\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

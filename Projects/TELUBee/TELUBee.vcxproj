@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8B131C65-BA69-4973-A5F5-E7E845343ECC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TELUBee</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfAtl>false</UseOfAtl>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfAtl>false</UseOfAtl>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\Engine\BuildRules\overlay.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\Bin\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\Bin\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mrayOIS.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
+      <OptimizeReferences>false</OptimizeReferences>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mrayOIS.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="EngineSplash.bmp" />
+    <None Include="EngineSplash_mask.bmp" />
+    <None Include="icon.ico" />
+    <None Include="ReadMe.txt" />
+    <None Include="simpleLogo.bmp" />
+    <None Include="stop-error.bmp" />
+    <None Include="TELUBeeLogo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\VirtualTelesar\VTelesar5\resource.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="ApplicationStateManager.h" />
+    <ClInclude Include="BaseAppState.h" />
+    <ClInclude Include="BaseDataReceiver.h" />
+    <ClInclude Include="BaseRenderState.h" />
+    <ClInclude Include="CameraRenderingState.h" />
+    <ClInclude Include="CinematicController.h" />
+    <ClInclude Include="ConnectingToRobotScreen.h" />
+    <ClInclude Include="DBConnectionCommands.h" />
+    <ClInclude Include="DVISwitcherController.h" />
+    <ClInclude Include="DynamicMemoryStream.h" />
+    <ClInclude Include="GStreamVideoProvider.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="GUIBlinkingText.h" />
+    <ClInclude Include="GUIConnectingToRobot.h" />
+    <ClInclude Include="GUIDateElement.h" />
+    <ClInclude Include="GUILoadingElement.h" />
+    <ClInclude Include="GUILoginMenu.h" />
+    <ClInclude Include="GUIMainMenu.h" />
+    <ClInclude Include="GUIMapScreen.h" />
+    <ClInclude Include="GUIOculusDetect.h" />
+    <ClInclude Include="GUIOculusDetectImpl.h" />
+    <ClInclude Include="GUIRobotPanel.h" />
+    <ClInclude Include="GUIRobotPanelImpl.h" />
+    <ClInclude Include="HMDCameraRenderer.h" />
+    <ClInclude Include="HMDRobotRenderer.h" />
+    <ClInclude Include="IApplicationState.h" />
+    <ClInclude Include="IHMDRenderer.h" />
+    <ClInclude Include="IMapController.h" />
+    <ClInclude Include="IndicatorComponent.h" />
+    <ClInclude Include="InMapRenderState.h" />
+    <ClInclude Include="IRenderingState.h" />
+    <ClInclude Include="IRobotCommunicator.h" />
+    <ClInclude Include="ISerialPort.h" />
+    <ClInclude Include="ITransitionBlender.h" />
+    <ClInclude Include="IVideoProvider.h" />
+    <ClInclude Include="JoystickDefinitions.h" />
+    <ClInclude Include="JoystickMapController.h" />
+    <ClInclude Include="LocalRobotCommunicator.h" />
+    <ClInclude Include="LoginScreenState.h" />
+    <ClInclude Include="MapCamera.h" />
+    <ClInclude Include="MapConnection.h" />
+    <ClInclude Include="MapEntity.h" />
+    <ClInclude Include="MapMarker.h" />
+    <ClInclude Include="MapObject.h" />
+    <ClInclude Include="multicast.h" />
+    <ClInclude Include="NetworkMessage.h" />
+    <ClInclude Include="NullRenderState.h" />
+    <ClInclude Include="OculusDetectState.h" />
+    <ClInclude Include="ofGstUtilsWin32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="ofSerial.h" />
+    <ClInclude Include="OFSerialPort.h" />
+    <ClInclude Include="ofVideoPlayerGst.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="RemoteRobotCommunicator.h" />
+    <ClInclude Include="TBeeOptiTrackObject.h" />
+    <ClInclude Include="RenderBlender.h" />
+    <ClInclude Include="RenderingStateManager.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RobotInfoManager.h" />
+    <ClInclude Include="SeeThroughWindow.h" />
+    <ClInclude Include="shmem.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TBRobotInfo.h" />
+    <ClInclude Include="IntroRenderingState.h" />
+    <ClInclude Include="TBAppGlobals.h" />
+    <ClInclude Include="TBRobotUserInfo.h" />
+    <ClInclude Include="TBUserInfo.h" />
+    <ClInclude Include="telubee\shmem.h" />
+    <ClInclude Include="UDPDataReceiver.h" />
+    <ClInclude Include="TBSharedMemory.h" />
+    <ClInclude Include="UDPVideoGrabber.h" />
+    <ClInclude Include="UDPVideoProvider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="ApplicationStateManager.cpp" />
+    <ClCompile Include="BaseAppState.cpp" />
+    <ClCompile Include="BaseRenderState.cpp" />
+    <ClCompile Include="CameraRenderingState.cpp" />
+    <ClCompile Include="CinematicController.cpp" />
+    <ClCompile Include="ConnectingToRobotScreen.cpp" />
+    <ClCompile Include="DBConnectionCommands.cpp" />
+    <ClCompile Include="DVISwitcherController.cpp" />
+    <ClCompile Include="DynamicMemoryStream.cpp" />
+    <ClCompile Include="GStreamVideoProvider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GUIBlinkingText.cpp" />
+    <ClCompile Include="GUIDateElement.cpp" />
+    <ClCompile Include="GUILoadingElement.cpp" />
+    <ClCompile Include="GUIOculusDetectImpl.cpp" />
+    <ClCompile Include="GUIRobotPanelImpl.cpp" />
+    <ClCompile Include="HMDCameraRenderer.cpp" />
+    <ClCompile Include="HMDRobotRenderer.cpp" />
+    <ClCompile Include="IndicatorComponent.cpp" />
+    <ClCompile Include="InMapRenderState.cpp" />
+    <ClCompile Include="IRenderingState.cpp" />
+    <ClCompile Include="ISerialPort.cpp" />
+    <ClCompile Include="JoystickMapController.cpp" />
+    <ClCompile Include="LocalRobotCommunicator.cpp" />
+    <ClCompile Include="LoginScreenState.cpp" />
+    <ClCompile Include="MapConnection.cpp" />
+    <ClCompile Include="MapEntity.cpp" />
+    <ClCompile Include="MapMarker.cpp" />
+    <ClCompile Include="MapObject.cpp" />
+    <ClCompile Include="multicast.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="NetworkMessage.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="OculusDetectState.cpp" />
+    <ClCompile Include="ofGstUtilsWin32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ofSerial.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="OFSerialPort.cpp" />
+    <ClCompile Include="ofVideoPlayerGst.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="RemoteRobotCommunicator.cpp" />
+    <ClCompile Include="TBeeOptiTrackObject.cpp" />
+    <ClCompile Include="RenderBlender.cpp" />
+    <ClCompile Include="RenderingStateManager.cpp" />
+    <ClCompile Include="RobotInfoManager.cpp" />
+    <ClCompile Include="SeeThroughWindow.cpp" />
+    <ClCompile Include="shmem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TELUBee.cpp" />
+    <ClCompile Include="IntroRenderingState.cpp" />
+    <ClCompile Include="TBAppGlobals.cpp" />
+    <ClCompile Include="UDPDataReceiver.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="TBSharedMemory.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UDPVideoGrabber.cpp" />
+    <ClCompile Include="UDPVideoProvider.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TELUBee.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUILoginMenu.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMainMenu.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMapControls.gui">
+      <SubType>Designer</SubType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMapScreen.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIConnectingToRobot.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIOculusDetect.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIRobotControls.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIRobotPanel.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughMessage.gui" />
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughScreen.gui" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\Engine\BuildRules\overlay.targets" />
+  </ImportGroup>
+</Project>

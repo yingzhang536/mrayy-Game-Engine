@@ -1,0 +1,7 @@
+Settings{
+	Bits	"32"
+	Fullscreen	"False"
+	Multisample	"0"
+	Resolution	"800,600"
+	VSync	"False"
+}

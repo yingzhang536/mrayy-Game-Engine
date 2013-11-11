@@ -1,0 +1,46 @@
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+  // float2 texCoord: TEXCOORD0;
+   float3 eyeVect: TEXCOORD0;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, 
+				  //float2 texCoord: TEXCOORD0,
+				  uniform float3 ViewPos,
+				uniform float4x4 WorldMat,
+				uniform float4x4 ViewMat,
+				uniform float4x4 ProjMat) 
+{
+	VS_OUTPUT Out;	
+	
+	float4x4 wvp=mul(ViewMat,ProjMat);
+	wvp=mul(WorldMat,wvp);
+	
+	Out.Pos=mul(Pos,wvp);
+	
+	//Out.texCoord=texCoord*100;
+	
+	float4 wpos=mul(Pos,WorldMat);
+	Out.eyeVect=ViewPos-wpos.xyz;
+	
+	return Out;
+}
+
+//////////////////////////////////
+
+
+float4 main_fp(//float2 texCoord: TEXCOORD0,
+				float3 eyeVect: TEXCOORD0
+				//,uniform sampler tex
+				) : COLOR 
+{
+
+	//float4 base=tex2D(tex,texCoord);
+	float4 base=float4(1,0,0,0.6);
+		
+	float len=1-min(500.0f,length(eyeVect))/500.0f;
+	
+	return float4(base.xyz,base.a*len);
+
+}

@@ -1,0 +1,304 @@
+
+
+ global int $tf_aindex=0; 
+global string $tf_anames[]; 
+clear $tf_anames; 
+global string $tf_aframes[]; 
+clear $tf_aframes;
+print $tf_anames;  
+
+proc int bc_add() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	$tf_aindex++;
+ 	setParent RCL2;
+ 	$tf_anames[$tf_aindex]=`textField`;
+ 	$tf_aframes[$tf_aindex]=`textField`;
+ 	return 1; }
+proc int bc_remove() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+  	if($tf_aindex>0)
+ 	{
+ 		deleteUI $tf_anames[$tf_aindex];
+ 		deleteUI $tf_aframes[$tf_aindex];
+ 		text -l "" t_temp; deleteUI t_temp;
+ 		$tf_aindex--;
+ 	} 	return 1; }  
+proc int bc_load() 
+{
+ 	fileBrowserDialog -m 0 -fc "load_animlist" -an "load";
+ 	return 1; }  
+proc int bc_save() 
+{
+ 	fileBrowserDialog -m 1 -fc "save_animlist" -an "save";
+ 	return 1; 
+}
+proc int bc_browse() 
+{
+ 	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+ 	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+ 	textField -e -tx $filename tf_path;
+ 	return 1; 
+}  
+
+proc int load_animlist(string $filename, string $fileType) 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	while($tf_aindex>=0)
+ 	{
+ 		deleteUI $tf_anames[$tf_aindex];
+ 		deleteUI $tf_aframes[$tf_aindex];
+ 		text -l "" t_temp; deleteUI t_temp; 
+		$tf_aindex--;
+ 	}
+ 	$fileid=`fopen $filename "r"`;
+ 	setParent RCL2;
+ 	while(!`feof $fileid`)
+ 	{
+ 		$tf_aindex++;
+ 		$fname=`fgetline $fileid`;
+ 		$tf_anames[$tf_aindex]=`textField -tx $fname`; 
+		$fframes=`fgetline $fileid`;
+ 		$tf_aframes[$tf_aindex]=`textField -tx $fframes`;
+ 	}
+ 	fclose $fileid;
+ 	return 1; 
+}  
+proc int save_animlist(string $filename, string $fileType) 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	$fileid=`fopen $filename "w"`;
+ 	for($i=0;$i<=$tf_aindex;$i++)
+ 	{
+ 		string $fname=eval("textField -q -tx "+$tf_anames[$i]);
+ 		string $fframes=eval("textField -q -tx "+$tf_aframes[$i]); 
+		fprint $fileid ($fname+"\n"+$fframes); 
+		if($i!=$tf_aindex)fprint $fileid ("\n"); 	
+	}
+ 	fclose $fileid;
+ 	return 1; 
+}
+proc int update_progress(int $value, int $max_value, string $status)
+{
+ 	float $divisor=(float)$max_value/(float)100;
+ 	float $percent=(float)$value/$divisor;
+ 	progressWindow -e -pr $value -st ((int)$percent+"% "+$status);
+ 	return 1; 
+}  
+
+
+proc bc_exportJoints(string $path,string $joint,int $fileid){
+  string $childs[]=`listRelatives -c -type joint ($path + $joint)`;
+  fprint $fileid ($joint + "\n");
+
+
+  float $v[]=`eval("getAttr " + $path + $joint + ".translate")`;
+  fprint $fileid ($v[0]+ " " + $v[1] + " " + $v[2] +"\n") ;
+
+  float $v[]=`eval("getAttr " + $path + $joint + ".rotate")`;
+  fprint $fileid ($v[0]+ " " + $v[1] + " " + $v[2] +"\n") ;
+
+  float $v[]=`eval("getAttr " + $path + $joint + ".scale")`;
+  fprint $fileid ($v[0]+ " " + $v[1] + " " + $v[2] +"\n") ;
+
+  fprint $fileid (size($childs) + "\n");
+  int $i=0;
+  for(;$i<size($childs);$i++){
+    bc_exportJoints($path+$joint+"|",$childs[$i],$fileid);
+  }
+}
+
+proc int[] return_intarray(string $intstring)
+ {
+ 	int $intarray[];
+ 	int $i=0;
+ 	while(match("[0-9]+",$intstring)!="") 
+	{ 
+		$intarray[$i]=match("[0-9]+",$intstring);
+ 		$intstring=`substitute "[0-9]+" $intstring ""`;
+ 		$i++;
+ 	} 
+	return $intarray;
+ } 
+proc bc_skel_export(){
+
+  	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+  	string $animName=`textField -q -tx tf_animName`;
+ 	string $path=`textField -q -tx tf_path`;
+ 	string $filename=`substitute "(\\\\)+$" $path ""`+"\\skeleton.txt";
+ 	string $anim_names[];
+ 	int $export_frames[];
+ 	int $export_frames_nameindex[];
+ 	int $export_frames_namecount[];
+	int $export_frames_count[];
+ 	int $count=0;
+ 	int $ai=0;
+ 	int $efi=0;
+  	//----------------------------------------fetch animations from textfields
+ 	while($ai<=$tf_aindex)
+ 	{ 
+		$anim_names[$ai]=eval("textField -q -tx "+$tf_anames[$ai]);
+ 		if(match("[a-zA-Z0-9]+",$anim_names[$ai])=="")
+//----------------------------------------------------------------warning
+ 		{
+ 				string $message="empty animation name field!";
+ 				progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+				undoInfo -state on; error $message;
+ 		}
+ 		if(`size $anim_names[$ai]`>14)
+//--------------------------------------------------------------------------------warning 
+		{
+			string $message="animation name has more than 14 characters!";
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+		} 		
+		if(match(" +",$anim_names[$ai])!="")
+//--------------------------------------------------------------------------warning
+		{ 
+			string $message="animation name contains spaces!";  
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+		}
+ 		string $tempstring=eval("textField -q -tx "+$tf_aframes[$ai]); 
+		if(match("[0-9]+",$tempstring)=="")
+//---------------------------------------------------------------------------warning 
+		{ 	
+			string $message="error in animation frames field!"; 
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message; 
+		}
+ 		int $frame;
+ 		int $namecount=0;
+ 		for($frame in return_intarray($tempstring))
+ 		{
+ 			$export_frames[$efi]=$frame;
+ 			$export_frames_nameindex[$efi]=$ai; 
+			$export_frames_namecount[$efi]=$namecount;
+
+ 			$namecount++; 
+			$efi++;
+ 		}
+		$export_frames_count[$ai]=$export_frames_namecount[$efi-1];
+ 		$ai++;
+ 	}
+  	//----------------------------------------evaluate selected object
+  	
+	string $objects[]=`ls -sl -type joint`;
+	
+ 		if($objects[0]=="")
+//---------------------------------------------------------------------------------------------------warning
+ 		{
+ 			string $message="please select the root joint!";
+  			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+ 		}
+ 	//----------------------------------------open file
+ 	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+//-------------------------------------------------------------------------------------------------------warning 
+	{
+		string $message="directory does not exist!"; 
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+ 	} 
+	///---------animation Name
+	fprint $fileid ($animName + "\n");
+
+	
+ 	string $cmd;
+	int $loop;
+
+//-------------------------------writing frames names and count
+	fprint $fileid (($tf_aindex+1) +"\n");
+  	 int $numframes=size($export_frames);
+	$current_frame=0;
+	while($current_frame<($tf_aindex+1))
+	{
+
+		fprint $fileid (($export_frames_count[$current_frame]+1)+"\n");
+		string $tempstring=$anim_names[$current_frame];//+$export_frames_namecount[$current_frame]; 
+		fprint $fileid ($tempstring+"\n"); 
+		$loop=0;
+		while($loop<$export_frames_count[$current_frame]+1)
+		{
+			fprint $fileid ($export_frames[$loop]+"\n"); 
+			$loop++;
+		} 
+
+		$current_frame++;
+	}
+	
+	//-------------------------------------------------------------
+ 	int $current_frame=0;
+  	int $progress=0;
+ 	float $step=1;
+ 	int $max_progress=$numframes; 
+	progressWindow -t "exporting mdl5-ascii file..." -pr $progress -st "0%" -ii false -min 0 -max $max_progress;
+
+ 	while ($current_frame<$numframes)
+ 	{	
+		currentTime $export_frames[$current_frame];
+	
+		bc_exportJoints("",$objects[0],$fileid);
+		
+  		update_progress($progress++,$max_progress,"exporting frames...");
+ 		$current_frame++;
+	}
+
+	fclose $fileid;
+ 	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p exporterSkelWindow; 
+
+}
+
+
+ proc int create_skel_gui() 
+{
+ 	global int $tf_aindex;
+
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+ 	if(`window -exists exporterSkelWindow`)deleteUI exporterSkelWindow;
+ 	
+ 	window -wh 512 384 -te 100 -le 100 -s false -t "maya skeleton-ascii Exporter" exporterSkelWindow;
+	rowColumnLayout -nr 2 -rh 1 250 -rh 2 125 RCL1; 
+	scrollLayout -hst 0 -p RCL1 SL1;
+	rowColumnLayout -nc 2 -cw 1 85 -cw 2 385 -p SL1 RCL2; 
+	text -l "Cycle name" tx1; 		
+	text -l "Cycle frames" tx2; 		
+	$tf_anames[$tf_aindex]=`textField -tx ""`; 		
+	$tf_aframes[$tf_aindex]=`textField -tx ""`; 
+	columnLayout -p RCL1 CL1; 	
+	rowLayout -nc 4 -cw4 60 60 60 60 -p CL1 RL1; 	
+	button -l "add" -w 60 -c "bc_add()"; 			
+	button -l "remove" -w 60 -c "bc_remove()"; 			
+	button -l "load" -w 60 -c "bc_load()"; 			
+	button -l "save" -w 60 -c "bc_save()"; 		
+	setParent CL1;	 			
+	text -l ""; 		
+	rowLayout -nc 2 -cw2 80 200 -p CL1 RL2; 			
+	text -l "Animation Name:"; 			
+	textField -tx "animation1" -w 100 tf_animName; 		
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export skeleton-ascii file" -w 504 -c "bc_skel_export()";
+ 	showWindow exporterSkelWindow;
+ 	return 1; 
+}  
+create_skel_gui();

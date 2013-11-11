@@ -1,0 +1,55 @@
+
+
+
+proc ExportCurve(string $curve,int $fileID)
+{
+	int $CVs=`eval("getAttr " +$curve+".spans")`+`eval("getAttr " +$curve+".degree")`;
+	int $i=0;
+	
+	fprint $fileID ("\t<Curve name=\""+$curve+"\">\n");
+	
+	for(;$i<$CVs;$i++)
+	{
+		float $pos[]= `eval("getAttr "+$curve+".cv["+$i+"]")`;
+		fprint $fileID ("\t\t<CV pos=\""+$pos[0]+","+$pos[1]+","+$pos[2]+"\"/>\n");
+		
+	}
+	fprint $fileID ("\t</Curve>\n");
+	
+}
+
+proc int ExportCurvesAct(string $filename, string $fileType )
+{
+	string $object[]=`ls -tr -sl -o -sn`;
+	if($object[0]=="")
+	{
+		return 0;
+	}
+	int $fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+	{
+		error ("Cann't Open File: "+$filename);
+	}
+	int $objectsCount=size($object);
+	int $loop;
+
+	fprint $fileid "<Curves>\n";
+	for($loop=0;$loop<$objectsCount;$loop++)
+	{
+		//TODO:- check if the object is curve
+		ExportCurve($object[$loop],$fileid);
+
+	}
+	fprint $fileid "</Curves>\n";
+	fclose $fileid;
+	return 1;
+}
+
+proc int bc_ExportCurves()
+{
+	fileBrowserDialog -m 1 -fc "ExportCurvesAct" -ft "*.*" -an "Export" -om "SaveAs";
+	return 1; 
+
+}
+
+bc_ExportCurves();

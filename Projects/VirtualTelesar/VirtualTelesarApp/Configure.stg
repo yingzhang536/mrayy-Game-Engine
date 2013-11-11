@@ -1,0 +1,11 @@
+Settings{
+	Bits	"24"
+	Debugging	"Yes"
+	Fullscreen	"False"
+	Monitor	""
+	Multisample	"0"
+	Resolution	"1280,720"
+	Shaders	"Yes"
+	Stereoscopic	"None"
+	VSync	"False"
+}

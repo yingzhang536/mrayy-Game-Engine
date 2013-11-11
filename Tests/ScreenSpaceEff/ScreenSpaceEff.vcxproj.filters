@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Eff">
+      <UniqueIdentifier>{2472b44b-3ae0-41bf-abb2-fa340bcecd3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test">
+      <UniqueIdentifier>{f178cf9e-03cf-481f-ae3b-233e14169d42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AdaptiveLuminancePP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="BrightFilterPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussBlurPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\GBufferListener.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="GlarePP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="HDRPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="LuminancePP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="ToneMappingPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="ToonPP.cpp">
+      <Filter>Source Files\Eff</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGUIManager.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PoolString.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGUIManager.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Engine\mrayWinApp\mrayEngineResource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="AdaptiveLuminancePP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="BloomPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="BrightFilterPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="DepthOfFieldPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GaussBlurPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\common\GBufferListener.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="GlarePP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="HDRPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="LuminancePP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="shadercallback.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="TestPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="ToneMappingPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="ToonPP.h">
+      <Filter>Source Files\Eff</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

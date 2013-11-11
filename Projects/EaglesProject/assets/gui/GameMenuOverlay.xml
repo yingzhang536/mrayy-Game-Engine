@@ -1,0 +1,11 @@
+<Overlay name="GameMenuOverlay">
+  <GUIWindow name="GameMenu"  pos="0" size="200,100"  caption="Menu" >
+    <children>
+      <GUIButton pos="10,10" size="180,30" caption="Resume" id="100"/>
+      <GUIButton pos="10,50" size="180,30" caption="Quit" id="101"/>
+    </children>
+    <effectors>
+      <GUIAnchorEffector anchor="Anchor_Center" offset="0,0"/>
+    </effectors>
+    </GUIWindow>
+  </Overlay>

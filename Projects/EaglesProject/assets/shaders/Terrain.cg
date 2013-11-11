@@ -1,0 +1,110 @@
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+   float3 lightDir: TEXCOORD1;
+   float4 lightPos: TEXCOORD3;
+   float fogExponent:	TEXCOORD2;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, float2 texCoord: TEXCOORD0, 
+				uniform float4x4 WorldMat,
+				uniform float4x4 ViewMat,
+				uniform float4x4 ProjMat,
+				uniform float4x4 LightViewProj,
+				uniform float3 Light0Pos,
+				uniform float3 ViewPos) 
+{
+	VS_OUTPUT Out;
+
+	float4x4 vp=mul(ViewMat,ProjMat);
+	
+	float4 wpos=mul(Pos,WorldMat);
+	
+	Out.lightPos=mul(wpos,LightViewProj);
+	
+	Out.Pos=mul(wpos,vp);
+	Out.texCoord=texCoord;
+	Out.lightDir=Light0Pos-wpos.xyz;
+	float fogDistance  = max(0,length(ViewPos-wpos.xyz)-200);
+	
+	Out.fogExponent=fogDistance*0.001;
+	
+	/*
+	float height=200;
+	float fogDensity=0.02*max(0,(1-min(Pos.y,height)/height));
+	Out.fogExponent=fogDistance * fogDensity;
+	*/
+	return Out;
+}
+
+
+float3 weight[]=
+{
+	float3(-1,-1,-0.05),
+	float3( 0,-1,-0.1),
+	float3( 1,-1,-0.05),
+	float3( 1, 0,-0.1),
+	float3( 1, 1,-0.05),
+	float3( 0, 1,-0.1),
+	float3(-1, 1,-0.05),
+	float3(-1, 0,-0.1),
+	float3( 0, 0,-0.4),
+};
+float calcShadow(float3 lightPos,sampler shadowMap,float2 shadowMapSize)
+{
+	float DepthBias=0.0015;
+	
+	float ourDepth=lightPos.z -DepthBias ;
+		
+	float2 shadowTC=0.5*lightPos.xy + float2(0.5,0.5);
+	//shadowTC.y=1-shadowTC.y;
+	
+	shadowTC.x=clamp(shadowTC.x,0,1);
+	shadowTC.y=clamp(shadowTC.y,0,1);
+	
+	float ndv;
+	ndv=1;
+	float2 texSize=1.0f/2048.0f;
+	texSize.x=1.0f/shadowMapSize.x;
+	texSize.y=1.0f/shadowMapSize.y;
+	
+	
+	if(shadowTC.x<1 && shadowTC.x>0 &&
+		shadowTC.y<1 && shadowTC.y>0){
+		for(int i=0;i<9;i++){
+			float shadowDepth=tex2D(shadowMap,shadowTC+weight[i].xy*texSize).r;
+			if(shadowDepth< ourDepth){
+				ndv +=weight[i].z;
+			}
+		}
+	}
+	
+	ndv=ndv*0.8+0.2;
+	
+	return ndv;
+}
+
+float4 main_fp(float2 texCoord: TEXCOORD0,float3 lightDir: TEXCOORD1,float fogExponent:	TEXCOORD2,
+				float4 lightPos: TEXCOORD3,
+				uniform sampler base,
+				uniform sampler detail,
+				uniform float2 shadowMapSize,
+				uniform sampler shadowMap) : COLOR 
+{
+  
+  
+	float fogFactor   = exp2(-abs(fogExponent));
+	lightDir=normalize(lightDir);
+	float4 diff=tex2D(base,texCoord);
+	float4 baseC=diff*(0.6+tex2D(detail,texCoord*400)*0.8);
+	float4 color= baseC*(lightDir.y*float4(0.8,0.7,0.0,1)*0.3+0.7)+0.1*float4(0.7,0.5,0.1,1);
+	
+	lightPos.xyz/=lightPos.w;
+	
+	float ndv=calcShadow(lightPos.xyz,shadowMap,shadowMapSize);
+	return lerp( float4(0.7,0.9,0.9,1),color*ndv,fogFactor);
+
+}
+
+

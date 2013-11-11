@@ -1,0 +1,109 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTelesar5", "VTelesar5\VTelesar5.vcxproj", "{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTSharedMem", "VTSharedMem\VTSharedMem.vcxproj", "{D81A268B-AAF0-44CB-885B-E0C13E52D61E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTLib", "VTLib\VTLib.vcxproj", "{97F27978-2696-4939-8881-887477C636B3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTSensorLibrary", "VTSensorLibrary\VTSensorLibrary.vcxproj", "{61AF0CD7-E438-4E2B-B71B-77E05BACD266}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMemoryWriter", "TestMemoryWriter\TestMemoryWriter.vcxproj", "{D8F1624C-96D8-4BC4-B291-A54E0BD28065}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualTelesarApp", "VirtualTelesarApp\VirtualTelesarApp.vcxproj", "{3602A27B-D29C-4442-AED4-4CC477543A33}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 6
+		SccProjectUniqueName0 = VTelesar5\\VTelesar5.vcxproj
+		SccProjectName0 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath0 = ..\\..
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection0 = Projects\\VirtualTelesar\\VTelesar5\\
+		SccProjectUniqueName1 = VTSharedMem\\VTSharedMem.vcxproj
+		SccProjectName1 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath1 = ..\\..
+		SccProvider1 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection1 = Projects\\VirtualTelesar\\VTSharedMem\\
+		SccProjectUniqueName2 = VTLib\\VTLib.vcxproj
+		SccProjectName2 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath2 = ..\\..
+		SccProvider2 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection2 = Projects\\VirtualTelesar\\VTLib\\
+		SccProjectUniqueName3 = VTSensorLibrary\\VTSensorLibrary.vcxproj
+		SccProjectName3 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath3 = ..\\..
+		SccProvider3 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection3 = Projects\\VirtualTelesar\\VTSensorLibrary\\
+		SccProjectUniqueName4 = TestMemoryWriter\\TestMemoryWriter.vcxproj
+		SccProjectName4 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath4 = ..\\..
+		SccProvider4 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection4 = Projects\\VirtualTelesar\\TestMemoryWriter\\
+		SccProjectUniqueName5 = VirtualTelesarApp\\VirtualTelesarApp.vcxproj
+		SccProjectName5 = \u0022$/mrayEngine\u0022,\u0020OTNAAAAA
+		SccLocalPath5 = ..\\..
+		SccProvider5 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection5 = Projects\\VirtualTelesar\\VirtualTelesarApp\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Unicode|Win32 = Debug_Unicode|Win32
+		Debug|Win32 = Debug|Win32
+		Release_Unicode|Win32 = Release_Unicode|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Debug_Unicode|Win32.ActiveCfg = Debug_Unicode|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Debug_Unicode|Win32.Build.0 = Debug_Unicode|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Debug|Win32.Build.0 = Debug|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Release_Unicode|Win32.ActiveCfg = Release_Unicode|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Release_Unicode|Win32.Build.0 = Release_Unicode|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Release|Win32.ActiveCfg = Release|Win32
+		{83DAE826-FD84-4952-9EFE-2DCDDEFB2FA1}.Release|Win32.Build.0 = Release|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Debug_Unicode|Win32.ActiveCfg = Debug_Unicode|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Debug_Unicode|Win32.Build.0 = Debug_Unicode|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Debug|Win32.Build.0 = Debug|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Release_Unicode|Win32.ActiveCfg = Release_Unicode|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Release_Unicode|Win32.Build.0 = Release_Unicode|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Release|Win32.ActiveCfg = Release|Win32
+		{D81A268B-AAF0-44CB-885B-E0C13E52D61E}.Release|Win32.Build.0 = Release|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Debug_Unicode|Win32.ActiveCfg = Debug_Unicode|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Debug_Unicode|Win32.Build.0 = Debug_Unicode|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Debug|Win32.Build.0 = Debug|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Release_Unicode|Win32.ActiveCfg = Release_Unicode|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Release_Unicode|Win32.Build.0 = Release_Unicode|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Release|Win32.ActiveCfg = Release|Win32
+		{97F27978-2696-4939-8881-887477C636B3}.Release|Win32.Build.0 = Release|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Debug_Unicode|Win32.ActiveCfg = Debug|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Debug_Unicode|Win32.Build.0 = Debug|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Debug|Win32.Build.0 = Debug|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Release_Unicode|Win32.ActiveCfg = Release|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Release_Unicode|Win32.Build.0 = Release|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Release|Win32.ActiveCfg = Release|Win32
+		{61AF0CD7-E438-4E2B-B71B-77E05BACD266}.Release|Win32.Build.0 = Release|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Debug_Unicode|Win32.ActiveCfg = Debug|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Debug_Unicode|Win32.Build.0 = Debug|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Debug|Win32.Build.0 = Debug|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Release_Unicode|Win32.ActiveCfg = Release|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Release_Unicode|Win32.Build.0 = Release|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Release|Win32.ActiveCfg = Release|Win32
+		{D8F1624C-96D8-4BC4-B291-A54E0BD28065}.Release|Win32.Build.0 = Release|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Debug_Unicode|Win32.ActiveCfg = Debug_Unicode|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Debug_Unicode|Win32.Build.0 = Debug_Unicode|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Debug|Win32.Build.0 = Debug|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Release_Unicode|Win32.ActiveCfg = Release_Unicode|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Release_Unicode|Win32.Build.0 = Release_Unicode|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Release|Win32.ActiveCfg = Release|Win32
+		{3602A27B-D29C-4442-AED4-4CC477543A33}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

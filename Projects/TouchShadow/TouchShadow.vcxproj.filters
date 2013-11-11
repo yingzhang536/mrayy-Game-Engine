@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Output">
+      <UniqueIdentifier>{763c3bb4-3a68-454c-9524-c1e732f46394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Management">
+      <UniqueIdentifier>{1bf92306-2195-49ba-b507-2c76be18133f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{0cd0b434-c37e-460e-a4dc-20179c9a0270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Management\Effects">
+      <UniqueIdentifier>{c6245758-b987-49e5-92c3-9a3fea30328f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TSApplication.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserDebugData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JointLimb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppCommon.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceController.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSoundInterface.h">
+      <Filter>Source Files\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelManager.h">
+      <Filter>Source Files\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionRule.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputChannel.h">
+      <Filter>Source Files\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="CUserData.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionDemo.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="UserFrame.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="UserFrameSchema.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelMap.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionRuleImpl.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoSharedData.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectsScheme.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioWaveSet.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioConverter.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveFile.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AreaInteraction.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleShapesEffect.h">
+      <Filter>Source Files\Management\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkleEffect.h">
+      <Filter>Source Files\Management\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialPort.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolObject.h">
+      <Filter>Source Files\Management</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchShadow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TSApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JointLimb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppCommon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceController.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSoundInterface.cpp">
+      <Filter>Source Files\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputChannel.cpp">
+      <Filter>Source Files\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="CUserData.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="UserFrame.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="UserFrameSchema.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="ChannelMap.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractionRuleImpl.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractionRule.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractionDemo.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoSharedData.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioWaveSet.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="ChannelManager.cpp">
+      <Filter>Source Files\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioConverter.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFile.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="AreaInteraction.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleShapesEffect.cpp">
+      <Filter>Source Files\Management\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkleEffect.cpp">
+      <Filter>Source Files\Management\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectsScheme.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialPort.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolObject.cpp">
+      <Filter>Source Files\Management</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

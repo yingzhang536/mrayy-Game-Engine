@@ -1,0 +1,178 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Arabic (Saudi Arabia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARA)
+#ifdef _WIN32
+LANGUAGE LANG_ARABIC, SUBLANG_ARABIC_SAUDI_ARABIA
+#pragma code_page(1256)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+ID_SplashMaskID         BITMAP                  "EngineSplash_mask.bmp"
+ID_SplashScreenID       BITMAP                  "EngineSplash.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "icon.ico"
+#endif    // Arabic (Saudi Arabia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Arabic (Syria) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARS)
+#ifdef _WIN32
+LANGUAGE LANG_ARABIC, SUBLANG_ARABIC_SYRIA
+#pragma code_page(1256)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_MRAY_LOGO_BMP       BITMAP                  "simpleLogo.bmp"
+IDB_Error_Image         BITMAP                  "stop-error.bmp"
+IDB_TELESAR_LOGO_BMP    BITMAP                  "telesarLoGo.bmp"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_CONFIG DIALOGEX 0, 0, 418, 247
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Config Dialog Box"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Options",IDC_STATIC,18,110,243,108
+    LISTBOX         IDC_LIST_OPTIONS,26,120,225,75,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_Values,137,198,110,94,CBS_DROPDOWNLIST | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_NewValue,137,198,71,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    LTEXT           "New Value:",IDC_STATIC_NewValue,82,202,37,8,NOT WS_VISIBLE
+    LTEXT           "Options:",IDC_STATIC_Options,90,201,28,8,NOT WS_VISIBLE
+    PUSHBUTTON      "Cancel",IDCANCEL,311,226,50,14
+    PUSHBUTTON      "OK",IDOK,361,226,50,14
+    CONTROL         102,IDC_MRAY_LOGO,"Static",SS_BITMAP,18,7,183,87,WS_EX_TRANSPARENT
+    CONTROL         IDB_TELESAR_LOGO_BMP,IDC_TELESAR_LOGO,"Static",SS_BITMAP,265,7,209,342,WS_EX_TRANSPARENT
+END
+
+IDD_DIALOG_MRAYEngine DIALOGEX 0, 0, 407, 117
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
+IDD_DIALOG_ERROR DIALOGEX 0, 0, 246, 223
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Error"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,188,202,50,14
+    LTEXT           "Sorry, but an Error has occourd ",IDC_STATIC,16,20,154,12
+    LTEXT           "",IDC_ERROR_MSG,25,47,197,119,SS_SUNKEN
+    LTEXT           "Error Message:",IDC_STATIC,16,31,50,8
+    CONTROL         112,IDC_STATIC,"Static",SS_BITMAP,206,7,32,30
+    LTEXT           "Please contact us at email : mrayyamen@gmail.com with the error message",IDC_STATIC,21,177,154,22
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_CONFIG, DIALOG
+    BEGIN
+        LEFTMARGIN, 18
+        RIGHTMARGIN, 411
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 240
+    END
+
+    IDD_DIALOG_MRAYEngine, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 400
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 110
+    END
+
+    IDD_DIALOG_ERROR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 238
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 216
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Arabic (Syria) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

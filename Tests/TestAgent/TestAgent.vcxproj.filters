@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\AI">
+      <UniqueIdentifier>{6755b078-2274-47b5-bfc3-90d5ff46402e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Goals">
+      <UniqueIdentifier>{346fbf7d-2571-411a-8f6d-cf160d12480e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI\Architect">
+      <UniqueIdentifier>{3c619cef-7442-4dc9-9352-02b00ed534a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\GameEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\GameEntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AgentPhysics.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIRenderDevice.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalFollowPath.cpp">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalGoToPoint.cpp">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalSteer.cpp">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalTraverseEdge.cpp">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="GoToInterstingPointEval.cpp">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="AgentArchitect.cpp">
+      <Filter>Source Files\AI\Architect</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\GameEntity.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\GameEntityManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentPhysics.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIRenderDevice.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="InterstingPointManager.h">
+      <Filter>Source Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalFollowPath.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalGoToPoint.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalSteer.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalsTypeEnum.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalTraverseEdge.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="GoToInterstingPointEval.h">
+      <Filter>Source Files\AI\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentArchitect.h">
+      <Filter>Source Files\AI\Architect</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\Data\AgentTest.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TestAgent.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\mrayWinApp\mrayEngineResource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

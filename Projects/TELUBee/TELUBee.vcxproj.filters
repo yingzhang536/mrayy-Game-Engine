@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ApplicationStates">
+      <UniqueIdentifier>{6e4d3b1a-7ee8-492c-b79e-4929bd154491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{2bd12dc4-80b8-41b8-abf7-306bbb9c829c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{2a8923c8-63b7-47fa-9d36-5dcd615be9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderingStates">
+      <UniqueIdentifier>{80a08693-acb4-4547-9cdc-7aa6158e63dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{080607b6-c7db-44dc-a438-3fddc216aaff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{7a557bb0-cb93-485d-a457-514f0f9a6216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DB">
+      <UniqueIdentifier>{d1a0ac39-a053-478c-aa49-fd023b957e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{05bf4ae5-f6e4-4f7a-a398-1113c0f63855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{9a8a94c1-fda1-4e00-a777-5fcab6d16fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VideoStreams">
+      <UniqueIdentifier>{d1c4c857-0f13-4e80-8aab-97b983d46c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SharedMemory">
+      <UniqueIdentifier>{581498bc-0cf8-477a-b2d6-8c9c237b97d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Communicator">
+      <UniqueIdentifier>{316ee2d1-85ad-45a0-8aaf-4222d76ca5c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GST">
+      <UniqueIdentifier>{1d2b8e26-716a-47fc-b5e8-719a549dab26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DVI">
+      <UniqueIdentifier>{92d7f396-43bb-4829-b4fc-9a9e773d6d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderingStates\HMD">
+      <UniqueIdentifier>{a6342773-7b4f-43f9-9ef7-d9e3b5991541}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="EngineSplash.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="EngineSplash_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="simpleLogo.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="stop-error.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TELUBeeLogo.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseAppState.h">
+      <Filter>Source Files\ApplicationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="IApplicationState.h">
+      <Filter>Source Files\ApplicationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingState.h">
+      <Filter>Source Files\ApplicationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationStateManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRenderState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingStateManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TBAppGlobals.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderBlender.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ITransitionBlender.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIMainMenu.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VirtualTelesar\VTelesar5\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InMapRenderState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="TBRobotInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroRenderingState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConnectionCommands.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="TBUserInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="TBRobotUserInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInfoManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILoginMenu.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginScreenState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="IMapController.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="MapCamera.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="JoystickMapController.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="IndicatorComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILoadingElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SeeThroughWindow.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="NullRenderState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="telubee\shmem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEntity.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MapConnection.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMarker.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="JoystickDefinitions.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIDateElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIMapScreen.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIBlinkingText.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectingToRobotScreen.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRobotPanel.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRobotPanelImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIConnectingToRobot.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CinematicController.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPDataReceiver.h">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDataReceiver.h">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkMessage.h">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMemoryStream.h">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="multicast.h">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="shmem.h">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="TBSharedMemory.h">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotCommunicator.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="TBeeOptiTrackObject.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalRobotCommunicator.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPVideoGrabber.h">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="IVideoProvider.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPVideoProvider.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="GStreamVideoProvider.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="ofVideoPlayerGst.h">
+      <Filter>GST</Filter>
+    </ClInclude>
+    <ClInclude Include="ofGstUtilsWin32.h">
+      <Filter>GST</Filter>
+    </ClInclude>
+    <ClInclude Include="DVISwitcherController.h">
+      <Filter>Source Files\DVI</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerialPort.h">
+      <Filter>Source Files\DVI</Filter>
+    </ClInclude>
+    <ClInclude Include="ofSerial.h">
+      <Filter>Source Files\DVI</Filter>
+    </ClInclude>
+    <ClInclude Include="OFSerialPort.h">
+      <Filter>Source Files\DVI</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRenderingState.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="IHMDRenderer.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="HMDCameraRenderer.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="HMDRobotRenderer.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIOculusDetect.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIOculusDetectImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="OculusDetectState.h">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteRobotCommunicator.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TELUBee.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseAppState.cpp">
+      <Filter>Source Files\ApplicationStates</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderingState.cpp">
+      <Filter>Source Files\ApplicationStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationStateManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRenderState.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingStateManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TBAppGlobals.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBlender.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InMapRenderState.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroRenderingState.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="DBConnectionCommands.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotInfoManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginScreenState.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="JoystickMapController.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="IndicatorComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILoadingElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SeeThroughWindow.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEntity.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MapConnection.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarker.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIDateElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIBlinkingText.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectingToRobotScreen.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRobotPanelImpl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CinematicController.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPDataReceiver.cpp">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMemoryStream.cpp">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkMessage.cpp">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClCompile>
+    <ClCompile Include="multicast.cpp">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="shmem.cpp">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="TBSharedMemory.cpp">
+      <Filter>Source Files\SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="TBeeOptiTrackObject.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalRobotCommunicator.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPVideoGrabber.cpp">
+      <Filter>Source Files\VideoStreams</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPVideoProvider.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="GStreamVideoProvider.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="ofVideoPlayerGst.cpp">
+      <Filter>GST</Filter>
+    </ClCompile>
+    <ClCompile Include="ofGstUtilsWin32.cpp">
+      <Filter>GST</Filter>
+    </ClCompile>
+    <ClCompile Include="DVISwitcherController.cpp">
+      <Filter>Source Files\DVI</Filter>
+    </ClCompile>
+    <ClCompile Include="ISerialPort.cpp">
+      <Filter>Source Files\DVI</Filter>
+    </ClCompile>
+    <ClCompile Include="ofSerial.cpp">
+      <Filter>Source Files\DVI</Filter>
+    </ClCompile>
+    <ClCompile Include="OFSerialPort.cpp">
+      <Filter>Source Files\DVI</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraRenderingState.cpp">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClCompile>
+    <ClCompile Include="HMDCameraRenderer.cpp">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClCompile>
+    <ClCompile Include="HMDRobotRenderer.cpp">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIOculusDetectImpl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="OculusDetectState.cpp">
+      <Filter>Source Files\RenderingStates</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteRobotCommunicator.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TELUBee.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUILoginMenu.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMainMenu.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMapScreen.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIRobotPanel.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIConnectingToRobot.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIMapControls.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughMessage.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughScreen.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIRobotControls.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIOculusDetect.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+  </ItemGroup>
+</Project>

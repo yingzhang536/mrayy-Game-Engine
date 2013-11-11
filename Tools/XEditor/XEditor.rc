@@ -1,0 +1,835 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARA)\r\n"
+    "LANGUAGE 1, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\XEditor.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MATERIALS_DIALOG DIALOGEX 0, 0, 162, 204
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Material"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,105,183,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,7,183,50,14
+    LISTBOX         IDC_MATERIALS_LIST,21,22,118,110,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Materials",IDC_STATIC,7,7,30,8
+    PUSHBUTTON      "Create Material",IDC_LOADSHADER,99,138,56,14
+    LTEXT           "Name:",IDC_STATIC,5,141,22,8
+    EDITTEXT        IDC_MATERIAL_NAME,30,138,60,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Duplicate",IDC_DUPLICATE_MTRL,99,154,56,14
+END
+
+IDD_TEXTURES_DIALOG DIALOGEX 0, 0, 162, 185
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Texture"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,105,164,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,7,164,50,14
+    LISTBOX         IDC_TEXTURES_LIST,21,22,118,110,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Textures:",IDC_STATIC,7,7,32,8
+    PUSHBUTTON      "Load Texture",IDC_LOADTEXTURE,23,137,50,14
+    COMBOBOX        IDC_TEXTURE_TYPE,78,138,60,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_SHADERS_DIALOG DIALOGEX 0, 0, 162, 185
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Shader"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,105,164,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,7,164,50,14
+    LISTBOX         IDC_SHADERS_LIST,21,22,118,110,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Shaders:",IDC_STATIC,7,7,30,8
+    PUSHBUTTON      "Load Shaders",IDC_LOADSHADER,19,137,50,14
+END
+
+IDD_ENVIRONMENT_SETTINGS_DLG DIALOGEX 0, 0, 202, 305
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "...",IDC_SKYBOX_DLG_BTN,132,20,24,14
+    LTEXT           "Sky Box:",IDC_STATIC,12,24,29,8
+    LTEXT           " ",IDC_SKYBOX_NAME_TXT,48,24,72,8
+    LTEXT           "Sun Direction:",IDC_STATIC,12,52,46,8
+    CONTROL         "",IDC_SUNDIR_HORIZ_SLD,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,66,66,90,15
+    CONTROL         "",IDC_SUNDIR_VERT_SLD,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,66,84,90,15
+    LTEXT           "Horizontal:",IDC_STATIC,24,72,36,8
+    LTEXT           "Vertical:",IDC_STATIC,24,90,27,8
+    LTEXT           "Shadow Map Size:",IDC_STATIC,12,126,59,8
+    EDITTEXT        IDC_SHADOWMAP_W_TXT,78,122,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SHADOWMAP_H_TXT,132,122,40,14,ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC,123,125,8,8
+    PUSHBUTTON      "...",IDC_POSTPROCESS_DLG,138,234,24,14
+    LTEXT           "Post Processing:",IDC_STATIC,18,238,54,8
+    LTEXT           " ",IDC_POSTPROCESS_TXT,78,239,48,8
+    CONTROL         "Enable",IDC_POSTPROCESS_ENABLE_CHK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,72,252,37,10
+    LTEXT           "Fog Distance:",IDC_STATIC,18,279,45,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_FOGDISTANCE_TXT,78,276,54,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    CONTROL         "Enable",IDC_FOG_ENABLE_CHK,"Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,144,279,37,10
+    PUSHBUTTON      "Change",IDC_CHANGE_SHADOWMAP_BTN,108,138,36,14
+    LTEXT           "Shadow Projection Settings:",IDC_STATIC,12,162,91,8
+    LTEXT           "FovY:",IDC_STATIC,36,178,20,8
+    EDITTEXT        IDC_SHADOW_FOVY_TXT,72,174,40,14,ES_AUTOHSCROLL
+    LTEXT           "ZNear:",IDC_STATIC,36,196,23,8
+    EDITTEXT        IDC_SHADOW_ZNEAR_TXT,72,192,40,14,ES_AUTOHSCROLL
+    LTEXT           "Aspect:",IDC_STATIC,117,178,26,8
+    EDITTEXT        IDC_SHADOW_ASPECT_TXT,150,174,40,14,ES_AUTOHSCROLL
+    LTEXT           "ZFar:",IDC_STATIC,119,196,18,8
+    EDITTEXT        IDC_SHADOW_ZFAR_TXT5,150,192,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Change",IDC_CHANGE_SHADOW_PROJ_BTN,108,210,36,14
+    GROUPBOX        "Shadow Settings",IDC_STATIC,6,109,192,120
+END
+
+IDD_SKYBOX_DLG DIALOGEX 0, 0, 160, 202
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Skybox"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,103,181,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,7,181,50,14
+    LISTBOX         IDC_SKYBOXS_LIST,22,22,118,110,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "SkyBoxs:",IDC_STATIC,8,6,30,8
+    PUSHBUTTON      "Load Skybox",IDC_LOADSKYBOX,100,137,56,14
+    LTEXT           "Name:",IDC_STATIC,6,140,22,8
+    EDITTEXT        IDC_SKYBOX_NAME,31,137,60,14,ES_AUTOHSCROLL
+END
+
+IDD_TERRAIN_TOOLBOX DIALOGEX 0, 0, 209, 231
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Terrain"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Load Height Map",IDC_BUTTON1,84,12,72,18
+    PUSHBUTTON      "Load Base Texture",IDC_BUTTON2,84,36,72,18
+    PUSHBUTTON      "Load Detail Texture",IDC_BUTTON3,84,78,72,18
+    PUSHBUTTON      "Load Normal Map",IDC_BUTTON10,84,54,72,18
+    PUSHBUTTON      "Load Detail Normal",IDC_BUTTON11,84,96,72,18
+    PUSHBUTTON      "Generate",IDC_BUTTON12,66,198,72,18
+    LTEXT           "",IDC_HeightMapTxt,24,18,8,8
+    LTEXT           " ",IDC_BaseTexTxt,24,42,8,8
+    LTEXT           " ",IDC_NormalMapTxt,24,60,8,8
+    LTEXT           " ",IDC_DetailTexTxt,24,84,8,8
+    LTEXT           " ",IDC_DetailNormalTxt,24,103,8,8
+    LTEXT           "Number of LOD:",IDC_STATIC,18,129,52,8
+    EDITTEXT        IDC_TERR_NUM_LODS_TXT,84,126,48,14,ES_AUTOHSCROLL
+    LTEXT           "LOD Distance:",IDC_STATIC,18,147,46,8
+    EDITTEXT        IDC_TERR_LOD_DISTANCE_TXT,84,144,48,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "GenNormal",IDC_GEN_NORMAL_MAP_BTN,156,12,48,18
+    EDITTEXT        IDC_TERR_SCALE_X_TXT,42,168,48,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TERR_SCALE_Y_TXT,90,168,48,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TERR_SCALE_Z_TXT,138,168,48,14,ES_AUTOHSCROLL
+    LTEXT           "Scale:",IDC_STATIC,18,170,20,8
+END
+
+IDD_NAVIGMESH_TOOLBOX DIALOGEX 0, 0, 136, 269
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Navigation Mesh Toolbox"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Generate",IDC_GENERATE_NAVMESH_BTN,42,125,54,14
+    EDITTEXT        IDC_NAVMESH_MAXSLOPE,73,55,48,14,ES_AUTOHSCROLL
+    LTEXT           "Max Slope:",IDC_STATIC,19,60,36,8
+    EDITTEXT        IDC_NAVMESH_MAXSTEP,73,73,48,14,ES_AUTOHSCROLL
+    LTEXT           "Max Step Size:",IDC_STATIC,19,76,48,8
+    EDITTEXT        IDC_NAVMESH_GCELLSZ,73,90,48,14,ES_AUTOHSCROLL
+    LTEXT           "Grid's Cell size:",IDC_STATIC,19,95,48,8
+    GROUPBOX        "Generation",IDC_STATIC,7,7,126,135
+    COMBOBOX        IDC_SUBMESH_LIST,49,18,78,39,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Sub Mesh:",IDC_STATIC,13,23,34,8
+    GROUPBOX        "Import/Export",IDC_STATIC,6,144,126,36
+    PUSHBUTTON      "Import",IDC_IMPORT_NAVMESH_BTN,18,156,50,14
+    PUSHBUTTON      "Export",IDC_EXPORT_NAVMESH_BTN,72,156,50,14
+    GROUPBOX        "Navigation Nodes Properties",IDC_STATIC,7,186,126,54
+    COMBOBOX        IDC_COMBO1,53,195,73,44,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Attributes:",IDC_STATIC,15,198,36,8
+    PUSHBUTTON      "Import Attributes",IDC_IMPORT_NAVMESH_ATTRS_BTN,54,210,72,14
+    PUSHBUTTON      "Load Attributes",IDC_Load_Attributes_BTN,36,108,66,14
+END
+
+IDD_PLUGIN_DIALOG DIALOGEX 0, 0, 331, 205
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Plugins"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,270,186,50,14
+    CONTROL         "",IDC_PLUGINS_LIST,"SysListView32",LVS_REPORT | WS_TABSTOP,7,25,317,117,WS_EX_STATICEDGE
+    LTEXT           "Installed Plugins:",IDC_STATIC,9,9,55,8
+    PUSHBUTTON      "Install Plugin",IDC_INSTALL_PLUGIN_BTN,6,144,50,14
+    PUSHBUTTON      "Uninstall",IDC_UNINSTALL_PLUGIN_BTN,270,144,50,14
+    PUSHBUTTON      "Reinstall",IDC_REINSTALL_PLUGIN_BTN,216,144,50,14
+END
+
+IDD_ENTITY_PROP_DLG DIALOGEX 0, 0, 160, 149
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Entity Properties"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Action Name:",-1,13,68,44,8
+    GROUPBOX        "Attributes",-1,6,90,144,54
+    COMBOBOX        IDC_ATTRIBUTE_LIST,61,105,78,45,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Attribute:",-1,19,108,32,8
+    EDITTEXT        IDC_MOD_ATTR_VALUE_TXT,61,122,78,14,ES_AUTOHSCROLL
+    LTEXT           "Value:",-1,27,127,21,8
+    LTEXT           """""",IDC_ACTION_NAME_TXT,67,69,8,8
+    PUSHBUTTON      "...",IDC_ACTION_NAME_BTN,135,65,20,14
+    PUSHBUTTON      "Make Entity",IDC_BUTTON3,102,18,49,14
+    LTEXT           "Entity ID :",-1,12,42,34,8
+    LTEXT           "-1",IDC_ENTITY_ID_TXT,66,42,8,8
+    EDITTEXT        IDC_ENTITYNAME_TXT,41,18,55,14,ES_AUTOHSCROLL
+    LTEXT           "Name: ",-1,11,22,24,8
+END
+
+IDD_GAMEACTIONS_DLG DIALOGEX 0, 0, 162, 221
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Action"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,102,192,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,6,192,50,14
+    LISTBOX         IDC_GAME_ACTIONS_LIST,21,22,118,122,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Actions:",IDC_STATIC,7,6,27,8
+    LTEXT           "Description:",IDC_STATIC,12,150,39,8
+    LTEXT           "",IDC_DESCRIPTION_TXT,12,162,132,24,WS_BORDER
+END
+
+IDD_LOG_DIALOG DIALOGEX 0, 0, 430, 263
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LOG_LIST,"SysListView32",LVS_REPORT | WS_TABSTOP,7,7,416,249,WS_EX_STATICEDGE
+END
+
+IDD_LEVEL_INFO_DLG DIALOGEX 0, 0, 206, 206
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,126,174,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,30,174,50,14
+    LTEXT           "Level Name:",IDC_STATIC,13,24,40,8
+    LTEXT           "Description:",IDC_STATIC,13,48,39,8
+    LTEXT           "Thumbnail:",IDC_STATIC,12,115,36,8
+    EDITTEXT        IDC_LEVEL_NAME_TXT,60,24,114,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LEVEL_DESCRIPTION_TXT,60,48,114,48,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    EDITTEXT        IDC_LEVEL_THUMPNAIL_TXT,60,114,114,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_SELECT_THUMBNAIL_BTN,180,114,18,12
+    LTEXT           "MainAction: ",IDC_STATIC,12,145,40,8
+    PUSHBUTTON      "...",IDC_SELECT_MAINACTION_BTN,180,144,18,12
+    LTEXT           "",IDC_MAINACTION_NAME_TXT,60,144,8,8
+END
+
+IDD_ANIMATION_BOX DIALOGEX 0, 0, 136, 65
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Animation"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Load Animation",IDC_LOADANIM_BTN,66,42,60,14
+    LTEXT           "Tracks:",-1,6,9,24,8
+    COMBOBOX        IDC_TRACKS_LIST,48,6,78,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Play",IDC_PLAYANIM_BTN,66,24,30,14
+    PUSHBUTTON      "Stop",IDC_STOPANIM_BTN,96,24,30,14
+END
+
+IDD_LOADING_DIALOG DIALOGEX 0, 0, 468, 241
+STYLE DS_SYSMODAL | DS_SETFONT | DS_SETFOREGROUND | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_THICKFRAME
+EXSTYLE WS_EX_TOPMOST | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         153,IDC_LOADING_PICTURE,"Static",SS_BITMAP,0,0,693,357
+    LTEXT           "Loading...",IDC_LOADING_STATUES_TXT,7,222,426,12,WS_BORDER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_MATERIALS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 197
+    END
+
+    IDD_TEXTURES_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+
+    IDD_SHADERS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+
+    IDD_ENVIRONMENT_SETTINGS_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 298
+    END
+
+    IDD_SKYBOX_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 153
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 195
+    END
+
+    IDD_TERRAIN_TOOLBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 201
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 225
+    END
+
+    IDD_NAVIGMESH_TOOLBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 129
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 262
+    END
+
+    IDD_PLUGIN_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 324
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 198
+    END
+
+    IDD_ENTITY_PROP_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 153
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 142
+    END
+
+    IDD_GAMEACTIONS_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 214
+    END
+
+    IDD_LOG_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 256
+    END
+
+    IDD_LEVEL_INFO_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 199
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 199
+    END
+
+    IDD_ANIMATION_BOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 129
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+
+    IDD_LOADING_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 461
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 234
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_LOADING_BMP         BITMAP                  "XEditor.bmp"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Arabic (Saudi Arabia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARA)
+#ifdef _WIN32
+LANGUAGE LANG_ARABIC, SUBLANG_ARABIC_SAUDI_ARABIA
+#pragma code_page(1256)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About XEditor"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "XEditor Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (M-RAY-Y) 2010",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_MATERIAL_EDITOR_DLG DIALOGEX 0, 0, 204, 479
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "RenderStates",-1,14,47,142,84
+    GROUPBOX        "Material Properties",-1,7,23,181,451
+    LTEXT           "Sub Mesh:",-1,26,10,34,8
+    COMBOBOX        IDC_SUBMESH_LIST,64,7,117,68,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Wireframe",IDC_MTRL_WIREFRAME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,58,49,10
+    CONTROL         "Smooth",IDC_MTRL_SMOOTH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,71,40,10
+    CONTROL         "ZTest",IDC_MTRL_ZTEST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,82,34,10
+    CONTROL         "ZWrite",IDC_MTRL_ZWRITE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,95,37,10
+    CONTROL         "Points",IDC_MTRL_POINTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,86,58,35,10
+    CONTROL         "Cullface",IDC_MTRL_CULLFACE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,86,71,41,10
+    CONTROL         "Alpha Test",IDC_MTRL_ALPHATEST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,86,82,50,10
+    CONTROL         "Fog",IDC_MTRL_FOG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,106,28,10
+    CONTROL         "Blend",IDC_MTRL_BLEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,86,95,33,10
+    CONTROL         "CW Cullface",IDC_MTRL_CWCULL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,86,106,55,10
+    GROUPBOX        "TextureUnits",-1,14,130,142,66
+    COMBOBOX        IDC_TEXTURES_LIST,26,143,84,37,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Add",IDC_ADD_TEXTURE_BTN,116,143,18,12
+    PUSHBUTTON      "Rmv",IDC_BUTTON2,134,143,18,12
+    LTEXT           """""",IDC_TEXTURENAME_TXT,50,173,72,8
+    PUSHBUTTON      "...",IDC_BUTTON3,128,170,18,12
+    LTEXT           "Shininess:",-1,20,254,30,8
+    EDITTEXT        IDC_SHININESS,56,253,30,12,ES_AUTOHSCROLL
+    GROUPBOX        "Values",-1,14,317,166,79
+    COMBOBOX        IDC_VALUES_LIST,56,329,84,12,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Add",IDC_ADD_VALUE,140,329,18,12
+    PUSHBUTTON      "Rmv",IDC_RMV_VALUE,158,329,18,12
+    LTEXT           "Shader:",-1,20,271,30,8
+    EDITTEXT        IDC_SHADERNAME_TXT,56,269,66,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BUTTON6,122,269,18,12
+    LTEXT           "Shadow:",-1,20,282,30,8
+    EDITTEXT        IDC_SHADOWSHADER_TXT,56,281,66,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_DEPTH_SHADER_BTN,122,281,18,12
+    LTEXT           "Type:",-1,32,350,21,8
+    COMBOBOX        IDC_VALUETYPE_LIST,56,346,84,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Params:",-1,20,373,30,8
+    EDITTEXT        IDC_PARAM_V1,56,370,30,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PARAM_V2,86,370,30,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PARAM_V3,116,370,30,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PARAM_V4,146,370,30,12,ES_AUTOHSCROLL
+    LTEXT           "Value:",-1,31,332,24,8
+    LTEXT           "Name:",-1,20,37,30,8
+    EDITTEXT        IDC_MATERIAL_NAME,56,34,96,12,ES_AUTOHSCROLL
+    LTEXT           "Name:",-1,26,173,22,8
+    PUSHBUTTON      "...",IDC_SELCET_MATERIAL_BTN,158,34,18,12
+    CONTROL         "Lighting",IDC_MTRL_LIGHTING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,119,41,10
+    PUSHBUTTON      "Ambient",IDC_AMBIENT_BTN,54,204,42,12
+    PUSHBUTTON      "Diffuse",IDC_DIFFUSE_BTN,54,222,42,12
+    PUSHBUTTON      "Specular",IDC_SPECULAR_BTN,102,204,42,12
+    PUSHBUTTON      "Emissive",IDC_EMISSION_BTN,102,222,42,12
+    GROUPBOX        "Blen Parameters",-1,12,402,168,66
+    COMBOBOX        IDC_SOURCE_BLEND_LST,66,414,102,36,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_DEST_BLEN_LIST,66,426,102,36,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Src:",-1,24,414,14,8
+    LTEXT           "Dst:",-1,24,426,14,8
+    COMBOBOX        IDC_ALPHA_FUNCTION_LIST,66,451,102,41,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Alpha Func:",-1,24,451,39,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_MATERIAL_EDITOR_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 197
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 472
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\XEditor.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDB_BITMAP_ICONS        BITMAP                  "res\\PaneIcons.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_TB_NEWSCENE
+    BUTTON      ID_TB_LOADSCENE
+    BUTTON      ID_TB_SAVESCENE
+    SEPARATOR
+    BUTTON      ID_TB_SELECT
+    BUTTON      ID_TB_TRANSLATE
+    BUTTON      ID_TB_ROTATE
+    BUTTON      ID_TB_SCALE
+    SEPARATOR
+    BUTTON      ID_TB_MATERIAL
+    BUTTON      ID_TB_TERRAIN
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New Scene",                  ID_FILE_NEWSCENE
+        MENUITEM "&Load Scene",                 ID_FILE_LOADSCENE
+        MENUITEM "&Save Scene",                 ID_FILE_SAVESCENE
+        MENUITEM SEPARATOR
+        MENUITEM "Import Model",                ID_FILE_LOADMODEL
+        MENUITEM "Export Model",                ID_FILE_SAVEMODEL
+        MENUITEM SEPARATOR
+        MENUITEM "Add Search Path",             ID_FILE_ADDSEARCHPATH
+        MENUITEM "Level Info",                  ID_FILE_LEVELINFO
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+    END
+    POPUP "Tools"
+    BEGIN
+        MENUITEM "Material Editor",             ID_TOOLS_MATERIALEDITOR
+        MENUITEM "Terrain Generator",           ID_TOOLS_TERRAINGENERATOR
+        MENUITEM "Environment",                 ID_TOOLS_ENVIRONMENT
+        MENUITEM SEPARATOR
+        MENUITEM "Entity Properties",           ID_TOOLS_ENTITYPROPERTIES
+        MENUITEM "Animation",                   ID_TOOLS_ANIMATION
+    END
+    POPUP "AI"
+    BEGIN
+        MENUITEM "NavMesh Generator",           ID_AI_NAVMESHGENERATOR
+    END
+    POPUP "Settings"
+    BEGIN
+        MENUITEM "Plugins",                     ID_SETTINGS_PLUGINS
+        MENUITEM "Log",                         ID_SETTINGS_LOG
+        MENUITEM SEPARATOR
+        MENUITEM "Game Mode",                   ID_SETTINGS_GAMEMODE
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "&Toolbars"
+        BEGIN
+            MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+            MENUITEM SEPARATOR
+            MENUITEM "&Customize...",               35001
+        END
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About XEditor...",           ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "M-RAY"
+            VALUE "FileDescription", "M-RAY Engine Framework Editor "
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "XEditor.exe"
+            VALUE "LegalCopyright", " (c) M-RAY .  All rights reserved."
+            VALUE "OriginalFilename", "XEditor.exe"
+            VALUE "ProductName", "XEditor"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+END
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "XEditor"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "XEditor"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Save Scene"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+END
+
+STRINGTABLE 
+BEGIN
+    IDR_PANE_OPTIONS        "Tools"
+    IDR_PANE_PROPERTIES     "Properties"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TB_NEWSCENE          "New Scene"
+    ID_TB_LOADSCENE         "Load Scene File"
+END
+
+#endif    // Arabic (Saudi Arabia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARA)
+LANGUAGE 1, 1
+#pragma code_page(1252)
+#include "res\XEditor.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

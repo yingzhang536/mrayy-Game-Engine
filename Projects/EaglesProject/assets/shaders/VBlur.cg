@@ -1,0 +1,62 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+   float texScaler: TEXCOORD1;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, uniform float2 viewPortSize) {
+	VS_OUTPUT Out;
+   Out.Pos.xy=2*sign(Pos.xy)-1;
+	Out.Pos.z = 1.0;
+	Out.Pos.w = 1.0;
+
+	Out.texCoord.x = 0.5 * (1 + Out.Pos.x);
+ 	Out.texCoord.y = 0.5 * (1 + Out.Pos.y);
+
+	Out.texScaler=1.0 / viewPortSize.y;
+   
+   return Out;
+}
+
+float2 gaussFilter[7] = 
+{ 
+   float2(-3.0,  1.0/64.0),
+   float2(-2.0,  6.0/64.0),
+   float2(-1.0,  15.0/64.0),
+   float2(0.0,  20.0/64.0),
+   float2(1.0, 15.0/64.0),
+   float2(2.0,  6.0/64.0),
+   float2(3.0,  1.0/64.0) 
+ };
+
+
+
+float4 main_fp(float2 texCoord: TEXCOORD0,float texScaler: TEXCOORD1,
+				uniform sampler tex0) : COLOR 
+
+{
+	
+   float4 color = 0.0;
+   
+   int i;
+   for (i=0;i<7;i++)
+   {
+      color += tex2D(tex0,float2(texCoord.x , texCoord.y + gaussFilter[i].x * texScaler )) *  gaussFilter[i].y;
+   } // End for
+//    
+//    color = color *2;
+      
+   return color;
+	
+}
+
+
+
+
+
+
+
+
+

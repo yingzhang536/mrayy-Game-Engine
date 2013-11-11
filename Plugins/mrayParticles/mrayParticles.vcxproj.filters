@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Particles">
+      <UniqueIdentifier>{0362112d-df82-4ac1-a343-57a6a2c57768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles\emitters">
+      <UniqueIdentifier>{87640715-667c-446d-ab1c-d9b5c7155b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles\affectors">
+      <UniqueIdentifier>{3fa25302-7f62-413b-8325-7718b1b45bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mrayParticles.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxParticleEmitter.h">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshParticleEmitter.h">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="RingParticleEmitter.h">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereParticleEmitter.h">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="IPABlocker.h">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="PAColorInterpolater.h">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="PARotationInterpolater.h">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="PAScaleInterpolater.h">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="PAVelocityInterpolater.h">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mrayParticlesPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxParticleEmitter.cpp">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshParticleEmitter.cpp">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="RingParticleEmitter.cpp">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereParticleEmitter.cpp">
+      <Filter>Source Files\Particles\emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="IPABlocker.cpp">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="PAColorInterpolater.cpp">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="PARotationInterpolater.cpp">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="PAScaleInterpolater.cpp">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="PAVelocityInterpolater.cpp">
+      <Filter>Source Files\Particles\affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

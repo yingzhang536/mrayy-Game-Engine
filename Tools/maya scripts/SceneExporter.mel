@@ -1,0 +1,180 @@
+
+
+
+
+
+
+//mray ascii Locater exporter  Mohamad yamen saraiji //////////////////////////////////////////
+proc int bc_browse() 
+{
+	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+	textField -e -tx $filename tf_path;
+	return 1; 
+} 
+proc int update_progress(int $value, int $max_value, string $status)
+{
+	float $divisor=(float)$max_value/(float)100;
+	float $percent=(float)$value/$divisor;
+	progressWindow -e -pr $value -st ((int)$percent+"% "+$status);
+	return 1; 
+}  
+
+proc int bc_setupAttrs()
+{
+
+	string $object[]=`ls -tr -sl -o -sn `;
+	int $loop;
+	int $objectsCount=size($object);
+	for($loop=0;$loop<$objectsCount;$loop++)
+	{
+		if(`objExists ($object[$loop]+".IsDummy")`==false)
+			addAttr -ln "IsDummy"  -at bool $object[$loop] ;
+
+		if(`objExists ($object[$loop]+".Model")`==false)
+			addAttr -ln "Model"  -dt "string" $object[$loop] ;
+/*
+		if(`objExists ($object[$loop]+".Material")`==false){
+			addAttr -ln "Material"  -dt "string" $object[$loop] ;
+			setAttr  ($object[$loop]+".Material") -type "string" " DefaultMtrl";
+		}
+
+		if(`objExists ($object[$loop]+".Action")`==false)
+			addAttr -ln "Action"  -dt "string" $object[$loop] ;*/
+
+	}
+	return 1;
+}
+
+proc int bc_exportObject(string $obj,string $modelName,string $path,string $material)
+{
+	$fileid=`fopen $path "w"`; 
+	if($fileid==0)
+	{
+		string $message="directory does not exist!"; 
+		error $message;
+	} 
+
+	fprint $fileid ("<ISceneNode Name=\""+$obj+"\" Type=\"AnimatedMesh\">\n");
+	fprint $fileid "\t<LODS>\n";
+	fprint $fileid ("\t\t<LOD Mesh=\""+$modelName+".mdl\" distance=\"100\">\n");
+	fprint $fileid ("\t\t\t<Material submodel=\""+$obj+"\" name=\""+$material+"\"/>\n");
+	fprint $fileid "\t\t</LOD>\n";
+	fprint $fileid "\t</LODS>\n";
+	fprint $fileid "</ISceneNode>\n";
+	fclose $fileid;
+	return 1;
+}
+
+proc int bc_exportObjects() 
+{
+	string $path=`textField -q -tx tf_path`;
+	string $baseFileName=`substitute "(\\\\)+$" $path ""`;
+	string $filename=$baseFileName+"\\Objects.xml";
+
+	string $object[]=`ls -tr -sl -o -sn `;
+	if($object[0]=="")
+	{
+		string $message="no object selected!";
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+	}
+	//----------------------------------------open file
+	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+	{
+		string $message="directory does not exist!"; 
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+	} 
+
+	string $cmd;
+	int $loop;
+	int $objectsCount=0;
+	int $objectsArr[];
+
+	int $objectsCount=size($object);
+
+	fprint $fileid "<Scene>\n";
+
+	int $isInstance=false;
+
+	for($loop=0;$loop<$objectsCount;$loop++)
+	{
+		print ($object[$loop]+"\n");
+	
+		string $userDefinedAttrs[]=`eval("listAttr -userDefined "+ $object[$loop])`;
+			
+		string $modelName;
+		$modelName=`eval("getAttr "+ $object[$loop]+".Model")`;
+		
+
+		fprint $fileid ("<ISceneNode Name=\""+$object[$loop]+"\" Type=\"AnimatedMesh\" Model=\""+$modelName+"\" ID=\""+$loop+"\"");
+/*
+		fprint $fileid ("\t<ISceneNode Model=\""+$modelName+".xml"+"\"");
+		fprint $fileid (" Action=\""+`eval("getAttr "+ $object[$loop]+".Action")`+"\"");*/
+
+		float $oPos[]=`eval("getAttr "+ $object[$loop]+".translate")`;
+		fprint $fileid (" Position=\""+$oPos[0]+","+$oPos[1]+","+$oPos[2]+ "\"");
+
+		float $oRot[]=`eval("getAttr "+ $object[$loop]+".rotate")`;
+		fprint $fileid (" Orintation=\""+$oRot[0]+","+$oRot[1]+","+$oRot[2]+ "\"");
+
+		float $oScale[]=`eval("getAttr "+ $object[$loop]+".scale")`;
+		fprint $fileid (" Scale=\""+$oScale[0]+","+$oScale[1]+","+$oScale[2]+ "\"");
+		fprint $fileid (">\n");
+		/*
+		fprint $fileid ("\t\t<CustomAttrs ");
+		int $attr;
+		int $attrCnt=size($userDefinedAttrs);
+		for($attr=0;$attr<$attrCnt;$attr++)
+		{
+			if(startsWith($userDefinedAttrs[$attr],"exp_"))
+			{
+				$expName=substr($userDefinedAttrs[$attr],5,size($userDefinedAttrs[$attr]));
+				fprint $fileid ($expName+"=\""+`eval("getAttr "+ $object[$loop]+"."+$userDefinedAttrs[$attr])`+ "\"");
+			}
+		}
+		fprint $fileid "/>\n";*/
+		fprint $fileid "\t</ISceneNode>\n";
+		/*
+		if($isInstance==false)
+			bc_exportObject($object[$loop],$modelName,$baseFileName+"\\"+$object[$loop]+".xml",`eval("getAttr "+ $object[$loop]+".Material")`);*/
+	}
+
+
+	fprint $fileid "</Scene>";
+	//----------------------------------------close file
+	fclose $fileid;
+	progressWindow -ep;
+	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p EaglesObjectsExporterwindow; 
+	undoInfo -state on;
+	return 1;
+}
+proc int create_SceneExporter_gui() 
+{
+	if(`window -exists SceneExporterToolWindow`)deleteUI SceneExporterToolWindow;
+	window -wh 512 284 -te 100 -le 100 -s false -t "Scene Exporter" SceneExporterToolWindow;
+	rowColumnLayout -nr 2 -rh 1 1 -rh 2 125 RCL1; 
+	scrollLayout -hst 0 -p RCL1 SL1;
+	rowColumnLayout -nc 2 -cw 1 85 -cw 2 385 -p SL1 RCL2; 
+	columnLayout -p RCL1 CL1; 	
+	rowLayout -nc 1 -cw4 60 60 60 60 -p CL1 RL1;
+	button -l "SetupAttrs" -w 60 -c "bc_setupAttrs()"; 	
+	setParent CL1;	 			
+	text -l ""; 		
+	rowLayout -nc 2 -cw2 30 300 -p CL1 RL2; 			
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export xml scene file" -w 504 -c "bc_exportObjects()";
+	showWindow SceneExporterToolWindow;
+	return 1; 
+}  
+create_SceneExporter_gui();
+

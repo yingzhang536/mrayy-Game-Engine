@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Managment">
+      <UniqueIdentifier>{713bccc6-2bd2-41f9-89d7-4d39ac62739f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managment\Scenario">
+      <UniqueIdentifier>{2e324007-1b27-4eb2-86b1-e6bf6d777642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managment\Scenario\introItems">
+      <UniqueIdentifier>{0194be21-8478-4393-9e67-4a4900e32c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managment\Game">
+      <UniqueIdentifier>{4cf6ac01-8d77-46b6-8219-49657f112cf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managment\Effects">
+      <UniqueIdentifier>{b960fc2a-3e1c-4763-a691-689750df5a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mod">
+      <UniqueIdentifier>{57c3fefb-62f4-470d-b38b-82a84c2aa79e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\eagles">
+      <UniqueIdentifier>{46a9d9d1-af44-4007-bb3d-4ed0afb2be80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Project">
+      <UniqueIdentifier>{70f43891-9a94-4235-be9b-0ab342d3d3e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Project\assets">
+      <UniqueIdentifier>{6344ee30-d194-454f-8e5f-38b0fc520199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Project\assets\shaders">
+      <UniqueIdentifier>{53e144ca-2c9e-488d-a7e9-bdaadfd71004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Project\assets\Levels">
+      <UniqueIdentifier>{717f07b6-062d-41b6-864e-c654af71e531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Project\assets\Overlay">
+      <UniqueIdentifier>{1c67477b-6869-4112-a43e-528e99f019f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EagleApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameOptionManager.cpp">
+      <Filter>Source Files\Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageController.cpp">
+      <Filter>Source Files\Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScenarioManager.cpp">
+      <Filter>Source Files\Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLLevelLoader.cpp">
+      <Filter>Source Files\Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AboutSenario.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameSenario.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IntroSenario.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoadingScenario.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuSenario.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SenarioState.cpp">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageIntroItem.cpp">
+      <Filter>Source Files\Managment\Scenario\introItems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VideoIntroItem.cpp">
+      <Filter>Source Files\Managment\Scenario\introItems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AirPlane.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AntiPlaneMissile.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BuildingEntity.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionManager.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ControlMap.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DefaultObjectFactory.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLevel.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLevelManager.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HumanController.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JetParticleSystem.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Missile.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MissileLauncher.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectFactory.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlaneCamera.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlaneMissile.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StaticEntity.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TreeEntity.cpp">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BloomPP.cpp">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlarePP.cpp">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InGamePP.cpp">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSoundthemeManager.cpp">
+      <Filter>Source Files\Mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnvironmentManager.cpp">
+      <Filter>Source Files\Mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IDManager.cpp">
+      <Filter>Source Files\Mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sun.cpp">
+      <Filter>Source Files\Mod</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\EagleApplication.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameOptionManager.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageController.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IScenarioNode.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScenarioExitCode.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScenarioManager.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGameInfo.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLevelLoader.h">
+      <Filter>Source Files\Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AboutSenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameSenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IntroSenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LoadingScenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MenuSenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProblemScenario.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SenarioState.h">
+      <Filter>Source Files\Managment\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageIntroItem.h">
+      <Filter>Source Files\Managment\Scenario\introItems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IntroItem.h">
+      <Filter>Source Files\Managment\Scenario\introItems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VideoIntroItem.h">
+      <Filter>Source Files\Managment\Scenario\introItems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AirPlane.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AntiPlaneMissile.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BuildingEntity.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CollisionManager.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ControlMap.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DefaultObjectFactory.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DemoCamera.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EPlaneAction.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEntity.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLevel.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLevelManager.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HumanController.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ILockableEntity.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IObjectCreator.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPlaneController.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JetParticleSystem.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Missile.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MissileGraveyard.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MissileLauncher.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectFactory.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlaneCamera.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlaneMissile.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StaticEntity.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureManager.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TreeEntity.h">
+      <Filter>Source Files\Managment\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BloomPP.h">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlarePP.h">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InGamePP.h">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PostProcessing.h">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shadercallback.h">
+      <Filter>Source Files\Managment\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CSoundthemeManager.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EaglesShaderCallbacks.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EnvironmentManager.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDManager.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IEnvironemtEvent.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sun.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\userDefinedShaders.h">
+      <Filter>Source Files\Mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IEaglesManager.h">
+      <Filter>Source Files\eagles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mrayWinApp\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrams\BaseDiagram.EAP">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\EngineSplash.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\EngineSplash_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\simpleLogo.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\mrayWinApp\stop-error.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Configure.stg">
+      <Filter>Resource Files\Project</Filter>
+    </None>
+    <None Include="Log.htm">
+      <Filter>Resource Files\Project</Filter>
+    </None>
+    <None Include="log.txt">
+      <Filter>Resource Files\Project</Filter>
+    </None>
+    <None Include="Resources_d.stg">
+      <Filter>Resource Files\Project</Filter>
+    </None>
+    <None Include="SearchPath.stg">
+      <Filter>Resource Files\Project</Filter>
+    </None>
+    <None Include="Assets\shaders\BBShader.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\BFinal.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\building.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\depthShader.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\Dither.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\GameMaterials.material">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\GlareFinal.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\grayscale.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\GUI.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\HBlur.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\InGamePP.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\Luminance.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\phong.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\Reflection.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\skyBox.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\splash.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\Terrain.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\TreeShader.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\VBlur.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\Water.cg">
+      <Filter>Resource Files\Project\assets\shaders</Filter>
+    </None>
+    <None Include="Assets\levels\levelTemplate.xml">
+      <Filter>Resource Files\Project\assets\Levels</Filter>
+    </None>
+    <None Include="Assets\levels\testLevel.xml">
+      <Filter>Resource Files\Project\assets\Levels</Filter>
+    </None>
+    <None Include="Assets\GUI\GameMenuOverlay.xml">
+      <Filter>Resource Files\Project\assets\Overlay</Filter>
+    </None>
+    <None Include="Assets\GUI\GameUIOverlay.xml">
+      <Filter>Resource Files\Project\assets\Overlay</Filter>
+    </None>
+    <None Include="Assets\GUI\LoadingOverlay.xml">
+      <Filter>Resource Files\Project\assets\Overlay</Filter>
+    </None>
+    <None Include="Assets\GUI\MenuOverlay.xml">
+      <Filter>Resource Files\Project\assets\Overlay</Filter>
+    </None>
+    <None Include="LevelSchema.xsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EaglesResource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="LevelSchema.xsd">
+      <Filter>Resource Files</Filter>
+    </Xsd>
+  </ItemGroup>
+</Project>

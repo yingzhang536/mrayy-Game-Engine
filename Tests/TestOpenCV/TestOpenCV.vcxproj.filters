@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ImageSource">
+      <UniqueIdentifier>{ba5531e4-82e5-4ac3-b671-f0188b158768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects">
+      <UniqueIdentifier>{434429f5-4af3-4a84-a2ec-0bcf08c07b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Robot">
+      <UniqueIdentifier>{4a171541-3674-4581-a26e-79be5cbd8fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{d0d8a004-6feb-4d02-94a0-ef5a9a5dcf52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound">
+      <UniqueIdentifier>{c1d1c7f7-c327-4f02-aaaf-631a72c7f421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Map Generator">
+      <UniqueIdentifier>{3a6fce7d-5230-494e-9ad0-986b90b643e2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestOpenCV.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectShowImageDataSource.cpp">
+      <Filter>Source Files\ImageSource</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenCVImageDataSource.cpp">
+      <Filter>Source Files\ImageSource</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraCaptureThread.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleCameraCaptureThread.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="BrowserWindow.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIWebPageControl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Guitar.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="GoogleMapHTMLGenerator.cpp">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DirectShowImageDataSource.h">
+      <Filter>Source Files\ImageSource</Filter>
+    </ClInclude>
+    <ClInclude Include="IImageDataSource.h">
+      <Filter>Source Files\ImageSource</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenCVImageDataSource.h">
+      <Filter>Source Files\ImageSource</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraCaptureThread.h">
+      <Filter>Source Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleCameraCaptureThread.h">
+      <Filter>Source Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotCommunication.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="IUserCommunication.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="BrowserWindow.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIWebPageControl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIWebPageOrganizer.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Guitar.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GoogleMapHTMLGenerator.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="GMVisitor.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="GMStyleInfo.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="GMMapOptions.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="GMMapData.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="GMMapTypeControlOptions.h">
+      <Filter>Source Files\Map Generator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Engine\mrayWinApp\mrayEngineResource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

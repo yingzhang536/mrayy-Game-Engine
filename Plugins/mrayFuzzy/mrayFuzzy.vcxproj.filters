@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Sets">
+      <UniqueIdentifier>{ae6c0678-fcfc-4b99-9a52-e17f1dd44dab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Hedges">
+      <UniqueIdentifier>{543d9e20-2ab9-4ddd-9d8b-46b34ed96ed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Operator">
+      <UniqueIdentifier>{5b98e633-95ef-4fd1-b180-1181de686a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Defuzzify">
+      <UniqueIdentifier>{fd3649bd-54e8-4d08-a653-7951b7f86bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Clustering">
+      <UniqueIdentifier>{ae917962-cd77-4ac8-a73e-7ac0b7a73b5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser">
+      <UniqueIdentifier>{e81ce0ff-1d73-4ae7-aa69-a0083bdf19ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FuzzyModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyRule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzySet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzySetProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyLeftShoulderSet.cpp">
+      <Filter>Source Files\Sets</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyRightShoulderSet.cpp">
+      <Filter>Source Files\Sets</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzySingletonSet.cpp">
+      <Filter>Source Files\Sets</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyTrapezoidalSet.cpp">
+      <Filter>Source Files\Sets</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyTriangleSet.cpp">
+      <Filter>Source Files\Sets</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyFairlyHedge.cpp">
+      <Filter>Source Files\Hedges</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyVeryHedge.cpp">
+      <Filter>Source Files\Hedges</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyAndOpt.cpp">
+      <Filter>Source Files\Operator</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyNotOpt.cpp">
+      <Filter>Source Files\Operator</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyOrOpt.cpp">
+      <Filter>Source Files\Operator</Filter>
+    </ClCompile>
+    <ClCompile Include="DefuzzyCentroid.cpp">
+      <Filter>Source Files\Defuzzify</Filter>
+    </ClCompile>
+    <ClCompile Include="DefuzzyMaxAv.cpp">
+      <Filter>Source Files\Defuzzify</Filter>
+    </ClCompile>
+    <ClCompile Include="FCMClustering.cpp">
+      <Filter>Source Files\Clustering</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyXMLParser.cpp">
+      <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FuzzyModule.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyRule.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzySet.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzySetProxy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyTerm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyVariable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDefuzzifyOperation.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mrayFuzzy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyLeftShoulderSet.h">
+      <Filter>Source Files\Sets</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyRightShoulderSet.h">
+      <Filter>Source Files\Sets</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzySingletonSet.h">
+      <Filter>Source Files\Sets</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyTrapezoidalSet.h">
+      <Filter>Source Files\Sets</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyTriangleSet.h">
+      <Filter>Source Files\Sets</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyFairlyHedge.h">
+      <Filter>Source Files\Hedges</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyVeryHedge.h">
+      <Filter>Source Files\Hedges</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyAndOpt.h">
+      <Filter>Source Files\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyNotOpt.h">
+      <Filter>Source Files\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyOrOpt.h">
+      <Filter>Source Files\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="DefuzzyCentroid.h">
+      <Filter>Source Files\Defuzzify</Filter>
+    </ClInclude>
+    <ClInclude Include="DefuzzyMaxAv.h">
+      <Filter>Source Files\Defuzzify</Filter>
+    </ClInclude>
+    <ClInclude Include="FCMClustering.h">
+      <Filter>Source Files\Clustering</Filter>
+    </ClInclude>
+    <ClInclude Include="IFuzzyClustering.h">
+      <Filter>Source Files\Clustering</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyXMLParser.h">
+      <Filter>Source Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

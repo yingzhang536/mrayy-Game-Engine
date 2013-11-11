@@ -1,0 +1,41 @@
+proc exportSelectedMesh()
+{
+	string $objects[]=`ls -sl`;
+
+	if($objects[0]=="")error "select mesh";
+
+	string $sCluster=`findRelatedSkinCluster $objects[0]`;
+	if($sCluster=="")error "mesh should be skinned";
+
+
+  	int $fileid=`fopen "e:\\mesh.txt" "w"`;
+	if(!$fileid)error "file not open!";
+
+	string $joints[]=`eval("skinPercent -q -t $sCluster " + $objects[0]+".vtx[0]")`;
+	int $jonitCnt=size($joints);
+	int $vertxCnt[]=`eval("polyEvaluate -v "+ $objects[0])`;
+
+	fprint $fileid ($jonitCnt+"\n");
+	fprint $fileid ($vertxCnt[0]+"\n");
+	int $j=0;
+	for(;$j<size($joints);$j++)
+	   fprint $fileid ($joints[$j]+" ");
+  	  fprint $fileid "\n";
+
+
+
+	int $i=0;
+	for(;$i<$vertxCnt[0];$i++)
+	{
+	  float $sPercent[]=`eval("skinPercent -q -v " +  $sCluster + " " + $objects[0]+ ".vtx["+$i+"]")`;
+	  int $j=0;
+	  for(;$j<size($sPercent);$j++)
+	    fprint $fileid ($sPercent[$j]+" ");
+  	  fprint $fileid "\n";
+	}
+
+	fclose $fileid;
+}
+
+exportSelectedMesh();
+

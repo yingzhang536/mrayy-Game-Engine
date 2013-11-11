@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Chromosomes">
+      <UniqueIdentifier>{c28a4366-3fbc-41fe-aebb-23fadc429d76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Operations">
+      <UniqueIdentifier>{e8926a23-7535-48ba-9345-e21b13210ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CompileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GAAlgorithmParameters.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GAChromosomeInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GAModule.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GAPopulation.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GABinChromosome.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GAChromosome.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GALimitValues.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GAMultiLimitsValues.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GASetChromosome.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GAValuedChrom.h">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClInclude>
+    <ClInclude Include="GAChromOperation.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="GAChromosomeSelector.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="GACrossOver.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="GAFitnessComparator.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="GAMutation.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="IGAChromValues.h">
+      <Filter>Source Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GAModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GAPopulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GABinChromosome.cpp">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClCompile>
+    <ClCompile Include="GASetChromosome.cpp">
+      <Filter>Source Files\Chromosomes</Filter>
+    </ClCompile>
+    <ClCompile Include="GAChromosomeSelector.cpp">
+      <Filter>Source Files\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="GACrossOver.cpp">
+      <Filter>Source Files\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="GAMutation.cpp">
+      <Filter>Source Files\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

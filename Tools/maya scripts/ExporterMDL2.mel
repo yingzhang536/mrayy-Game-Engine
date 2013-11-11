@@ -1,0 +1,385 @@
+//mdl5-ascii exporter (c) 2003 thomas oppl //////////////////////////////////////////
+ global int $tf_aindex=0; 
+global string $tf_anames[]; 
+clear $tf_anames; 
+global string $tf_aframes[]; 
+clear $tf_aframes;  print $tf_anames;  
+proc int bc_add() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	$tf_aindex++;
+ 	setParent RCL2;
+ 	$tf_anames[$tf_aindex]=`textField`;
+ 	$tf_aframes[$tf_aindex]=`textField`;
+ 	return 1; }
+proc int bc_remove() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+  	if($tf_aindex>0)
+ 	{
+ 		deleteUI $tf_anames[$tf_aindex];
+ 		deleteUI $tf_aframes[$tf_aindex];
+ 		text -l "" t_temp; deleteUI t_temp;
+ 		$tf_aindex--;
+ 	} 	return 1; }  
+proc int bc_load() 
+{
+ 	fileBrowserDialog -m 0 -fc "load_animlist" -an "load";
+ 	return 1; }  
+proc int bc_save() 
+{
+ 	fileBrowserDialog -m 1 -fc "save_animlist" -an "save";
+ 	return 1; 
+}
+proc int bc_browse() 
+{
+ 	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+ 	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+ 	textField -e -tx $filename tf_path;
+ 	return 1; 
+}  
+proc int load_animlist(string $filename, string $fileType) 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	while($tf_aindex>=0)
+ 	{
+ 		deleteUI $tf_anames[$tf_aindex];
+ 		deleteUI $tf_aframes[$tf_aindex];
+ 		text -l "" t_temp; deleteUI t_temp; 
+		$tf_aindex--;
+ 	}
+ 	$fileid=`fopen $filename "r"`;
+ 	setParent RCL2;
+ 	while(!`feof $fileid`)
+ 	{
+ 		$tf_aindex++;
+ 		$fname=`fgetline $fileid`;
+ 		$tf_anames[$tf_aindex]=`textField -tx $fname`; 
+		$fframes=`fgetline $fileid`;
+ 		$tf_aframes[$tf_aindex]=`textField -tx $fframes`;
+ 	}
+ 	fclose $fileid;
+ 	return 1; 
+}  
+proc int save_animlist(string $filename, string $fileType) 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+  	global string $tf_aframes[];
+  	$fileid=`fopen $filename "w"`;
+ 	for($i=0;$i<=$tf_aindex;$i++)
+ 	{
+ 		string $fname=eval("textField -q -tx "+$tf_anames[$i]);
+ 		string $fframes=eval("textField -q -tx "+$tf_aframes[$i]); 
+		fprint $fileid ($fname+"\n"+$fframes); 
+		if($i!=$tf_aindex)fprint $fileid ("\n"); 	
+	}
+ 	fclose $fileid;
+ 	return 1; 
+}
+proc int update_progress(int $value, int $max_value, string $status)
+{
+ 	float $divisor=(float)$max_value/(float)100;
+ 	float $percent=(float)$value/$divisor;
+ 	progressWindow -e -pr $value -st ((int)$percent+"% "+$status);
+ 	return 1; 
+}  
+proc int bc_export() 
+{
+ //	flushUndo;
+ //	undoInfo -state off;
+  	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+  	float $scale=`floatField -q -v ff_scale`;
+ 	string $path=`textField -q -tx tf_path`;
+ 	string $filename=`substitute "(\\\\)+$" $path ""`+"\\model.txt";
+ 	string $anim_names[];
+ 	int $export_frames[];
+ 	int $export_frames_nameindex[];
+ 	int $export_frames_namecount[];
+	int $export_frames_count[];
+ 	int $count=0;
+ 	int $ai=0;
+ 	int $efi=0;
+  	//----------------------------------------fetch animations from textfields
+ 	while($ai<=$tf_aindex)
+ 	{ 
+		$anim_names[$ai]=eval("textField -q -tx "+$tf_anames[$ai]);
+ 		if(match("[a-zA-Z0-9]+",$anim_names[$ai])=="")
+//----------------------------------------------------------------warning
+ 		{
+ 				string $message="empty animation name field!";
+ 				progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+				undoInfo -state on; error $message;
+ 		}
+ 		if(`size $anim_names[$ai]`>14)
+//--------------------------------------------------------------------------------warning 
+		{
+			string $message="animation name has more than 14 characters!";
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+		} 		
+		if(match(" +",$anim_names[$ai])!="")
+//--------------------------------------------------------------------------warning
+		{ 
+			string $message="animation name contains spaces!";  
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+		}
+ 		string $tempstring=eval("textField -q -tx "+$tf_aframes[$ai]); 
+		if(match("[0-9]+",$tempstring)=="")
+//---------------------------------------------------------------------------warning 
+		{ 	
+			string $message="error in animation frames field!"; 
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message; 
+		}
+ 		int $frame;
+ 		int $namecount=0;
+ 		for($frame in return_intarray($tempstring))
+ 		{
+ 			$export_frames[$efi]=$frame;
+ 			$export_frames_nameindex[$efi]=$ai; 
+			$export_frames_namecount[$efi]=$namecount;
+
+ 			$namecount++; 
+			$efi++;
+ 		}
+		$export_frames_count[$ai]=$export_frames_namecount[$efi-1];
+ 		$ai++;
+ 	}  	//----------------------------------------evaluate selected object
+
+ 	string $object[]=`ls -tr -sl`;
+ 		if($object[0]=="")
+//---------------------------------------------------------------------------------------------------warning
+ 		{
+ 			string $message="no object selected!";
+  			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+ 		}
+ 	//----------------------------------------open file
+ 	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+//-------------------------------------------------------------------------------------------------------warning 
+	{
+		string $message="directory does not exist!"; 
+		progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+ 	} 
+	fprint $fileid (size($object) + "\n");
+ 	string $cmd;
+	int $loop;
+     for($loop=0;$loop<size($object);$loop++)
+     {
+
+	fprint $fileid ( $object[$loop]+"\n");
+	float $oPos[]=`eval("getAttr "+ $object[$loop]+".translate")`;
+	fprint $fileid ($oPos[0]+" "+$oPos[1]+" "+$oPos[2]+ "\n");
+
+	float $oRot[]=`eval("getAttr "+ $object[$loop]+".rotate")`;
+	fprint $fileid ($oRot[0]+" "+$oRot[1]+" "+$oRot[2]+ "\n");
+
+	float $oScale[]=`eval("getAttr "+ $object[$loop]+".scale")`;
+	fprint $fileid ($oScale[0]+" "+$oScale[1]+" "+$oScale[2]+ "\n");
+
+
+	select $object[$loop];
+ 	$cmd=("polyEvaluate -v");
+ 	int $numverts[]=eval($cmd);
+ 	$cmd=("polyEvaluate -uv");
+ 	int $numuvs[]=eval($cmd);
+ 	$cmd=("polyEvaluate -t");
+ 	int $numtris[]=eval($cmd);
+  	int $numframes=size($export_frames);
+ 	int $current_frame=0;
+ 	currentTime $export_frames[$current_frame];
+  	int $progress=0;
+ 	float $step=1;
+ 	int $max_progress=$numframes+$numuvs[0]+(2*$numtris[0])+($numverts[0]*$numframes); 
+	progressWindow -t "exporting mdl5-ascii file..." -pr $progress -st "0%" -ii false -min 0 -max $max_progress;
+
+	 	//----------------------------------------find global bounding box 	
+	$cmd=("polyEvaluate -b"); 	float $gbb[]=eval($cmd);
+ 	while ($current_frame<$numframes)
+ 	{	
+ 		$cmd=("polyEvaluate -b");
+ 		float $bb[]=eval($cmd);
+ 		if ($bb[0]<$gbb[0]){$gbb[0]=$bb[0];} 
+		if ($bb[1]>$gbb[1]){$gbb[1]=$bb[1];} 
+		if ($bb[2]<$gbb[2]){$gbb[2]=$bb[2];}
+ 		if ($bb[3]>$gbb[3]){$gbb[3]=$bb[3];}
+ 		if ($bb[4]<$gbb[4]){$gbb[4]=$bb[4];} 
+		if ($bb[5]>$gbb[5]){$gbb[5]=$bb[5];} 
+ 		$current_frame++;
+ 		currentTime $export_frames[$current_frame];
+  		update_progress($progress++,$max_progress,"finding globalboundingbox...");
+  	} 	$current_frame=0; 	currentTime $export_frames[$current_frame];
+  	//----------------------------------------write header 
+//	fprint $fileid "globalboundingbox\n";
+ 	fprint $fileid ((-$gbb[1])+" "+$gbb[4]+" "+$gbb[2]+" "+(-$gbb[0])+" "+$gbb[5]+" "+$gbb[3]+"\n\n");
+ 	fprint $fileid ($numverts[0]+"\n\n");
+ 	fprint $fileid ($numtris[0]+"\n\n");
+ 	fprint $fileid ($numuvs[0]+"\n\n");
+ 	fprint $fileid ($numframes+"\n\n");
+ 	fprint $fileid (($tf_aindex+1)+"\n\n");
+// 	fprint $fileid ("scale\n"+$scale+"\n");
+  	//----------------------------------------write uvcoordinates 
+//	fprint $fileid "uvcoordinates\n";
+ 	$step=$numuvs[0]/10;if($step<1)$step=1;
+ 	$count=0;
+ 	while($count<$numuvs[0])
+ 	{	 
+		float $uv[]=`polyEditUV -q -u -v ($object[$loop]+".map["+$count+"]")`; 	
+		fprint $fileid ($uv[0]+" "+$uv[1]+"\n"); 	
+	/*	if($uv[0]>1.001||$uv[0]<-0.001||$uv[1]>1.001||$uv[1]<-0.001)
+//--------------------------------------------------warning 	
+		{ 	
+			string $message="some uvcoordinates are outside 0 and 1 texture space!"; 	
+			fclose $fileid; system("shell del "+$filename); 
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+		} 	*/
+		$count++;  
+		if($count%$step==0)update_progress($progress+=$step,$max_progress,"writing uvcoordinates..."); 
+ 	}
+  	//----------------------------------------write triangles 
+//	fprint $fileid "triangles\n"; 
+	$step=$numtris[0]/10;if($step<1)$step=1;
+ 	$count=0;
+	fprint $fileid "\n";
+ 	while($count<$numtris[0])
+ 	{ 
+		string $tempstringarray[]=`polyInfo -fv ($object[$loop]+".f["+$count+"]")`; 
+		int $list[]=return_intarray($tempstringarray[0]); 
+		if(size($list)>4)
+//---------------------------------------------------------------------------------------------warning 	
+		{ 	
+			string $message="model is not triangulated!"; 
+			fclose $fileid; system("shell del "+$filename); 	
+			progressWindow -ep; confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message; 
+		} 	
+		fprint $fileid ($list[1]+" "+$list[2]+" "+$list[3]+"\n");
+ 		$count++; 
+ 		if($count%$step==0)update_progress($progress+=$step,$max_progress,"writing triangles..."); 
+ 	}  	//----------------------------------------write uvtriangles 
+//	fprint $fileid "uvtriangles\n"; 
+	$count=0; 
+	fprint $fileid "\n";
+	while($count<$numtris[0])
+ 	{ 
+		string $tempstringarray[]=`polyInfo -fv ($object[$loop]+".f["+$count+"]")`;
+ 		int $list[]=return_intarray($tempstringarray[0]);
+ 		for($i=1;$i<4;$i++)  
+             { 	
+			string $vf=$object[$loop]+".vtxFace["+$list[$i]+"]["+$list[0]+"]";
+ 			string $tempstringarray[]=`polyListComponentConversion -fromVertexFace -toUV  $vf`;
+ 			int $intarray[]=return_intarray($tempstringarray[0]);
+ 			fprint $fileid ($intarray[size($intarray)-1]+" ");
+ //faster with $tempstring? 	
+		} 
+		fprint $fileid ("\n");
+ 		$count++;
+  		if($count%$step==0)update_progress($progress+=$step,$max_progress,"writing uvtriangles...");
+  	}  	//----------------------------------------write animation frames 
+	$step=$numverts[0]/5;if($step<1)$step=1; 
+	$current_frame=0;
+	while($current_frame<($tf_aindex+1))
+	{
+		fprint $fileid (($export_frames_count[$current_frame]+1)+"\n");
+		$current_frame++;
+	}
+	$current_frame=0;
+	while($current_frame<$numframes) 
+	{ 	//----------------------------------------frame name 	
+	fprint $fileid "\n";
+		string $tempstring=$anim_names[$export_frames_nameindex[$current_frame]];//+$export_frames_namecount[$current_frame]; 
+		fprint $fileid ($tempstring+"\n"); 	//----------------------------------------bounding box 	
+	//	fprint $fileid "boundingbox\n"; 
+	 	$cmd=("polyEvaluate -b");
+ 		float $bb[]=eval($cmd);
+ 		fprint $fileid ((-$bb[1])+" "+$bb[4]+" "+$bb[2]+" "+(-$bb[0])+" "+$bb[5]+" "+$bb[3]+"\n");
+ 	//----------------------------------------vertices+normals 
+	//	fprint $fileid "vertices+normals\n"; 
+		$count=0;
+ 		while($count<$numverts[0])
+ 		{ 
+			float $vtx[]=`pointPosition ($object[0]+".vtx["+$count+"]")`; 
+			fprint $fileid (-$vtx[0]+" "+$vtx[2]+" "+$vtx[1]+" ");
+ 			float $x[]=`polyNormalPerVertex -q -x ($object[$loop]+".vtx["+$count+"]")`;
+ 			fprint $fileid ($x[0]+" ");
+ 			float $z[]=`polyNormalPerVertex -q -z ($object[$loop]+".vtx["+$count+"]")`; 
+			fprint $fileid (-$z[0]+" "); 
+			float $y[]=`polyNormalPerVertex -q -y ($object[$loop]+".vtx["+$count+"]")`; 
+			fprint $fileid (-$y[0]+"\n");
+ 			$count++;
+  			if($count%$step==0)update_progress($progress+=$step,$max_progress,"writing frame "+$tempstring+"...");
+  		} 
+		$current_frame++;
+ 		currentTime $export_frames[$current_frame];
+ 	}
+     }
+ 	 	//----------------------------------------close file
+ 	fclose $fileid;
+  	progressWindow -ep;
+ 	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p exporterwindow; 
+ 	undoInfo -state on;
+ 	return 1;
+ }
+  proc int[] return_intarray(string $intstring)
+ {
+ 	int $intarray[];
+ 	int $i=0;
+ 	while(match("[0-9]+",$intstring)!="") 
+	{ 
+		$intarray[$i]=match("[0-9]+",$intstring);
+ 		$intstring=`substitute "[0-9]+" $intstring ""`;
+ 		$i++;
+ 	} 
+	return $intarray;
+ } 
+ proc int create_gui() 
+{
+ 	global int $tf_aindex;
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+ 	if(`window -exists exporterwindow`)deleteUI exporterwindow;
+ 	window -wh 512 384 -te 100 -le 100 -s false -t "maya mdl5-ascii exporter" exporterwindow;
+	rowColumnLayout -nr 2 -rh 1 250 -rh 2 125 RCL1; 
+	scrollLayout -hst 0 -p RCL1 SL1;
+	rowColumnLayout -nc 2 -cw 1 85 -cw 2 385 -p SL1 RCL2; 
+	text -l "animation name" tx1; 		
+	text -l "animation frames" tx2; 		
+	$tf_anames[$tf_aindex]=`textField -tx "walk"`; 		
+	$tf_aframes[$tf_aindex]=`textField -tx "2 4 6 8 10 12"`; 
+	columnLayout -p RCL1 CL1; 	
+	rowLayout -nc 4 -cw4 60 60 60 60 -p CL1 RL1; 	
+	button -l "add" -w 60 -c "bc_add()"; 			
+	button -l "remove" -w 60 -c "bc_remove()"; 			
+	button -l "load" -w 60 -c "bc_load()"; 			
+	button -l "save" -w 60 -c "bc_save()"; 		
+	setParent CL1;	 			
+	text -l ""; 		
+	rowLayout -nc 2 -cw2 30 300 -p CL1 RL2; 			
+	text -l "scale:"; 			
+	floatField -pre 4 -v 1 -min 0.1 -max 128 ff_scale; 		
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export mdl5-ascii file" -w 504 -c "bc_export()";
+ 	showWindow exporterwindow;
+ 	return 1; 
+}  
+create_gui();

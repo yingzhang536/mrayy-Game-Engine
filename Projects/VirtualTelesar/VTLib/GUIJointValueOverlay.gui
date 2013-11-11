@@ -1,0 +1,13 @@
+<Overlay Name="JointValue">
+  <Panel Size="300,50">
+    <Children>
+      <StackPanel Direction="Horizontal" Offset="4" Size="300,50" Docking="Fill">
+        <Children>
+          <StaticText Name="MinTxt" Text="Min:0" Position="0,0" Size="50,50"/>
+          <SliderBar Name="ValueBar" Size="200,50" HorizontalAlignment="Center"/>
+          <StaticText Name="MaxTxt" Text="Max:100" Position="0,0" Size="50,50" HorizontalAlignment="Right"/>
+        </Children>
+      </StackPanel>
+    </Children>
+  </Panel>
+</Overlay>

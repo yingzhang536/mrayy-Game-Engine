@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LevelSchema" targetNamespace="http://tempuri.org/LevelSchema.xsd" elementFormDefault="qualified" xmlns="http://tempuri.org/LevelSchema.xsd" xmlns:mstns="http://tempuri.org/LevelSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Level">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Terrain">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BaseTexture" type="xs:string" />
+              <xs:element name="DetailTexture" type="xs:string" />
+              <xs:element name="HeightMap" type="xs:string" />
+              <xs:element name="Size" type="xs:string" />
+              <xs:element name="numOfLod" type="xs:int" />
+              <xs:element name="lodDistance" type="xs:int" />
+              <xs:element name="DetailNormal" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:sequence>
+          <xs:element name="Object">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Name" type="xs:string" />
+                <xs:element name="type" type="xs:int" />
+                <xs:element name="Position" type="xs:string" />
+                <xs:element name="Rotation" type="xs:string" />
+                <xs:element name="Scale" type="xs:string" />
+                <xs:element name="class" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:element name="Player">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Position" type="xs:string" />
+              <xs:element name="type" type="xs:string" />
+              <xs:element name="roation" type="xs:string" />
+              <xs:element name="scale" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Environment">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ambient" type="xs:string" />
+              <xs:element name="DayLength" type="xs:int" />
+              <xs:element name="Fog">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="start" type="xs:string" />
+                    <xs:element name="end" type="xs:string" />
+                    <xs:element name="color" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="viewDistance" type="xs:int" />
+              <xs:element name="Sun">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="color" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Name" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

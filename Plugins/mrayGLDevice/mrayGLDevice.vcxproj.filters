@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Textures">
+      <UniqueIdentifier>{7baaf72a-8f10-409d-bd17-557e8ed06a26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{730b479b-e010-4ed9-ac6a-93031a4ec92f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ext">
+      <UniqueIdentifier>{73e4aaf8-b307-4cad-ab69-c5304622e385}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RT">
+      <UniqueIdentifier>{dbb63698-1b46-493a-8d2d-7091972c2705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\excluded">
+      <UniqueIdentifier>{1d3c1277-0452-47b5-98d1-e00ef669bb9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HardwareBuffer">
+      <UniqueIdentifier>{2045742d-7312-4618-9e34-dc8657b69684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Win32">
+      <UniqueIdentifier>{9eb3a72d-1aec-4553-a9c9-38efe2955deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLDev.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLPickBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSupport.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTextureUtil.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mrayGLPlugin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLPBufferTexture.h">
+      <Filter>Source Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTexture.h">
+      <Filter>Source Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="SGLCGShaderFactory.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="sglcgshaderprogram.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SGLSLShaderFactory.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SGLSLShaderProgram.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\ExtGL.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\GLee.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\glew.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\glext.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\GLU.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\glut.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\glxext.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\wglew.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\extLibs\gl\wglext.h">
+      <Filter>Source Files\Ext</Filter>
+    </ClInclude>
+    <ClInclude Include="GLFBORenderTarget.h">
+      <Filter>Source Files\RT</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMRenderTarget.h">
+      <Filter>Source Files\RT</Filter>
+    </ClInclude>
+    <ClInclude Include="GLPBuffer.h">
+      <Filter>Source Files\RT</Filter>
+    </ClInclude>
+    <ClInclude Include="GLHardwareBufferManager.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLHardwarePixelBuffer.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLIndexBuffer.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLRenderBuffer.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLStreamBuffer.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTextureBuffer.h">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWin32RenderWindow.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Context.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32GLSupport.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32MonitorEnum.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32RenderWindowUtil.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLDev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLPickBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSupport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTextureUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mrayGLPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLPBufferTexture.cpp">
+      <Filter>Source Files\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTexture.cpp">
+      <Filter>Source Files\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="SGLCGShaderFactory.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="sglcgshaderprogram.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SGLSLShaderFactory.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="sGLSLShaderProgram.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\gl\ExtGL.cpp">
+      <Filter>Source Files\Ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\extLibs\gl\GLee.c">
+      <Filter>Source Files\Ext</Filter>
+    </ClCompile>
+    <ClCompile Include="GLFBORenderTarget.cpp">
+      <Filter>Source Files\RT</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMRenderTarget.cpp">
+      <Filter>Source Files\RT</Filter>
+    </ClCompile>
+    <ClCompile Include="GLPBuffer.cpp">
+      <Filter>Source Files\RT</Filter>
+    </ClCompile>
+    <ClCompile Include="GLRenderTarget.cpp">
+      <Filter>Source Files\excluded</Filter>
+    </ClCompile>
+    <ClCompile Include="GLHardwareBufferManager.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLHardwarePixelBuffer.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLIndexBuffer.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLRenderBuffer.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLStreamBuffer.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTextureBuffer.cpp">
+      <Filter>Source Files\HardwareBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWin32RenderWindow.cpp">
+      <Filter>Source Files\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Context.cpp">
+      <Filter>Source Files\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32GLSupport.cpp">
+      <Filter>Source Files\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32MonitorEnum.cpp">
+      <Filter>Source Files\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32RenderWindowUtil.cpp">
+      <Filter>Source Files\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="GLRenderTarget.h">
+      <Filter>Source Files\excluded</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

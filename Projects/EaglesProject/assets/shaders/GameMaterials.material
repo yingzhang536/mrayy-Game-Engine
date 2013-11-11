@@ -1,0 +1,105 @@
+
+material F15Material
+{
+	 value ["baseTex"] texture "F15Diff.png" tex2D
+	{
+		WrapS repeat
+		Filtering trilinear
+	}
+	value ["specTex"] texture "F15Spec.png" tex2D
+	{
+		WrapS repeat
+		Filtering trilinear
+	}
+	value ["bumpTex"] texture "F15Norm.png" tex2D
+	{
+		WrapS repeat
+		Filtering trilinear
+	}
+	shader cg
+	{
+		shaderFP "phong.cg"
+		shaderVP "phong.cg"
+	}
+}
+material sky_object
+{
+	ambient "0,0,0"
+	diffuse "255,255,255"
+	CullFace false
+	zwrite false
+	
+ 	shader cg
+ 	{
+ 		shaderFP "sky.cg"
+ 		shaderVP "sky.cg"
+ 	}
+}
+
+material Tree_mtrl
+{
+	CullFace false
+	Blend true
+	BlendRenderer Transparent
+	 
+	shader cg
+	{
+		shaderFP "TreeShader.cg"
+		shaderVP "TreeShader.cg"
+	}
+}
+
+
+
+material LvlBoundingBox
+{
+
+ 	CullFace false
+ 	BlendRenderer Transparent
+   	
+   	value ["tex"] texture "Warning.png" tex2D
+   	{
+ 		WrapS repeat
+ 		Filtering trilinear
+   	}
+ 	shader cg
+ 	{
+ 		shaderFP "BBShader.cg"
+ 		shaderVP "BBShader.cg"
+ 	}
+	 
+}
+material Building_mtrl
+{
+	shader cg
+	{
+		shaderFP "building.cg"
+		shaderVP "building.cg"
+	}
+}
+
+
+material water_mtrl
+{
+	CullFace false
+	value ["texScale"] float2 "4,2"
+	value ["bumpSpeed"] float2 "0.05,0.08"
+	value ["speed"] float "20"
+	value ["ampl"] float "100"
+	
+	value ["envTex"] texture "" texCUBE
+	{
+	}
+	
+	value ["bumpTex"] texture "WaterNormal.tga" tex2D
+	{
+		WrapS repeat
+		Filtering trilinear
+	}
+	
+	shader cg
+	{
+		shaderFP "water.cg"
+		shaderVP "water.cg"
+	}
+}

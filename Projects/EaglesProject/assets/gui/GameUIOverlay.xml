@@ -1,0 +1,20 @@
+<Overlay name="LoadingOverlay">
+  <GUIImage name="loading Text"  pos="0" Dock="Fill" source="loadingScreen.png">
+    <GUIStaticText caption="L O A D I N G . . ." size="400,40" DrawBG="false" >
+      <font Alignment="TopLeft" size="24" color="255,255,255,255" hasShadow="true" shadowOffset="2" />
+      <effectors>
+        <GUIPercentAnchorEffector anchor="Anchor_UL" offset="0.19,0.83"/>
+      </effectors>
+    </GUIStaticText>
+
+    <GUIDummy name="loadingCircle">
+      <effectors>
+        <GUIPercentAnchorEffector anchor="Anchor_UL" offset="0.125,0.845"/>
+      </effectors>
+
+      <GUIRotateImage BackColor="255,255,0,255"  size="80,80"  source="circle_0.png" angleSpeed="-80"/>
+      <GUIRotateImage BackColor="255,255,0,255=" size="80,80"  source="circle_1.png" angleSpeed="80"/>
+      <GUIRotateImage BackColor="255,255,0,255" size="80,80"  source="circle_3.png" angleSpeed="160"/>
+    </GUIDummy>
+  </GUIImage>
+</Overlay>

@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Unicode|Win32">
+      <Configuration>Debug_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode|Win32">
+      <Configuration>Release_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5A13CBAE-F8D3-4395-A47D-B7C6433ED5EE}</ProjectGuid>
+    <RootNamespace>CharacterDemoGM</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\bin\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\bin\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\mrayEngine\include;..\..\mrayMath;..\..\mrayMFC;..\..\mrayWin32;..\..\mrayAI;..\..\mrayGLDevice;..\..\mrayGameLayer;..\..\mrayPhysX;..\..\PhCharacterLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CHARACTERDEMOGM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine_d.lib;mrayGameLayer_d.lib;mrayAI_d.lib;mrayMath_d.lib;PhCharacterLib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\mrayEngine\include;..\..\mrayMath;..\..\mrayMFC;..\..\mrayWin32;..\..\mrayAI;..\..\mrayGLDevice;..\..\mrayGameLayer;..\..\mrayPhysX;..\..\PhCharacterLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CHARACTERDEMOGM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine.lib;mrayGameLayer.lib;mrayAI.lib;mrayMath.lib;PhCharacterLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\mrayEngine\include;..\..\mrayMath;..\..\mrayMFC;..\..\mrayWin32;..\..\mrayAI;..\..\mrayGLDevice;..\..\mrayGameLayer;..\..\mrayPhysX;..\..\PhCharacterLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CHARACTERDEMOGM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine_d.lib;mrayGameLayer_d.lib;mrayAI_d.lib;mrayMath_d.lib;PhCharacterLib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\mrayEngine\include;..\..\mrayMath;..\..\mrayMFC;..\..\mrayWin32;..\..\mrayAI;..\..\mrayGLDevice;..\..\mrayGameLayer;..\..\mrayPhysX;..\..\PhCharacterLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CHARACTERDEMOGM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mrayEngine.lib;mrayGameLayer.lib;mrayAI.lib;mrayMath.lib;PhCharacterLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CharacterDemoGM.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="CameraStartAction.cpp" />
+    <ClCompile Include="CD_SelectTargetMain.cpp" />
+    <ClCompile Include="CharacterAction.cpp" />
+    <ClCompile Include="CollisionModelAction.cpp" />
+    <ClCompile Include="FoodAction.cpp" />
+    <ClCompile Include="ObstacleAction.cpp" />
+    <ClCompile Include="PhysicalCharacterAction.cpp" />
+    <ClCompile Include="PhysicalObjectAction.cpp" />
+    <ClCompile Include="SelectionSurfaceAction.cpp" />
+    <ClCompile Include="ShotingObjectAction.cpp" />
+    <ClCompile Include="SoundAction.cpp" />
+    <ClCompile Include="AICharacterArch.cpp" />
+    <ClCompile Include="AIFoodArch.cpp" />
+    <ClCompile Include="AIGameArch.cpp" />
+    <ClCompile Include="AIObstacleObject.cpp" />
+    <ClCompile Include="CharControlerPM.cpp" />
+    <ClCompile Include="PhCharacterPM.cpp" />
+    <ClCompile Include="PhysicalObject.cpp" />
+    <ClCompile Include="SimplePhysics.cpp" />
+    <ClCompile Include="AIListBoxRenderDevice.cpp" />
+    <ClCompile Include="CFood.cpp" />
+    <ClCompile Include="CharacterCostFunction.cpp" />
+    <ClCompile Include="CharacterObject.cpp" />
+    <ClCompile Include="CHouse.cpp" />
+    <ClCompile Include="LocationArrow.cpp" />
+    <ClCompile Include="GoalChatToFriend.cpp" />
+    <ClCompile Include="GoalFindFood.cpp" />
+    <ClCompile Include="GoalFindFriend.cpp" />
+    <ClCompile Include="GoalFollowPath.cpp" />
+    <ClCompile Include="GoalGoToObject.cpp" />
+    <ClCompile Include="GoalGoToPoint.cpp" />
+    <ClCompile Include="GoalHide.cpp" />
+    <ClCompile Include="GoalListenToUser.cpp" />
+    <ClCompile Include="GoalMakeChat.cpp" />
+    <ClCompile Include="GoalPlayAnimation.cpp" />
+    <ClCompile Include="GoalTraverseEdge.cpp" />
+    <ClCompile Include="GoalWait.cpp" />
+    <ClCompile Include="GoalWaitForChat.cpp" />
+    <ClCompile Include="GoToInterstingPointEval.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CharacterMessages.h" />
+    <ClInclude Include="CompileConfig.h" />
+    <ClInclude Include="CameraStartAction.h" />
+    <ClInclude Include="CD_SelectTargetMain.h" />
+    <ClInclude Include="CharacterAction.h" />
+    <ClInclude Include="CollisionModelAction.h" />
+    <ClInclude Include="FoodAction.h" />
+    <ClInclude Include="ObstacleAction.h" />
+    <ClInclude Include="PhysicalCharacterAction.h" />
+    <ClInclude Include="PhysicalObjectAction.h" />
+    <ClInclude Include="SelectionSurfaceAction.h" />
+    <ClInclude Include="ShotingObjectAction.h" />
+    <ClInclude Include="SoundAction.h" />
+    <ClInclude Include="AICharacterArch.h" />
+    <ClInclude Include="AIFoodArch.h" />
+    <ClInclude Include="AIGameArch.h" />
+    <ClInclude Include="AIObstacleObject.h" />
+    <ClInclude Include="EAgentType.h" />
+    <ClInclude Include="CharControlerPM.h" />
+    <ClInclude Include="PhCharacterPM.h" />
+    <ClInclude Include="PhysicalObject.h" />
+    <ClInclude Include="SimplePhysics.h" />
+    <ClInclude Include="AIListBoxRenderDevice.h" />
+    <ClInclude Include="CFood.h" />
+    <ClInclude Include="CharacterCostFunction.h" />
+    <ClInclude Include="CharacterObject.h" />
+    <ClInclude Include="CHouse.h" />
+    <ClInclude Include="LocationArrow.h" />
+    <ClInclude Include="GoalChatToFriend.h" />
+    <ClInclude Include="GoalFindFood.h" />
+    <ClInclude Include="GoalFindFriend.h" />
+    <ClInclude Include="GoalFollowPath.h" />
+    <ClInclude Include="GoalGoToObject.h" />
+    <ClInclude Include="GoalGoToPoint.h" />
+    <ClInclude Include="GoalHide.h" />
+    <ClInclude Include="GoalListenToUser.h" />
+    <ClInclude Include="GoalMakeChat.h" />
+    <ClInclude Include="GoalPlayAnimation.h" />
+    <ClInclude Include="GoalsTypeEnum.h" />
+    <ClInclude Include="GoalTraverseEdge.h" />
+    <ClInclude Include="GoalWait.h" />
+    <ClInclude Include="GoalWaitForChat.h" />
+    <ClInclude Include="GoToInterstingPointEval.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,234 @@
+<GameEntities>
+	<GameEntity ID="2" Name="RobotBody.mdx">
+		<Components>
+			<TwoWheelsRobotComponent/>
+			<SceneComponent Name="Body">
+				<Components>
+					<ModelComponent ModelPath="RobotBody.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Left">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Right">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Back">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<PhysicsComponent Name="Body" TargetNode="Body">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25,0,1,0,5,0,0,1,-25,0,0,0,1" Name="Ìîe">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="1" MassLocalPos="0.960797,0.277242,0.00258565,-0.946222,-0.277224,0.960788,-0.00578413,7.06132,-0.00408786,0.00484057,0.99998,-0.0588591,0,0,0,1" MassSpaceInertia="35.080048,5.0427232,36.774643" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Left" TargetNode="Left">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25.9462,0,1,0,5,0,0,1,-31,0,0,0,1" Name="T¢e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Right" TargetNode="Right">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25.9462,0,1,0,5,0,0,1,-19,0,0,0,1" Name="ü„e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Back" TargetNode="Back">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-35,0,1,0,5,0,0,1,-25,0,0,0,1" Name="¼®e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Left">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,-6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Right">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Back">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-10.946222,0,0" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+		</Components>
+	</GameEntity>
+	<GameEntity ID="3" Name="RobotBody.mdx">
+		<Components>
+			<TwoWheelsRobotComponent/>
+			<SceneComponent Name="Body">
+				<Components>
+					<ModelComponent ModelPath="RobotBody.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Left">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Right">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Back">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<PhysicsComponent Name="Body" TargetNode="Body">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25,0,1,0,5,0,0,1,0,0,0,0,1" Name="Œçe">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="1" MassLocalPos="0.960797,0.277242,0.00258565,-0.946222,-0.277224,0.960788,-0.00578413,7.06132,-0.00408786,0.00484057,0.99998,-0.0588591,0,0,0,1" MassSpaceInertia="35.080048,5.0427232,36.774643" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Left" TargetNode="Left">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25.9462,0,1,0,5,0,0,1,-6,0,0,0,1" Name="Œe">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Right" TargetNode="Right">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-25.9462,0,1,0,5,0,0,1,6,0,0,0,1" Name="lýe">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Back" TargetNode="Back">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-35,0,1,0,5,0,0,1,0,0,0,0,1" Name="D½e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Left">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,-6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Right">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Back">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-10.946222,0,0" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+		</Components>
+	</GameEntity>
+	<GameEntity ID="4" Name="RobotBody.mdx">
+		<Components>
+			<TwoWheelsRobotComponent/>
+			<SceneComponent Name="Body">
+				<Components>
+					<ModelComponent ModelPath="RobotBody.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Left">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Right">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Back">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<PhysicsComponent Name="Body" TargetNode="Body">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,0,0,1,0,5,0,0,1,-25,0,0,0,1" Name="×e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="1" MassLocalPos="0.960797,0.277242,0.00258565,-0.946222,-0.277224,0.960788,-0.00578413,7.06132,-0.00408786,0.00484057,0.99998,-0.0588591,0,0,0,1" MassSpaceInertia="35.080048,5.0427232,36.774643" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Left" TargetNode="Left">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-0.946222,0,1,0,5,0,0,1,-31,0,0,0,1" Name="äñe">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Right" TargetNode="Right">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-0.946222,0,1,0,5,0,0,1,-19,0,0,0,1" Name=",’e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Back" TargetNode="Back">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-10,0,1,0,5,0,0,1,-25,0,0,0,1" Name="œne">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Left">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,-6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Right">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Back">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-10.946222,0,0" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+		</Components>
+	</GameEntity>
+	<GameEntity ID="5" Name="RobotBody.mdx">
+		<Components>
+			<TwoWheelsRobotComponent/>
+			<SceneComponent Name="Body">
+				<Components>
+					<ModelComponent ModelPath="RobotBody.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Left">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Right">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<SceneComponent Name="Back">
+				<Components>
+					<ModelComponent ModelPath="RoboWheel.mdx"/>
+				</Components>
+				<SceneNodeDesc CullType="1" Name="" Orintation="1,0,0,0" Position="0,0,0" Scale="1,1,1" ViewDist="-1" Visible="1"/>
+			</SceneComponent>
+			<PhysicsComponent Name="Body" TargetNode="Body">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,0,0,1,0,5,0,0,1,0,0,0,0,1" Name="Dye">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="1" MassLocalPos="0.960797,0.277242,0.00258565,-0.946222,-0.277224,0.960788,-0.00578413,7.06132,-0.00408786,0.00484057,0.99998,-0.0588591,0,0,0,1" MassSpaceInertia="35.080048,5.0427232,36.774643" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Left" TargetNode="Left">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-0.946222,0,1,0,5,0,0,1,-6,0,0,0,1" Name="4%!e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Right" TargetNode="Right">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-0.946222,0,1,0,5,0,0,1,6,0,0,0,1" Name="da!e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicsComponent Name="Back" TargetNode="Back">
+				<PhysicalNode ActorGroupID="0" Density="0" GlobalPos="1,0,0,-10,0,1,0,5,0,0,1,0,0,0,0,1" Name="d!e">
+					<PhysicalBody AngularDamping="0.050000001" AngularVelocity="0,0,0" CCDMotionThreshold="0" ContactReportThreshold="3.4028235e+038" LinearDamping="0" LinearVelocity="0,0,0" Mass="0.5" MassLocalPos="1,0,0,-2.8153e-008,0,1,0,8.25678e-007,0,0,1,-5.59487e-009,0,0,0,1" MassSpaceInertia="1.8955293,1.895529,3.0688066" MaxAngularVelocity="8" SleepAngularVelocity="0.14" SleepDamping="0" SleepEnergyThreshold="-1" SleepLinearVelocity="0.15000001" SolverIterationCount="4" WakeupCounter="0.39999998"/>
+				</PhysicalNode>
+			</PhysicsComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Left">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,-6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Right">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-0.94622231,0,6" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+			<PhysicalJointComponent TargetNodeA="Body" TargetNodeB="Back">
+				<PhysicalJoint EnableCollision="0" JointType="RevoluteJoint" LocalAnchorA="-10.946222,0,0" LocalAnchorB="0,0,0" LocalAxisA="0,0,1" LocalAxisB="0,0,1" LocalNormalA="1,0,0" LocalNormalB="1,0,0" MaxForce="3.4028235e+038" MaxTorque="3.4028235e+038" solverExtrapolationFactor="0.5" UseAccelerationSpring="0"/>
+			</PhysicalJointComponent>
+		</Components>
+	</GameEntity>
+</GameEntities>

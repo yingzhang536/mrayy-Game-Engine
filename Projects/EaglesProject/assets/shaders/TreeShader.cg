@@ -1,0 +1,34 @@
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, 
+				  float2 texCoord: TEXCOORD0,
+				uniform float4x4 WorldMat,
+				uniform float4x4 ViewMat,
+				uniform float4x4 ProjMat) 
+{
+	VS_OUTPUT Out;	
+	float4x4 wvp=mul(ViewMat,ProjMat);
+	wvp=mul(WorldMat,wvp);
+	
+	Out.Pos=mul(Pos,wvp);
+	Out.texCoord=texCoord;
+	
+	return Out;
+}
+
+//////////////////////////////////
+
+
+float4 main_fp(float2 texCoord: TEXCOORD0,
+				uniform float4 Light0Diff, 
+				uniform sampler tex0) : COLOR 
+{
+
+	float4 base=tex2D(tex0,texCoord);
+	return base*Light0Diff;
+
+}

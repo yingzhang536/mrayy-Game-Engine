@@ -1,0 +1,296 @@
+
+
+
+proc int bc_browse() 
+{
+ 	fileBrowserDialog -m 4 -fc "set_path" -an "browse";
+ 	return 1; 
+}  
+proc int set_path(string $filename, string $fileType) 
+{
+ 	textField -e -tx $filename tf_path;
+ 	return 1; 
+}  
+
+  
+proc bc_exportJointsNames(string $path,string $joint,int $fileid){
+  string $childs[]=`listRelatives -c -type joint ($path + $joint)`;
+  fprint $fileid ($joint + "\n");
+
+  float $v[]=`eval("getAttr " + $path+ $joint + ".translate")`;
+  fprint $fileid ($v[0]+ " " + $v[1] + " " + $v[2] +"\n") ;
+
+  fprint $fileid (size($childs) + "\n");
+  int $i=0;
+  for(;$i<size($childs);$i++){
+    bc_exportJointsNames($path+$joint+"|",$childs[$i],$fileid);
+  }
+}
+
+
+proc bc_resetJointTransformation(string $path,string $joint){
+  string $childs[]=`listRelatives -c -type joint ($path + $joint)`;
+  string $tmp[]=`eval("listConnections "+$path + $joint + ".rotateX")`;
+//  print ($joint + " :");
+ // if(size($tmp)==0)
+{
+   //print ("x ");
+    eval("setAttr " + $path + $joint + ".rotateX  0 ");
+  }
+ // $tmp=`eval("listConnections "+$path + $joint + ".rotateY")`;
+//  if(size($tmp)==0)
+{
+ //  print ("y ");
+    eval("setAttr " + $path + $joint + ".rotateY  0 ");
+  }
+ // $tmp=`eval("listConnections "+$path + $joint + ".rotateZ")`;
+ // if(size($tmp)==0)
+{
+//   print ("z");
+    eval("setAttr " + $path + $joint + ".rotateZ  0 ");
+  }
+//  print "\n";
+  int $i=0;
+  for(;$i<size($childs);$i++){
+    bc_resetJointTransformation($path+$joint+"|",$childs[$i]);
+  }
+}
+//bc_resetJointTransformation("","Root");
+
+  proc int[] return_intarray(string $intstring)
+ {
+ 	int $intarray[];
+ 	int $i=0;
+ 	while(match("[0-9]+",$intstring)!="") 
+	{ 
+		$intarray[$i]=match("[0-9]+",$intstring);
+ 		$intstring=`substitute "[0-9]+" $intstring ""`;
+ 		$i++;
+ 	} 
+	return $intarray;
+ } 
+
+ proc exportMeshWeights(string $obj,int $fileid)
+{
+
+
+	string $sCluster=`findRelatedSkinCluster $obj`;
+	if($sCluster=="")error "mesh should be skinned";
+	string $joints[]=`eval("skinPercent -q -t " + $sCluster + " " + $obj+".vtx[0]")`;
+	int $jonitCnt=size($joints);
+	int $vertxCnt[]=`eval("polyEvaluate -v "+ $obj)`;
+
+	fprint $fileid ($jonitCnt+"\n");
+	fprint $fileid ($vertxCnt[0]+"\n");
+	int $j=0;
+	for(;$j<size($joints);$j++)
+	   fprint $fileid ($joints[$j]+" ");
+  	  fprint $fileid "\n";
+
+
+
+	int $i=0;
+	for(;$i<$vertxCnt[0];$i++)
+	{
+	  float $sPercent[]=`eval("skinPercent -q -v " +  $sCluster + " " + $obj+ ".vtx["+$i+"]")`;
+	  int $j=0;
+	  for(;$j<size($sPercent);$j++)
+	    fprint $fileid ($sPercent[$j]+" ");
+  	  fprint $fileid "\n";
+	}
+
+
+}
+proc bc_smesh_export(){
+
+ 	string $path=`textField -q -tx tf_path`;
+ 	string $filename=`substitute "(\\\\)+$" $path ""`+"\\smesh.txt";
+ 	int $count=0;
+ 	int $ai=0;
+ 	int $efi=0;
+  	//----------------------------------------evaluate selected object
+  	
+	string $joints[]=`ls -sl -type joint`;
+	string $objects[]=`ls -sl -type transform`;
+	int $totalObjects=size($objects);
+	
+ 		if($objects[0]=="")
+//---------------------------------------------------------------------------------------------------warning
+ 		{
+ 			string $message="there is no objects selected!";
+  			confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; error $message;
+ 		}
+
+		if($joints[0]=="")
+//---------------------------------------------------------------------------------------------------warning
+ 		{
+ 			string $message="there is no joints selected! exporting a static mesh!";
+  			confirmDialog -t "warning" -m $message -b "ok";
+			undoInfo -state on; warning $message;
+ 		}
+ 	//----------------------------------------open file
+ 	$fileid=`fopen $filename "w"`; 
+	if($fileid==0)
+//-------------------------------------------------------------------------------------------------------warning 
+	{
+		string $message="directory does not exist!"; 
+		confirmDialog -t "warning" -m $message -b "ok";
+		undoInfo -state on; error $message;
+ 	} 
+
+	fprint $fileid ($totalObjects - size ($joints)+ "\n");
+
+	
+ 	string $cmd;
+	//-------------------------------------------------------------
+ 	float $step=1;
+ //bc_resetJointTransformation("",$joints[0]);
+	
+//write objects
+     for($loop=0;$loop<size($objects);$loop++)
+     {
+		//ignore joints
+		if(`objectType -i joint $objects[$loop]`)
+			continue;
+
+		fprint $fileid ( $objects[$loop]+"\n");
+		float $oPos[]=`eval("getAttr "+ $objects[$loop]+".translate")`;
+		fprint $fileid ($oPos[0]+" "+$oPos[1]+" "+$oPos[2]+ "\n");
+
+		float $oRot[]=`eval("getAttr "+ $objects[$loop]+".rotate")`;
+		fprint $fileid ($oRot[0]+" "+$oRot[1]+" "+$oRot[2]+ "\n");
+
+		float $oScale[]=`eval("getAttr "+ $objects[$loop]+".scale")`;
+		fprint $fileid ($oScale[0]+" "+$oScale[1]+" "+$oScale[2]+ "\n");
+
+
+		select $objects[$loop];
+ 		$cmd=("polyEvaluate -v");	//vertices
+ 		int $numverts[]=eval($cmd);
+ 		$cmd=("polyEvaluate -uv");	//UVs
+ 		int $numuvs[]=eval($cmd);
+ 		$cmd=("polyEvaluate -t");	//Triangles
+ 		int $numtris[]=eval($cmd);
+ 		float $step=1;
+  		//----------------------------------------write header 
+ 		fprint $fileid ($numverts[0]+"\n\n");
+ 		fprint $fileid ($numtris[0]+"\n\n");
+ 		fprint $fileid ($numuvs[0]+"\n\n");
+ 		//----------------------------------------write uvcoordinates 
+	//	fprint $fileid "uvcoordinates\n";
+ 		$step=$numuvs[0]/10;if($step<1)$step=1;
+ 		$count=0;
+ 		while($count<$numuvs[0])
+ 		{	 
+			float $uv[]=`polyEditUV -q -u -v ($objects[$loop]+".map["+$count+"]")`; 	
+			fprint $fileid ($uv[0]+" "+$uv[1]+"\n"); 	
+			$count++;  
+ 		}
+  		//----------------------------------------write triangles 
+	//	fprint $fileid "triangles\n"; 
+		$step=$numtris[0]/10;if($step<1)$step=1;
+ 		$count=0;
+		fprint $fileid "\n";
+ 		while($count<$numtris[0])
+ 		{ 
+			string $tempstringarray[]=`polyInfo -fv ($objects[$loop]+".f["+$count+"]")`; 
+			int $list[]=return_intarray($tempstringarray[0]); 
+			if(size($list)>4)
+	//---------------------------------------------------------------------------------------------warning 	
+			{ 	
+				string $message="model is not triangulated!"; 
+				fclose $fileid; system("shell del "+$filename); 	
+				 confirmDialog -t "warning" -m $message -b "ok";
+				undoInfo -state on; error $message; 
+			} 	
+			fprint $fileid ($list[1]+" "+$list[2]+" "+$list[3]+"\n");
+ 			$count++; 
+
+		}  	//----------------------------------------write uvtriangles 
+	//	fprint $fileid "uvtriangles\n"; 
+		$count=0; 
+		fprint $fileid "\n";
+		print $numtris[0];
+		while($count<$numtris[0])
+ 		{ 
+			string $tempstringarray[]=`polyInfo -fv ($objects[$loop]+".f["+$count+"]")`;
+ 			int $list[]=return_intarray($tempstringarray[0]);
+ 			for($i=1;$i<4;$i++)  
+             { 	
+				string $vf=$objects[$loop]+".vtxFace["+$list[$i]+"]["+$list[0]+"]";
+ 				string $tempstringarray[]=`polyListComponentConversion -fromVertexFace -toUV  $vf`;
+ 				int $intarray[]=return_intarray($tempstringarray[0]);
+				if(size($intarray)>0){
+	 				fprint $fileid ($intarray[size($intarray)-1]+" ");
+			}else
+				fprint $fileid ("0 ");
+		} 
+		fprint $fileid ("\n");
+ 		$count++;
+  	}  	//----------------------------------------write vertices
+
+ 	//----------------------------------------vertices+normals 
+	//	fprint $fileid "vertices+normals\n"; 
+		$count=0;
+ 		while($count<$numverts[0])
+ 		{ 
+			float $vtx[]=`pointPosition ($objects[$loop]+".vtx["+$count+"]")`; 
+			fprint $fileid (($vtx[0]-$oPos[0])+" "+($vtx[1]-$oPos[1])+" "+($vtx[2]-$oPos[2])+" ");
+ 			float $x[]=`polyNormalPerVertex -q -x ($objects[$loop]+".vtx["+$count+"]")`;
+ 			fprint $fileid ($x[0]+" ");
+ 			float $y[]=`polyNormalPerVertex -q -y ($objects[$loop]+".vtx["+$count+"]")`; 
+			fprint $fileid ($y[0]+"\n");
+			float $z[]=`polyNormalPerVertex -q -z ($objects[$loop]+".vtx["+$count+"]")`; 
+			fprint $fileid ($z[0]+" "); 
+			
+ 			$count++;
+		} 
+ 	}
+
+//export skeleton
+//	fprint $fileid ("\n" + size($joints)+"\n");
+//	int $i=0;
+//	for(;$i<size($joints);$i++)
+		bc_exportJointsNames("",$joints[0],$fileid);
+	
+
+
+	//exporting mesh weights
+
+     for($loop=0;$loop<size($objects);$loop++)
+     {
+		//ignore joints
+		if(`objectType -i joint $objects[$loop]`)
+			continue;
+		print ( $objects[$loop]+"\n");
+		fprint $fileid ( $objects[$loop]+"\n");
+		exportMeshWeights($objects[$loop],$fileid);
+	 }
+	fclose $fileid;
+ 	confirmDialog -t "export done!" -m "export done!" -b "ok" -db "ok" -ds "ok" -p exporterSMeshWindow; 
+
+}
+
+
+ proc int create_smesh_gui() 
+{
+ 	global int $tf_aindex;
+
+ 	global string $tf_anames[];
+ 	global string $tf_aframes[];
+ 	if(`window -exists exporterSMeshWindow` )deleteUI exporterSMeshWindow ;
+ 	
+ 	window -wh 512 384 -te 100 -le 100 -s true -t "maya skin mesh-ascii Exporter" exporterSMeshWindow;
+	columnLayout CL1; 	
+	rowLayout -nc 3 -cw3 30 414 60 -p CL1 RL3; 			
+	text -l "path:"; 			
+	textField -tx "e:\\" -w 414 tf_path; 			
+	button -l "browse" -w 60 -c "bc_browse()"; 		
+	setParent CL1; 			
+	button -l "export skin mesh-ascii file" -w 504 -c "bc_smesh_export()";
+ 	showWindow exporterSMeshWindow;
+ 	return 1; 
+}
+create_smesh_gui();
+

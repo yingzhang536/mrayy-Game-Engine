@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Unicode|Win32">
+      <Configuration>Debug_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode|Win32">
+      <Configuration>Release_Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{97F27978-2696-4939-8881-887477C636B3}</ProjectGuid>
+    <RootNamespace>VTLib</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>..\..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\Engine\BuildRules\overlay.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\..\lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\..\lib\$(Configuration)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayMath;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Dependencies\include;..\..\..\Engine\mrayGUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;VTLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>vld.lib;vldmt.lib;mrayEngine.lib;mrayMath.lib;mrayGameLayer.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayMath;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Dependencies\include;..\..\..\Engine\mrayGUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;VTLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>mrayEngine.lib;mrayMath.lib;mrayGameLayer.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayMath;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;VTLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>vld.lib;vldmt.lib;mrayEngine_d.lib;mrayMath_d.lib;mrayGameLayer_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayMath;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;VTLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>mrayEngine.lib;mrayMath.lib;mrayGameLayer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetFileName) ..\..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ContactCollisionDebugger.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="ContactDisablerComponent.cpp" />
+    <ClCompile Include="GGComponent.cpp" />
+    <ClCompile Include="GGDriver.cpp" />
+    <ClCompile Include="GUIComponentTreeBox.cpp" />
+    <ClCompile Include="GUISpringTouchElement.cpp" />
+    <ClCompile Include="GUIMotorConnector.cpp" />
+    <ClCompile Include="IRobotJointComponent.cpp" />
+    <ClCompile Include="KinBodyControlComponent.cpp" />
+    <ClCompile Include="LinkDebugComponent.cpp" />
+    <ClCompile Include="PIDController.cpp" />
+    <ClCompile Include="RobotCommunicator.cpp" />
+    <ClCompile Include="RTTI_OBJ.cpp" />
+    <ClCompile Include="SensorCurve.cpp" />
+    <ClCompile Include="SpringTouchSensorComponent.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="VTLib.cpp" />
+    <ClCompile Include="CommunicationDataRecorder.cpp" />
+    <ClCompile Include="UDPCommunicationLayer.cpp" />
+    <ClCompile Include="CommunicationManager.cpp" />
+    <ClCompile Include="DebugRenderSettings.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CommunicationComponent.cpp" />
+    <ClCompile Include="CoupledJointComponent.cpp" />
+    <ClCompile Include="DistanceCalculatorComponent.cpp" />
+    <ClCompile Include="ErrorCalculatorComponent.cpp" />
+    <ClCompile Include="IControllableComponent.cpp" />
+    <ClCompile Include="IVTComponent.cpp" />
+    <ClCompile Include="MountableComponent.cpp" />
+    <ClCompile Include="PhysicsTransformComponent.cpp" />
+    <ClCompile Include="RobotCommunicatorComponent.cpp" />
+    <ClCompile Include="SoundListenerComponent.cpp" />
+    <ClCompile Include="TouchSensorComponent.cpp" />
+    <ClCompile Include="CommunicationData.cpp" />
+    <ClCompile Include="CommunicatorScheme.cpp" />
+    <ClCompile Include="GUIGraphPlotElement.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ContactCollisionDebugger.h" />
+    <ClInclude Include="ContactDisablerComponent.h" />
+    <ClInclude Include="GGComponent.h" />
+    <ClInclude Include="GGDriver.h" />
+    <ClInclude Include="GUIComponentTreeBox.h" />
+    <ClInclude Include="GUISpringTouchElement.h" />
+    <ClInclude Include="GUIMotorConnector.h" />
+    <ClInclude Include="IForceFeedbackDriver.h" />
+    <ClInclude Include="IRobotJointComponent.h" />
+    <ClInclude Include="ISensorModulator.h" />
+    <ClInclude Include="IVTDebugInterface.h" />
+    <ClInclude Include="KinBodyControlComponent.h" />
+    <ClInclude Include="LinkDebugComponent.h" />
+    <ClInclude Include="MotorConnection.h" />
+    <ClInclude Include="mywsock.h" />
+    <ClInclude Include="PIDController.h" />
+    <ClInclude Include="RobotCommunicator.h" />
+    <ClInclude Include="SensorCurve.h" />
+    <ClInclude Include="SpringTouchSensorComponent.h" />
+    <ClInclude Include="SpringTouchSensorImpl.h" />
+    <ClInclude Include="VTLib.h" />
+    <ClInclude Include="CommunicationDataRecorder.h" />
+    <ClInclude Include="ICommunicationLayer.h" />
+    <ClInclude Include="UDPCommunicationLayer.h" />
+    <ClInclude Include="CommunicationManager.h" />
+    <ClInclude Include="DebugRenderSettings.h" />
+    <ClInclude Include="AttachmentComponent.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CommunicationComponent.h" />
+    <ClInclude Include="CoupledJointComponent.h" />
+    <ClInclude Include="DistanceCalculatorComponent.h" />
+    <ClInclude Include="ErrorCalculatorComponent.h" />
+    <ClInclude Include="GUIGeneratorComponent.h" />
+    <ClInclude Include="ICommunicatorComponent.h" />
+    <ClInclude Include="IControllableComponent.h" />
+    <ClInclude Include="IFeedbackControl.h" />
+    <ClInclude Include="IGUIGenerator.h" />
+    <ClInclude Include="IVTComponent.h" />
+    <ClInclude Include="MountableComponent.h" />
+    <ClInclude Include="PhysicsTransformComponent.h" />
+    <ClInclude Include="RobotCommunicatorComponent.h" />
+    <ClInclude Include="SoundListenerComponent.h" />
+    <ClInclude Include="TouchSensorComponent.h" />
+    <ClInclude Include="CommunicationData.h" />
+    <ClInclude Include="CommunicatorScheme.h" />
+    <ClInclude Include="VTCommon.h" />
+    <ClInclude Include="GUIGraphPlotElement.h" />
+    <ClInclude Include="GUIJointValueController.h" />
+    <ClInclude Include="GUIJointValueOverlay.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="GUIJointValueOverlay.gui" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Engine\mrayGameLayer\mrayGameLayer.vcxproj">
+      <Project>{3e142eb9-7eef-4649-bf74-b21bc7d53a0e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\Engine\BuildRules\overlay.targets" />
+  </ImportGroup>
+</Project>

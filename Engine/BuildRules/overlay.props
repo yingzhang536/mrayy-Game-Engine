@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(OverlayBeforeTargets)' == '' and '$(OverlayAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <OverlayBeforeTargets>Midl</OverlayBeforeTargets>
+    <OverlayAfterTargets>CustomBuild</OverlayAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OverlayDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(OverlayDependsOn)</OverlayDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Overlay>
+      <CommandLineTemplate>$(SolutionDir)bin\release\GUISchemeGenerator.exe %(FullPath) $(ProjectDir)</CommandLineTemplate>
+      <Outputs>%(FullPath).h</Outputs>
+      <ExecutionDescription>Compiling : %(Filename)</ExecutionDescription>
+    </Overlay>
+  </ItemDefinitionGroup>
+</Project>

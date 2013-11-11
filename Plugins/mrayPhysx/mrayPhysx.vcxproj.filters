@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\PhysX">
+      <UniqueIdentifier>{31152220-31cd-481e-b01a-4b79ac14aac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysX\Joints">
+      <UniqueIdentifier>{9e71e800-c197-424c-afca-31c080de2559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysX\ForceFields">
+      <UniqueIdentifier>{ae2fe807-a797-47b2-9665-6afcbef95421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mrayPhysX.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXAPI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPhysXCloth.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="CPhysXMaterial.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="CPhysXNode.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXCCBoxInterface.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXCCCapsuleInterface.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXCharController.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="physXCommon.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXDebugRenderer.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXManager.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXObjectConverter.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="physXPhysicsGenLib.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXSceneQuery.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXSceneQueryReport.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXShape.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXWheelShape.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Stream.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="UserAllocator.h">
+      <Filter>Source Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="IPhysXJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXCylinderJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXDistanceJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXDOF6Joint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXFixedJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXPointOnLineJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXPointOnPlaneJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXPrismaticJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXPulleyJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXRevoluteJoint.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXSphericalJoint3D.h">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXForceField.h">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXForceFieldLinearKernal.h">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXForceFieldShapeGroup.h">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXForceFieldShapes.h">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CPhysXCloth.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="CPhysXMaterial.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="CPhysXNode.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXAPI.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXCCBoxInterface.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXCCCapsuleInterface.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXCharController.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXCommon.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXDebugRenderer.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXManager.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXObjectConverter.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="physXPhysicsGenLib.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXSceneQuery.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXSceneQueryReport.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXShape.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXWheelShape.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="Stream.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="UserAllocator.cpp">
+      <Filter>Source Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="IPhysXJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXCylinderJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXDistanceJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXDOF6Joint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXFixedJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXPointOnLineJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXPointOnPlaneJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXPrismaticJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXPulleyJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXRevoluteJoint.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXSphericalJoint3D.cpp">
+      <Filter>Source Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXForceField.cpp">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXForceFieldLinearKernal.cpp">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXForceFieldShapeGroup.cpp">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXForceFieldShapes.cpp">
+      <Filter>Source Files\PhysX\ForceFields</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

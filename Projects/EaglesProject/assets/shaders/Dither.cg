@@ -1,0 +1,80 @@
+
+
+struct VS_OUTPUT {
+   float4 Pos: POSITION;
+   float2 texCoord: TEXCOORD0;
+   float texScaler: TEXCOORD1;
+   float2 imagePos: TEXCOORD2;
+};
+
+VS_OUTPUT main_vp(float4 Pos: POSITION, uniform float2 viewPortSize, float2 texCoord: TEXCOORD0) {
+	VS_OUTPUT Out;
+   Out.Pos.xy=2*sign(Pos.xy)-1;
+   Out.Pos.z = 1.0;
+   Out.Pos.w = 1.0;
+
+// 	Out.texCoord.x = 0.5 * (1 + Out.Pos.x + 1.0 / viewPortSize.x);
+//  	Out.texCoord.y = 0.5 * (1 + Out.Pos.y + 1.0 / viewPortSize.y);
+
+    Out.texCoord=texCoord;
+    Out.texCoord.y=1-Out.texCoord.y;
+    
+	Out.texScaler=1.0 / viewPortSize.y;
+	
+	Out.imagePos=texCoord*viewPortSize;
+   
+   return Out;
+}
+
+float2 Dither[16]=
+{
+	float2(0,0),
+	float2(0.5,0),
+	float2(0.2,0),
+	float2(0.1,0),
+	float2(0.8,0),
+	float2(0.4,0),
+	float2(0.9,0),
+	float2(0.6, 0),
+	float2(0.3,0),
+	float2(0.11,0),
+	float2(0.2,0),
+	float2(0.9,0),
+	float2(1,0),
+	float2(0.5,0),
+	float2(0.85,0),
+	float2(0.3,0)
+};
+
+
+float4 main_fp(float2 texCoord: TEXCOORD0,float texScaler: TEXCOORD1,
+				float2 imagePos: TEXCOORD2,
+				uniform sampler tex0,
+				uniform sampler tex1) : COLOR 
+
+{	
+	float4 color=tex2D(tex1,texCoord);
+	float g=dot(color.rgb,float3(0.5,0.3,0.2));
+	int x=((int)imagePos.x)%4;
+	int y=((int)imagePos.y)%4;
+	for(int i=0;i<16;i++){
+		if(i==4*x+y){
+			if(g>=Dither[i].x)
+				g=1;
+			else
+				g=0;
+				break;
+			}
+	}
+    return float4(g,g,g,1);
+	
+}
+
+
+
+
+
+
+
+
+

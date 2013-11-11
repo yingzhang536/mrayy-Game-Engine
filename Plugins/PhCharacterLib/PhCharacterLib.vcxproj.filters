@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Controlling">
+      <UniqueIdentifier>{e7a5dfb6-483e-4ec9-8b8a-e913b45c890a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysicalModel">
+      <UniqueIdentifier>{c76d9709-fa9e-4cd3-98b7-c734e65e5877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterGait.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterTracking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\ContactTrigger.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\FinitStateMachine.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\HumanGait.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\Parental_PD_Actuator.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\PoseController.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\PositioningController.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\State.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\TimeTrigger.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\Tri_PD_Actuator.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="Controlling\TypeResolver.cpp">
+      <Filter>Source Files\Controlling</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\DOFLimit.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\ObjectDesc.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\SegInertiaDesc.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\Segment.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\SegmentDesc.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\SegShapeDesc.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalModel\XMLPhysicalModelParser.cpp">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Character.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterGait.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterTracking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileConfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ICharacterListener.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Actuator.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\ActuatorParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\BalanceParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\ContactTrigger.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Controller.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\ControllingParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\FinitStateMachine.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\GaitParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\HumanGait.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\HumanGait_BalanceParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Parental_PD_Actuator.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Parental_PD_Params.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\PoseController.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\PoseModifier.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\PositioningController.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\PositioningParams.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\State.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\TimeTrigger.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Tracker.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Tri_PD_Actuator.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Tri_PD_Params.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\Trigger.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="Controlling\TypeResolver.h">
+      <Filter>Source Files\Controlling</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\DOFLimit.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\ObjectDesc.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\PhysicalJointDoubleLimitSoftDesc.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\SegInertiaDesc.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\Segment.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\SegmentDesc.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\SegShapeDesc.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalModel\XMLPhysicalModelParser.h">
+      <Filter>Source Files\PhysicalModel</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

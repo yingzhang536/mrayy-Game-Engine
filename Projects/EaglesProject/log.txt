@@ -1,0 +1,368 @@
+****************** Logger Started at: [22:20:34] ******************
+[22:20:34]: Info--> ---------- CPU ---------- 
+[22:20:34]: Info-->Processor Vendor: GenuineIntel
+[22:20:34]: Info-->Processor Name: Unknown P6 family
+[22:20:34]: Info-->Speed: 1995 mhz
+[22:20:34]: Success--> ---------- [Done] ---------- 
+[22:20:34]: Info-->Skin "DefaultSkin" been added
+[22:20:34]: Info-->Skin "Style1" been added
+[22:20:34]: Info-->Skin "Style2" been added
+[22:20:34]: Info-->Skin "Windows" been added
+[22:20:34]: Info-->	------ Loading Plugins ------
+[22:20:35]: Success-->	Plugin loaded: mrayGL Renderer Plugin
+[22:20:35]: Success-->	Plugin loaded: mraySound
+[22:20:35]: Success-->	Plugin loaded: mrayParticleSystem
+[22:20:35]: Info-->------ Loading Plugins [Done] ------
+[22:20:35]: Info-->	------ mrayWin ------
+[22:20:35]: Info-->		------ OIS Input Manager ------
+[22:20:35]: Info-->		Verion Name:Smash
+[22:20:35]: Info-->		OIS Version: 1.2.0
+[22:20:35]: Info-->	------ OIS Input Manager [Done] ------
+[22:20:35]: Info-->------ mrayWin [Done] ------
+[22:20:35]: Info-->	------ OpenGL ------
+[22:20:36]: Info-->	Opengl Vendor is NVIDIA Corporation
+[22:20:36]: Info-->	Opengl Version is 2.1.2
+[22:20:36]: Info-->	Opengl Renderer is GeForce 9500 GT/PCI/SSE2
+[22:20:36]: Info-->------ OpenGL [Done] ------
+[22:20:37]: Warning-->TextureResourceManager::loadTextureCube(): Texture Not Found :""
+[22:20:37]: Warning-->End of script!
+[22:20:37]: Warning-->Mesh File Not Found: BuildingBaseDestBuildingBase0.mdl
+[22:20:37]: Warning-->Mesh File Not Found: BuildingBaseDestBuildingBase1.mdl
+[22:20:37]: Info-->	------ FMOD ------
+[22:20:37]: Info-->	Hardware 2D channels :  24
+[22:20:37]: Info-->	Hardware 3D channels : 24
+[22:20:37]: Info-->------ FMOD [Done] ------
+[22:20:39]: Info-->	------ FMOD ------
+[22:20:39]: Info-->	Hardware 2D channels :  22
+[22:20:39]: Info-->	Hardware 3D channels : 22
+[22:20:39]: Info-->------ FMOD [Done] ------
+[22:20:40]: Info-->	------ FMOD ------
+[22:20:40]: Info-->	Hardware 2D channels :  20
+[22:20:40]: Info-->	Hardware 3D channels : 20
+[22:20:40]: Info-->------ FMOD [Done] ------
+[22:20:40]: Warning-->TextureResourceManager::loadTexture2D(): Texture Not Found :"i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\Thumbs.db"
+[22:20:41]: Info-->Skin "Default" been added
+[22:20:47]: Info-->	------ FMOD ------
+[22:20:47]: Info-->	Hardware 2D channels :  18
+[22:20:47]: Info-->	Hardware 3D channels : 18
+[22:20:47]: Info-->------ FMOD [Done] ------
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/F15.mdl
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/blade_left.mdl
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/blade_right.mdl
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/blade_topBack.mdl
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/blade_rightBotBack.mdl
+[22:20:49]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/blade_leftBotBack.mdl
+[22:20:50]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/Missile.mdl
+[22:20:51]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/TreeBase3.mdl
+[22:20:51]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/BuildingBase0.mdl
+[22:20:51]: Success-->MDL mesh file loadedi:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/models/BuildingBase1.mdl
+[22:21:0]: Info-->	------ FMOD ------
+[22:21:1]: Info-->	Hardware 2D channels :  16
+[22:21:1]: Info-->	Hardware 3D channels : 16
+[22:21:1]: Info-->------ FMOD [Done] ------
+[22:22:14]: Info-->	------ File Resource Manager ------
+[22:22:14]: Info-->	Used Memory: 16560
+[22:22:14]: Info-->	AboutBG.png , size=120
+[22:22:14]: Info-->	BBShader.cg , size=120
+[22:22:14]: Info-->	BackGround.png , size=120
+[22:22:14]: Info-->	BigLogo.png , size=120
+[22:22:14]: Info-->	BuildingBase0.mdl , size=120
+[22:22:14]: Info-->	BuildingBase1.mdl , size=120
+[22:22:14]: Info-->	Configure.stg , size=120
+[22:22:14]: Info-->	Danger.png , size=120
+[22:22:14]: Info-->	Default.xml , size=120
+[22:22:14]: Info-->	F15.mdl , size=120
+[22:22:14]: Info-->	F15.xml , size=120
+[22:22:14]: Info-->	F15Diff.png , size=120
+[22:22:14]: Info-->	F15Missile.xml , size=120
+[22:22:14]: Info-->	F15Norm.png , size=120
+[22:22:14]: Info-->	F15Spec.png , size=120
+[22:22:14]: Info-->	GUI_0.png , size=120
+[22:22:14]: Info-->	GameMaterials.material , size=120
+[22:22:14]: Info-->	GameMenuOverlay.xml , size=120
+[22:22:14]: Info-->	GlareFinal.cg , size=120
+[22:22:14]: Info-->	HBlur.cg , size=120
+[22:22:14]: Info-->	InGamePP.cg , size=120
+[22:22:14]: Info-->	LoadingOverlay.xml , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (0).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (1).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (10).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (11).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (12).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (13).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (14).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (15).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (16).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (17).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (18).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (19).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (2).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (20).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (21).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (22).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (23).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (3).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (4).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (5).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (6).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (7).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (8).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase0\b (9).tga , size=120
+[22:22:14]: Info-->	Low\BuildingBase1\b (1).tga , size=120
+[22:22:14]: Info-->	Low\Trees\T(1).tga , size=120
+[22:22:14]: Info-->	Luminance.cg , size=120
+[22:22:14]: Info-->	MenuOverlay.xml , size=120
+[22:22:14]: Info-->	Missile.mdl , size=120
+[22:22:14]: Info-->	MouseCursor.png , size=120
+[22:22:14]: Info-->	Noise128x128.tga , size=120
+[22:22:14]: Info-->	PlaneExp/0.png , size=120
+[22:22:14]: Info-->	PlaneExp/1.png , size=120
+[22:22:14]: Info-->	PlaneExp/10.png , size=120
+[22:22:14]: Info-->	PlaneExp/11.png , size=120
+[22:22:14]: Info-->	PlaneExp/12.png , size=120
+[22:22:14]: Info-->	PlaneExp/13.png , size=120
+[22:22:14]: Info-->	PlaneExp/14.png , size=120
+[22:22:14]: Info-->	PlaneExp/15.png , size=120
+[22:22:15]: Info-->	PlaneExp/16.png , size=120
+[22:22:15]: Info-->	PlaneExp/17.png , size=120
+[22:22:15]: Info-->	PlaneExp/18.png , size=120
+[22:22:15]: Info-->	PlaneExp/19.png , size=120
+[22:22:15]: Info-->	PlaneExp/2.png , size=120
+[22:22:15]: Info-->	PlaneExp/20.png , size=120
+[22:22:15]: Info-->	PlaneExp/21.png , size=120
+[22:22:15]: Info-->	PlaneExp/22.png , size=120
+[22:22:15]: Info-->	PlaneExp/23.png , size=120
+[22:22:15]: Info-->	PlaneExp/3.png , size=120
+[22:22:15]: Info-->	PlaneExp/4.png , size=120
+[22:22:15]: Info-->	PlaneExp/5.png , size=120
+[22:22:15]: Info-->	PlaneExp/6.png , size=120
+[22:22:15]: Info-->	PlaneExp/7.png , size=120
+[22:22:15]: Info-->	PlaneExp/8.png , size=120
+[22:22:15]: Info-->	PlaneExp/9.png , size=120
+[22:22:15]: Info-->	SearchPath.stg , size=120
+[22:22:15]: Info-->	Stop.png , size=120
+[22:22:15]: Info-->	Tahoma_attr.fnt , size=120
+[22:22:15]: Info-->	Tahoma_font.png , size=120
+[22:22:15]: Info-->	Tahoma_font.xml , size=120
+[22:22:15]: Info-->	TreeBase3.mdl , size=120
+[22:22:15]: Info-->	TreeShader.cg , size=120
+[22:22:15]: Info-->	VBlur.cg , size=120
+[22:22:15]: Info-->	Warning.png , size=120
+[22:22:15]: Info-->	WaterNormal.tga , size=120
+[22:22:15]: Info-->	black_smoke.tga , size=120
+[22:22:15]: Info-->	blade_left.mdl , size=120
+[22:22:15]: Info-->	blade_leftBotBack.mdl , size=120
+[22:22:15]: Info-->	blade_right.mdl , size=120
+[22:22:15]: Info-->	blade_rightBotBack.mdl , size=120
+[22:22:15]: Info-->	blade_topBack.mdl , size=120
+[22:22:15]: Info-->	building.cg , size=120
+[22:22:15]: Info-->	controls.png , size=120
+[22:22:15]: Info-->	depthShader.cg , size=120
+[22:22:15]: Info-->	detail_mud.jpg , size=120
+[22:22:15]: Info-->	flare\flare0.tga , size=120
+[22:22:15]: Info-->	flare\flare1.tga , size=120
+[22:22:15]: Info-->	flare\flare2.tga , size=120
+[22:22:15]: Info-->	flare\flare3.tga , size=120
+[22:22:15]: Info-->	flare\flare4.tga , size=120
+[22:22:15]: Info-->	flare\flare5.tga , size=120
+[22:22:15]: Info-->	flare\flare6.tga , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/Credites.mp3 , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/Game/Explosion/Exp1.wav , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/Game/Jet.wav , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/Game/Missile.wav , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/Game/Wind.mp3 , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/themes/Tactic/Mystery.mp3 , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/themes/Tactic/mekalopolis.mp3 , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Assets/sound/themes/Tactic/skyward-fire.mp3 , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/DeviceCaps.txt , size=120
+[22:22:15]: Info-->	i:/Programing/GameEngine/mrayEngine/EaglesProject/Resources_d.stg , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot0.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot1.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot2.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot3.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot4.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot5.png , size=120
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot6.png , size=120
+[22:22:15]: Info-->	loadingScreen.png , size=120
+[22:22:15]: Info-->	missileGUI.png , size=120
+[22:22:15]: Info-->	mrayLogo.png , size=120
+[22:22:15]: Info-->	phong.cg , size=120
+[22:22:15]: Info-->	sky_night/back.png , size=120
+[22:22:15]: Info-->	sky_night/bottom.png , size=120
+[22:22:15]: Info-->	sky_night/front.png , size=120
+[22:22:15]: Info-->	sky_night/left.png , size=120
+[22:22:15]: Info-->	sky_night/right.png , size=120
+[22:22:15]: Info-->	sky_night/up.png , size=120
+[22:22:15]: Info-->	skybox.cg , size=120
+[22:22:15]: Info-->	terrain.cg , size=120
+[22:22:15]: Info-->	terrain.jpg , size=120
+[22:22:15]: Info-->	terrain.raw , size=120
+[22:22:15]: Info-->	testLevel.xml , size=120
+[22:22:15]: Info-->	water.cg , size=120
+[22:22:15]: Info-->	windBeam.tga , size=120
+[22:22:15]: Info-->------ File Resource Manager [Done] ------
+[22:22:15]: Info-->	------ Material Resource Manager ------
+[22:22:15]: Info-->	Used Memory: 1488
+[22:22:15]: Info-->	Building_mtrl , size=248
+[22:22:15]: Info-->	F15Material , size=248
+[22:22:15]: Info-->	LvlBoundingBox , size=248
+[22:22:15]: Info-->	Tree_mtrl , size=248
+[22:22:15]: Info-->	sky_object , size=248
+[22:22:15]: Info-->	water_mtrl , size=248
+[22:22:15]: Info-->------ Material Resource Manager [Done] ------
+[22:22:15]: Info-->	------ Mesh Resource Manager ------
+[22:22:15]: Info-->	Used Memory: 102510
+[22:22:15]: Info-->	BuildingBase0.mdl , size=1300
+[22:22:15]: Info-->	BuildingBase0/0 , size=1140
+[22:22:15]: Info-->	BuildingBase0/1 , size=1140
+[22:22:15]: Info-->	BuildingBase0/10 , size=1140
+[22:22:15]: Info-->	BuildingBase0/11 , size=1140
+[22:22:15]: Info-->	BuildingBase0/12 , size=1140
+[22:22:15]: Info-->	BuildingBase0/13 , size=1140
+[22:22:15]: Info-->	BuildingBase0/14 , size=1140
+[22:22:15]: Info-->	BuildingBase0/15 , size=1140
+[22:22:15]: Info-->	BuildingBase0/16 , size=1140
+[22:22:15]: Info-->	BuildingBase0/17 , size=1140
+[22:22:15]: Info-->	BuildingBase0/18 , size=1140
+[22:22:15]: Info-->	BuildingBase0/19 , size=1140
+[22:22:15]: Info-->	BuildingBase0/2 , size=1140
+[22:22:15]: Info-->	BuildingBase0/20 , size=1140
+[22:22:15]: Info-->	BuildingBase0/21 , size=1140
+[22:22:15]: Info-->	BuildingBase0/22 , size=1140
+[22:22:15]: Info-->	BuildingBase0/23 , size=1140
+[22:22:15]: Info-->	BuildingBase0/3 , size=1140
+[22:22:15]: Info-->	BuildingBase0/4 , size=1140
+[22:22:15]: Info-->	BuildingBase0/5 , size=1140
+[22:22:15]: Info-->	BuildingBase0/6 , size=1140
+[22:22:15]: Info-->	BuildingBase0/7 , size=1140
+[22:22:15]: Info-->	BuildingBase0/8 , size=1140
+[22:22:15]: Info-->	BuildingBase0/9 , size=1140
+[22:22:15]: Info-->	BuildingBase1.mdl , size=1484
+[22:22:15]: Info-->	BuildingBase1/1 , size=1292
+[22:22:15]: Info-->	F15.mdl , size=54654
+[22:22:15]: Info-->	Missile.mdl , size=10978
+[22:22:15]: Info-->	TreeBase3.mdl , size=592
+[22:22:15]: Info-->	TreeBase3/1 , size=528
+[22:22:15]: Info-->	blade_left.mdl , size=616
+[22:22:15]: Info-->	blade_leftBotBack.mdl , size=1200
+[22:22:15]: Info-->	blade_right.mdl , size=616
+[22:22:15]: Info-->	blade_rightBotBack.mdl , size=1246
+[22:22:15]: Info-->	blade_topBack.mdl , size=644
+[22:22:15]: Info-->------ Mesh Resource Manager [Done] ------
+[22:22:15]: Info-->	------ Texture Resource Manager ------
+[22:22:15]: Info-->	Used Memory: 58521862
+[22:22:15]: Info-->	 , size=6
+[22:22:15]: Info-->	AboutBG.png , size=1048576
+[22:22:15]: Info-->	BackGround.png , size=9501696
+[22:22:15]: Info-->	BigLogo.png , size=786432
+[22:22:15]: Info-->	Danger.png , size=1048576
+[22:22:15]: Info-->	F15Diff.png , size=4194304
+[22:22:15]: Info-->	F15Norm.png , size=786432
+[22:22:15]: Info-->	F15Spec.png , size=786432
+[22:22:15]: Info-->	GUI_0.png , size=1048576
+[22:22:15]: Info-->	Low\BuildingBase0\b (0).tga , size=49152
+[22:22:15]: Info-->	Low\BuildingBase0\b (1).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (10).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (11).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (12).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (13).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (14).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (15).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (16).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (17).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (18).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (19).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (2).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (20).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (21).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (22).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (23).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (3).tga , size=49152
+[22:22:15]: Info-->	Low\BuildingBase0\b (4).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (5).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (6).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (7).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (8).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase0\b (9).tga , size=98304
+[22:22:15]: Info-->	Low\BuildingBase1\b (1).tga , size=524288
+[22:22:15]: Info-->	Low\Trees\T(1).tga , size=524288
+[22:22:15]: Info-->	MouseCursor.png , size=16384
+[22:22:15]: Info-->	Noise128x128.tga , size=49152
+[22:22:15]: Info-->	PlaneExp/0.png , size=49152
+[22:22:15]: Info-->	PlaneExp/1.png , size=49152
+[22:22:15]: Info-->	PlaneExp/10.png , size=49152
+[22:22:15]: Info-->	PlaneExp/11.png , size=49152
+[22:22:15]: Info-->	PlaneExp/12.png , size=49152
+[22:22:15]: Info-->	PlaneExp/13.png , size=49152
+[22:22:15]: Info-->	PlaneExp/14.png , size=49152
+[22:22:15]: Info-->	PlaneExp/15.png , size=49152
+[22:22:15]: Info-->	PlaneExp/16.png , size=49152
+[22:22:15]: Info-->	PlaneExp/17.png , size=49152
+[22:22:15]: Info-->	PlaneExp/18.png , size=49152
+[22:22:15]: Info-->	PlaneExp/19.png , size=49152
+[22:22:15]: Info-->	PlaneExp/2.png , size=49152
+[22:22:15]: Info-->	PlaneExp/20.png , size=49152
+[22:22:15]: Info-->	PlaneExp/21.png , size=49152
+[22:22:15]: Info-->	PlaneExp/22.png , size=49152
+[22:22:15]: Info-->	PlaneExp/23.png , size=49152
+[22:22:15]: Info-->	PlaneExp/3.png , size=49152
+[22:22:15]: Info-->	PlaneExp/4.png , size=49152
+[22:22:15]: Info-->	PlaneExp/5.png , size=49152
+[22:22:15]: Info-->	PlaneExp/6.png , size=49152
+[22:22:15]: Info-->	PlaneExp/7.png , size=49152
+[22:22:15]: Info-->	PlaneExp/8.png , size=49152
+[22:22:15]: Info-->	PlaneExp/9.png , size=49152
+[22:22:15]: Info-->	SkyNight , size=4718592
+[22:22:15]: Info-->	Stop.png , size=65536
+[22:22:15]: Info-->	Tahoma_font.png , size=1048576
+[22:22:15]: Info-->	Warning.png , size=65536
+[22:22:15]: Info-->	WaterNormal.tga , size=196608
+[22:22:15]: Info-->	black_smoke.tga , size=262144
+[22:22:15]: Info-->	controls.png , size=4194304
+[22:22:15]: Info-->	detail_mud.jpg , size=786432
+[22:22:15]: Info-->	flare\flare0.tga , size=65536
+[22:22:15]: Info-->	flare\flare1.tga , size=16384
+[22:22:15]: Info-->	flare\flare2.tga , size=65536
+[22:22:15]: Info-->	flare\flare3.tga , size=16384
+[22:22:15]: Info-->	flare\flare4.tga , size=16384
+[22:22:15]: Info-->	flare\flare5.tga , size=16384
+[22:22:15]: Info-->	flare\flare6.tga , size=16384
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot0.png , size=195840
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot1.png , size=196608
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot2.png , size=196608
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot3.png , size=196608
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot4.png , size=196608
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot5.png , size=196608
+[22:22:15]: Info-->	i:\Programing\GameEngine\mrayEngine\EaglesProject\Assets\Credits\shot6.png , size=196608
+[22:22:15]: Info-->	loadingScreen.png , size=3686400
+[22:22:15]: Info-->	missileGUI.png , size=65536
+[22:22:15]: Info-->	mrayLogo.png , size=524288
+[22:22:15]: Info-->	sky_night/back.png , size=786432
+[22:22:15]: Info-->	sky_night/bottom.png , size=786432
+[22:22:15]: Info-->	sky_night/front.png , size=786432
+[22:22:15]: Info-->	sky_night/left.png , size=786432
+[22:22:15]: Info-->	sky_night/right.png , size=786432
+[22:22:15]: Info-->	sky_night/up.png , size=786432
+[22:22:15]: Info-->	temp_video , size=196608
+[22:22:15]: Info-->	terrain.jpg , size=12582912
+[22:22:15]: Info-->	windBeam.tga , size=65536
+[22:22:15]: Info-->------ Texture Resource Manager [Done] ------
+[22:22:15]: Info-->	------ Fonts Resource Manager ------
+[22:22:15]: Info-->	Used Memory: 13860
+[22:22:15]: Info-->	Tahoma_font.xml , size=13860
+[22:22:15]: Info-->------ Fonts Resource Manager [Done] ------
+[22:22:15]: Info-->	------ Shader Resource Manager ------
+[22:22:15]: Info-->	Used Memory: 5704
+[22:22:15]: Info-->	BBShader.cg , size=376
+[22:22:15]: Info-->	GlareFinal.cg , size=376
+[22:22:15]: Info-->	HBlur.cg , size=280
+[22:22:15]: Info-->	InGamePP.cg , size=472
+[22:22:15]: Info-->	Luminance.cg , size=280
+[22:22:15]: Info-->	TreeShader.cg , size=424
+[22:22:15]: Info-->	VBlur.cg , size=280
+[22:22:15]: Info-->	building.cg , size=664
+[22:22:15]: Info-->	depthShader.cg , size=280
+[22:22:15]: Info-->	phong.cg , size=664
+[22:22:15]: Info-->	skybox.cg , size=424
+[22:22:15]: Info-->	terrain.cg , size=664
+[22:22:15]: Info-->	water.cg , size=520

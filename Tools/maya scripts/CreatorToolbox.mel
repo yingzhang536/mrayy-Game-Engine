@@ -1,0 +1,1037 @@
+
+
+
+proc int resetPivotCenter(string $node)
+{
+
+	float $pvot[]=`xform -q -ws -pivots $node`;
+	float $center[]=`xform -q -ws -t $node`;
+	float $point[];
+	$point[0]=$center[0]-$pvot[0];
+	$point[1]=$center[1]-$pvot[1];
+	$point[2]=$center[2]-$pvot[2];
+	
+	string $child[]=`listRelatives -children -type "transform" $node`;
+	
+	string $parentNode=`firstParentOf  $node`;
+	if($parentNode!="")
+		parent -w $node;
+	
+	int $i=0;
+	
+	string $cmd="parent -w ";
+	
+	if(size($child)>0)
+	{	
+		for(;$i<size($child);$i++)
+		{
+			$cmd+=$child[$i]+" ";
+		}
+		eval($cmd);
+	}
+	
+	xform -t $point[0] $point[1] $point[2] $node;
+	makeIdentity -apply true -t 1 -n 0 $node;
+	xform -t $pvot[0] $pvot[1] $pvot[2] $node;
+
+		
+	if($parentNode!="")
+		parent $node $parentNode;
+	
+	
+	if(size($child)>0)
+	{	
+		$i=0;
+		string $cmd="parent ";
+		for(;$i<size($child);$i++)
+		{
+			$cmd+=$child[$i]+" ";
+		}
+		$cmd+=$node;
+		eval($cmd);
+	}
+	
+	return 1;
+}
+
+proc int bc_resetPivotCenter()
+{
+	string $nodes[]=`ls -sl`;
+	int $i=0;
+	string $cmd="select ";
+	for(;$i<size($nodes);$i++)
+	{
+		resetPivotCenter($nodes[$i]);
+		$cmd+=$nodes[$i]+" ";
+	}
+	eval($cmd);
+	return 1;
+}
+
+proc float[] multVecMatrix(float $m[],float $v[])
+{
+	float $ret[];
+	$ret[0]=$m[0]*$v[0]+$m[4]*$v[1]+$m[8]*$v[2]+$m[12]*$v[3];
+	$ret[1]=$m[1]*$v[0]+$m[5]*$v[1]+$m[9]*$v[2]+$m[13]*$v[3];
+	$ret[2]=$m[2]*$v[0]+$m[6]*$v[1]+$m[10]*$v[2]+$m[14]*$v[3];
+	return $ret;
+}
+
+proc float[] transpose(float $m[])
+{
+	float $ret[];
+	$ret[0]=$m[0];    $ret[1]=$m[4];    $ret[2]=$m[8];    $ret[3]=$m[3];
+	$ret[4]=$m[1];    $ret[5]=$m[5];    $ret[6]=$m[9];    $ret[7]=$m[7];
+	$ret[8]=$m[2];    $ret[9]=$m[6];    $ret[10]=$m[10];  $ret[11]=$m[11];
+	$ret[12]=$m[12];   $ret[13]=$m[13];   $ret[14]=$m[14];  $ret[15]=$m[15];
+	
+	return $ret;
+}
+
+proc float[] getTransformMatrix(string $node)
+{
+   
+    float $m[]=`eval("xform -q -ws -m "+$node)`;
+    float $T[]=`eval("xform -q -ws -t "+$node)`;
+    $m[12]=$T[0];
+    $m[13]=$T[1];
+    $m[14]=$T[2];
+    return $m;
+}
+
+proc float[] getAbsScale(string $node)
+{
+	string $parentNode=`firstParentOf  $node`;
+	if($parentNode!="")
+		parent -w $node;
+	float $scale[]=`xform -q -r -s $node`;
+	if($parentNode!="")
+		parent $node $parentNode;
+	return $scale;
+}
+
+proc float[] getAxis(float $m[],string $axis)
+{
+    float $ret[]={0,0,0};
+    if($axis=="X")
+    {
+        $ret[0]=$m[0];
+        $ret[1]=$m[1];
+        $ret[2]=$m[2];
+    }else if($axis=="Y")
+    {
+        $ret[0]=$m[4];
+        $ret[1]=$m[5];
+        $ret[2]=$m[6];
+    }else if($axis=="Z")
+    {
+        $ret[0]=$m[8];
+        $ret[1]=$m[9];
+        $ret[2]=$m[10];
+    }
+    return $ret;
+    
+}
+ proc float[] eularToQuaternion(float $heading,float $attitude,float $bank) {
+	float $ret[];
+    // Assuming the angles are in radians.
+    float $c1 = cos($heading);
+    float $s1 = sin($heading);
+    float $c2 = cos($attitude);
+    float $s2 = sin($attitude);
+    float $c3 = cos($bank);
+    float $s3 = sin($bank);
+    $ret[0] = sqrt(1.0 + $c1 * $c2 + $c1*$c3 - $s1 * $s2 * $s3 + $c2*$c3) / 2.0;
+    float $w4 = (4.0 * $ret[0]);
+    $ret[1] = ($c2 * $s3 + $c1 * $s3 + $s1 * $s2 * $c3) / $w4 ;
+    $ret[2] = ($s1 * $c2 + $s1 * $c3 + $c1 * $s2 * $s3) / $w4 ;
+    $ret[3] = (-$s1 * $s3 + $c1 * $s2 * $c3 +$s2) / $w4 ;
+    return $ret;
+  }
+proc int SetupCollisionObject(string $obj[],string $type)
+{
+	addAttr -ln NodeType  -dt "string" $obj[0];
+	addAttr -ln Collision -dt "string"  $obj[0];
+	addAttr -ln PH_MaterialName -dt "string" $obj[0];
+	addAttr -ln Mass  -defaultValue 1.0 $obj[0];
+	addAttr -ln Density  -defaultValue 1.0 $obj[0];
+	if($obj[1]!="")
+	{
+		addAttr -ln Shape -dt "string"  ;
+		setAttr($obj[0]+".Shape") -lock true -type "string" $obj[1];	
+	}
+	setAttr($obj[0]+".NodeType") -lock true -type "string" "Collision";
+	setAttr($obj[0]+".Collision") -lock true -type "string" $type;
+	setAttr($obj[0]+".PH_MaterialName") -type "string" "PH_Default";
+	setAttr($obj[0]+".Mass") 1.0;
+	setAttr($obj[0]+".Density") 1.0;
+	return 1; 
+
+}
+
+proc int bc_CreateSphere()
+{
+	string $parent[]=`ls -sl -tr -o -sn`;
+	
+	float $rad=1;
+	float $pos[]={0,0,0};
+	if($parent[0]!="")
+	{
+		float $bb[]= `xform -q -ws -bb $parent[0]`;
+		float $pp[]= `xform -q -ws -t $parent[0]`;
+		$rad=($bb[3]-$bb[0])*0.5;
+		
+		$pos[0]=($bb[3]+$bb[0])*0.5-$pp[0];
+		$pos[1]=($bb[4]+$bb[1])*0.5-$pp[1];
+		$pos[2]=($bb[5]+$bb[2])*0.5-$pp[2];
+	}
+	string $obj[]=`polySphere -r $rad -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1`;
+	SetupCollisionObject($obj,"Sphere");
+	if($parent[0]!="")
+	{
+		parent $obj[0] $parent[0];
+		xform -t $pos[0] $pos[1] $pos[2] $obj[0];
+		xform -ro 0 0 0 $obj[0];
+		
+	}
+	return 1; 
+
+}
+proc int bc_CreateCylinder()
+{
+	float $rad=1;
+	float $h=2;
+	string $parent[]=`ls -sl -tr -o -sn`;
+	float $pos[]={0,0,0};
+	if($parent[0]!="")
+	{
+		float $bb[]= `xform -q -ws -bb $parent[0]`;
+		float $pp[]= `xform -q -ws -t $parent[0]`;
+		$rad=($bb[3]-$bb[0])*0.5;
+		$h=$bb[4]-$bb[1]-2*$rad;
+	
+		$pos[0]=($bb[3]+$bb[0])*0.5-$pp[0];
+		$pos[1]=($bb[4]+$bb[1])*0.5-$pp[1];
+		$pos[2]=($bb[5]+$bb[2])*0.5-$pp[2];
+	}
+	string $obj[]=`polyCylinder  -r $rad -h $h -sx 20 -sy 1 -sz 8 -ax 0 1 0 -rcp 1 -cuv 3 -ch 1`;
+	SetupCollisionObject($obj,"Capsule");
+	if($parent[0]!="")
+	{
+		parent $obj[0] $parent[0];
+		xform -t $pos[0] $pos[1] $pos[2] $obj[0];
+		xform -ro 0 0 0 $obj[0];
+		
+	}
+	return 1; 
+
+}
+proc int bc_CreateBox()
+{
+	float $w=1;
+	float $h=2;
+	float $d=2;
+	string $parent[]=`ls -sl -tr -o -sn`;
+	float $pos[]={0,0,0};
+	if($parent[0]!="")
+	{
+		float $bb[]= `xform -q -ws -bb $parent[0]`;
+		float $pp[]= `xform -q -ws -t $parent[0]`;
+		$w=$bb[3]-$bb[0];
+		$h=$bb[4]-$bb[1];
+		$d=$bb[5]-$bb[2];
+	
+		$pos[0]=($bb[3]+$bb[0])*0.5-$pp[0];
+		$pos[1]=($bb[4]+$bb[1])*0.5-$pp[1];
+		$pos[2]=($bb[5]+$bb[2])*0.5-$pp[2];
+	}
+	string $obj[]=`polyCube -w $w -h $h -d $d -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1`;
+	SetupCollisionObject($obj,"Box");
+	if($parent[0]!="")
+	{
+		parent $obj[0] $parent[0];
+		xform -t $pos[0] $pos[1] $pos[2] $obj[0];
+		xform -ro 0 0 0 $obj[0];
+	}
+	return 1; 
+
+}
+
+proc int bc_MakeConvexMesh()
+{
+	
+	string $object[]=`ls -sl -tr -o -sn`;
+	if($object[0]=="")
+		return 0;
+	string $obj[];
+	$obj[0]=$object[0];
+	$obj[1]="";
+	
+	SetupCollisionObject($obj,"Convex");
+	return 1;
+}
+
+proc int bc_CreateControllableJoint()
+{
+	string $object[]=`ls -sl -tr -o -sn`;
+	int $count=size($object);
+	int $i;
+	string $name="controllableJoint";
+	int $nodeCount=0;
+	float $oPos[]={0,0,0};
+	
+	for($i=0;$i<$count;$i++)
+	{
+		string $type=GetAttribValue($object[$i],"NodeType");
+		if($type!="Constraint")
+		{
+			warning( "Object :"+$object[$i]+" is not a constraint!");
+			continue;
+		}
+		float $oPos1[]=`eval("xform -q -ws -t "+ $object[$i])`;
+		$oPos[0]+=$oPos1[0];
+		$oPos[1]+=$oPos1[1];
+		$oPos[2]+=$oPos1[2];
+		$nodeCount++;
+	}
+	if($nodeCount==0)
+	{
+		error("No selected constraints found!");
+		return 0;
+	}
+	$oPos[0]/=$nodeCount;
+	$oPos[1]/=$nodeCount;
+	$oPos[2]/=$nodeCount;
+	
+	string $loc[]=`spaceLocator -p 0 0 0 -name $name`;
+		 
+	move $oPos[0] $oPos[1] $oPos[2] $loc[0];
+	
+	addAttr -ln NodeType -dt "string" $loc[0];
+	setAttr($loc[0]+".NodeType") -lock true -type "string" "ControllableJoint";
+	
+	addAttr -ln ConstraintsCount -at short  $loc[0];
+	setAttr($loc[0]+".ConstraintsCount") -lock true $nodeCount;
+	int $obj=0;
+	for($i=0;$i<$count;$i++)
+	{
+		string $type=GetAttribValue($object[$i],"NodeType");
+		if($type!="Constraint")
+		{
+			continue;
+		}
+		$name+="_"+$object[$i];
+		string $attrN="Object"+$obj;
+		addAttr -ln $attrN -dt "string"  $loc[0];
+		setAttr($loc[0]+"."+$attrN) -type "string" -lock true $object[$i];
+		
+		addAttr -ln ($attrN+"Ratio")   $loc[0];
+		setAttr($loc[0]+"."+$attrN+"Ratio") 1;
+		
+		
+		addAttr -ln ($attrN+"Axis") -at enum -enumName "T:S1:S2:X:Y:Z" $loc[0];
+		setAttr($loc[0]+"."+$attrN+"Axis") 0;
+		$obj++;
+	}
+	return 1;
+}
+
+proc int bc_CreateSingleControllableJoint()
+{
+	string $object[]=`ls -sl -tr -o -sn`;
+	int $count=size($object);
+	int $i;
+	
+	for($i=0;$i<$count;$i++)
+	{
+		string $type=GetAttribValue($object[$i],"NodeType");
+		if($type!="Constraint")
+		{
+			warning( "Object :"+$object[$i]+" is not a constraint!");
+			continue;
+		}
+		float $oPos[]=`eval("xform -q -ws -t "+ $object[$i])`;
+	
+		string $name="controllableJoint";
+		string $loc[]=`spaceLocator -p 0 0 0 -name $name`;
+			 
+		move $oPos[0] $oPos[1] $oPos[2] $loc[0];
+		
+		addAttr -ln NodeType -dt "string" $loc[0];
+		setAttr($loc[0]+".NodeType") -lock true -type "string" "ControllableJoint";
+		
+		addAttr -ln ConstraintsCount -at short  $loc[0];
+		setAttr($loc[0]+".ConstraintsCount") -lock true 1;
+		
+		string $attrN="Object0";
+		addAttr -ln $attrN -dt "string"  $loc[0];
+		setAttr($loc[0]+"."+$attrN) -type "string" -lock true $object[$i];
+			
+		addAttr -ln ($attrN+"Ratio")   $loc[0];
+		setAttr($loc[0]+"."+$attrN+"Ratio") 1;
+			
+			
+		addAttr -ln ($attrN+"Axis") -at enum -enumName "T:S1:S2:X:Y:Z"  $loc[0];
+		setAttr($loc[0]+"."+$attrN+"Axis") 0;
+		
+	}
+	return 1;
+}
+proc int bc_CreateMaterialNode()
+{
+		string $loc[]=`spaceLocator -p 0 0 0 -name "PhysicalMaterial"`;
+		
+		addAttr -ln NodeType -dt "string" $loc[0];
+		setAttr($loc[0]+".NodeType") -lock true -type "string" "PhysicsMaterial";
+		
+		addAttr -ln StaticFriction   $loc[0];
+		setAttr($loc[0]+".StaticFriction")  0.1;
+		addAttr -ln DynamicFriction   $loc[0];
+		setAttr($loc[0]+".DynamicFriction")  0.1;
+		addAttr -ln Restitution   $loc[0];
+		setAttr($loc[0]+".Restitution")  0.0;
+		
+		return 1;
+}
+proc int bc_MakePhysicalNode()
+{
+	
+	string $object[]=`ls -sl -tr -o -sn`;
+	int $count=size($object);
+	int $i;
+	for($i=0;$i<$count;$i++)
+	{
+		if(`attributeExists NodeType $object[$i]`==false)
+		{
+			addAttr -ln NodeType -dt "string" $object[$i];
+			setAttr($object[$i]+".NodeType") -lock true -type "string" "Physical";
+		}
+		
+		if(`attributeExists SolverIterations $object[$i]`==false)
+			addAttr -ln SolverIterations -sn sit -at short -defaultValue 4 $object[$i];
+		
+		if(`attributeExists Mass $object[$i]`==false)
+			addAttr -ln Mass -sn ma -defaultValue 1.0 $object[$i];
+			
+		if(`attributeExists IsDynamic $object[$i]`==false)
+		{
+			addAttr -ln Density $object[$i];
+			setAttr($object[$i]+".Density") 0.0;
+		}
+		if(`attributeExists Kinematic $object[$i]`==false)
+		{
+			addAttr -ln Kinematic -sn kin -at "bool"  $object[$i];
+			setAttr($object[$i]+".Kinematic") false;
+		}
+		if(`attributeExists IsDynamic $object[$i]`==false)
+		{
+			addAttr -ln IsDynamic -sn isDyn -at "bool"  $object[$i];
+			setAttr($object[$i]+".IsDynamic") true;
+		}
+		
+			
+	}
+	return 1;
+}
+
+proc int bc_CreateContactSensor()
+{
+	string $parent[]=`ls -sl -tr -o -sn`;
+	float $pos[]={0,0,0};
+	if($parent[0]=="" || `GetAttribValue $parent[0] "NodeType"`!="Collision")
+	{
+		error ("Select collision object to attach sensor for it");
+	}
+	
+	float $oPos[]= `xform -q -ws -t $parent[0]`;
+	
+	string $obj[]=`spaceLocator -p 0 0 0 -name "contactSensor"`;
+	move $oPos[0] $oPos[1] $oPos[2] $obj[0];
+	parent $obj[0] $parent[0];
+	xform -t $pos[0] $pos[1] $pos[2] $obj[0];
+	addAttr -ln NodeType -dt "string" $obj[0];
+	setAttr($obj[0]+".NodeType") -lock true -type "string" "ContactSensor";
+	return 1;
+}
+
+proc int fillConstraintAttrs(string $loc)
+{
+	if(`attributeExists NodeType $loc`==false)
+	{
+		addAttr -ln NodeType -dt "string" $loc;
+		setAttr($loc+".NodeType") -lock true -type "string" "Constraint";
+	}
+	
+	if(`attributeExists LocalAxis $loc`==false)
+	{
+		addAttr -ln LocalAxis -at enum -enumName "X:Y:Z" $loc;
+		setAttr($loc+".LocalAxis") 0;
+	}
+	
+	if(`attributeExists LocalNormal $loc`==false)
+	{
+		addAttr -ln LocalNormal -at enum -enumName "X:Y:Z" $loc;
+		setAttr($loc+".LocalNormal")  1;
+	}
+	
+	if(`attributeExists Swing1 $loc`==false)
+	{
+		addAttr -ln Swing1  -at enum -enumName "Free:Limited:Locked" $loc;
+		setAttr($loc+".Swing1") 2;
+	}
+	
+	if(`attributeExists Swing1Limit $loc`==false)
+	{
+		addAttr -ln Swing1Limit -sn s1l $loc;
+		setAttr($loc+".Swing1Limit")  90;
+	}
+	
+	
+	if(`attributeExists Swing2 $loc`==false)
+	{
+		addAttr -ln Swing2   -at enum -enumName "Free:Limited:Locked"   $loc;
+		setAttr($loc+".Swing2") 2;
+	}
+	if(`attributeExists Swing2Limit $loc`==false)
+	{
+		addAttr -ln Swing2Limit -sn s2l $loc;
+		setAttr($loc+".Swing2Limit")  90;
+	}
+	
+	
+	if(`attributeExists Twist $loc`==false)
+	{
+		addAttr -ln Twist   -at enum -enumName "Free:Limited:Locked" $loc;
+		setAttr($loc+".Twist") 1;
+	}
+	
+	if(`attributeExists TwistLimitLow $loc`==false)
+	{
+		addAttr -ln TwistLimitLow -sn tll $loc;
+		setAttr($loc+".TwistLimitLow")  -90;
+	}
+	
+	if(`attributeExists TwistLimitHigh $loc`==false)
+	{
+		addAttr -ln TwistLimitHigh -sn tlh $loc;
+		setAttr($loc+".TwistLimitHigh")  90;
+	}
+	
+	
+	if(`attributeExists SwingDamping $loc`==false)
+	{
+		addAttr -ln SwingDamping  $loc;
+		setAttr($loc+".SwingDamping")  0;
+	}
+	
+	if(`attributeExists SwingSpring $loc`==false)
+	{
+		addAttr -ln SwingSpring  $loc;
+		setAttr($loc+".SwingSpring")  10;
+	}
+	
+	if(`attributeExists TwistDamping $loc`==false)
+	{
+		addAttr -ln TwistDamping  $loc;
+		setAttr($loc+".TwistDamping")  0;
+	}
+	
+	if(`attributeExists TwistSpring $loc`==false)
+	{
+		addAttr -ln TwistSpring  $loc;
+		setAttr($loc+".TwistSpring")  10;
+	}
+	
+	if(`attributeExists XMove $loc`==false)
+	{
+		addAttr -ln XMove   -at enum -enumName "Free:Limited:Locked" $loc;
+		setAttr($loc+".XMove") false;
+	}
+	
+	if(`attributeExists YMove $loc`==false)
+	{
+		addAttr -ln YMove   -at enum -enumName "Free:Limited:Locked"  $loc;
+		setAttr($loc+".YMove") false;
+	}
+	
+	if(`attributeExists ZMove $loc`==false)
+	{
+		addAttr -ln ZMove   -at enum -enumName "Free:Limited:Locked" $loc;
+		setAttr($loc+".ZMove") 2;
+	}
+	if(`attributeExists LinearLimit $loc`==false)
+	{
+		addAttr -ln LinearLimit $loc;
+		setAttr($loc+".LinearLimit")  2;
+	}/*
+	if(`attributeExists LinearDamping $loc`==false)
+	{
+		addAttr -ln LinearDamping $loc;
+		setAttr($loc+".LinearDamping")  1;
+	}
+	if(`attributeExists LinearRestitution $loc`==false)
+	{
+		addAttr -ln LinearLimit $loc;
+		setAttr($loc+".LinearLimit")  1;
+	}*/
+	return 1;
+}
+proc int bc_UpdateConstraint()
+{
+	string $object[]=`ls -sl -tr -o -sn`;
+	int $i=0;
+	for(;$i<size($object);$i++)
+	{
+		fillConstraintAttrs($object[$i]);
+	}
+	return 1;
+}
+
+proc int bc_CreateConstraint()
+{
+	string $object[]=`ls -sl -tr -o -sn`;
+	if(size($object)!=2)
+	{
+		error ("Select only 2 objects to create constraint");
+		return 0;
+	}
+	
+	if(GetAttribValue($object[0],"NodeType")!="Physical")
+	{
+		error ("Object1 should be a physical node");
+		return 0;
+	}
+	if(GetAttribValue($object[1],"NodeType")!="Physical")
+	{
+		error ("Object2 should be a physical node");
+		return 0;
+	}
+					
+	float $oPos1[]=`eval("xform -q -ws -t "+ $object[0])`;
+	float $oPos2[]=`eval("xform -q -ws -t "+ $object[1])`;
+	
+	float $oPos[];
+	$oPos[0]=($oPos1[0]+$oPos2[0])*0.5;
+	$oPos[1]=($oPos1[1]+$oPos2[1])*0.5;
+	$oPos[2]=($oPos1[2]+$oPos2[2])*0.5;
+	
+	string $name="Cons_"+$object[0]+"_"+$object[1];
+	
+	string $loc[]=`spaceLocator -p 0 0 0 -name $name`;
+	move $oPos[0] $oPos[1] $oPos[2] $loc[0];
+	
+	addAttr -ln Object1 -hidden true -dt "string" $loc[0];
+	setAttr($loc[0]+".Object1") -lock true -type "string" $object[0];
+	
+	addAttr -ln Object2 -hidden true -dt "string" $loc[0];
+	setAttr($loc[0]+".Object2") -lock true -type "string" $object[1];
+	
+	string $parentNode=`firstParentOf  $object[0]`;
+	if($parentNode!="")
+	{
+		parent $loc $parentNode;
+	}
+	
+	
+	fillConstraintAttrs($loc[0]);
+	
+	return 1;
+}
+
+proc string GetAttribValue(string $object,string $attr)
+{
+	if(`eval("attributeExists "+ $attr +" " + $object)`==false)
+		return "";
+	string $ret= `eval("getAttr "+$object+"."+$attr)`;
+	return $ret;
+}
+proc string ExportControllableJointProperties(string $object)
+{
+
+	print ("Exporting Controllable Joint :"+$object+"\n");
+	string $tagElement="";
+	int $objCount=`eval("getAttr "+$object+".ConstraintsCount")`;
+	int $i=0;
+	$tagElement += ("\t<CoupledJointComponent Name=\""+$object+"\">\n");
+	for(;$i<$objCount;$i++)
+	{
+		string $attrN="Object"+$i;
+		string $name=`eval("getAttr "+$object+".Object"+$i)`;
+		float $ratio=`eval("getAttr "+$object+".Object"+$i+"Ratio")`;
+		string $axis=`eval("getAttr -asString "+$object+".Object"+$i+"Axis ")`;
+		$tagElement+="\t\t<Joint TargetJoint=\""+$name+"\" Ratio=\""+$ratio+"\" Axis=\""+$axis+"\"/>\n";
+	}
+	
+	$tagElement += ("\t</CoupledJointComponent>\n");
+
+	return $tagElement;
+}
+
+proc string ExportCollisionProperties(string $object)
+{
+
+	print ("Exporting Shape :"+$object+"\n");
+
+	string $tagElement="";
+	string $collType=`eval("getAttr "+$object+".Collision")`;
+
+	float $oPos[];
+	float $oRot[];
+	
+	$tagElement += ("\t<Shape Name=\""+$object+"\"" + " Type=\""+$collType+"\"");
+
+
+	$oPos=`eval("getAttr "+ $object+".translate")`;
+	$tagElement+=(" Position=\""+$oPos[0]+","+$oPos[1]+","+$oPos[2]+ "\"");
+
+	$oRot=`eval("getAttr "+ $object+".rotate")`;
+	$tagElement+= (" Rotation=\""+$oRot[0]+","+$oRot[1]+","+$oRot[2]+ "\"");
+
+	$oScale=`getAbsScale $object`;
+	if($collType=="Sphere")
+	{
+		string $shape=`eval("getAttr "+$object+".Shape")`;
+		float $radius=$oScale[0]*`eval("getAttr "+ $shape+".radius")`;
+		
+		$tagElement+=(" Radius=\""+$radius+ "\"");
+	}else if($collType=="Box")
+	{
+		string $shape=`eval("getAttr "+$object+".Shape")`;
+		float $w=`eval("getAttr "+ $shape+".width")`*0.5*$oScale[0];
+		float $h=`eval("getAttr "+ $shape+".height")`*0.5*$oScale[1];
+		float $d=`eval("getAttr "+ $shape+".depth")`*0.5*$oScale[2];
+		$tagElement+=(" Extent=\""+$w+ ","+$h+","+$d+ "\"");
+	}else if($collType=="Capsule")
+	{
+		string $shape=`eval("getAttr "+$object+".Shape")`;
+		float $radius=$oScale[0]*`eval("getAttr "+ $shape+".radius")`;
+		float $height=$oScale[1]*`eval("getAttr "+ $shape+".height")`;
+		$tagElement+= (" Radius=\""+$radius+ "\" "+
+			"Height=\""+$height+ "\"");
+	}else if($collType=="Convex")
+	{
+		$tagElement+= (" Path=\""+$object+ ".mdl\" ");
+	}
+	$tagElement+=("/>\n");
+	return $tagElement; 
+}
+
+proc string ExportConstraintProperties(string $object)
+{
+
+	print ("Exporting Constraint:"+$object+"\n");
+	string $tagElement="";
+	
+	float $oPos[];
+	float $oRot[];
+	
+	string $obj1=GetAttribValue($object,"Object1");
+	string $obj2=GetAttribValue($object,"Object2");
+	string $AxisN=`getAttr -asString ($object+".LocalAxis")`;
+	string $NormalN=`getAttr -asString ($object+".LocalNormal")`;
+	
+
+	float $constM[]=`getTransformMatrix($object)`;
+	float $m1[]=`getTransformMatrix($obj1)`;
+	float $m2[]=`getTransformMatrix($obj2)`;
+	
+	if($AxisN!="X" && $AxisN!="Y" && $AxisN!="Z")
+	{
+		error ("Constraint: "+$object+" has invalid local axis: "+$AxisN+"\n");
+	}
+	if($NormalN!="X" && $NormalN!="Y" && $NormalN!="Z")
+	{
+		error ("Constraint: "+$object+" has invalid local normal: "+$NormalN+"\n");
+	}
+	
+	float $axis[]=`getAxis $constM $AxisN`;
+	float $normal[]=`getAxis $constM $NormalN`;
+	
+	$axis[3]=0;
+	$normal[3]=0;
+	float $m1Trans[]=transpose($m1);
+	float $m2Trans[]=transpose($m2);
+	
+	float $axis1[]=multVecMatrix($m1Trans,$axis);
+	float $axis2[]=multVecMatrix($m2Trans,$axis);
+	
+	float $norm1[]=multVecMatrix($m1Trans,$normal);
+	float $norm2[]=multVecMatrix($m2Trans,$normal);
+	
+	
+	float $t1[]=`eval("xform -q -ws -t "+$obj1)`;
+	float $t2[]=`eval("xform -q -ws -t "+$obj2)`;
+	float $vec[]=`eval("xform -q -ws -t "+$object)`;
+	float $anch1[]={$vec[0]-$t1[0],$vec[1]-$t1[1],$vec[2]-$t1[2],0};
+	float $anch2[]={$vec[0]-$t2[0],$vec[1]-$t2[1],$vec[2]-$t2[2],0};
+	
+	$anch1=multVecMatrix($m1Trans,$anch1);
+	$anch2=multVecMatrix($m2Trans,$anch2);
+	
+	string $twist=`getAttr -asString ($object+".Twist")`;//GetAttribValue($object,"Twist");
+	string $swing1=`getAttr -asString ($object+".Swing1")`;//GetAttribValue($object,"Swing1");
+	string $swing2=`getAttr -asString ($object+".Swing2")`;//GetAttribValue($object,"Swing2");
+	
+	int $xmove=`getAttr -asString ($object+".XMove")`;//GetAttribValue($object,"XMove");
+	int $ymove=`getAttr -asString ($object+".YMove")`;//GetAttribValue($object,"YMove");
+	int $zmove=`getAttr -asString ($object+".ZMove")`;//GetAttribValue($object,"ZMove");
+
+	$tagElement += ("<PhysicalJointDOF6Component Name=\""+$object+"\" TargetNodeA=\""+$obj1+"\" TargetNodeB=\""+$obj2+"\">\n");
+	$tagElement += ("<PhysicalJoint JointType=\"D6Joint\" ");
+	$tagElement += (" LocalAnchorA=\""+$anch1[0]+","+$anch1[1]+","+$anch1[2]+"\" ");
+	$tagElement += (" LocalAnchorB=\""+$anch2[0]+","+$anch2[1]+","+$anch2[2]+"\" ");
+	$tagElement += (" LocalAxisA=\""+$axis1[0]+","+$axis1[1]+","+$axis1[2]+"\" ");
+	$tagElement += (" LocalAxisB=\""+$axis2[0]+","+$axis2[1]+","+$axis2[2]+"\" ");
+	$tagElement += (" LocalNormalA=\""+$norm1[0]+","+$norm1[1]+","+$norm1[2]+"\" ");
+	$tagElement += (" LocalNormalB=\""+$norm2[0]+","+$norm2[1]+","+$norm2[2]+"\" ");
+	
+	$tagElement += (" MaxForce=\"3.4028235e+038\" MaxTorque=\"3.4028235e+038\"");
+	$tagElement += (" Swing1Motion=\""+("Motion_"+$swing1)+"\"");
+	$tagElement += (" Swing2Motion=\""+("Motion_"+$swing2)+"\"");
+	$tagElement += (" TwistMotion=\"" +("Motion_"+$twist)+"\"");
+	$tagElement += (" xMotion=\"" +("Motion_"+$xmove)+"\" ");
+	$tagElement += (" yMotion=\"" +("Motion_"+$ymove)+"\" ");
+	$tagElement += (" zMotion=\"" +("Motion_"+$zmove)+"\" ");
+	$tagElement += (" UseAccelerationSpring=\"0\" >\n");
+	
+	if($twist=="Locked")
+	{
+		float $damp,$spring,$low,$high;
+		$damp=0;
+		$spring=0;
+		$low=GetAttribValue($object,"TwistLimitLow");
+		$high=GetAttribValue($object,"TwistLimitHigh");
+		$tagElement+="<TwistLimit>\n";
+		$tagElement+="<Low Damping=\""+$damp+"\" Restitution=\""+0+"\" Spring=\""+$spring+"\" Value=\""+$low+"\"/>\n";
+		$tagElement+="<High Damping=\""+$damp+"\" Restitution=\""+0+"\" Spring=\""+$spring+"\" Value=\""+$high+"\"/>\n";
+		$tagElement+="</TwistLimit>\n";
+		
+		$damp=GetAttribValue($object,"TwistDamping");
+		$spring=GetAttribValue($object,"TwistSpring");
+        $tagElement+="<TwistDrive Damping=\""+$damp+"\" DrivePosition=\"1\" driveVelocity=\"0\" ForceLimit=\"3.4028235e+038\" Spring=\""+$spring+"\"/>\n";
+	}
+	
+	float $swingSpring,$swingDamping;
+	
+	$swingDamping=GetAttribValue($object,"SwingDamping");
+	$swingSpring=GetAttribValue($object,"SwingSpring");
+	if($swing1=="Locked")
+	{
+		float $value;
+		$value=GetAttribValue($object,"Swing1Limit");
+		
+        $tagElement+="<Swing1Limit Value=\""+$value+"\"/>\n";
+		
+	}
+	if($swing2=="Locked")
+	{
+		float $value;
+		$value=GetAttribValue($object,"Swing2Limit");
+		
+        $tagElement+="<Swing2Limit Value=\""+$value+"\"/>\n";
+	}
+	
+	if($swing1=="Locked" || $swing2=="Locked")
+	{
+        $tagElement+="<SwingDrive Damping=\""+$swingDamping+"\" DrivePosition=\"1\" driveVelocity=\"0\" ForceLimit=\"3.4028235e+038\" Spring=\""+$swingSpring+"\"/>\n";
+	}
+	
+	$linearLimit=GetAttribValue($object,"LinearLimit");
+	
+    $tagElement+="<LinearLimit Value=\""+$linearLimit+"\"/>\n";
+	if($xmove=="Locked")
+	{
+        $tagElement+="<xDrive Damping=\"0.1\" DrivePosition=\"1\" driveVelocity=\"0\" ForceLimit=\"3.4028235e+038\" Spring=\"1000\"/>\n";
+	}
+	if($ymove=="Locked")
+	{
+        $tagElement+="<yDrive Damping=\"0.1\" DrivePosition=\"1\" driveVelocity=\"0\" ForceLimit=\"3.4028235e+038\" Spring=\"1000\"/>\n";
+	}
+	if($zmove=="Locked")
+	{
+        $tagElement+="<zDrive Damping=\"0.1\" DrivePosition=\"1\" driveVelocity=\"0\" ForceLimit=\"3.4028235e+038\" Spring=\"1000\"/>\n";
+	}
+	$tagElement += ("</PhysicalJoint>\n");
+	$tagElement += ("</PhysicalJointDOF6Component>\n");
+	return $tagElement; 
+}
+
+proc string ExportPhysicalNodeProperties(string $object)
+{
+	print ("Exporting Physical Node :"+$object+"\n");
+    string $dynamic;
+    string $kinematic;
+
+	float $oPos[];
+	float $oRot[];
+	float $oScale[];
+	
+	string $tagElement="";
+	$oPos=`eval("xform -q -ws -t "+ $object)`;
+	$oRot=`eval("xform -q -ws -ro "+ $object)`;
+	$oScale=`getAbsScale $object`;
+
+	float $rotQuat[]=eularToQuaternion($oRot[0],$oRot[1],$oRot[2]);
+	
+
+	$tagElement+="<PhysicsComponent Name=\""+$object+"\"";
+	$tagElement+=(" TargetNode=\""+$object+"\"");
+	
+	$tagElement+=(" Position=\""+$oPos[0]+","+$oPos[1]+","+$oPos[2]+ "\"");
+	$tagElement+= (" Rotation=\""+$oRot[0]+","+$oRot[1]+","+$oRot[2]+ "\"");
+	
+	$dynamic=GetAttribValue($object,"IsDynamic");
+	$kinematic=GetAttribValue($object,"Kinematic");
+		
+	$tagElement+=">\n";
+	$tagElement+="<PhysicalNode>\n";
+	if($dynamic=="1")
+	{
+		string $mass=GetAttribValue($object,"Mass");
+		$tagElement+="<PhysicalBody ";
+		if($mass!="")
+			$tagElement+="Mass=\""+$mass+"\" ";
+		if($kinematic!="")
+			$tagElement+="Kinematic=\""+$kinematic+"\" ";
+		$tagElement+="/>\n";
+	}
+				
+	$tagElement+="<Shapes>\n";
+	string $child[]=`listRelatives -type "transform"  -ni -children $object`;
+	int $count=size($child);
+	int $totalShapes=0;
+	int $i=0;
+	for($i=0;$i<$count;$i++)
+	{
+	    string $type=GetAttribValue($child[$i],"NodeType");
+	    if($type=="Collision")
+	    {
+			$tagElement+=ExportCollisionProperties($child[$i]);	
+			$totalShapes++;
+	    }
+	}
+	if($totalShapes==0)
+	{
+		warning("Physical Node :'"+$object+"' doesn't have any shapes");
+	}	
+	$tagElement+="</Shapes>\n";		
+	$tagElement+="</PhysicalNode>\n";
+	$tagElement+="</PhysicsComponent>\n";
+
+	print ("\tDone\n");
+
+	return $tagElement;
+}
+
+proc string ExportSceneObject(string $object)
+{
+
+
+	float $oPos[];
+	float $oRot[];
+	float $oScale[];
+	
+	string $tagElement="";
+	$oPos=`eval("xform -q -ws -t "+ $object)`;
+	$oRot=`eval("xform -q -ws -ro "+ $object)`;
+	$oScale=`getAbsScale $object`;
+
+	float $rotQuat[]=eularToQuaternion($oRot[0],$oRot[1],$oRot[2]);
+	
+	print ("\t\tExporting Scene Node:"+$object+"\n");
+	$tagElement+="<SceneComponent Name=\""+$object+"\">\n";
+	$tagElement+="<Components>\n";
+	$tagElement+="<ModelComponent ModelPath=\""+$object+".mdx\"/>\n";
+	$tagElement+="</Components>\n";
+	$tagElement+="<SceneNodeDesc Name=\""+$object+"\" Orintation=\""+$rotQuat[0]+","+$rotQuat[1]+","+$rotQuat[2]+","+$rotQuat[3]+"\" Position=\""+$oPos[0]+","+$oPos[1]+","+$oPos[2]+"\" Scale=\""+$oScale[0]+","+$oScale[1]+","+$oScale[2]+"\" />\n";
+	$tagElement+="</SceneComponent>\n";
+
+	return $tagElement;
+}
+
+proc int ExportObjectsAct(string $filename, string $fileType )
+{
+	string $basePath=dirname($filename)+"\\";
+	mrayExporter -all -units m -texcoords -vertNormal -tangents -exportPath $basePath;
+	string $object[]=`ls -tr -o -sn`;
+	int $objectsCount=size($object);
+	if($objectsCount==0)
+	{
+		return 0;
+	}
+	int $loop;
+	
+	string $tagElement="";
+//	$tagElement+= "<GameEntity>\n"; 
+	$tagElement+="<Components>\n";
+
+	for($loop=0;$loop<$objectsCount;$loop++)
+	{
+	
+	    string $type=GetAttribValue($object[$loop],"NodeType");
+		if($type=="Physical")
+		{
+			$tagElement+=ExportSceneObject($object[$loop]);
+			$tagElement+=ExportPhysicalNodeProperties($object[$loop]);
+		}else if($type=="Constraint")
+		{
+			$tagElement+=ExportConstraintProperties($object[$loop]);
+		}else if($type=="ControllableJoint")
+		{
+			$tagElement+=ExportControllableJointProperties($object[$loop]);
+		}else
+		{
+			$tagElement+=ExportSceneObject($object[$loop]);
+		}
+
+
+
+	}
+	int $fileid=`fopen $filename "w"`;
+	if($fileid==0)
+	{
+		error ("Cann't Open File: "+$filename);
+	}
+	$tagElement+="</Components>\n";
+//	$tagElement+="</GameEntity>\n"; 
+	fprint $fileid $tagElement;
+	fclose $fileid;
+	return 1;
+}
+
+proc int bc_ExportObjects()
+{
+	fileBrowserDialog -m 1 -fc "ExportObjectsAct" -ft "*.*" -an "Export" -om "SaveAs";
+	return 1; 
+
+}
+
+
+proc int create_CollisionObjToolbox_gui() 
+{
+	if(`window -exists CollisionObjToolboxWindow`)deleteUI CollisionObjToolboxWindow;
+	window  -rtf true -tlb true -t "V.Telesar Toolbox" CollisionObjToolboxWindow;
+	rowColumnLayout -numberOfColumns 1;
+	button -l "Sphere" -w 60 -c "bc_CreateSphere()"; 	
+	button -l "Cylinder" -w 60 -c "bc_CreateCylinder()"; 
+	button -l "Box" -w 60 -c "bc_CreateBox()"; 
+	separator;
+	button -l "Physical Material" -w 100 -c "bc_CreateMaterialNode()"; 
+	button -l "Make Convex" -w 100 -c "bc_MakeConvexMesh()"; 
+	button -l "Make Physical" -w 100 -c "bc_MakePhysicalNode()"; 
+	separator;
+	
+	button -l "Add Motor" -w 100 -c "bc_CreateConstraint()"; 
+	button -l "Update Constraint" -w 100 -c "bc_UpdateConstraint()"; 
+	button -l "Coupled Controller" -w 100 -c "bc_CreateControllableJoint()"; 
+	button -l "Single Coupled Controller" -w 100 -c "bc_CreateSingleControllableJoint()";
+	separator;
+	
+	button -l "Contact Sensor" -w 100 -c "bc_CreateContactSensor()"; 
+	separator;
+	button -l "Export" -w 60 -c "bc_ExportObjects()"; 
+
+	showWindow CollisionObjToolboxWindow;
+	return 1; 
+}  
+create_CollisionObjToolbox_gui();
