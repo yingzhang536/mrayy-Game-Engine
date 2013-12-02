@@ -43,5 +43,3 @@
 #include <algorithm>
 
 
-// GStreamer
-#include <gst/gst.h>

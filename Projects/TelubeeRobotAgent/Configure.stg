@@ -1,0 +1,10 @@
+Settings{
+	Bits	"24"
+	Camera	"Microsoft LifeCam Studio"
+	Debugging	"Yes"
+	Fullscreen	"False"
+	Monitor	"0"
+	Multisample	"0"
+	Resolution	"1280,720"
+	VSync	"False"
+}

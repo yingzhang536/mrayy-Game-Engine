@@ -22,7 +22,7 @@ namespace mray
 {
 namespace video
 {
-
+	/*
 	class GStreamerPlaybackImpl;
 class GStreamerPlayback
 {
@@ -34,7 +34,7 @@ public:
 
 	void SetPipeline(const core::string& desc);
 };
-
+*/
 }
 }
 

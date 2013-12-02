@@ -8,6 +8,7 @@
 #include "TBAppGlobals.h"
 #include "TextureResourceManager.h"
 #include "VideoResourceManager.h"
+#include "GStreamVideoProvider.h"
 
 namespace mray
 {
@@ -175,6 +176,7 @@ namespace TBee
 			if(attr)
 			{
 				m_fileName=attr->value;
+				//GCPtr<video::GStreamVideoProvider> vdo;
 				video::IVideoSourcePtr vdo=gVideoResourceManager.LoadVideo(m_fileName);
 				m_video->Set(vdo,m_texture);
 			}

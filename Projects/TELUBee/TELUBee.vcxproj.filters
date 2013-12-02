@@ -58,6 +58,9 @@
     <Filter Include="Source Files\RenderingStates\HMD">
       <UniqueIdentifier>{a6342773-7b4f-43f9-9ef7-d9e3b5991541}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderingStates\Test States">
+      <UniqueIdentifier>{3bd25efc-8205-4f08-962d-114efcf0a45a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -259,12 +262,6 @@
     <ClInclude Include="GStreamVideoProvider.h">
       <Filter>Source Files\Communicator</Filter>
     </ClInclude>
-    <ClInclude Include="ofVideoPlayerGst.h">
-      <Filter>GST</Filter>
-    </ClInclude>
-    <ClInclude Include="ofGstUtilsWin32.h">
-      <Filter>GST</Filter>
-    </ClInclude>
     <ClInclude Include="DVISwitcherController.h">
       <Filter>Source Files\DVI</Filter>
     </ClInclude>
@@ -300,6 +297,15 @@
     </ClInclude>
     <ClInclude Include="RemoteRobotCommunicator.h">
       <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
+    <ClInclude Include="GStreamerTestState.h">
+      <Filter>Source Files\RenderingStates\Test States</Filter>
+    </ClInclude>
+    <ClInclude Include="_ofVideoPlayerGst.h">
+      <Filter>GST</Filter>
+    </ClInclude>
+    <ClInclude Include="_ofGstUtilsWin32.h">
+      <Filter>GST</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -420,12 +426,6 @@
     <ClCompile Include="GStreamVideoProvider.cpp">
       <Filter>Source Files\Communicator</Filter>
     </ClCompile>
-    <ClCompile Include="ofVideoPlayerGst.cpp">
-      <Filter>GST</Filter>
-    </ClCompile>
-    <ClCompile Include="ofGstUtilsWin32.cpp">
-      <Filter>GST</Filter>
-    </ClCompile>
     <ClCompile Include="DVISwitcherController.cpp">
       <Filter>Source Files\DVI</Filter>
     </ClCompile>
@@ -455,6 +455,15 @@
     </ClCompile>
     <ClCompile Include="RemoteRobotCommunicator.cpp">
       <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="GStreamerTestState.cpp">
+      <Filter>Source Files\RenderingStates\Test States</Filter>
+    </ClCompile>
+    <ClCompile Include="_ofVideoPlayerGst.cpp">
+      <Filter>GST</Filter>
+    </ClCompile>
+    <ClCompile Include="_ofGstUtilsWin32.cpp">
+      <Filter>GST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

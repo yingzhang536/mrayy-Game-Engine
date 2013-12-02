@@ -10,6 +10,7 @@ namespace mray
 {
 namespace video
 {
+	/*
 
 class GStreamerPlaybackImpl
 {
@@ -36,7 +37,7 @@ public:
 		gst_element_set_state(m_pipeLine,GST_STATE_NULL);
 		gst_object_unref(m_pipeLine);
 	}
-};
+};*/
 
 }
 }

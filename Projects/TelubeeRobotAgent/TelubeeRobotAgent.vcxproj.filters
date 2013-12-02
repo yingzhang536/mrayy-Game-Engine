@@ -33,6 +33,12 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>Source Files\tinyxml</Filter>
     </ClInclude>
+    <ClInclude Include="GstVideoProvider.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TRApplication.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -46,6 +52,12 @@
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source Files\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="GstVideoProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TRApplication.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

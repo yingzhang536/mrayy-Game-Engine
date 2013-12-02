@@ -37,6 +37,7 @@ namespace TBee
 
 		math::vector2d m_speed;
 		math::vector3d m_head;
+		float m_rotation;
 	public:
 		CRobotConnector()
 		{
@@ -96,13 +97,16 @@ namespace TBee
 			if (!joystick)
 			{
 				m_speed = 0;
+				m_rotation = 0;
 				return;
 			}
 			controllers::JoysticAxis x = joystick->getAxisState(0);
 			controllers::JoysticAxis y = joystick->getAxisState(1);
+			controllers::JoysticAxis r = joystick->getAxisState(3);
 
 			m_speed.x = x.abs;
 			m_speed.y = y.abs;
+			m_rotation = r.abs;
 		}
 		void UpdateStatus()
 		{
@@ -112,6 +116,7 @@ namespace TBee
 			TBAppGlobals::oculusDevice->GetOrientation().toEulerAngles(m_head);
 			m_communicator->SetData("Head", core::StringConverter::toString(m_head));
 			m_communicator->SetData("Speed", core::StringConverter::toString(m_speed));
+			m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation));
 		}
 
 	};
@@ -135,6 +140,16 @@ CameraRenderingState::CameraRenderingState()
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
 	m_guiRenderer = r;
+
+	m_capturing = false;
+	m_clickCount = 0;
+
+	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
+	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
+
+	m_correctionValue[0] = m_lensCorrectionPP->GetValue("final.HMDWrapParams1");
+	m_correctionValue[1] = m_lensCorrectionPP->GetValue("final.HMDWrapParams2");
+
 }
 
 
@@ -206,15 +221,27 @@ void CameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
 
 void CameraRenderingState::OnEvent(Event* e)
 {
-	if(e->getType()==ET_Keyboard)
+	if(e->getType()==ET_Mouse)
 	{
-		KeyboardEvent* ev=(KeyboardEvent*)e;
-		if(ev->press && ev->key==KEY_UP)
+		MouseEvent* ev = (MouseEvent*)e;
+		if(ev->event==MET_LEFTDOWN)
 		{
-			m_VerticalShift+=1;
-		}else if(ev->press && ev->key==KEY_DOWN)
-		{
-			m_VerticalShift-=1;
+			if (m_capturing)
+			{
+				if (m_clickCount == 0)
+				{
+					m_firstClick = ev->pos;
+					m_clickCount++;
+				}
+				else if (m_clickCount == 1)
+				{
+					m_BoxSize = ev->pos - m_firstClick;
+					m_BoxSize.x = abs(m_BoxSize.x);
+					m_BoxSize.y = abs(m_BoxSize.y);
+					m_capturing = false;
+					m_clickCount++;
+				}
+			}
 		}
 	}
 	if(e->getType()==ET_Keyboard)
@@ -241,6 +268,36 @@ void CameraRenderingState::OnEvent(Event* e)
 			else if (evt->key == KEY_ESCAPE)
 			{
 				m_exitCode = STATE_EXIT_CODE;
+			}
+			else
+			if (evt->key == KEY_B)
+			{
+				m_capturing = true;
+				m_clickCount = 0;
+			}
+			else if (evt->key == KEY_Y)
+			{
+				m_correctionValue[0]->floatParam[0] += 0.01*(evt->shift?-1:1);
+			}
+			else if (evt->key == KEY_U)
+			{
+				m_correctionValue[0]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
+			}
+			else if (evt->key == KEY_I)
+			{
+				m_correctionValue[0]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
+			}
+			else if (evt->key == KEY_H)
+			{
+				m_correctionValue[1]->floatParam[0] += 0.01*(evt->shift ? -1 : 1);
+			}
+			else if (evt->key == KEY_J)
+			{
+				m_correctionValue[1]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
+			}
+			else if (evt->key == KEY_K)
+			{
+				m_correctionValue[1]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
 			}
 		}
 	}
@@ -290,6 +347,39 @@ void CameraRenderingState::OnExit()
 		m_cameraSource[1].camera->Stop();
 
 }
+
+class TextureRenderTarget:public video::IRenderTarget
+{
+protected:
+	video::ITexturePtr m_tex;
+public:
+	TextureRenderTarget(video::ITexturePtr tex){ m_tex = tex; }
+	virtual~TextureRenderTarget()
+	{
+	}
+
+	virtual void clear(const video::SColor&c, bool clearBackbuffer, bool clearDepthBuffer)
+	{
+	}
+
+	virtual void bind() {}
+	virtual void unbind() {}
+
+	virtual void attachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
+	virtual void deattachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
+
+	virtual const video::ITexturePtr& getColorTexture(int i = 0) { return m_tex; }
+	virtual const video::IHardwarePixelBufferPtr& getDepthBuffer() { return video::IHardwarePixelBufferPtr::Null; }
+	virtual const video::IHardwarePixelBufferPtr& getStencilBuffer() { return video::IHardwarePixelBufferPtr::Null; }
+
+	virtual int GetColorTextureCount() { return 1; }
+	virtual void Resize(int x, int y) {}
+	virtual math::vector2di getSize()
+	{
+		return math::vector2di(m_tex->getSize().x, m_tex->getSize().y);
+	}
+
+};
 video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETargetEye eye)
 {
 	IRenderingState::Render(rc,eye);
@@ -297,9 +387,22 @@ video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETarget
 	int index=GetEyeIndex(eye);
 	
 	video::IVideoDevice* dev=Engine::getInstance().getDevice();
+
+	video::TextureUnit tex;
+	tex.SetEdgeColor(video::DefaultColors::Black);
+	tex.setTextureClamp(video::ETW_WrapS, video::ETC_CLAMP_TO_BORDER);
+	tex.setTextureClamp(video::ETW_WrapT, video::ETC_CLAMP_TO_BORDER);
+	m_cameraSource[index].videoGrabber->Blit();
+
+	video::ITexturePtr cameraTex = m_cameraSource[index].videoGrabber->GetTexture();
+	{
+		math::vector2d size(cameraTex->getSize().x, cameraTex->getSize().y);
+		m_lensCorrectionPP->Setup(math::rectf(0, size));
+		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
+		cameraTex = m_lensCorrectionPP->getOutput()->getColorTexture();
+	}
 	dev->setRenderTarget(m_renderTarget[index]);
 
-	m_cameraSource[index].videoGrabber->Blit();
 
 //	gTextureResourceManager.writeResourceToDist(m_video->GetTexture(),"screens\\image#"+core::StringConverter::toString(s_id++)+".jp2");
 	if (rc.getSize() != m_hmdSize)
@@ -307,11 +410,7 @@ video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETarget
 		m_hmdSize = rc.getSize();
 		_UpdateCameraParams();
 	}
-	video::TextureUnit tex;
-	tex.SetEdgeColor(video::DefaultColors::Black);
-	tex.setTextureClamp(video::ETW_WrapS,video::ETC_CLAMP_TO_BORDER);
-	tex.setTextureClamp(video::ETW_WrapT,video::ETC_CLAMP_TO_BORDER);
-	tex.SetTexture(m_cameraSource[index].videoGrabber->GetTexture());
+	tex.SetTexture(cameraTex);
 	dev->useTexture(0,&tex);
 	//float croppingHeight=1-m_targetAspectRatio/m_cameraSource[index].ratio;
 	float targetHeight = m_cameraSource[index].camera->GetFrameSize().x / m_targetAspectRatio;
@@ -330,7 +429,11 @@ video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETarget
 	//tc.BRPoint=targetRect.BRPoint/rc.getSize();
 	tc.ULPoint.y=1-tc.ULPoint.y;
 	tc.BRPoint.y=1-tc.BRPoint.y;
-	dev->draw2DImage(math::rectf(targetRect.ULPoint+math::vector2d(0,shift),targetRect.BRPoint+math::vector2d(0,shift)),1,0,&tc);
+	dev->draw2DImage(math::rectf(targetRect.ULPoint + math::vector2d(0, shift), targetRect.BRPoint + math::vector2d(0, shift)), 1, 0, &tc);
+
+
+	//draw a grid
+
 
 	//_RenderUI(targetRect);
 	dev->setRenderTarget(0);
@@ -350,7 +453,17 @@ void CameraRenderingState::_RenderUI(const math::rectf& rc)
 {
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;
+	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 
+	if (m_clickCount == 2)
+	{
+		int n = 20;
+		for (int i = 0; i < n; ++i)
+		{
+			dev->draw2DLine(math::vector2d(0, i*m_BoxSize.y), math::vector2d(rc.getWidth(), i*m_BoxSize.y), video::SColor(0, 0, 0, 255));
+			dev->draw2DLine(math::vector2d(i*m_BoxSize.x, 0), math::vector2d(i*m_BoxSize.x, rc.getHeight()), video::SColor(0, 0, 0, 255));
+		}
+	}
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -364,9 +477,10 @@ void CameraRenderingState::_RenderUI(const math::rectf& rc)
 		attr.RightToLeft = 0;
 
 		controllers::IJoysticController* joystick = TBAppGlobals::inputMngr->getJoystick(0);
+		math::rectf r = rc;
+
 		if (joystick)
 		{
-			math::rectf r=rc;
 
 			for (int i = 0; i < 4; ++i)
 			{
@@ -375,9 +489,18 @@ void CameraRenderingState::_RenderUI(const math::rectf& rc)
 				font->print(r, &attr, 0, msg, m_guiRenderer);
 				r.ULPoint.y += attr.fontSize + 5;
 			}
-			m_guiRenderer->Flush();
+
 
 		}
+		math::vector3d correctionX(m_correctionValue[0]->floatParam[0], m_correctionValue[0]->floatParam[1], m_correctionValue[0]->floatParam[2]);
+		math::vector3d correctionY(m_correctionValue[1]->floatParam[0], m_correctionValue[1]->floatParam[1], m_correctionValue[1]->floatParam[2]);
+		core::string msg = mT("Correction X:") + core::StringConverter::toString(correctionX);
+		font->print(r, &attr, 0, msg, m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
+		msg = mT("Correction Y:") + core::StringConverter::toString(correctionY);
+		font->print(r, &attr, 0, msg, m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
+		m_guiRenderer->Flush();
 	}
 }
 

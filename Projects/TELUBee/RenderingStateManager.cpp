@@ -18,6 +18,7 @@
 #include "RenderBlender.h"
 #include "ConnectingToRobotScreen.h"
 #include "CameraRenderingState.h"
+#include "GStreamerTestState.h"
 
 
 namespace mray
@@ -66,6 +67,10 @@ RenderingStateManager::RenderingStateManager(Application* app)
 	m_introState->InitState(TBAppGlobals::App);
 	AddState(m_introState,"Null");
 
+	TBee::GStreamerTestState* streamerTest = new TBee::GStreamerTestState();
+	streamerTest->InitState(TBAppGlobals::App);
+	AddState(streamerTest, "Streamer");
+
 	m_introState=new TBee::IntroRenderingState();
 	m_introState->InitState(TBAppGlobals::App);
 	AddState(m_introState,"Intro");
@@ -92,7 +97,8 @@ RenderingStateManager::RenderingStateManager(Application* app)
 	AddState(m_cameraState,"Camera");
 
 
-	AddTransition("Null","Intro",STATE_EXIT_CODE);
+	AddTransition("Null","Streamer",STATE_EXIT_CODE);
+	AddTransition("Streamer","Intro",STATE_EXIT_CODE);
 	if(TBAppGlobals::usingOculus)
 	{
 		AddTransition("Intro","Oculus",STATE_EXIT_CODE);

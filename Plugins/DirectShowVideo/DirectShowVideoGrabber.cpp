@@ -28,6 +28,7 @@ DirectShowVideoGrabber::DirectShowVideoGrabber()
 		s_videoInput->setUseCallback(true);
 	}
 	m_textureImage.autoDel=true;
+	m_hasNewFrame = false;
 }
 DirectShowVideoGrabber::~DirectShowVideoGrabber()
 {

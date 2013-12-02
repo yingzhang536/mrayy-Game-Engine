@@ -140,6 +140,7 @@ ofVideoPlayerGst::ofVideoPlayerGst (){
 	pixels						= NULL;
 	nFrames						= 0;
 	bPaused						= false;
+	bIsFrameNew = false;
 
 
 

@@ -1,13 +1,9 @@
 #pragma once
 
 #include "ofGstUtils.h"
-#include "IUDPClient.h"
-#include "NetAddress.h"
-
-typedef struct _GTimer		GTimer;
 
 
-class ofGstVideoPlayer : public ofGstAppSink{
+class ofGstVideoPlayer: public  ofGstAppSink{
 public:
 
 	ofGstVideoPlayer();
@@ -16,10 +12,8 @@ public:
 	/// needs to be called before loadMovie
 	bool 	setPixelFormat(video::EPixelFormat pixelFormat);
 	video::EPixelFormat	getPixelFormat();
-
+	
 	bool 	loadMovie(core::string uri);
-	bool	Connect(const core::string& ip, int remotePort, int localPort);
-
 
 	void 	update();
 
@@ -55,7 +49,7 @@ public:
 	bool 			isFrameNew();
 
 	unsigned char * getPixels();
-	video::ImageInfo*	getPixelsRef();
+	video::ImageInfo*		getPixelsRef();
 
 	float 			getHeight();
 	float 			getWidth();
@@ -70,37 +64,14 @@ protected:
 	void	on_stream_prepared();
 
 	// return true to set the message as attended so upstream doesn't try to process it
-	virtual bool on_message(GstMessage* msg){ return false; };
+	virtual bool on_message(GstMessage* msg){return false;};
 
 private:
-	video::EPixelFormat	internalPixelFormat;
-	unsigned long long				nFrames;
+	video::EPixelFormat		internalPixelFormat;
+	guint64				nFrames;
 	int 				fps_n, fps_d;
 	bool				bIsStream;
-	bool				bRemote;
 	bool				bIsAllocated;
 	bool				threadAppSink;
 	ofGstVideoUtils		videoUtils;
-public:
-	struct CConnectData
-	{
-		int sourceID;
-		GstElement* src;
-		GstElement* sink;
- 		GstElement* dec;
- 		GstElement* mpeg;
-		GTimer* timer;
-
-		network::IUDPClient* client;
-		network::NetAddress address;
-		struct bufferInfo
-		{
-			char* buffer;
-			int offset;
-			int len;
-		};
-		std::list<bufferInfo> cache;
-	};
-protected:
-	CConnectData m_connectData;
 };

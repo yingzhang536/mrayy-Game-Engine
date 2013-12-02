@@ -4,6 +4,7 @@
 #include "UDPVideoProvider.h"
 #include "IRenderArea.h"
 #include "Application.h"
+#include "GStreamVideoProvider.h"
 
 namespace mray
 {
@@ -12,7 +13,7 @@ namespace TBee
 
 HMDRobotRenderer::HMDRobotRenderer()
 {
-	m_provider=new UDPVideoProvider();//GStreamVideoProvider();
+	m_provider=new GStreamVideoProvider(); //UDPVideoProvider();//
 }
 
 HMDRobotRenderer::~HMDRobotRenderer()

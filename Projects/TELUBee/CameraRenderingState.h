@@ -18,7 +18,7 @@
 #include "IRenderingState.h"
 #include "VideoGrabberTexture.h"
 #include "IRenderTarget.h"
-
+#include "ParsedShaderPP.h"
 
 
 namespace mray
@@ -63,6 +63,14 @@ protected:
 	CameraInfo m_cameraSource[2];
 	
 	int m_VerticalShift;
+
+	bool m_capturing;
+	int m_clickCount;
+	math::vector2d m_firstClick;
+	math::vector2d m_BoxSize;
+
+	GCPtr<video::ParsedShaderPP> m_lensCorrectionPP;
+	video::ParsedShaderPP::PassValue* m_correctionValue[2];
 
 
 	CRobotConnector* m_robotConnector;

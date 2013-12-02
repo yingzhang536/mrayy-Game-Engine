@@ -15,7 +15,7 @@
 #define _GStreamVideoProvider_
 
 #include "IVideoProvider.h"
-class ofVideoPlayerGst;
+class ofGstVideoPlayer;
 namespace mray
 {
 namespace TBee
@@ -24,12 +24,13 @@ namespace TBee
 class GStreamVideoProvider:public IVideoProvider
 {
 protected:
-	ofVideoPlayerGst* m_playBack;
+	ofGstVideoPlayer* m_playBack;
 public:
 	GStreamVideoProvider();
 	virtual~GStreamVideoProvider();
 
-	virtual void ConnectToCameras(const core::string& ip,int port1,int port2);
+	void LoadMovie(const core::string& path);
+	virtual void ConnectToCameras(const core::string& ip, int remotePort, int localPort);
 	virtual void Disconnect();
 	virtual bool IsConnected();
 

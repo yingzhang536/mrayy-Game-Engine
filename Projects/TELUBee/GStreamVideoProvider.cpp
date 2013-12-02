@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "GStreamVideoProvider.h"
 
-#include "ofVideoPlayerGst.h"
+#include "ofGstVideoPlayer.h"
 
 
 namespace mray
@@ -13,10 +13,8 @@ namespace TBee
 
 GStreamVideoProvider::GStreamVideoProvider()
 {
-	m_playBack=new ofVideoPlayerGst();
-	//m_playBack->loadMovie("C:\\fingers.mov");
-	//m_playBack->play();
-	m_playBack->Connect("192.168.10.170",170,5000);
+	m_playBack=new ofGstVideoPlayer();
+	//m_playBack->Connect("192.168.10.170",170,5000);
 
 }
 GStreamVideoProvider::~GStreamVideoProvider()
@@ -24,9 +22,17 @@ GStreamVideoProvider::~GStreamVideoProvider()
 	delete m_playBack;
 }
 
-void GStreamVideoProvider::ConnectToCameras(const core::string& ip,int port1,int port2)
+void GStreamVideoProvider::LoadMovie(const core::string& path)
 {
-	m_playBack->Connect(ip,port1,port2);
+	m_playBack->loadMovie(path);
+	m_playBack->play();
+
+}
+
+void GStreamVideoProvider::ConnectToCameras(const core::string& ip, int remotePort, int localPort)
+{
+	m_playBack->Connect(ip,remotePort,localPort);
+	m_playBack->play();
 }
 void GStreamVideoProvider::Disconnect()
 {
@@ -34,7 +40,7 @@ void GStreamVideoProvider::Disconnect()
 }
 bool GStreamVideoProvider::IsConnected()
 {
-	return m_playBack->IsConnected();
+	return m_playBack->isLoaded();
 }
 
 bool GStreamVideoProvider::HasNewImage(int id)
@@ -43,14 +49,14 @@ bool GStreamVideoProvider::HasNewImage(int id)
 }
 const video::ImageInfo* GStreamVideoProvider::GetImage(int id)
 {
-	return m_playBack->getTextureReference();
+	return m_playBack->getPixelsRef();
 }
 math::rectf	GStreamVideoProvider::GetTexRect(int id)
 {
 	static const math::rectf trcs[]=
 	{
-		math::rectf(0,0,0.5,1),
-		math::rectf(0.5,0,1,1)
+		math::rectf(0,0,1,1),
+		math::rectf(0,0,1,1)
 	};
 	return trcs[id];
 }

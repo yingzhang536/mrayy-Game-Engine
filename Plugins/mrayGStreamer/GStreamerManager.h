@@ -22,6 +22,7 @@ namespace mray
 {
 namespace video
 {
+/*
 
 	class GStreamerManagerImpl;
 
@@ -35,7 +36,7 @@ public:
 
 	void Init();
 	void Shutdown();
-};
+};*/
 
 }
 }

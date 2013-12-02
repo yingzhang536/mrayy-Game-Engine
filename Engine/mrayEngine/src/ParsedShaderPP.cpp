@@ -1096,7 +1096,7 @@ IRenderTarget* ParsedShaderPP::render(IRenderTarget* input)
 	if(!isEnabled())return input;
 	//getDevice()->set2DMode();
 	m_input=input;
-	IRenderTargetPtr inTex=input;
+	IRenderTarget* inTex=input;
 	for (int i=0;i<m_passes.size();++i)
 	{
 		inTex=m_passes[i]->render(inTex);

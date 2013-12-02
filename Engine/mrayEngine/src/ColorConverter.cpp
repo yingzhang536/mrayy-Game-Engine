@@ -454,24 +454,26 @@ void ColorConverter::resizeImage(video::ImageInfo*img,const math::Point2di& newS
 	}*/
 	uchar*inData=(uchar*)img->imageData;
 	int width=img->Size.x;
-	int x=0,y=0;
-	byte clrArr[4];
+//	int x=0,y=0;
+//	byte clrArr[4];
 	for(int i=0;i<newSize.x;++i){
-		x=i*dw;
+//		x=i*dw;
 		for(int j=0;j<newSize.y;j++){
-			y=j*dh;
-			averageValue(inData,x,y,width,dw,dh,depth).ToByteArrayRGBA(clrArr);
+	//		y=j*dh;
+			int index = (j*newSize.x + i)*depth;
+			//averageValue(inData,x,y,width,dw,dh,depth).ToByteArrayRGBA(clrArr);
+			int nearestMatch = (((int)(j * dh) * (img->Size.x )) + ((int)(i *dw) ))*depth;
 			if(depth==1)
-				buffer[(j*newSize.x+i)*depth]=clrArr[0];
+				buffer[index]=inData[nearestMatch];
 			else if(depth==3){
-				buffer[(j*newSize.x+i)*depth+0]=clrArr[0];
-				buffer[(j*newSize.x+i)*depth+1]=clrArr[1];
-				buffer[(j*newSize.x+i)*depth+2]=clrArr[2];
+				buffer[index + 0] = inData[nearestMatch+0];
+				buffer[index + 1] = inData[nearestMatch + 1];
+				buffer[index + 2] = inData[nearestMatch + 2];
 			}else{
-				buffer[(j*newSize.x+i)*depth+0]=clrArr[0];
-				buffer[(j*newSize.x+i)*depth+1]=clrArr[1];
-				buffer[(j*newSize.x+i)*depth+2]=clrArr[2];
-				buffer[(j*newSize.x+i)*depth+3]=clrArr[3];
+				buffer[index + 0] = inData[nearestMatch + 0];
+				buffer[index + 1] = inData[nearestMatch + 1];
+				buffer[index + 2] = inData[nearestMatch + 2];
+				buffer[index + 3] = inData[nearestMatch + 3];
 			}
 		}
 	}

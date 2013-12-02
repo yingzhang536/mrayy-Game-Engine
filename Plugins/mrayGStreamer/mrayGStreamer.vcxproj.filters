@@ -4,12 +4,18 @@
     <ClCompile Include="GStreamerManager.cpp" />
     <ClCompile Include="GStreamerPlayback.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ofGstUtils.cpp" />
+    <ClCompile Include="ofGstVideoGrabber.cpp" />
+    <ClCompile Include="ofGstVideoPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GStreamerManager.h" />
     <ClInclude Include="GStreamerPlayback.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ofGstUtils.h" />
+    <ClInclude Include="ofGstVideoGrabber.h" />
+    <ClInclude Include="ofGstVideoPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
