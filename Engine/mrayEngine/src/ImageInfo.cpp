@@ -28,6 +28,7 @@ void ImageInfo::clear(){
 	delete [] imageData;
 	imageDataSize=0;
 	imageData=0;
+	Size = 0;
 }
 
 void ImageInfo::setData(const void*data,const math::vector3di&size,EPixelFormat format){

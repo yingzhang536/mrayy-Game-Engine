@@ -13,126 +13,92 @@
 #include <ViewPort.h>
 
 #include "DirectShowVideoGrabber.h"
-
+#include "IThreadManager.h"
 #include <windows.h>
+#include "RobotCommunicator.h"
+#include "CombineVideoGrabber.h"
+
+#include "DirectSoundInputStream.h"
+
+#define COMMUNICATION_PORT 6000
+#define VIDEO_PORT 5000
+#define AUDIO_PORT 5002
 
 namespace mray
 {
-
-
-	class CombineVideoGrabber :public video::IVideoGrabber
+	class GstVideoGrabberImpl :public GstVideoGrabber
 	{
-	protected:
-		video::IVideoGrabber* m_g1;
-		video::IVideoGrabber* m_g2;
-
-		math::vector2di m_targetSize;
-		bool m_newFrame;
-		video::ImageInfo m_lastImage;
-		video::ImageInfo m_frame1;
-		video::ImageInfo m_frame2;
-
+		OS::IMutex* m_mutex;
+		video::IVideoGrabber* m_grabber;
 	public:
-
-		CombineVideoGrabber()
+		GstVideoGrabberImpl(video::IVideoGrabber* v)
 		{
-			m_g1 = 0;
-			m_g2 = 0;
+			m_grabber = v;
+			m_mutex = OS::IThreadManager::getInstance().createMutex();
 		}
-
-		void SetGrabbers(video::IVideoGrabber* g1, video::IVideoGrabber* g2)
+		~GstVideoGrabberImpl()
 		{
-			m_g1 = g1;
-			m_g2 = g2;
+			delete m_mutex;
 		}
-
-		virtual void SetFrameSize(int w, int h)
+		virtual void Lock()
 		{
-			m_targetSize.set(w, h);
-			m_lastImage.createData(math::vector3di(w, h, 1), GetImageFormat());
-
+			m_mutex->lock();
 		}
-		virtual const math::vector2di& GetFrameSize()
+		virtual void Unlock()
 		{
-			return m_targetSize;
+			m_mutex->unlock();
 		}
-
-		virtual void SetImageFormat(video::EPixelFormat fmt)
+		virtual video::IVideoGrabber* GetGrabber()
 		{
-		}
-		virtual video::EPixelFormat GetImageFormat()
-		{
-			return video::EPixel_R8G8B8;
-		}
-
-		virtual bool GrabFrame()
-		{
-			m_newFrame = false;
-			bool ret = false;
-			bool a = false, b = false;
-
-			if (m_g1 && m_g1->GrabFrame())
-				a = true;
-			if (m_g2 && m_g2->GrabFrame())
-				b = true;
-			ret = a | b;
-			if (!ret)
-				return false;
-			m_newFrame = true;
-			if (a)
-				m_frame1.setData(m_g1->GetLastFrame()->imageData, m_g1->GetLastFrame()->Size, m_g1->GetLastFrame()->format);
-			if (b)
-				m_frame2.setData(m_g2->GetLastFrame()->imageData, m_g2->GetLastFrame()->Size, m_g2->GetLastFrame()->format);
-
-			if (a && b)
-			{
-				video::ColorConverter::resizeImage(&m_frame1, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
-				video::ColorConverter::resizeImage(&m_frame2, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
-				for (int i = 0; i < m_targetSize.x / 2; ++i)
-				{
-					for (int j = 0; j < m_targetSize.y; ++j)
-					{
-						int index1 = (j*m_targetSize.x + i) * 3;//for frame1
-						int index2 = (j*m_targetSize.x + i*2) * 3;//for frame1
-						int index  = (j*m_targetSize.x / 2 + i) * 3;//for frame
-						m_lastImage.imageData[index1 + 0] = m_frame1.imageData[index + 0];
-						m_lastImage.imageData[index1 + 1] = m_frame1.imageData[index + 1];
-						m_lastImage.imageData[index1 + 2] = m_frame1.imageData[index + 2];
-
-						m_lastImage.imageData[index2 + 0] = m_frame2.imageData[index + 0];
-						m_lastImage.imageData[index2 + 1] = m_frame2.imageData[index + 1];
-						m_lastImage.imageData[index2 + 2] = m_frame2.imageData[index + 2];
-					}
-				}
-			}else if (a)
-			{
-				video::ColorConverter::resizeImage(&m_frame1, math::Point2di(m_targetSize.x, m_targetSize.y));
-				m_lastImage.setData(m_frame1.imageData, m_frame1.Size, m_frame1.format);
-			}else if ( b)
-			{
-				video::ColorConverter::resizeImage(&m_frame2, math::Point2di(m_targetSize.x, m_targetSize.y));
-				m_lastImage.setData(m_frame2.imageData, m_frame2.Size, m_frame2.format);
-			}
-			return true;
-		}
-		virtual bool HasNewFrame()
-		{
-			return m_newFrame;
-		}
-
-
-		virtual const video::ImageInfo* GetLastFrame()
-		{
-			return &m_lastImage;
+			return m_grabber;
 		}
 	};
 
+	class AppRobotCommunicatorListener :public IRobotCommunicatorListener
+	{
+		TRApplication* m_app;
+	public:
+		AppRobotCommunicatorListener(TRApplication* app)
+		{
+			m_app = app;
+		}
+		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort)
+		{
+			m_app->OnUserConnected(address,videoPort,audioPort);
+		}
+		virtual void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
+		{
+			m_app->OnRobotStatus(sender, status);
+		}
+		void OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address)
+		{
+			m_app->OnUserDisconnected(sender, address);
+
+		}
+		virtual void OnCollisionData(RobotCommunicator* sender, float left, float right)
+		{
+		}
+
+	};
+
+
 TRApplication::TRApplication()
 {
+	m_robotCommunicator = 0;
+	m_startVideo = 0;
+	m_videoProvider = 0;
+	m_videoGrabber = 0;
+	m_communicatorListener = new AppRobotCommunicatorListener(this);
 }
 
 TRApplication::~TRApplication()
 {
+	if (m_videoProvider)
+		m_videoProvider->Stop();
+	delete m_videoProvider;
+	delete m_videoGrabber;
+	delete m_robotCommunicator;
+	delete m_communicatorListener;
 }
 
 
@@ -156,64 +122,207 @@ void TRApplication::_InitResources()
 }
 
 
-void TRApplication::onEvent(Event* event)
+void TRApplication::onEvent(Event* e)
 {
-	CMRayApplication::onEvent(event);
+//#define JOYSTICK_SelectButton 8
+	CMRayApplication::onEvent(e);
+	if (e->getType() == ET_Joystick)
+	{
+		JoystickEvent* evt = (JoystickEvent*)e;
+		if (evt->event == JET_BUTTON_PRESSED)
+		{
+			if (evt->button == 8 && m_controller==EController::Logicool || evt->button== 6 && m_controller==EController::XBox)
+			{
+				m_robotCommunicator->SetLocalControl(!m_robotCommunicator->IsLocalControl());
+			}
+		}
+	}
 }
 
 
 void TRApplication::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
+	{
+		m_ip = extraOptions.GetOptionValue("TargetIP");
+		m_cameraIfo[0].id = extraOptions.GetOptionByName("Camera0")->getValueIndex();
+		m_cameraIfo[1].id = extraOptions.GetOptionByName("Camera1")->getValueIndex();
 
+		m_cameraIfo[0].w = m_cameraIfo[1].w = 1280;
+		m_cameraIfo[0].h = m_cameraIfo[1].h = 720;
+		m_cameraIfo[0].fps = m_cameraIfo[1].fps = 30;
+
+		m_debugData.debug = extraOptions.GetOptionByName("Debugging")->getValue()=="Yes";
+
+		m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox"? EController::XBox : EController::Logicool;
+
+		core::string quality = extraOptions.GetOptionByName("Quality")->getValue();
+		if (quality == "Ultra Low")m_quality = EStreamingQuality::UltraLow;
+		if (quality == "Low")m_quality = EStreamingQuality::Low;
+		if (quality == "Medium")m_quality = EStreamingQuality::Medium;
+		if (quality == "High")m_quality = EStreamingQuality::High;
+		if (quality == "Ultra High")m_quality = EStreamingQuality::UltraHigh;
+
+		m_streamAudio = extraOptions.GetOptionByName("Audio")->getValue() == "Yes";
+		m_isLocal = extraOptions.GetOptionByName("Network")->getValue() == "Local";
+	}
 	_InitResources();
 
 	m_limitFps = true;
 	network::createWin32Network();
 
+	{
+		std::vector<sound::InputStreamDeviceInfo> lst;
+		sound::DirectSoundInputStream inputStream;
+		inputStream.ListDevices(lst);
+		for (int i = 0; i < lst.size(); ++i)
+		{
+			printf("%d - %s : %s\n", lst[i].ID, lst[i].name.c_str(), lst[i].description.c_str());
+		}
+	}
+
 	m_guiRender = new GUI::GUIBatchRenderer();
 	m_guiRender->SetDevice(getDevice());
 
+	if (m_debugData.debug)
+	{
 
-	m_viewPort = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
 
-
-	int cameraIndex[2] = { 0, 1 };
+		m_viewPort = GetRenderWindow()->CreateViewport("VP", 0, 0, math::rectf(0, 0, 1, 1), 0);
+		m_viewPort->AddListener(this);
+	}else
+		this->GetRenderWindow(0)->Hide();
 
 	//create cameras
 	for (int i = 0; i < 2; ++i)
 	{
-		m_cameras[i] = new video::DirectShowVideoGrabber();
-		m_cameras[i]->SetDevice(cameraIndex[i]);
-		m_cameras[i]->SetFrameSize(1280, 800);
-		m_cameras[i]->Start();
-
+		video::DirectShowVideoGrabber * grabber=new video::DirectShowVideoGrabber();
+		m_cameras[i] = grabber;
+		if (m_cameraIfo[i].id >= 0)
+			grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
+		if (!m_debugData.debug)
+		{
+			m_cameras[i]->Stop();
+		}
 		m_cameraTextures[i].Set(m_cameras[i], getDevice()->createEmptyTexture2D(true));
 
 	}
 
 	m_combinedCameras = new CombineVideoGrabber();
-	m_combinedCameras->SetFrameSize(1280, 800);
+	/*if (m_quality==EStreamingQuality::UltraLow)
+		m_combinedCameras->SetFrameSize(640, 360);
+	else if (m_quality == EStreamingQuality::Low)
+		m_combinedCameras->SetFrameSize(768, 432);
+	else if (m_quality == EStreamingQuality::Medium)
+		m_combinedCameras->SetFrameSize(896, 504);
+	else if (m_quality == EStreamingQuality::High)
+		m_combinedCameras->SetFrameSize(1024, 576);
+	else if (m_quality == EStreamingQuality::UltraHigh)*/
+		m_combinedCameras->SetFrameSize(1280, 720);
 	((CombineVideoGrabber*)m_combinedCameras.pointer())->SetGrabbers(m_cameras[0], m_cameras[1]);
 	m_cameraTextures[2].Set(m_combinedCameras, getDevice()->createEmptyTexture2D(true));
+	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
 
 	m_videoProvider = new GstVideoProvider();
-	m_videoProvider->SetDataSource(m_combinedCameras);
-	m_videoProvider->StreamDataTo(network::NetAddress("127.0.0.1", 5000));
-	m_videoProvider->Start();
+	m_videoProvider->SetNetworkType(m_isLocal);
+	m_videoProvider->EnableAudio(m_streamAudio);
+	m_videoProvider->SetDataSource(m_videoGrabber);
+	m_videoProvider->StreamDataTo(network::NetAddress(m_ip, VIDEO_PORT), VIDEO_PORT,AUDIO_PORT);
+//	m_videoProvider->Start();
+
+	m_robotCommunicator = new RobotCommunicator();
+	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
+	m_robotCommunicator->SetListener(m_communicatorListener);
 }
 
 
 void TRApplication::draw(scene::ViewPort* vp)
 {
-	CMRayApplication::draw(vp);
+}
+
+void TRApplication::WindowPostRender(video::RenderWindow* wnd)
+{
+}
+
+void TRApplication::update(float dt)
+{
+	CMRayApplication::update(dt);
+	if (m_startVideo || m_debugData.debug)
+	{
+		//m_cameraTextures[2].Blit();
+ 		m_videoGrabber->Lock();
+	//	m_videoGrabber->GetGrabber()->GrabFrame();
+		if (m_debugData.debug)
+			m_cameraTextures[2].Blit();
+		else
+			m_cameraTextures[2].GetGrabber()->GrabFrame();
+ 		m_videoGrabber->Unlock();
 
 
+		if (m_startVideo && !m_videoProvider->IsConnected())
+		{
+			if (!m_debugData.debug )
+			{
+				for (int i = 0; i < 2; ++i)
+				{
+					video::DirectShowVideoGrabber * grabber = (video::DirectShowVideoGrabber *)m_cameras[i].pointer();
+					if (m_cameraIfo[i].id >= 0)
+						grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
+				}
+			}
+			m_videoProvider->Start(m_quality);
+		}
+		if (!m_startVideo && m_videoProvider->IsConnected())
+		{
+			m_videoProvider->Stop();
+			if (!m_debugData.debug)
+			{
+				m_cameras[0]->Stop();
+				m_cameras[1]->Stop();
+			}
+		}
+	}
 
+	if (m_robotCommunicator->IsLocalControl())
+	{
+		math::vector2d speed;
+		float rotation;
+
+		controllers::IJoysticController* joystick = m_inputManager->getJoystick(0);
+		if (joystick)
+		{
+			RobotStatus st;
+			controllers::JoysticAxis x = joystick->getAxisState(0);
+			controllers::JoysticAxis y = joystick->getAxisState(1);
+			controllers::JoysticAxis r = joystick->getAxisState(3);
+
+			st.speedX = x.abs;
+			st.speedY = y.abs;
+			st.rotation= r.abs;
+
+			st.connected = true;
+			st.roll = st.yaw = st.tilt = 0;
+			m_robotCommunicator->SetRobotData(st);
+		}
+		
+	}
+	Sleep(10);
+}
+
+void TRApplication::onDone()
+{
+	CMRayApplication::onDone();
+}
+
+
+void TRApplication::onRenderDone(scene::ViewPort*vp)
+{
+	getDevice()->set2DMode();
 	video::TextureUnit tex;
 	tex.SetTexture(m_cameraTextures[2].GetTexture());
 	getDevice()->useTexture(0, &tex);
-	getDevice()->draw2DImage(vp->getAbsViewPort(), 1);
+	math::rectf texCoords(0,1,1,0);
+	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
 
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 	if (font){
@@ -232,37 +341,74 @@ void TRApplication::draw(scene::ViewPort* vp)
 		attr.spacing = 2;
 		attr.wrap = 0;
 		attr.RightToLeft = 0;
-		core::string msg = mT("FPS= ");
-		msg += core::StringConverter::toString((int)core::CFPS::getInstance().getFPS());
-		font->print(math::rectf(vp->getAbsRenderingViewPort().getWidth() - 250, vp->getAbsRenderingViewPort().getHeight() - 50, 10, 10), &attr, 0, msg, m_guiRender);
-		yoffset += attr.fontSize;
+
+#define LOG_OUT(msg,x,y)\
+	font->print(math::rectf((x), (y) + yoffset, 10, 10), &attr, 0, msg, m_guiRender);\
+	yoffset += attr.fontSize;
+
+		{
+			attr.fontSize = 18;
+			yoffset = 100;
+			core::string msg;
+			msg = core::string("User Status: ") + (m_debugData.userConnected ? "Connected":"Disconnected");
+			LOG_OUT(msg, 50, 50);
+			if (m_debugData.userConnected)
+			{
+				msg = "Address: " + m_debugData.userAddress.toString();
+				LOG_OUT(msg, 100, 50);
+			}
+			{
+				msg = core::string("Robot Status: ") + (m_debugData.robotData.connected ? "Connected" : "Disconnected");
+				LOG_OUT(msg, 50, 100);
+				msg = core::string("Controlling: ") + (m_robotCommunicator->IsLocalControl() ? "Local" : "Remote");
+				LOG_OUT(msg, 50, 100);
+				msg = core::string("Sensors : ") + core::StringConverter::toString(math::vector2d(m_debugData.collision));
+				LOG_OUT(msg, 50, 100);
+				if (m_debugData.robotData.connected || m_robotCommunicator->IsLocalControl())
+				{
+					msg = core::string("Speed: ") + core::StringConverter::toString(math::vector2d(m_debugData.robotData.speedX, m_debugData.robotData.speedY));
+					LOG_OUT(msg, 100, 100);
+
+					msg = core::string("Rotation: ") + core::StringConverter::toString(m_debugData.robotData.rotation);
+					LOG_OUT(msg, 100, 100);
+
+					msg = core::string("Head: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.tilt, m_debugData.robotData.yaw, m_debugData.robotData.roll));
+					LOG_OUT(msg, 100, 100);
+
+				}
+
+			}
+		}
+
 
 	}
 
 	m_guiRender->Flush();
 	getDevice()->useShader(0);
 }
-
-void TRApplication::WindowPostRender(video::RenderWindow* wnd)
+void TRApplication::OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort)
 {
-}
+	//printf("User Connected : %s\n", address.toString().c_str());
+	m_videoProvider->StreamDataTo(address,videoPort,audioPort);
+	m_debugData.userAddress = address;
+	m_debugData.userConnected = true;
 
-void TRApplication::update(float dt)
+	m_startVideo = true;
+}
+void TRApplication::OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
 {
-	CMRayApplication::update(dt);
-	//m_cameraTextures[2].Blit();
-	Sleep(30);
+	m_debugData.robotData = status;
 }
-
-void TRApplication::onDone()
+void TRApplication::OnCollisionData(RobotCommunicator* sender, float left, float right)
 {
-	CMRayApplication::onDone();
+	m_debugData.collision.x = left;
+	m_debugData.collision.y = right;
 }
-
-
-void TRApplication::onRenderDone(scene::ViewPort*vp)
+void TRApplication::OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address)
 {
+	m_debugData.userConnected = false;
+	m_startVideo = false;
+
+
 }
-
-
 }

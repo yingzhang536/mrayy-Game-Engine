@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "RobotInfoManager.h"
 
-
+#include "XMLTree.h"
 
 namespace mray
 {
@@ -55,6 +55,25 @@ void RobotInfoManager::ClearRobots()
 {
 	m_impl->robots.clear();
 }
+void RobotInfoManager::LoadRobots(const core::string& path)
+{
+	xml::XMLTree tree;
+	if (!tree.load(path))
+		return;
+
+	xml::XMLElement* root= tree.getSubElement("Robots");
+	xml::XMLElement* e = root->getSubElement("Robot");
+	while (e)
+	{
+		TBRobotInfo ifo;
+		ifo.IP = e->getValueString("IP");
+		ifo.name = e->getValueString("Name");
+		AddRobotInfo(ifo);
+		e = e->nextSiblingElement("Robot");
+	}
+
+}
+
 
 }
 }

@@ -19,6 +19,14 @@
 
 namespace mray
 {
+	namespace game
+	{
+		class OculusCameraComponent;
+	}
+	namespace video
+	{
+		class OculusDevice;
+	}
 namespace VT
 {
 	class Application;
@@ -39,6 +47,11 @@ public:
 	static bool IsDebugging;
 	static bool Physics;
 	static core::string GhostServerIP;
+	static int Camera0;
+	static int Camera1;
+
+	static video::OculusDevice* oculusDevice;
+	static game::OculusCameraComponent* oculusComponents[2];
 	
 	static bool FlipCameras;
 	static ECameraSourceType CameraType;

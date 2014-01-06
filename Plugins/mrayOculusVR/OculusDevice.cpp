@@ -207,6 +207,11 @@ namespace video
 			return m_data.deviceInfo.HResolution*0.5f/m_data.deviceInfo.VResolution;
 		}
 
+		void ResetOrientation()
+		{
+			m_fusion.Reset();
+		}
+
 
 		void UpdateManualMagCalibration() 
 		{
@@ -347,7 +352,10 @@ float OculusDevice::GetAspectRatio()
 	return m_impl->GetAspectRatio();
 }
 
-
+void OculusDevice::ResetOrientation()
+{
+	m_impl->ResetOrientation();
+}
 
 }
 }

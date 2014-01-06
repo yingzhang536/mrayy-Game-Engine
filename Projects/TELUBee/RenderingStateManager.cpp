@@ -18,6 +18,7 @@
 #include "RenderBlender.h"
 #include "ConnectingToRobotScreen.h"
 #include "CameraRenderingState.h"
+#include "GSTCameraRenderingState.h"
 #include "GStreamerTestState.h"
 
 
@@ -67,9 +68,9 @@ RenderingStateManager::RenderingStateManager(Application* app)
 	m_introState->InitState(TBAppGlobals::App);
 	AddState(m_introState,"Null");
 
-	TBee::GStreamerTestState* streamerTest = new TBee::GStreamerTestState();
+	TBee::GSTCameraRenderingState* streamerTest = new TBee::GSTCameraRenderingState();
 	streamerTest->InitState(TBAppGlobals::App);
-	AddState(streamerTest, "Streamer");
+	AddState(streamerTest, "CameraRemote");
 
 	m_introState=new TBee::IntroRenderingState();
 	m_introState->InitState(TBAppGlobals::App);
@@ -85,7 +86,7 @@ RenderingStateManager::RenderingStateManager(Application* app)
 	AddState(ls,"Login");
 
 	TBee::InMapRenderState* maps=new TBee::InMapRenderState();
-	maps->InitState(TBAppGlobals::App);
+	//maps->InitState(TBAppGlobals::App);
 	AddState(maps,"Map");
 
 	TBee::ConnectingToRobotScreen* ctr=new TBee::ConnectingToRobotScreen();
@@ -94,11 +95,12 @@ RenderingStateManager::RenderingStateManager(Application* app)
 
 	m_cameraState=new TBee::CameraRenderingState();
 	m_cameraState->InitState(TBAppGlobals::App);
-	AddState(m_cameraState,"Camera");
+	AddState(m_cameraState,"CameraLocal");
 
+	m_cameraState = streamerTest;
 
-	AddTransition("Null","Streamer",STATE_EXIT_CODE);
-	AddTransition("Streamer","Intro",STATE_EXIT_CODE);
+	AddTransition("Null","Login",STATE_EXIT_CODE);
+	//AddTransition("Streamer","Intro",STATE_EXIT_CODE);
 	if(TBAppGlobals::usingOculus)
 	{
 		AddTransition("Intro","Oculus",STATE_EXIT_CODE);
@@ -106,8 +108,10 @@ RenderingStateManager::RenderingStateManager(Application* app)
 	}else
 		AddTransition("Intro","Login",STATE_EXIT_CODE);
 	AddTransition("Login","Map",ToMap_CODE);
-	AddTransition("Login", "Camera", ToCamera_CODE);
-	AddTransition("Camera", "Login", STATE_EXIT_CODE);
+	AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
+	AddTransition("Login", "CameraLocal", ToLocalCamera_CODE);//Camera
+	AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
+	AddTransition("CameraLocal", "Login", STATE_EXIT_CODE);
 	AddTransition("Map","Login",BackToTile_Code);
 	AddTransition("Map","Connecting",ConnectToRobot_Code);
 	AddTransition("Connecting","Map",BackToMap_Code);
@@ -273,21 +277,18 @@ void RenderingStateManager::AddTransition(const core::string&a,const core::strin
 void RenderingStateManager::LoadSettingsXML(xml::XMLElement* e)
 {
 	xml::XMLAttribute*attr=0;
-	xml::XMLElement* se=e->getSubElement("Intro");
-	if(se)
-		m_introState->LoadFromXML(se);
-	se=e->getSubElement("Loading");
-	if(se)
-		m_loadingState->LoadFromXML(se);
-	se=e->getSubElement("Login");
-	if(se)
+
+	const std::vector<IState*>& states= m_stateMachine->getStates();
+
+	for (int i = 0; i < states.size(); ++i)
 	{
-		m_loginState->LoadFromXML(se);
-	}
-	se=e->getSubElement("Camera");
-	if(se)
-	{
-		m_cameraState->LoadFromXML(se);
+		BaseRenderState* s = dynamic_cast<BaseRenderState*>(states[i]);
+		if (s)
+		{
+			xml::XMLElement* se = e->getSubElement(s->getName());
+			if (se)
+				s->GetState()->LoadFromXML(se);
+		}
 	}
 }
 

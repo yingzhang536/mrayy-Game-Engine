@@ -34,6 +34,8 @@ TBeeOptiTrackObject* TBAppGlobals::optiObj=0;
 InputManager* TBAppGlobals::inputMngr = 0;
 video::OculusDevice* TBAppGlobals::oculusDevice = 0;
 
+EController TBAppGlobals::m_controller = EController::Logicool;
+
 int TBAppGlobals::MajorVer=1;
 int TBAppGlobals::MinorVer=0;
 

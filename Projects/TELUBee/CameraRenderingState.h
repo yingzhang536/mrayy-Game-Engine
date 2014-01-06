@@ -15,7 +15,7 @@
 #define ___CameraRenderingState___
 
 
-#include "IRenderingState.h"
+#include "IEyesRenderingBaseState.h"
 #include "VideoGrabberTexture.h"
 #include "IRenderTarget.h"
 #include "ParsedShaderPP.h"
@@ -29,36 +29,22 @@ namespace mray
 	}
 namespace TBee
 {
-	class IRobotCommunicator;
-	class CRobotConnector;
-class CameraRenderingState:public IRenderingState
+class CameraRenderingState:public IEyesRenderingBaseState
 {
 protected:
 
 	struct CameraInfo
 	{
-		CameraInfo():id(0),camera(0),videoGrabber(0)
+		CameraInfo() :id(0), camera(0), videoGrabber(0)
 		{
 		}
 		int id;
-
-		math::vector2d cropping;
-		math::vector2d scale;
-		float ratio;
 
 		video::VideoGrabberTexture* videoGrabber;
 
 		video::ICameraVideoGrabber* camera;
 	};
 
-	math::vector2d m_cameraResolution;
-	int m_cameraFPS;
-
-	float m_targetAspectRatio;
-	float m_hmdDistance;
-	float m_cameraFov;
-	float m_hmdFov;
-	math::vector2d m_hmdSize;
 
 	CameraInfo m_cameraSource[2];
 	
@@ -68,23 +54,17 @@ protected:
 	int m_clickCount;
 	math::vector2d m_firstClick;
 	math::vector2d m_BoxSize;
-
-	GCPtr<video::ParsedShaderPP> m_lensCorrectionPP;
-	video::ParsedShaderPP::PassValue* m_correctionValue[2];
-
-
-	CRobotConnector* m_robotConnector;
-
 	GUI::IGUIRenderer* m_guiRenderer;
 
+	virtual math::vector2d _GetEyeResolution(int i) ;
+	virtual video::ITexturePtr GetEyeTexture(int i) ;
+	virtual math::rectf GetEyeTexCoords(int i) { return math::rectf(0, 0, 1, 1); }
 	void _RenderUI(const math::rectf& rc);
-	void _UpdateCameraParams();
 public:
 	CameraRenderingState();
 	virtual~CameraRenderingState();
 
 	virtual void InitState(Application* app);
-	void SetParameters(float targetAspectRatio,float hmdDistance,float cameraFov,float hmdFov);
 	void SetCameraInfo(ETargetEye eye,int id);
 
 	video::ICameraVideoGrabber* GetCamera(ETargetEye eye){return m_cameraSource[GetEyeIndex(eye)].camera;}

@@ -79,7 +79,7 @@ public:
 
 	virtual void onEvent(Event* e);
 
-	void ConnectToCameras(const core::string& ip,int port1,int port2);
+	void ConnectToCameras(const core::string& ip,int videoPort,int audioPort,int localAudio);
 	void Disconnect();
 	bool IsConnected();
 	void SwitchToSeeThrough();

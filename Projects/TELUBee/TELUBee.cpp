@@ -62,6 +62,14 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
+		op.name = "Controller";
+		op.value = "Logicool";
+		op.valueSet.insert("Logicool");
+		op.valueSet.insert("XBox");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
 		op.name="DVIPort";
 		OS::OFSerialPortService spProvider;
 		std::vector<OS::SerialPortInfo> ports= spProvider.EnumAvaliablePorts();

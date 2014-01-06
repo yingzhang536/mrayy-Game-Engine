@@ -59,7 +59,7 @@ void StateMachine::setActiveState(const core::string& name){
 	}
 }
 
-IState* StateMachine::getActiveState(){
+IState* StateMachine::getActiveState()const{
 	if(!m_activeState)
 		return 0;
 	return m_activeState->state;
@@ -112,14 +112,14 @@ bool StateMachine::addTransition(const core::string&from,const core::string&to,c
 	}
 	return true;
 }
-IState*StateMachine::getState(const core::string&name){
-	NameIDMap::iterator it=m_stateNames.find(name);
+IState*StateMachine::getState(const core::string&name)const{
+	NameIDMap::const_iterator it=m_stateNames.find(name);
 	if(it==m_stateNames.end())
 		return 0;
 	return m_states[it->second];
 }
-ICondition*StateMachine::getCondition(const core::string&name){
-	NameIDMap::iterator it=m_condNames.find(name);
+ICondition*StateMachine::getCondition(const core::string&name)const{
+	NameIDMap::const_iterator it = m_condNames.find(name);
 	if(it==m_condNames.end())
 		return 0;
 	return m_conditions[it->second];

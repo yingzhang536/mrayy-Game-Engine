@@ -1,10 +1,15 @@
 Settings{
+	Audio	"No"
 	Bits	"24"
-	Camera	"Microsoft LifeCam Studio"
-	Debugging	"Yes"
+	Camera0	"0 - Microsoft LifeCam Studio"
+	Camera1	"0 - Microsoft LifeCam Studio"
+	Controller	"XBox"
+	Debugging	"No"
 	Fullscreen	"False"
 	Monitor	"0"
 	Multisample	"0"
+	Network	"Global"
+	Quality	"Medium"
 	Resolution	"1280,720"
 	VSync	"False"
 }

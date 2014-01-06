@@ -107,7 +107,7 @@ void ConnectingToRobotScreen::OnEnter(IRenderingState*prev)
 	m_connectingPnl->StatusLbl->SetText(core::string("Initializing"));
 	m_connectingPnl->InstructionLbl->SetVisible(false);
 #ifdef USE_SEETHROUGH
-	TBAppGlobals::seeTrough->ConnectToCameras(TBAppGlobals::selectedRobot->IP,1212,1213);
+	TBAppGlobals::seeTrough->ConnectToCameras(TBAppGlobals::selectedRobot->IP,1212,1213,1214);
 #endif
 	m_roboComm->Connect(TBAppGlobals::selectedRobot->IP,20000);
 //	m_roboComm->Connect("127.0.0.1",3000);

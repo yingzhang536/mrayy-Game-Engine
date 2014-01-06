@@ -1,0 +1,11 @@
+
+
+Robot Agent
+
+5000		Video Stream out port		Dispatcher
+20001		Commands out port			Dispatcher
+
+5001		Audio Stream in port		Listener
+20000		Commands in port			Listener
+
+

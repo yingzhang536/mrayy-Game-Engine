@@ -1,0 +1,12 @@
+
+
+TELUBee
+
+20000		Commands out port			Dispatcher
+5001		Audio Stream in port		Dispatcher
+
+5000		Video Stream out port		Listener
+20001		Commands in port			Listener
+
+
+

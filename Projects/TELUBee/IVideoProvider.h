@@ -28,7 +28,7 @@ public:
 	IVideoProvider(){}
 	virtual~IVideoProvider(){}
 
-	virtual void ConnectToCameras(const core::string& ip,int port1,int port2)=0;
+	virtual void ConnectToCameras(const core::string& ip, int videoPort, int audioPort, int localPort) = 0;
 	virtual void Disconnect()=0;
 	virtual bool IsConnected()=0;
 

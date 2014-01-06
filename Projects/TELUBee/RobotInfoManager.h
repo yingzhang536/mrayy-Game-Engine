@@ -53,6 +53,8 @@ public:
 	TBRobotInfo* GetRobotInfoByID(int id);
 	const std::vector<TBRobotInfo>& GetRobots();
 	void ClearRobots();
+
+	void LoadRobots(const core::string& path);
 };
 
 }

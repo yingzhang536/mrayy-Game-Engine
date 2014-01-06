@@ -42,6 +42,8 @@
 
 #include "OculusDetectState.h"
 
+#include "JoystickDefinitions.h"
+
 
 namespace mray
 {
@@ -155,6 +157,21 @@ void Application::init(const OptionContainer &extraOptions)
 			TBee::TBAppGlobals::IsDebugging=false;
 	
 		TBee::TBAppGlobals::DVIPort=extraOptions.GetOptionValue("DVIPort");
+
+		TBee::TBAppGlobals::m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
+
+		if (TBee::TBAppGlobals::m_controller == EController::XBox)
+		{
+			JOYSTICK_SelectButton = 6;
+			JOYSTICK_StartButton = 7;
+
+			JOYSTICK_Axis0 = 2;
+			JOYSTICK_Axis1 = 3;
+			JOYSTICK_Axis2 = 0;
+			JOYSTICK_Axis3 = 1;
+		}
+		
+
 	}
 	_InitResources();
 
@@ -178,6 +195,7 @@ void Application::init(const OptionContainer &extraOptions)
 	TBAppGlobals::inputMngr = m_inputManager;
 // 	m_guiManager=new GUI::GUIManager(getDevice());
 // 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
+	gLogManager.log("Managers", ELL_INFO);
 
 	m_soundManager=new sound::FSLManager();
 	m_videoManager=new video::TheoraManager();
@@ -187,11 +205,14 @@ void Application::init(const OptionContainer &extraOptions)
 	m_screenShot->setMipmapsFilter(false);
 	m_screenShot->createTexture(math::vector3d(GetRenderWindow()->GetSize().x,GetRenderWindow()->GetSize().y,1),video::EPixel_B8G8R8A8);
 
+	gLogManager.log("Robots", ELL_INFO);
 
 	TBAppGlobals::robotInfoManager=new RobotInfoManager();
+	TBAppGlobals::robotInfoManager->LoadRobots("RobotsMap.xml");
 
 	m_appStateManager=new TBee::ApplicationStateManager();
 
+	gLogManager.log("States", ELL_INFO);
 
 //	TBee::ApplicationMenuState* menuState=new TBee::ApplicationMenuState();
 	m_renderingState=new TBee::RenderingStateManager(this);
@@ -207,11 +228,11 @@ void Application::init(const OptionContainer &extraOptions)
 		m_renderTarget=getDevice()->createRenderTarget("",m_rtTexture,0,0,0);
 	}
 
-	TBAppGlobals::optiObj=new TBeeOptiTrackObject();
-	TBAppGlobals::ConnectOpti();
-
-	if(false)
+	if (false)
 	{
+		TBAppGlobals::optiObj = new TBeeOptiTrackObject();
+		TBAppGlobals::ConnectOpti();
+
 		m_seeThroughWindow=new SeeThroughWindow();
 		TBAppGlobals::seeTrough=m_seeThroughWindow;
 		m_seeThroughWindow->Init(this,extraOptions);
@@ -221,6 +242,8 @@ void Application::init(const OptionContainer &extraOptions)
 	// check for Oculus
 	if(TBAppGlobals::usingOculus)
 	{
+		gLogManager.log("Initing Oculus", ELL_INFO);
+
 		TBAppGlobals::StereoMode=scene::EStereo_SideBySide;
 		//Create Oculus
 		m_oculusData->oculusManager=new video::OculusManager();
@@ -270,6 +293,9 @@ void Application::init(const OptionContainer &extraOptions)
 
 	}
 	LoadSettingsXML("States.xml");
+
+	gLogManager.log("Starting Application", ELL_INFO);
+
 }
 
 void Application::RenderUI(scene::ViewPort* vp)
@@ -409,7 +435,7 @@ void Application::update(float dt)
 }
 void Application::onDone()
 {
-	TBee::TBAppGlobals::Save("VTSettings.conf");
+	//TBee::TBAppGlobals::Save("VTSettings.conf");
 
 }
 

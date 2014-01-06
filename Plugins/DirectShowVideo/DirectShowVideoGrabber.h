@@ -38,7 +38,7 @@ protected:
 	int m_device;
 
 	bool m_inited;
-
+	ulong m_bufferId;
 
 public:
 	DirectShowVideoGrabber();
@@ -58,6 +58,8 @@ public:
 
 	void SetImageFormat(video::EPixelFormat fmt);
 	video::EPixelFormat GetImageFormat();
+
+	ulong GetBufferID(){ return m_bufferId; }
 
 	bool GrabFrame();
 	bool HasNewFrame();

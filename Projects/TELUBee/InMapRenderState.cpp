@@ -39,6 +39,9 @@ InMapRenderState::InMapRenderState()
 {
 	m_pageManager=0;
 	m_mapGUIManager=0;
+	m_entManager = 0;
+	m_guiManager = 0;
+	m_mapObject = 0;
 	m_mapScreenGUI=new GUIMapScreen();
 	m_robotPanel=new GUI::GUIRobotPanelImpl();
 	m_indicatorVisible=true;

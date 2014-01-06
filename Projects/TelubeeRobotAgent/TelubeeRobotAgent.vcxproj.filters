@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="PortsDesc.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -26,9 +27,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="multicast.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="tinyxml2.h">
       <Filter>Source Files\tinyxml</Filter>
@@ -39,15 +37,24 @@
     <ClInclude Include="TRApplication.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="RobotCommunicator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CombineVideoGrabber.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMySink.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMySrc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TelubeeRobotAgent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="multicast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
@@ -57,6 +64,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TRApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotCommunicator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CombineVideoGrabber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMySink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMySrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

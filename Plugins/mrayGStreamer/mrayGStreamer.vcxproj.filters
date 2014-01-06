@@ -7,6 +7,8 @@
     <ClCompile Include="ofGstUtils.cpp" />
     <ClCompile Include="ofGstVideoGrabber.cpp" />
     <ClCompile Include="ofGstVideoPlayer.cpp" />
+    <ClCompile Include="CMySrc.cpp" />
+    <ClCompile Include="CMySink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GStreamerManager.h" />
@@ -16,6 +18,8 @@
     <ClInclude Include="ofGstUtils.h" />
     <ClInclude Include="ofGstVideoGrabber.h" />
     <ClInclude Include="ofGstVideoPlayer.h" />
+    <ClInclude Include="CMySrc.h" />
+    <ClInclude Include="CMySink.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

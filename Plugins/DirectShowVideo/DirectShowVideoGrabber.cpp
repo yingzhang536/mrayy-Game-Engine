@@ -29,6 +29,7 @@ DirectShowVideoGrabber::DirectShowVideoGrabber()
 	}
 	m_textureImage.autoDel=true;
 	m_hasNewFrame = false;
+	m_bufferId = 0;
 }
 DirectShowVideoGrabber::~DirectShowVideoGrabber()
 {
@@ -139,6 +140,7 @@ bool DirectShowVideoGrabber::GrabFrame()
 		return false;
 	if(s_videoInput->isFrameNew(m_device))
 	{
+		m_bufferId++;
 		m_hasNewFrame=true;
 		unsigned char * viPixels = s_videoInput->getPixels(m_device, false,false);
 

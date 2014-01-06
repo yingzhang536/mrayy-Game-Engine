@@ -28,98 +28,6 @@ namespace TBee
 	int s_id=0;
 	typedef video::DirectShowVideoGrabber VCameraType ;
 
-	class CRobotConnector
-	{
-		core::string m_robotIP;
-		RemoteRobotCommunicator* m_communicator;
-		bool m_connected;
-		bool m_status;
-
-		math::vector2d m_speed;
-		math::vector3d m_head;
-		float m_rotation;
-	public:
-		CRobotConnector()
-		{
-			m_connected = false;
-			m_status = false;
-			m_communicator = new RemoteRobotCommunicator();
-		}
-		~CRobotConnector()
-		{
-			delete m_communicator;
-		}
-		bool IsRobotConnected()
-		{
-			return m_status;
-		}
-		void ConnectRobot()
-		{
-			if (m_connected)
-				m_communicator->Disconnect();
-			m_connected = m_communicator->Connect(m_robotIP, 20000);
-			//	m_roboComm->Connect("127.0.0.1",3000);
-			m_communicator->SetUserID("yamens");
-			m_communicator->ConnectUser(true);
-		}
-		void DisconnectRobot()
-		{
-			EndUpdate();
-			m_communicator->Disconnect();
-			m_connected = false;
-		}
-		void StartUpdate()
-		{
-			if (!m_connected)
-				return;
-			m_status = true;
-
-			m_communicator->ConnectRobot(true);
-		}
-		void EndUpdate()
-		{
-			m_status = false;
-			m_communicator->ConnectRobot(false);
-		}
-		void LoadXML(xml::XMLElement* e)
-		{
-
-			xml::XMLAttribute*attr = e->getAttribute("IP");
-			if (attr)
-			{
-				m_robotIP = attr->value;
-			}
-		}
-
-		void HandleController()
-		{
-			controllers::IJoysticController* joystick= TBAppGlobals::inputMngr->getJoystick(0);
-			if (!joystick)
-			{
-				m_speed = 0;
-				m_rotation = 0;
-				return;
-			}
-			controllers::JoysticAxis x = joystick->getAxisState(0);
-			controllers::JoysticAxis y = joystick->getAxisState(1);
-			controllers::JoysticAxis r = joystick->getAxisState(3);
-
-			m_speed.x = x.abs;
-			m_speed.y = y.abs;
-			m_rotation = r.abs;
-		}
-		void UpdateStatus()
-		{
-			if (!m_status || !m_connected)
-				return;
-			HandleController();
-			TBAppGlobals::oculusDevice->GetOrientation().toEulerAngles(m_head);
-			m_communicator->SetData("Head", core::StringConverter::toString(m_head));
-			m_communicator->SetData("Speed", core::StringConverter::toString(m_speed));
-			m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation));
-		}
-
-	};
 CameraRenderingState::CameraRenderingState()
 {
 	m_exitCode=0;
@@ -128,14 +36,10 @@ CameraRenderingState::CameraRenderingState()
 
 	m_cameraSource[0].id=1;
 	m_cameraSource[1].id=2;
-
-	m_cameraResolution.set(640, 480);
-	m_cameraFov = 25;
+	m_eyes[1].cw = true;
 
 	m_cameraSource[0].videoGrabber=new video::VideoGrabberTexture();
 	m_cameraSource[1].videoGrabber=new video::VideoGrabberTexture();
-
-	m_robotConnector = new CRobotConnector();
 
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
@@ -143,13 +47,6 @@ CameraRenderingState::CameraRenderingState()
 
 	m_capturing = false;
 	m_clickCount = 0;
-
-	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
-	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
-
-	m_correctionValue[0] = m_lensCorrectionPP->GetValue("final.HMDWrapParams1");
-	m_correctionValue[1] = m_lensCorrectionPP->GetValue("final.HMDWrapParams2");
-
 }
 
 
@@ -158,49 +55,27 @@ CameraRenderingState::~CameraRenderingState()
 	delete m_cameraSource[0].videoGrabber;
 	delete m_cameraSource[1].videoGrabber;
 
-	delete m_robotConnector;
 	delete m_guiRenderer;
 }
-
-void CameraRenderingState::_UpdateCameraParams()
+math::vector2d CameraRenderingState::_GetEyeResolution(int i)
 {
-	m_targetAspectRatio=m_hmdSize.x/m_hmdSize.y;
-	for(int i=0;i<2;++i)
-	{
-		video::ICameraVideoGrabber*camera= m_cameraSource[i].camera;
-		if(!camera)
-			return;
-		math::vector2d framesize= camera->GetFrameSize();
-		float camRatio=framesize.x/framesize.y;
-		m_cameraSource[i].cropping.set(framesize.x,framesize.x/camRatio);
-		m_cameraSource[i].ratio=camRatio;
-
-		float focal=1;//in meter
-		float w1=2*focal*tan(math::toRad(m_hmdFov*0.5f));
-		float w2=2*(focal-m_hmdDistance)*tan(math::toRad(m_cameraFov*0.5f));
-
-		float ratio=w2/w1;
-		m_cameraSource[i].scale=m_hmdSize*ratio;
-	}
+	return m_cameraSource[i].camera->GetFrameSize();
 }
-
-void CameraRenderingState::SetParameters(float targetAspectRatio,float hmdDistance,float cameraFov,float hmdFov)
+video::ITexturePtr CameraRenderingState::GetEyeTexture(int i)
 {
-	m_targetAspectRatio=targetAspectRatio;
-	m_hmdDistance=hmdDistance;
-	m_cameraFov=cameraFov;
-	m_hmdFov=hmdFov;
-	_UpdateCameraParams();
+	return m_cameraSource[i].videoGrabber->GetTexture();
 }
 
 void CameraRenderingState::InitState(Application* app)
 {
-	IRenderingState::InitState(app);
+	IEyesRenderingBaseState::InitState(app);
+
 	int c=1;
 	if(TBAppGlobals::StereoMode!=scene::EStereo_None)
 		c=2;
 	for(int i=0;i<2;++i)
 	{
+		m_eyes[i].flip90 = true;
 		m_cameraSource[i].camera=new VCameraType();
 		video::ITexturePtr tex=app->getDevice()->createEmptyTexture2D(true);
 
@@ -221,6 +96,7 @@ void CameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
 
 void CameraRenderingState::OnEvent(Event* e)
 {
+	IEyesRenderingBaseState::OnEvent(e);
 	if(e->getType()==ET_Mouse)
 	{
 		MouseEvent* ev = (MouseEvent*)e;
@@ -275,49 +151,6 @@ void CameraRenderingState::OnEvent(Event* e)
 				m_capturing = true;
 				m_clickCount = 0;
 			}
-			else if (evt->key == KEY_Y)
-			{
-				m_correctionValue[0]->floatParam[0] += 0.01*(evt->shift?-1:1);
-			}
-			else if (evt->key == KEY_U)
-			{
-				m_correctionValue[0]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
-			}
-			else if (evt->key == KEY_I)
-			{
-				m_correctionValue[0]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
-			}
-			else if (evt->key == KEY_H)
-			{
-				m_correctionValue[1]->floatParam[0] += 0.01*(evt->shift ? -1 : 1);
-			}
-			else if (evt->key == KEY_J)
-			{
-				m_correctionValue[1]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
-			}
-			else if (evt->key == KEY_K)
-			{
-				m_correctionValue[1]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
-			}
-		}
-	}
-	if (e->getType() == ET_Joystick)
-	{
-		JoystickEvent* evt = (JoystickEvent*)e;
-		if (evt->event == JET_BUTTON_PRESSED)
-		{
-			if (evt->button == JOYSTICK_SelectButton)
-			{
-				m_exitCode = STATE_EXIT_CODE;
-				m_robotConnector->EndUpdate();
-			}
-			else if (evt->button == JOYSTICK_StartButton)
-			{
-				if (m_robotConnector->IsRobotConnected())
-					m_robotConnector->EndUpdate();
-				else
-					m_robotConnector->StartUpdate();
-			}
 		}
 	}
 }
@@ -325,16 +158,15 @@ void CameraRenderingState::OnEvent(Event* e)
 
 void CameraRenderingState::OnEnter(IRenderingState*prev)
 {
+	IEyesRenderingBaseState::OnEnter(prev);
 	//VCameraType* cam=(VCameraType*)m_camera;//m_video->GetGrabber().pointer();
 	m_cameraSource[0].camera->InitDevice(m_cameraSource[0].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 	if(m_cameraSource[1].camera)
 		m_cameraSource[1].camera->InitDevice(m_cameraSource[1].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 	//cam->Start();
 	//printf("Cam resolution=%dx%d@%d\n",m_camera->GetFrameSize().x,m_camera->GetFrameSize().y,m_camera->GetFrameRate());
+	
 
-	_UpdateCameraParams();
-
-	m_robotConnector->ConnectRobot();
 }
 
 
@@ -347,92 +179,12 @@ void CameraRenderingState::OnExit()
 		m_cameraSource[1].camera->Stop();
 
 }
-
-class TextureRenderTarget:public video::IRenderTarget
-{
-protected:
-	video::ITexturePtr m_tex;
-public:
-	TextureRenderTarget(video::ITexturePtr tex){ m_tex = tex; }
-	virtual~TextureRenderTarget()
-	{
-	}
-
-	virtual void clear(const video::SColor&c, bool clearBackbuffer, bool clearDepthBuffer)
-	{
-	}
-
-	virtual void bind() {}
-	virtual void unbind() {}
-
-	virtual void attachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
-	virtual void deattachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
-
-	virtual const video::ITexturePtr& getColorTexture(int i = 0) { return m_tex; }
-	virtual const video::IHardwarePixelBufferPtr& getDepthBuffer() { return video::IHardwarePixelBufferPtr::Null; }
-	virtual const video::IHardwarePixelBufferPtr& getStencilBuffer() { return video::IHardwarePixelBufferPtr::Null; }
-
-	virtual int GetColorTextureCount() { return 1; }
-	virtual void Resize(int x, int y) {}
-	virtual math::vector2di getSize()
-	{
-		return math::vector2di(m_tex->getSize().x, m_tex->getSize().y);
-	}
-
-};
 video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETargetEye eye)
 {
-	IRenderingState::Render(rc,eye);
-	float shift=(float)m_VerticalShift*0.5f;
-	int index=GetEyeIndex(eye);
-	
-	video::IVideoDevice* dev=Engine::getInstance().getDevice();
-
-	video::TextureUnit tex;
-	tex.SetEdgeColor(video::DefaultColors::Black);
-	tex.setTextureClamp(video::ETW_WrapS, video::ETC_CLAMP_TO_BORDER);
-	tex.setTextureClamp(video::ETW_WrapT, video::ETC_CLAMP_TO_BORDER);
-	m_cameraSource[index].videoGrabber->Blit();
-
-	video::ITexturePtr cameraTex = m_cameraSource[index].videoGrabber->GetTexture();
-	{
-		math::vector2d size(cameraTex->getSize().x, cameraTex->getSize().y);
-		m_lensCorrectionPP->Setup(math::rectf(0, size));
-		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
-		cameraTex = m_lensCorrectionPP->getOutput()->getColorTexture();
-	}
-	dev->setRenderTarget(m_renderTarget[index]);
-
-
-//	gTextureResourceManager.writeResourceToDist(m_video->GetTexture(),"screens\\image#"+core::StringConverter::toString(s_id++)+".jp2");
-	if (rc.getSize() != m_hmdSize)
-	{
-		m_hmdSize = rc.getSize();
-		_UpdateCameraParams();
-	}
-	tex.SetTexture(cameraTex);
-	dev->useTexture(0,&tex);
-	//float croppingHeight=1-m_targetAspectRatio/m_cameraSource[index].ratio;
-	float targetHeight = m_cameraSource[index].camera->GetFrameSize().x / m_targetAspectRatio;
-	float heightDiff = targetHeight - m_cameraSource[index].camera->GetFrameSize().y;
-	//float croppingHeight = 1-1.0f/(targetHeight / rc.getHeight());
-	float croppingHeight = heightDiff / m_cameraSource[index].camera->GetFrameSize().y;
-	croppingHeight*=0.5f;
-	math::rectf tc(0,-croppingHeight,1,1+croppingHeight);
-	//now calculate the actual rendering rectangle
-	math::rectf targetRect;
-	math::vector2d margin=(rc.getSize()-m_cameraSource[index].scale)/2;
-	targetRect.ULPoint=rc.ULPoint+margin;
-	targetRect.BRPoint=rc.BRPoint-margin;
-
-	//tc.ULPoint=targetRect.ULPoint/rc.getSize();
-	//tc.BRPoint=targetRect.BRPoint/rc.getSize();
-	tc.ULPoint.y=1-tc.ULPoint.y;
-	tc.BRPoint.y=1-tc.BRPoint.y;
-	dev->draw2DImage(math::rectf(targetRect.ULPoint + math::vector2d(0, shift), targetRect.BRPoint + math::vector2d(0, shift)), 1, 0, &tc);
-
-
+	video::IRenderTarget*ret=IEyesRenderingBaseState::Render(rc, eye);
 	//draw a grid
+	video::IVideoDevice* dev = Engine::getInstance().getDevice();
+
 
 
 	//_RenderUI(targetRect);
@@ -440,12 +192,15 @@ video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETarget
 	dev->useTexture(0,0);
 
 
-	return m_renderTarget[index].pointer();
+	return ret;
 }
 
 void CameraRenderingState::Update(float dt)
 {
-	m_robotConnector->UpdateStatus();
+	IEyesRenderingBaseState::Update(dt);
+
+	m_cameraSource[0].videoGrabber->Blit();
+	m_cameraSource[1].videoGrabber->Blit();
 }
 
 
@@ -507,7 +262,7 @@ void CameraRenderingState::_RenderUI(const math::rectf& rc)
 
 void CameraRenderingState::LoadFromXML(xml::XMLElement* e)
 {
-	IRenderingState::LoadFromXML(e);
+	IEyesRenderingBaseState::LoadFromXML(e);
 	xml::XMLAttribute* attr;
 
 
@@ -518,41 +273,6 @@ void CameraRenderingState::LoadFromXML(xml::XMLElement* e)
 	if(attr)
 		m_cameraSource[1].id=core::StringConverter::toInt(attr->value);
 
-	attr=e->getAttribute("Size");
-	if(attr)
-	{
-		m_cameraResolution=core::StringConverter::toVector2d(attr->value);
-
-
-	}
-	attr=e->getAttribute("FPS");
-	if(attr)
-	{
-		m_cameraFPS=core::StringConverter::toInt(attr->value);
-	}
-
-	attr=e->getAttribute("CameraDistance");
-	if(attr)
-	{
-		m_hmdDistance=core::StringConverter::toFloat(attr->value);
-	}
-	attr=e->getAttribute("CameraFov");
-	if(attr)
-	{
-		m_cameraFov=core::StringConverter::toFloat(attr->value);
-	}
-	attr=e->getAttribute("HMDFov");
-	if(attr)
-	{
-		m_hmdFov=core::StringConverter::toFloat(attr->value);
-	}
-	attr=e->getAttribute("HMDSize");
-	if(attr)
-	{
-		m_hmdSize=core::StringConverter::toVector2d(attr->value);
-	}
-
-	m_robotConnector->LoadXML(e);
 }
 
 

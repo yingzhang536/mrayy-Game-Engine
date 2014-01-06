@@ -40,11 +40,12 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\Program Files (x86)\OSSBuild\GStreamer\v0.10.6\sdk\share\vs\2010\libs\gstreamer-0.10.props" />
+    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\Program Files (x86)\OSSBuild\GStreamer\v0.10.6\sdk\share\vs\2010\libs\gstreamer-0.10.props" />
+    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -95,7 +96,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>mrayOIS.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib;mrayGStreamer.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,9 +119,11 @@
     <ClInclude Include="CameraRenderingState.h" />
     <ClInclude Include="CinematicController.h" />
     <ClInclude Include="ConnectingToRobotScreen.h" />
+    <ClInclude Include="CRobotConnector.h" />
     <ClInclude Include="DBConnectionCommands.h" />
     <ClInclude Include="DVISwitcherController.h" />
     <ClInclude Include="DynamicMemoryStream.h" />
+    <ClInclude Include="GSTCameraRenderingState.h" />
     <ClInclude Include="GStreamerTestState.h" />
     <ClInclude Include="GStreamVideoProvider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -139,6 +142,7 @@
     <ClInclude Include="HMDCameraRenderer.h" />
     <ClInclude Include="HMDRobotRenderer.h" />
     <ClInclude Include="IApplicationState.h" />
+    <ClInclude Include="IEyesRenderingBaseState.h" />
     <ClInclude Include="IHMDRenderer.h" />
     <ClInclude Include="IMapController.h" />
     <ClInclude Include="IndicatorComponent.h" />
@@ -200,9 +204,11 @@
     <ClCompile Include="CameraRenderingState.cpp" />
     <ClCompile Include="CinematicController.cpp" />
     <ClCompile Include="ConnectingToRobotScreen.cpp" />
+    <ClCompile Include="CRobotConnector.cpp" />
     <ClCompile Include="DBConnectionCommands.cpp" />
     <ClCompile Include="DVISwitcherController.cpp" />
     <ClCompile Include="DynamicMemoryStream.cpp" />
+    <ClCompile Include="GSTCameraRenderingState.cpp" />
     <ClCompile Include="GStreamerTestState.cpp" />
     <ClCompile Include="GStreamVideoProvider.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -214,10 +220,12 @@
     <ClCompile Include="GUIRobotPanelImpl.cpp" />
     <ClCompile Include="HMDCameraRenderer.cpp" />
     <ClCompile Include="HMDRobotRenderer.cpp" />
+    <ClCompile Include="IEyesRenderingBaseState.cpp" />
     <ClCompile Include="IndicatorComponent.cpp" />
     <ClCompile Include="InMapRenderState.cpp" />
     <ClCompile Include="IRenderingState.cpp" />
     <ClCompile Include="ISerialPort.cpp" />
+    <ClCompile Include="JoystickDefinitions.cpp" />
     <ClCompile Include="JoystickMapController.cpp" />
     <ClCompile Include="LocalRobotCommunicator.cpp" />
     <ClCompile Include="LoginScreenState.cpp" />
@@ -289,6 +297,9 @@
     <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIRobotPanel.gui" />
     <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughMessage.gui" />
     <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUISeethroughScreen.gui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PortDesc.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

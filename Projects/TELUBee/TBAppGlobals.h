@@ -39,6 +39,12 @@ namespace TBee
 	class SeeThroughWindow;
 	class TBeeOptiTrackObject;
 
+
+	enum class EController
+	{
+		XBox,
+		Logicool
+	};
 class TBAppGlobals
 {
 protected:
@@ -51,6 +57,8 @@ public:
 	static bool IsDebugging;
 	static core::string ServerIP;
 	static TBeeOptiTrackObject* optiObj;
+
+	static EController m_controller;
 
 	static int MajorVer;
 	static int MinorVer;

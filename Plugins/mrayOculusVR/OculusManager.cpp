@@ -26,6 +26,10 @@ namespace video
 		OculusMessage(const OVR::MessageType& msg,const OVR::DeviceHandle &dev):device(dev),message(msg)
 		{}
 		OculusMessage(){}
+		~OculusMessage()
+		{
+			device.Clear();
+		}
 	};
 
 class OculusManagerImpl:public MessageHandler

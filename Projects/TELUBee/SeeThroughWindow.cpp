@@ -277,9 +277,9 @@ void SeeThroughWindow::onRenderDone(scene::ViewPort*vp)
 }
 
 
-void SeeThroughWindow::ConnectToCameras(const core::string& ip,int port1,int port2)
+void SeeThroughWindow::ConnectToCameras(const core::string& ip, int videoPort, int audioPort, int localAudio)
 {
-	m_robot->GetProvider()->ConnectToCameras(ip,port1,port2);
+	m_robot->GetProvider()->ConnectToCameras(ip,videoPort,audioPort,localAudio);
 }
 
 void SeeThroughWindow::Disconnect()

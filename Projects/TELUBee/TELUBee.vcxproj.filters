@@ -307,6 +307,15 @@
     <ClInclude Include="_ofGstUtilsWin32.h">
       <Filter>GST</Filter>
     </ClInclude>
+    <ClInclude Include="IEyesRenderingBaseState.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="GSTCameraRenderingState.h">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClInclude>
+    <ClInclude Include="CRobotConnector.h">
+      <Filter>Source Files\Communicator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -465,6 +474,18 @@
     <ClCompile Include="_ofGstUtilsWin32.cpp">
       <Filter>GST</Filter>
     </ClCompile>
+    <ClCompile Include="IEyesRenderingBaseState.cpp">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClCompile>
+    <ClCompile Include="GSTCameraRenderingState.cpp">
+      <Filter>Source Files\RenderingStates\HMD</Filter>
+    </ClCompile>
+    <ClCompile Include="CRobotConnector.cpp">
+      <Filter>Source Files\Communicator</Filter>
+    </ClCompile>
+    <ClCompile Include="JoystickDefinitions.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TELUBee.rc">
@@ -502,5 +523,8 @@
     <Overlay Include="..\..\Bin\Data\Telubee\TBee\GUIOculusDetect.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PortDesc.txt" />
   </ItemGroup>
 </Project>

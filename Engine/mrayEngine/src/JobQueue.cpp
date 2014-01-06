@@ -146,19 +146,25 @@ void JobQueue::AddRequest(const JobOrderPtr& order,JobLoadCompleteDelegate listn
 bool JobQueue::RemoveRequest(JobOrder* order)
 {
 	bool ret=false;
+	bool signal = false;
 	m_reqMutex->lock();
-	RequeseList::iterator it= m_requests.begin();
-	for (;it!=m_requests.end();++it)
+	if (m_requests.size() > 0)
 	{
-		if((*it)->order.pointer()==order)
+		signal = true;
+		RequeseList::iterator it = m_requests.begin();
+		for (; it != m_requests.end(); ++it)
 		{
-			m_requests.erase(it);
-			ret= true;
-			break;
+			if ((*it)->order.pointer() == order)
+			{
+				m_requests.erase(it);
+				ret = true;
+				break;
+			}
 		}
 	}
 	m_reqMutex->unlock();
-	m_workCond->signal();
+	if (signal)
+		m_workCond->signal();
 	return true;
 }
 

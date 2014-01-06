@@ -94,6 +94,8 @@ public:
 	virtual UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len) =0;
 	virtual UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src) =0;
 
+	virtual UDPClientError GetAvailableBytes(unsigned int* len)=0;
+
 	// Status
 	virtual bool IsOpen()  =0;
 	virtual bool IsConnected()  =0;

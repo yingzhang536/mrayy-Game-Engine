@@ -28,6 +28,8 @@
 	(((DWORD)(ch4)& 0xFF000000) >> 24))
 
 
+#define VI_COM_MULTI_THREADED
+
 
 ///////////////////////////  HANDY FUNCTIONS  /////////////////////////////
 

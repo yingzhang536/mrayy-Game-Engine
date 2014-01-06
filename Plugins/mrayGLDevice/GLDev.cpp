@@ -1038,7 +1038,7 @@ void GLDev::draw2DImageRot(const math::rectf &pos,const math::vector2d &origin/*
 		points[0]=m*math::vector2d(-origin.x,-origin.y);
 		points[1]=m*math::vector2d( size.x-origin.x,-origin.y);
 		points[2]=m*math::vector2d( size.x-origin.x, size.y-origin.y);
-		points[3]=m*math::vector2d(-origin.x, size.x-origin.y);
+		points[3]=m*math::vector2d(-origin.x, size.y-origin.y);
 	}
 	//setTransformationState(TS_TEXTURE0,texture->getTransformationMatrix());
 	//useTexture(0,texture);

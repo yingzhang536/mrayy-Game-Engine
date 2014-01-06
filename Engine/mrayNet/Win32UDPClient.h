@@ -77,7 +77,7 @@ namespace network
 
 		UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len);
 		UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src);
-
+		UDPClientError GetAvailableBytes(unsigned int* len);
 		// Status
 		bool IsOpen() {return (bool)(handle != INVALID_SOCKET);}        
 		bool IsConnected() {return connected;}

@@ -39,6 +39,7 @@ protected:
 	ImageInfo m_imageData;
 	math::vector2di m_size;
 	bool m_hasNewFrame;
+	ulong m_bufferID;
 
 protected:
 	virtual uint calcSizeInternal();
@@ -75,7 +76,7 @@ public:
 	virtual bool seek(float time);
 	virtual bool GrabFrame();
 	virtual bool HasNewFrame();
-
+	virtual ulong GetBufferID(){ return m_bufferID; }
 
 	virtual const ImageInfo* GetLastFrame(){return &m_imageData;}
 	void createVideoBuffers();

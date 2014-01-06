@@ -124,11 +124,13 @@ void Application::init(const OptionContainer &extraOptions)
 	}
 	{
 
-		core::string v=extraOptions.GetOptionValue("Camera");
-		if(v=="USB")
-			VT::VTAppGlobals::CameraType=EWebCamera;
-		else
-			VT::VTAppGlobals::CameraType=EFlyCapture;
+		// 		core::string v=extraOptions.GetOptionValue("Camera");
+		// 		if(v=="USB")
+		VT::VTAppGlobals::CameraType = EWebCamera;
+		// 		else
+		//			VT::VTAppGlobals::CameraType=EFlyCapture;
+	}
+	{
 	}
 	{
 
@@ -441,7 +443,7 @@ void Application::update(float dt)
 }
 void Application::onDone()
 {
-	VT::VTAppGlobals::Save("VTSettings.conf");
+	//VT::VTAppGlobals::Save("VTSettings.conf");
 
 }
 

@@ -21,7 +21,8 @@
 #include <StringConverter.h>
 #include <PixelUtil.h>
 #include <IThreadManager.h>
-
+#include "CMySrc.h"
+#include "CMySink.h"
 
 #define OF_LOOP_NONE 0
 #define  OF_LOOP_NORMAL 1
@@ -61,6 +62,7 @@ public:
 	virtual void 		  eos_cb();
 
 	static void startGstMainLoop();
+	static void stopGstMainLoop();
 	static GMainLoop * getGstMainLoop();
 	static bool			busFunction(GstBus * bus, GstMessage * message, ofGstUtilsImpl * app);
 	bool				gstHandleMessage(GstBus * bus, GstMessage * message);
@@ -104,26 +106,46 @@ public:
 		void execute(OS::IThread*caller, void*arg){
 			main_loop = g_main_loop_new(NULL, FALSE);
 			g_main_loop_run(main_loop);
+			printf("GST Thread shutdown\n");
 		}
 	};
 
 	static ofGstMainLoopThread * mainLoop;
 	static OS::IThread* mainLoopThread;
+
 	GstBus * bus;
 };
 ofGstUtilsImpl::ofGstMainLoopThread * ofGstUtilsImpl::mainLoop=0;
 OS::IThread * ofGstUtilsImpl::mainLoopThread=0;
 
 void ofGstUtilsImpl::startGstMainLoop(){
-	static bool initialized = false;
-	if (!initialized){
+	if (!mainLoop){
 		mainLoop = new ofGstMainLoopThread;
-
-		mainLoopThread= OS::IThreadManager::getInstance().createThread(mainLoop);
-		mainLoopThread->start(0);
-		//mainLoop->start();
-		initialized = true;
 	}
+	if (mainLoopThread)
+		stopGstMainLoop();
+	mainLoopThread= OS::IThreadManager::getInstance().createThread(mainLoop);
+	mainLoopThread->start(0);
+	//mainLoop->start();
+	
+}
+
+void ofGstUtilsImpl::stopGstMainLoop(){
+	
+	if (!mainLoop)
+		return;
+
+	g_main_loop_quit(mainLoop->main_loop);
+	bool running = g_main_loop_is_running(mainLoop->main_loop);
+	g_main_loop_unref(mainLoop->main_loop);
+	delete mainLoop;
+	mainLoop = 0;
+	if (!mainLoopThread)
+		return;
+	OS::IThreadManager::getInstance().killThread(mainLoopThread);
+	delete mainLoopThread;
+	mainLoopThread = 0;
+
 }
 
 GMainLoop * ofGstUtilsImpl::getGstMainLoop(){
@@ -198,6 +220,14 @@ ofGstUtils::ofGstUtils() {
 			"appsink", (char*)"Element application sink",
 			appsink_plugin_init, "0.1", "LGPL", "ofVideoPlayer", "openFrameworks",
 			"http://openframeworks.cc/");
+		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
+			"mysrc", (char*)"Element application src",
+			_GstMySrcClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+			"");
+		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
+			"mysink", (char*)"Element application sink",
+			_GstMySinkClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+			"");
 		plugin_registered = true;
 	}
 
@@ -302,10 +332,11 @@ bool ofGstUtils::startPipeline(){
 		gLogManager.log("ofGstUtils - startPipeline(): unable to set pipeline to ready", ELL_WARNING);
 		return false;
 	}
+	
 	if (gst_element_get_state(GST_ELEMENT(m_impl->gstPipeline), NULL, NULL, 10 * GST_SECOND) == GST_STATE_CHANGE_FAILURE){
 		gLogManager.log("ofGstUtils - startPipeline(): unable to get pipeline ready status", ELL_WARNING);
 		return false;
-	}
+	}/**/
 
 	// pause the pipeline
 	if (gst_element_set_state(GST_ELEMENT(m_impl->gstPipeline), GST_STATE_PAUSED) == GST_STATE_CHANGE_FAILURE) {
@@ -420,6 +451,7 @@ void ofGstUtilsImpl::stop(){
 	gst_element_get_state(gstPipeline, &state, NULL, 2 * GST_SECOND);
 	bPlaying = false;
 	bPaused = true;
+
 }
 
 float ofGstUtils::getPosition(){
@@ -588,6 +620,7 @@ void ofGstUtilsImpl::close(){
 		gstPipeline = NULL;
 		gstSink = NULL;
 	}
+	stopGstMainLoop();
 
 	bLoaded = false;
 }

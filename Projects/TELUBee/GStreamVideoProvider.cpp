@@ -29,9 +29,9 @@ void GStreamVideoProvider::LoadMovie(const core::string& path)
 
 }
 
-void GStreamVideoProvider::ConnectToCameras(const core::string& ip, int remotePort, int localPort)
+void GStreamVideoProvider::ConnectToCameras(const core::string& ip, int  videoPort, int audioPort, int localPort)
 {
-	m_playBack->Connect(ip,remotePort,localPort);
+	m_playBack->Connect(ip,videoPort,audioPort,localPort);
 	m_playBack->play();
 }
 void GStreamVideoProvider::Disconnect()

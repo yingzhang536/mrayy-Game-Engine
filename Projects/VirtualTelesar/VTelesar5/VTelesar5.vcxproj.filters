@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{aebf0202-c013-4b4c-b4a2-ab556acddabd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderingStates\OBjects">
+      <UniqueIdentifier>{f1ec7ffb-9e7b-428a-adc0-1fa4e4326fa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="CameraTextureSource.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraCorrectionGrabber.cpp">
+      <Filter>Source Files\RenderingStates\OBjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="OculusLensParams.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraCorrectionGrabber.h">
+      <Filter>Source Files\RenderingStates\OBjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

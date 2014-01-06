@@ -103,7 +103,7 @@ public:
 		xml::XMLWriter w;
 		xml::XMLElement root("RobotData");
 		root.addAttribute("Connected", core::StringConverter::toString(data.robot.status.connected));
-		if (data.robot.status.connected)
+	//	if (data.robot.status.connected)
 		{
 			for (std::map<core::string, core::string>::iterator it = values.begin(); it != values.end(); ++it)
 			{
@@ -137,7 +137,7 @@ void RemoteRobotCommunicatorThread::execute(OS::IThread*caller, void*arg)
 		}
 		if (m_owner->data.robot.status.connected && m_owner->connected)
 		{
-			OS::IThreadManager::getInstance().sleep(2);
+			OS::IThreadManager::getInstance().sleep(33);
 		}
 		else
 		{
@@ -225,7 +225,20 @@ void RemoteRobotCommunicator::SetData(const core::string &key, const core::strin
 {
 	m_data->SetData(key, value);
 }
-
+void RemoteRobotCommunicator::RemoveData(const core::string &key)
+{
+	std::map<core::string, core::string>::iterator it= m_data->values.find(key);
+	if (m_data->values.end() != it)
+	{
+		m_data->values.erase(it);
+	}
+	m_data->UpdateData();
+}
+void RemoteRobotCommunicator::ClearData()
+{
+	m_data->values.clear();
+	m_data->UpdateData();
+}
 void RemoteRobotCommunicator::Update(float dt)
 {
 	//return ;

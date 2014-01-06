@@ -21,6 +21,8 @@ namespace TBee
 
 	void IRenderingState::InitState(Application* app)
 	{
+		gLogManager.log("Initing Rendering State", ELL_INFO);
+
 		int c=1;
 		if(TBAppGlobals::StereoMode!=scene::EStereo_None)
 			c=2;

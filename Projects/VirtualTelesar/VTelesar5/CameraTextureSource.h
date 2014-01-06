@@ -52,6 +52,9 @@ public:
 	CameraTextureSource();
 	virtual~CameraTextureSource();
 
+	video::VideoGrabberTexture* GetGrabber(){ return m_texGrabber; }
+
+
 	void SetCameraInfo(int id,int w,int h,int fps);
 
 	virtual const core::string& GetSourceType(){return FactorySourceType;}

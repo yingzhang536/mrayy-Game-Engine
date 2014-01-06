@@ -16,6 +16,7 @@ TheoraVideo::TheoraVideo(TheoraVideoClip*clip):m_clip(clip)
 {
 
 	m_hasNewFrame=false;
+	m_bufferID = 0;
 
 }
 TheoraVideo::~TheoraVideo()
@@ -171,6 +172,7 @@ bool TheoraVideo::GrabFrame(){
 	TheoraVideoFrame* f=m_clip->getNextFrame();
 	if(!f)
 		return false;
+	m_bufferID++;
 	m_hasNewFrame=true;
 	int pixelsCount=video::PixelUtil::getPixelDescription(m_imageData.format).elemSizeB;
 	mraySystem::memCopy(m_imageData.imageData,f->getBuffer(),f->getHeight()*f->getWidth()*pixelsCount);

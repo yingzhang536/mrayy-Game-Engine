@@ -31,7 +31,7 @@ namespace video{
 	};
 
 ITexture::ITexture(ETextureType type,bool internal):m_type(type),m_BilinearFilter(0),m_resourceCreated(false),
-	m_TrilinearFilter(1),m_MipmapFilter(1),m_AnisotropicFilter(0),m_isRenderTarget(false),m_internal(internal)
+m_TrilinearFilter(1), m_MipmapFilter(1), m_AnisotropicFilter(0), m_isRenderTarget(false), m_internal(internal), m_format(EPixel_R8G8B8A8)
 {
 	m_pixelFormat=new UnkownPixelFormat();
 	m_size=1;

@@ -36,7 +36,8 @@ namespace mray
 namespace TBee
 {
 #define ToMap_CODE 0x100
-#define ToCamera_CODE 0x101
+#define ToLocalCamera_CODE 0x101
+#define ToRemoteCamera_CODE 0x102
 
 	class Application;
 class LoginScreenState:public IRenderingState,public IDelegateContainer
@@ -65,10 +66,14 @@ protected:
 	float m_exitTimeOut;
 	db::SQLConnectData* m_connectionData;
 
+	
+
 
 	void OnLoginPressed(IObject* caller,void* args);
 	void OnExitPressed(IObject* caller,void* args);
 	void OnSeeThroughPressed(IObject* caller,void* args);
+	void OnConnectRemotePressed(IObject* caller, void* args);
+	void OnConnectLocalPressed(IObject* caller, void* args);
 
 	void _OnConnectionCallback(db::ISQLConnection*c,bool res,void* ud);
 	void _OnAuthenticatingCallback(db::ISQLConnection*c,db::ISQLResult* res,void* ud);

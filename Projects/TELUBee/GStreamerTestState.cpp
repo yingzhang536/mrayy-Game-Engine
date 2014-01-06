@@ -15,7 +15,7 @@ GStreamerTestState::GStreamerTestState()
 	m_providers = new GStreamVideoProvider();
 
 	//m_providers->LoadMovie("http://docs.gstreamer.com/media/sintel_trailer-480p.webm");
-	 m_providers->ConnectToCameras("192.168.10.46",5001,5000);
+	 //m_providers->ConnectToCameras("192.168.10.46",5000,5002,5001);
 }
 
 

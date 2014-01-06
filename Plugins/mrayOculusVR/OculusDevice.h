@@ -81,6 +81,8 @@ public:
 
 	void StartMagManualCalibration();
 	void SetMagAutoCalibration();
+
+	void ResetOrientation();
 };
 
 }

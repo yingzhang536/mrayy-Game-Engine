@@ -45,7 +45,9 @@ LoginScreenState::LoginScreenState()
 
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState,this,OnLoginPressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState,this,OnExitPressed));
-	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState,this,OnSeeThroughPressed));
+	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnSeeThroughPressed));
+	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectLocalPressed));
+	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectRemotePressed));
 }
 LoginScreenState::~LoginScreenState()
 {
@@ -53,6 +55,24 @@ LoginScreenState::~LoginScreenState()
 	delete m_connectionData;
 }
 
+void LoginScreenState::OnConnectRemotePressed(IObject* caller, void* args)
+{
+	m_state = EDone;
+	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
+	m_exitTimeOut = 0;
+	m_exitCode = ToRemoteCamera_CODE;
+
+	return;
+}
+void LoginScreenState::OnConnectLocalPressed(IObject* caller, void* args)
+{
+	m_state = EDone;
+	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
+	m_exitTimeOut = 0;
+	m_exitCode = ToLocalCamera_CODE;
+
+	return; 
+}
 
 void LoginScreenState::OnLoginPressed(IObject* caller,void* args)
 {
@@ -84,7 +104,7 @@ void LoginScreenState::OnExitPressed(IObject* caller,void* args)
 }
 void LoginScreenState::OnSeeThroughPressed(IObject* caller,void* args)
 {
-	m_exitCode=ToCamera_CODE;
+	m_exitCode=ToLocalCamera_CODE;
 }
 void LoginScreenState::InitState(Application* app)
 {

@@ -33,8 +33,8 @@ extern void *netsec_request;
 extern int netsec_requestlen;
 #endif // NETSEC
 
-#define DMSG(x,y)
-#define TRACE(x,y)
+#define DMSG(x,y) printf(y);
+#define TRACE(x,y)printf(x,y);
 #define ASSERT(x) FATAL_ERROR(!x,#x)
 
 
@@ -436,6 +436,23 @@ namespace network
 		}
 #endif
 	}  // end Win32UDPClient::RecvFrom()
+
+	UDPClientError Win32UDPClient::GetAvailableBytes(unsigned int* len)
+	{
+
+		int result = Win32Network::inner_receivefrom(handle, 0, (int)*len, 0,MSG_PEEK);
+		if (result < 0)
+		{
+			*len = 0;
+			return UDP_SOCKET_ERROR_RECV;
+		}
+		else
+		{
+			return UDP_SOCKET_ERROR_NONE;
+		}
+	}
+
+
 	void Win32UDPClient::OnReceive()
 	{
 		FATAL_ERROR(!(owner && recv_handler),"Client owner doesn't exist");

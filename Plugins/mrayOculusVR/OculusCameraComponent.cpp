@@ -67,7 +67,7 @@ void OculusCameraComponent::Update(float dt)
 
 	if(m_vp->getCamera())
 	{
-		m_vp->getCamera()->setFovY(fov);
+	//	m_vp->getCamera()->setFovY(fov);
 		m_vp->getCamera()->setAspect(aspectRatio);
 		m_vp->getCamera()->setAutoUpdateAspect(false);
 		const math::matrix4x4& pm=m_vp->getCamera()->getProjectionMatrix();

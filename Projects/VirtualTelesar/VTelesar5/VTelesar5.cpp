@@ -11,7 +11,7 @@
 
 // #include <vld.h>
 // #include <vldapi.h>
-
+#include "DirectShowVideoGrabber.h"
 
 using namespace mray;
 using namespace core;
@@ -61,11 +61,29 @@ APPLICATION_ENTRY_POINT
 	op.value="COM3";
 	extraOptions.push_back(op);
 	op.valueSet.clear();
-	op.name="Camera";
-	op.value="USB";
-	op.valueSet.insert("USB");
-	op.valueSet.insert("FlyCapture");
-	extraOptions.push_back(op);
+
+	for (int j = 0; j < 2; ++j)
+	{
+		op.name = "Camera" + core::StringConverter::toString(j);
+		video::DirectShowVideoGrabber ds;
+		int camsCount = ds.ListDevices();
+		for (int i = 0; i<camsCount; ++i)
+		{
+			op.valueSet.insert(core::StringConverter::toString(i) + " - " + ds.GetDeviceName(i));
+		}
+		if (op.valueSet.size()>0)
+		{
+			op.value = *op.valueSet.begin();
+		}
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+// 
+// 	op.name="Camera";
+// 	op.value="USB";
+// 	op.valueSet.insert("USB");
+// 	op.valueSet.insert("FlyCapture");
+// 	extraOptions.push_back(op);
 	op.valueSet.clear();
 	op.name="Physics";
 	op.value="No";

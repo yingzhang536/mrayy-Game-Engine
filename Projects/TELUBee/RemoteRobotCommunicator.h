@@ -43,6 +43,8 @@ public:
 	virtual void Update(float dt);
 
 	void SetData(const core::string &key, const core::string &value);
+	void RemoveData(const core::string &key);
+	void ClearData();
 
 	void LoadFromXml(xml::XMLElement* e);
 };

@@ -98,6 +98,8 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CMySink.h" />
+    <ClInclude Include="CMySrc.h" />
     <ClInclude Include="GStreamerManager.h" />
     <ClInclude Include="GStreamerPlayback.h" />
     <ClInclude Include="ofGstUtils.h" />
@@ -107,6 +109,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMySink.cpp" />
+    <ClCompile Include="CMySrc.cpp" />
     <ClCompile Include="GStreamerManager.cpp" />
     <ClCompile Include="GStreamerPlayback.cpp" />
     <ClCompile Include="ofGstUtils.cpp" />

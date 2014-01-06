@@ -30,7 +30,7 @@ public:
 	virtual~GStreamVideoProvider();
 
 	void LoadMovie(const core::string& path);
-	virtual void ConnectToCameras(const core::string& ip, int remotePort, int localPort);
+	virtual void ConnectToCameras(const core::string& ip, int videoPort,int audioPort, int localPort);
 	virtual void Disconnect();
 	virtual bool IsConnected();
 

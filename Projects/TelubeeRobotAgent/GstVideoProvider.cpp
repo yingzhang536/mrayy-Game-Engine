@@ -22,9 +22,17 @@
 #include "IUDPClient.h"
 #include "INetwork.h"
 
+#include <time.h>
+
+#include <windows.h>
+#include "CMySink.h"
+#include "CMySrc.h"
+
+
 namespace mray
 {
 
+	int m_frameRate = 30;
 	static bool plugin_registered = false;
 	static bool gst_inited = false;
 class GstVideoProviderImpl
@@ -36,24 +44,43 @@ public:
 	GstElement  *		gstSink;
 	GstElement 	*		gstPipeline;
 	GstBus*		bus;
-	GTimer*		timer;
+	double		m_time;
 	bool				bPlaying;
 	bool				bLoaded;
 	bool				bPaused;
 	bool isAppSink;
 
+	bool m_isLocal;
+	bool m_streamAudio;
+
+	ulong m_lastBufferID;
+	float m_timeAcc;
+	int m_frames;
+	int m_wasted;
+
 	int sourceid;
 
-	video::IVideoGrabber* src;
+	GstVideoGrabber* src;
 
-	network::IUDPClient* m_udpClient;
+	network::IUDPClient* m_udpClient[2];
 	network::NetAddress m_targetAddress;
+	int m_targetPorts[2];
+
+#define SENDING_BLOCK 4096
+	char m_sendingBuffer[SENDING_BLOCK];
+	int m_dataOffset;
 
 	ulong m_counter;
 public:
 
 	static gboolean push_data(GstVideoProviderImpl *data) {
-		data->NeedData();
+		//data->NeedData();
+		GstBuffer* buffer;// = gst_buffer_new();
+		if(data->NeedData(&buffer))
+		{
+			gst_app_src_push_buffer((GstAppSrc*)(data->gstSrc), buffer);
+		}
+
 #if 0
 
 		GstBuffer *buffer;
@@ -131,7 +158,8 @@ public:
 
 	/* This signal callback triggers when appsrc needs data. Here, we add an idle handler
 	* to the mainloop to start pushing data into the appsrc */
-	static void start_feed(GstElement *source, guint size, GstVideoProviderImpl *data) {
+	static void start_feed(GstAppSrc *source, guint size, gpointer d) {
+		GstVideoProviderImpl* data = (GstVideoProviderImpl*)d;
 		if (data->sourceid == 0) {
 			data->sourceid = g_idle_add((GSourceFunc)push_data, data);
 		}
@@ -139,24 +167,45 @@ public:
 
 	/* This callback triggers when appsrc has enough data and we can stop sending.
 	* We remove the idle handler from the mainloop */
-	static void stop_feed(GstElement *source, GstVideoProviderImpl *data) {
+	static void stop_feed(GstAppSrc *source, gpointer d) {
+		GstVideoProviderImpl* data = (GstVideoProviderImpl*)d;
+
 		if (data->sourceid != 0) {
+	//		printf("Stop Feed\n");
 			g_source_remove(data->sourceid);
 			data->sourceid = 0;
 		}
 	}
-
+	static GstFlowReturn need_buffer(GstMySrc *source, gpointer data, GstBuffer ** buffer) {
+		GstVideoProviderImpl* app = (GstVideoProviderImpl*)data;
+		app->NeedData(buffer);
+		return GST_FLOW_OK;
+	}
 	/* The appsink has received a buffer */
-	static GstFlowReturn new_buffer(GstAppSink * sink, void * data) {
-		GstBuffer *buffer;
-
+	static GstFlowReturn new_buffer(GstMySink * sink, gpointer data,GstBuffer* buffer) {
+		//GstBuffer *buffer;
 		/* Retrieve the buffer */
-		g_signal_emit_by_name(sink, "pull-buffer", &buffer);
+	//	buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
+		//g_signal_emit_by_name(sink, "pull-buffer", &buffer);
 		if (buffer) {
 			/* The only thing we do in this example is print a * to indicate a received buffer */
 			//	Sleep(10);
-			((GstVideoProviderImpl*)data)->SendData(buffer);
-			gst_buffer_unref(buffer);
+			((GstVideoProviderImpl*)data)->SendData(buffer,0);
+			//gst_buffer_unref(buffer);
+		}
+		return GST_FLOW_OK;
+	}
+
+	static GstFlowReturn new_audiobuffer(GstMySink * sink, gpointer data, GstBuffer* buffer) {
+		//GstBuffer *buffer;
+		/* Retrieve the buffer */
+		//	buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
+		//g_signal_emit_by_name(sink, "pull-buffer", &buffer);
+		if (buffer) {
+			/* The only thing we do in this example is print a * to indicate a received buffer */
+			//	Sleep(10);
+			((GstVideoProviderImpl*)data)->SendData(buffer,1);
+			//gst_buffer_unref(buffer);
 		}
 		return GST_FLOW_OK;
 	}
@@ -169,131 +218,366 @@ public:
 		if (buffer) {
 			/* The only thing we do in this example is print a * to indicate a received buffer */
 
-			guint8* data = GST_BUFFER_DATA(buffer);
-			int size = GST_BUFFER_SIZE(buffer);
+			//((GstVideoProviderImpl*)data)->SendData(buffer,0);
 			gst_buffer_unref(buffer);
 		}
 		return GST_FLOW_OK;
 	}
 public:
+	uchar *pixels;
 
+	int pixelsCount;
 	GstVideoProviderImpl()
 	{
 
 
 		if (!gst_inited){
 			gst_init(NULL, NULL);
+
 			gst_inited = true;
 			gLogManager.log("ofGstUtils - gstreamer inited", ELL_INFO, EVL_Heavy);
 		}
-		/*
+		
 		if (!plugin_registered){
 			gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
-				"appsink", (char*)"Element application sink",
-				appsink_plugin_init, "0.1", "LGPL", "ofVideoPlayer", "openFrameworks",
-				"http://openframeworks.cc/");
+				"mysink", (char*)"Element application sink",
+				_GstMySinkClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+				"");
+			gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
+				"mysrc", (char*)"Element application src",
+				_GstMySrcClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+				"");
 			plugin_registered = true;
-		}*/
+		}
 
 		bPlaying = false;
 		bLoaded = false;
 		bPaused = false;
 		sourceid = 0;
-		timer = g_timer_new();
+		m_time = 0;
+		m_dataOffset = 0;
 
-		m_udpClient = network::INetwork::getInstance().createUDPClient();
+		m_udpClient[0] = 0;
+		m_udpClient[1] = 0;
+		pixels = 0;
+		pixelsCount = 0;
 
+		m_isLocal = false;
+		m_streamAudio = true;
 
 	}
 	virtual~GstVideoProviderImpl()
 	{
 		Stop();
+		delete[]pixels;
 	}
 
-	bool NeedData()
+	bool NeedData(GstBuffer** b)
 	{
-		gdouble ms = g_timer_elapsed(timer, NULL);
-		if (ms < 1.0 / 20.0)
-			return true;
-		if (!src->GrabFrame())return true;
-		const video::ImageInfo* image= src->GetLastFrame();
+		double t = gTimer.getActualTimeAccurate();
+		double ms = t-m_time;
+		if (ms < 1000.0 / (m_frameRate))
+		{
+			//printf("-");
+			return false;
+		}
 
+
+		src->Lock();
+
+		if (src->GetGrabber()->GetBufferID()==m_lastBufferID)
+		{
+			m_wasted++;
+			//printf("-");
+			src->Unlock();
+			return false;
+		}
+		m_lastBufferID = src->GetGrabber()->GetBufferID();
 		GstBuffer* buffer = gst_buffer_new();
-		GST_BUFFER_SIZE(buffer) = image->imageDataSize;
-		GST_BUFFER_DATA(buffer) = image->imageData;
-		GST_BUFFER_TIMESTAMP(buffer) = gst_util_uint64_scale(m_counter, GST_SECOND, 1);
-		++m_counter;
-//		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(image->imageDataSize, GST_SECOND, 1);
-		
-		GstFlowReturn ret;
-		g_signal_emit_by_name(gstSrc, "push-buffer", buffer, &ret);
+		const video::ImageInfo* image = src->GetGrabber()->GetLastFrame();
+		if (image->imageDataSize != pixelsCount)
+		{
+			pixelsCount = image->imageDataSize;
+			pixels = new uchar[image->imageDataSize];
+		}
+		//	GST_BUFFER_SIZE(buffer) = 1280 * 720 * 3;
+		//	GST_BUFFER_DATA(buffer) = pixels;
+		memcpy(pixels, image->imageData, pixelsCount);
 
+
+		src->Unlock();
+
+		GST_BUFFER_SIZE(buffer) = pixelsCount;
+		GST_BUFFER_DATA(buffer) = pixels;
+		m_timeAcc += ms;
+		m_time = t;
+		m_frames++;
+		if (m_timeAcc >= 1000)
+		{
+			printf("%d/%d, ", m_frames,m_wasted);
+			m_timeAcc -= 1000;
+			m_frames = 0;
+			m_wasted = 0;
+		}
+
+		//time_t  now = time(0);
+
+		//memcpy(GST_BUFFER_DATA(buffer), image->imageData, image->imageDataSize);
+		// 		GST_BUFFER_TIMESTAMP(buffer) = gst_util_uint64_scale(m_counter, GST_SECOND, m_frameRate);//m_counter * GST_SECOND/20;// 
+		// 
+		// 		++m_counter;
+		// 		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+
+		GstFlowReturn ret=GST_FLOW_OK;
+		//g_signal_emit_by_name(gstSrc, "push-buffer", buffer, &ret);
+		//gst_buffer_unref(buffer);
+		//	printf("trying\n");
+#if 0
+
+		time_t  now = time(0);
+
+		//memcpy(GST_BUFFER_DATA(buffer), image->imageData, image->imageDataSize);
+		GST_BUFFER_TIMESTAMP(buffer) = gst_util_uint64_scale(m_counter, GST_SECOND, m_frameRate);//m_counter * GST_SECOND/20;// 
+
+		++m_counter;
+		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+
+		GstFlowReturn ret;
+		//g_signal_emit_by_name(gstSrc, "push-buffer", buffer, &ret);
+		ret = gst_app_src_push_buffer((GstAppSrc*)(gstSrc), buffer);
+
+
+#endif
+		//printf("+ ");
+		*b = GST_BUFFER_CAST(buffer);
+
+		//gst_buffer_unref(buffer);
 		/* Free the buffer now that we are done with it */
 		if (ret != GST_FLOW_OK) {
 			/* We got some error, stop sending data */
 			return FALSE;
 		}
-		g_timer_start(timer);
+
+
 		return true;
 	}
 
-	void SendData(GstBuffer* buffer)
+	bool NeedData()
+	{
+		GstBuffer* buffer;// = gst_buffer_new();
+		return NeedData(&buffer);
+	}
+	bool NeedDataApp()
+	{
+		GstBuffer* buffer;// = gst_buffer_new();
+		return NeedData(&buffer);
+	}
+
+	void SendData(GstBuffer* buffer,int index)
 	{
 		guint8* data = GST_BUFFER_DATA(buffer);
 		int size = GST_BUFFER_SIZE(buffer);
-		m_udpClient->SendTo(&m_targetAddress, (char*)data, size);
-		printf("data sent: %d\n", size);
+		network::NetAddress addr;
+		addr.address = m_targetAddress.address;
+		addr.port = m_targetPorts[index];
+		m_udpClient[index]->SendTo(&addr, (char*)data, size);
+//		printf("data sent: %d\n", size);
+
+		//printf("[%d] ", index);
+
+		return;
+		int remaining = size;
+		int offset = 0;
+		while (remaining > 0)
+		{
+			int bytes=math::Min<int>(SENDING_BLOCK-m_dataOffset,remaining);
+			memcpy(m_sendingBuffer, data + offset, bytes);
+			remaining -= bytes;
+			offset += bytes;
+			m_dataOffset += bytes;
+			if (m_dataOffset >= SENDING_BLOCK)
+			{
+				m_udpClient[index]->SendTo(&m_targetAddress, (char*)m_sendingBuffer, SENDING_BLOCK);
+				m_dataOffset = 0;
+			}
+		}
 	}
 
-	void SetDataSource(video::IVideoGrabber* src)
+	void EnableAudio(bool a)
+	{
+		m_streamAudio = a;
+	}
+	void SetNetworkType(bool isLocal)
+	{
+		m_isLocal = isLocal;
+	}
+	void SetDataSource(GstVideoGrabber* src)
 	{
 		this->src = src;
 	}
-	void StreamDataTo(const network::NetAddress& target)
+	void StreamDataTo(const network::NetAddress& target, int videoPort, int audioPort)
 	{
 		m_targetAddress = target;
+		m_targetPorts[0] = videoPort;
+		m_targetPorts[1] = audioPort;
 	}
 
-	bool Start()
+	bool Start(EStreamingQuality quality)
 	{
 		close();
 		startGstMainLoop();
+		GError* err = 0;
+		m_frameRate = 15;
+		m_timeAcc = 0;
+		m_frames = 0;
+		core::string gstString = "appsrc name=src   ! ffmpegcolorspace name = mpeg  ! theoraenc"// bitrate=8192, speed-level=1, keyframe-auto=false, keyframe-freq=20"// 
+			"!rtptheorapay name = pay ! .send_rtp_sink gstrtpsession .send_rtp_src "// "
+			//x264enc profile=high444 speed-preset=ultrafast bitrate=1024 byte-stream=true name = enc !rtph264pay queue-delay=0 name = pay"
+			"  ! appsink name = sink ";// !appsink name = sink sync = false", NULL); sync = false
 
+		//gstString = "appsrc name=src  ! ffmpegcolorspace name = mpeg ! videorate !  x264enc name=enc speed-preset=ultrafast sliced-threads=true  ! rtph264pay name=pay !  appsink name=sink ";//bitrate=1024  
+		//gstString = "appsrc name=src  ! ffmpegcolorspace name = mpeg ! theoraenc name=enc !   appsink name=sink sync=false";//rtptheorapay name=pay !
+		//gstString = "appsrc name=src ! ffmpegcolorspace!  vp8enc  name=enc ! rtpvp8pay name=pay !  appsink name=sink sync=false";
+		// profile=high  pass=0
+		gstString = "mysrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc profile=baseline pass=qual quantizer=10 speed-preset=ultrafast bitrate=6144 sliced-threads=true ! rtph264pay mtu=1400 ! fakesink name=sink1 sync=false";
+		//gstString = "appsrc name=src !  video/x-raw-rgb, width=1408,height=1152,framerate=25/1 !ffmpegcolorspace !  ffenc_h263 name=enc !  rtph263pay name=pay ! rtph263depay ! ffdec_h263! autovideosink name=sink ";//bitrate=1024  
+		// 
+		core::string pass="pass1";
+		int quanizer=20;
+		int bitrate=2048;
+		int mu = 1400;
+		switch (quality)
+		{
+		case EStreamingQuality::UltraLow:
+			pass = "pass1";
+			quanizer = 40;
+			bitrate = 1000;
+			m_frameRate = 15;
+			break;
+		case EStreamingQuality::Low:
+			pass = "pass1";
+			quanizer = 30;
+			bitrate = 1000;
+			m_frameRate = 20;
+			break;
+		case EStreamingQuality::Medium:
+			pass = "qual";
+			quanizer = 20;
+			bitrate = 2000;
+			m_frameRate = 25;
+			break;
+		case EStreamingQuality::High:
+			pass = "qual";
+			quanizer = 10;
+			bitrate = 3000;
+			m_frameRate = 25;
+			break;
+		case EStreamingQuality::UltraHigh:
+			pass = "qual"; 
+			quanizer = 5;
+			bitrate = 4000;
+			m_frameRate = 25;
+			break;
+		default:
+			break;
+		}
+		if (m_isLocal)
+			mu = 1400*5;
+// 		pass = "pass1";
+ 		m_frameRate = 25;
+		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc rc-lookahead=1 cabac=true pass=" + pass +
+			" quantizer=" + core::StringConverter::toString(quanizer) +
+			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			"  ! rtph264pay mtu=1400 ! mysink name=sink sync=false " ;
 
-		gstPipeline = gst_parse_launch("appsrc name=src ! ffmpegcolorspace name = mpeg !x264enc name = enc  !rtph264pay name = pay !appsink name = sink", NULL);
+		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode
+		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc "// rc - lookahead = 1 cabac = true pass = " + pass +
+			//" quantizer=" + core::StringConverter::toString(quanizer) +
+			"   speed-preset=ultrafast "// sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			"  ! rtph264pay mtu=1400 ! tee name=videoTee " 
+			" dshowaudiosrc ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=2!  audioconvert  ! audioresample ! vorbisenc  !tee name=audioTee "  //oggmux max-delay=50 max-page-delay=50 
+			"videoTee. ! queue ! mysink name=sink sync=false " 
+			"audioTee. ! queue ! mysink name=audiosink sync=false";
+
+		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode, rc-lookahead=1 cabac=true
+		gstString = "appsrc name=src ! queue! ffmpegcolorspace! videorate!   x264enc  name=enc pass=" + pass +
+			"  quantizer=" + core::StringConverter::toString(quanizer) +
+			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			" tune=zerolatency"
+			"  ! rtph264pay mtu=" + core::StringConverter::toString(mu) + 
+			" ! mysink name=sink sync=false ";
+
+		if (m_streamAudio)
+			gstString+=" dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert   !audioresample ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+		//audio/x-raw-int, endianness=1234, signed=true, width=16, depth=16, rate=22000, channels=1
+		//vorbisenc  !
+
+		printf("Connection String: %s\n", gstString.c_str());
+		gstPipeline = gst_parse_launch(gstString.c_str(), &err);// !appsink name = sink sync = false", NULL); sync = false
 		if (!gstPipeline)
 		{
 			gLogManager.log("pipleine couldn't be created!",ELL_ERROR);
 			return false;
 		}
+
 		gstSrc = gst_bin_get_by_name(GST_BIN(gstPipeline), "src");
 		GstElement* mpg = gst_bin_get_by_name(GST_BIN(gstPipeline), "mpeg");
 		GstElement* enc = gst_bin_get_by_name(GST_BIN(gstPipeline), "enc");
 		GstElement* pay = gst_bin_get_by_name(GST_BIN(gstPipeline), "pay");
 		GstElement* sink = gst_bin_get_by_name(GST_BIN(gstPipeline), "sink");
+		GstMySink* audioSink = GST_MYSINK(gst_bin_get_by_name(GST_BIN(gstPipeline), "audiosink"));
 		gstSink = sink;
 		g_signal_connect(gstPipeline, "deep-notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
 
-		g_signal_connect(gstSrc, "need-data", G_CALLBACK(start_feed), this);
-		g_signal_connect(gstSrc, "enough-data", G_CALLBACK(stop_feed), this);
+// 
+// 		g_signal_connect(gstSrc, "need-data", G_CALLBACK(start_feed), this);
+// 		g_signal_connect(gstSrc, "enough-data", G_CALLBACK(stop_feed), this);
 
-		/* Configure appsink */
+		GstMySink* mySink = GST_MYSINK(sink);
+		mySink->new_buffer = new_buffer;
+		mySink->data = this;
+		if (audioSink)
+		{
+			audioSink->new_buffer = new_audiobuffer;
+			audioSink->data = this;
+		}
+#if 0
+		GstMySrc* mySrc = GST_MySRC(gstSrc);
+		mySrc->need_buffer = need_buffer;
+		mySrc->data = this;
+#endif
+		g_object_set(sink, "emit-signals", false, "sync", false, NULL);
+		g_object_set(G_OBJECT(gstSink), "sync", FALSE, "async", FALSE, (void*)NULL);
+		g_object_set(gstSrc, "emit-signals", false, NULL);
 
-		g_object_set(sink, "emit-signals", TRUE, NULL);
- //		g_signal_connect(sink, "new-buffer", G_CALLBACK(new_buffer), this);
+//  		g_signal_connect(sink, "new-buffer", G_CALLBACK(new_buffer), this);
 // 		g_signal_connect(sink, "new-preroll", G_CALLBACK(new_preroll), this);
-		g_object_set(G_OBJECT(sink), "async", FALSE, "sync", FALSE, NULL);
-	
-		g_object_set(G_OBJECT(gstSink), "emit-signals", FALSE, "sync", FALSE, (void*)NULL);
-		//gst_app_sink_set_drop(GST_APP_SINK(gstSink),1);
-		//gst_app_sink_set_max_buffers(GST_APP_SINK(gstSink),2);
 
 		GstAppSinkCallbacks gstCallbacks;
 		gstCallbacks.eos = 0;
-		gstCallbacks.new_preroll = &new_preroll;
-		gstCallbacks.new_buffer = &new_buffer;
+		gstCallbacks.new_preroll = 0;// &new_preroll;
+		//gstCallbacks.new_buffer = &new_buffer;
 
-		gst_app_sink_set_callbacks(GST_APP_SINK(gstSink), &gstCallbacks, this, NULL);
+
+		GstAppSrcCallbacks srcCB;
+		srcCB.need_data = &start_feed;
+		srcCB.enough_data = &stop_feed;
+		srcCB.seek_data = 0;
+
+
+		//gst_app_sink_set_callbacks(GST_APP_SINK(gstSink), &gstCallbacks, this, NULL);
+		
+#if 1
+		gst_base_sink_set_sync(GST_BASE_SINK(sink), false);
+		gst_app_sink_set_max_buffers(GST_APP_SINK(sink), -1);
+		gst_app_sink_set_drop(GST_APP_SINK(sink), true);
+		gst_base_sink_set_max_lateness(GST_BASE_SINK(sink), -1);
+		gst_app_src_set_callbacks(GST_APP_SRC(gstSrc), &srcCB, this, NULL);
+
+#endif
+		/* Configure appsink */
+
+	
 
 		GstCaps* caps;
 		/*
@@ -305,21 +589,56 @@ public:
 			"height", G_TYPE_INT, src->GetFrameSize().y,
 			NULL);
 		*/
-		caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetFrameSize().x, src->GetFrameSize().y, 10, 1, 4, 3);
+		caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y, m_frameRate, 1, 4, 3);
+		//g_object_set(gstSrc, "caps", caps, NULL);
 		gst_app_src_set_caps(GST_APP_SRC(gstSrc), caps);
-		
+		gst_caps_unref(caps);
+
+// 		caps = gst_caps_new_simple("application/x-rtp",
+// 			"media", G_TYPE_STRING, "video",
+// 			"clock-rate", G_TYPE_INT, 90000,
+// 			"payload", G_TYPE_INT, 96,
+// 			"encoding-name", G_TYPE_STRING, "H264",
+// 			NULL);
+// 		g_object_set(sink, "caps", caps, NULL);
+
+//		gst_caps_unref(caps);
 		m_counter = 0;
-		m_udpClient->Close();
-		m_udpClient->Open();
-	//	setPipelineWithSink(gstPipeline, sink, true);
-		startPipeline();
+		m_wasted = 0;
+		m_lastBufferID = -1;
+		try
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				m_udpClient[i] = network::INetwork::getInstance().createUDPClient();
+				m_udpClient[i]->Open();
+			}
+		}
+		catch (std::exception& e)
+		{
+			printf("%s\n", e.what());
+		}
+		printf("Setting Pipeline\n");
+		setPipelineWithSink(gstPipeline, sink, true);
+		if (!startPipeline())
+		{
+			printf("Failed to start pipeline!\n");
+			return false;
+		}
 		play();
+
+		printf("Pipeline is created and ready to stream!\n");
 		return true;
 	}
 	void Stop()
 	{
+		if (!bLoaded)
+			return;
 		close();
-		delete m_udpClient;
+		delete m_udpClient[0];
+		delete m_udpClient[1];
+		m_udpClient[0] = 0;
+		m_udpClient[1] = 0;
 
 	}
 
@@ -331,7 +650,7 @@ public:
 		gstSink = sink;
 
 		if (gstSink){
-			gst_base_sink_set_sync(GST_BASE_SINK(gstSink), true);
+		//	gst_base_sink_set_sync(GST_BASE_SINK(gstSink), true);
 		}
 
 		if (gstSink && core::string(gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(gst_element_get_factory(gstSink)))) == "appsink"){
@@ -352,6 +671,7 @@ public:
 			gLogManager.log("ofGstUtils - startPipeline(): unable to set pipeline to ready", ELL_WARNING);
 			return false;
 		}
+		
 		if (gst_element_get_state(GST_ELEMENT(gstPipeline), NULL, NULL, 10 * GST_SECOND) == GST_STATE_CHANGE_FAILURE){
 			gLogManager.log("ofGstUtils - startPipeline(): unable to get pipeline ready status", ELL_WARNING);
 			return false;
@@ -388,7 +708,8 @@ public:
 			gstPipeline = NULL;
 			gstSink = NULL;
 		}
-
+		
+		stopGstMainLoop();
 		bLoaded = false;
 
 	}
@@ -435,16 +756,32 @@ public:
 		bPlaying = false;
 		bPaused = true;
 	}
+	static bool loop_initialized ;
+
 	static void startGstMainLoop(){
-		static bool initialized = false;
-		if (!initialized){
+		if (!loop_initialized){
 			mainLoop = new GstMainLoopThread;
 
 			mainLoopThread = OS::IThreadManager::getInstance().createThread(mainLoop);
 			mainLoopThread->start(0);
 			//mainLoop->start();
-			initialized = true;
+			loop_initialized = true;
 		}
+	}
+
+
+	static void stopGstMainLoop(){
+
+		if (!loop_initialized)
+			return;
+		if (!mainLoopThread)
+			return;
+
+		g_main_loop_quit(mainLoop->main_loop);
+		OS::IThreadManager::getInstance().killThread(mainLoopThread);
+		delete mainLoopThread;
+		mainLoopThread = 0;
+		loop_initialized = false;
 	}
 
 	static GMainLoop * getGstMainLoop(){
@@ -487,6 +824,8 @@ public:
 
 GstVideoProviderImpl::GstMainLoopThread * GstVideoProviderImpl::mainLoop = 0;
 OS::IThread * GstVideoProviderImpl::mainLoopThread = 0;
+
+bool GstVideoProviderImpl::loop_initialized = false;
 
 
 bool GstVideoProviderImpl::HandleMessage(GstBus * bus, GstMessage * msg){
@@ -579,6 +918,7 @@ bool GstVideoProviderImpl::HandleMessage(GstBus * bus, GstMessage * msg){
 GstVideoProvider::GstVideoProvider()
 {
 	m_impl = new GstVideoProviderImpl;
+	m_connected = 0;
 }
 
 GstVideoProvider::~GstVideoProvider()
@@ -587,25 +927,39 @@ GstVideoProvider::~GstVideoProvider()
 }
 
 
-void GstVideoProvider::SetDataSource(video::IVideoGrabber* src)
+void GstVideoProvider::SetDataSource(GstVideoGrabber* src)
 {
 	m_impl->SetDataSource(src);
 }
 
-void GstVideoProvider::StreamDataTo(const network::NetAddress& target)
+void GstVideoProvider::StreamDataTo(const network::NetAddress& target, int videoPort, int audioPort)
 {
-	m_impl->StreamDataTo(target);
+	m_impl->StreamDataTo(target,videoPort,audioPort);
 }
 
-
-void GstVideoProvider::Start()
+void GstVideoProvider::EnableAudio(bool a)
 {
-	m_impl->Start();
+	m_impl->EnableAudio(a);
+}
+void GstVideoProvider::SetNetworkType(bool isLocal)
+{
+	m_impl->SetNetworkType(isLocal);
+}
+
+void GstVideoProvider::Start(EStreamingQuality quality)
+{
+	m_connected = true;
+	m_impl->Start(quality);
 }
 
 void GstVideoProvider::Stop()
 {
+	m_connected = false;
 	m_impl->Stop();
+}
+bool GstVideoProvider::IsConnected()
+{
+	return m_connected;
 }
 
 }

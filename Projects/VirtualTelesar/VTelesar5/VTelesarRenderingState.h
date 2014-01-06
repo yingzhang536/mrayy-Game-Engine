@@ -32,7 +32,7 @@
 #include "ViewportListener.h"
 
 #include "GhostProxyManager.h"
-#include "CameraTextureSource.h"
+#include "CameraCorrectionGrabber.h"
 
 #include "OculusManager.h"
 #include "OculusDevice.h"
@@ -58,6 +58,7 @@ protected:
 		Object
 	};
 
+
 	GCPtr<physics::IPhysicManager>		m_phManager;
 	GCPtr<game::GameEntityManager> m_gameManager;
 	GCPtr<scene::ISceneManager>		m_sceneManager;
@@ -79,7 +80,8 @@ protected:
 	GCPtr<scene::ViewPort> m_3rdVP;
 	GCPtr<VT::ContactCollisionDebugger> m_collisionDebugger;
 	GCPtr<scene::IDebugDrawManager> m_debugRenderer;
-	GCPtr<video::CameraTextureSource> m_cameraSource[2];
+	//GCPtr<video::CameraTextureSource> m_cameraSource[2];
+	GCPtr<CameraCorrectionGrabber> m_cameraSource[2];
 
 	GCPtr<OS::IThread> m_physicsUpdateThread;
 
@@ -114,9 +116,11 @@ protected:
 	int m_selectedObject;
 
 	GCPtr<video::OculusManager> m_oculusManager;
-	GCPtr<video::OculusDevice> m_oculusDevice;
+	video::OculusDevice* m_oculusDevice;
 	GCPtr<video::ParsedShaderPP> m_oculusRenderer[2];
 	game::OculusCameraComponent* m_oculusComponents[2];
+
+	bool m_seeThrough;
 
 
 	core::string m_modelName;

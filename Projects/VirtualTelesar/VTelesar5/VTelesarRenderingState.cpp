@@ -150,11 +150,13 @@ namespace VT
 			if(m_oculus)
 			{
 				math::quaternion q=m_oculus->GetOrientation();
-				q.x=-q.x;
-				q.y=-q.y;
-				q.z= q.z;
+// 				q.x= q.x;
+// 				q.y= q.y;
+// 				q.z= q.z;
 				//this->setOrintation(q);
-				resultQ=q;
+				math::vector3d angles;
+				q.toEulerAngles(angles);
+				resultQ.fromEulerAngles(angles.x,-angles.y,-angles.z);
 			}
 			resultQ*=m_orientation;
 			this->setOrintation(resultQ);
@@ -230,8 +232,8 @@ VTelesarRenderingState::VTelesarRenderingState()
 	m_closed=false;
 	m_collisionDebugger=new VT::ContactCollisionDebugger();
 	g_udpListener.m_owner=this;
-	m_cameraSource[0]=new video::CameraTextureSource();
-	m_cameraSource[1]=new video::CameraTextureSource();
+	m_cameraSource[0]=new CameraCorrectionGrabber(0);
+	m_cameraSource[1] = new CameraCorrectionGrabber(1);
 	m_previewRenderingSteps=false;
 	
 }
@@ -250,6 +252,8 @@ VTelesarRenderingState::~VTelesarRenderingState()
 	m_stereo=false;
 	m_viewMode=StereoCamera;
 	delete VT::DebugRenderSettings::DebugInterface;
+	m_oculusManager = 0;
+	m_seeThrough = false;
 }
 
 void VTelesarRenderingState::CreatePhysicsSystem()
@@ -499,6 +503,10 @@ void VTelesarRenderingState::_Reload(const core::string& scene)
 			ent->AddComponent(m_oculusComponents[1]);
 		}
 		ent->Initialize();
+
+
+		VT::VTAppGlobals::oculusComponents[0] = m_oculusComponents[0];
+		VT::VTAppGlobals::oculusComponents[1] = m_oculusComponents[1];
 	}
 	if(false)
 	{
@@ -537,6 +545,7 @@ void VTelesarRenderingState::InitState(Application* app)
 		PluginManager::getInstance().loadPluginsFromDir("VTPlugins");
 	}
 
+	m_seeThrough = false;
 	m_sceneManager=new scene::SceneManager(app->getDevice());
 	m_guiManager=new GUI::GUIManager(app->getDevice());
 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
@@ -559,7 +568,8 @@ void VTelesarRenderingState::InitState(Application* app)
 	{
 		//Create Oculus
 		m_oculusManager=new video::OculusManager();
-		m_oculusDevice=m_oculusManager->CreateDevice(0);
+		m_oculusDevice = m_oculusManager->CreateDevice(0);
+		VT::VTAppGlobals::oculusDevice = m_oculusDevice;
 	}
 
 	m_modelName="Skinned.xml";
@@ -593,11 +603,19 @@ void VTelesarRenderingState::InitState(Application* app)
  	gMaterialResourceManager.parseMaterialXML(gFileSystem.openFile("VT_materials.mtrl"));
 
 	{
+		xml::XMLTree tree;
+		if (tree.load("VTelesarSettings.xml"))
+			LoadFromXML(tree.getSubElement("Settings"));
+	}
+	{
 		HeadMount* hm=new HeadMount(m_sceneManager,1);
 		m_headMount=hm;
 		
 		m_vp[0]=new scene::ViewPort("Left",0,0,0,math::rectf(0,0,0.5,1),0);
 		m_vp[1]=new scene::ViewPort("Right",0,0,0,math::rectf(0.5,0,1,1),0);
+
+		m_vp[0]->setOnlyToRenderTarget(true);
+		m_vp[1]->setOnlyToRenderTarget(true);
 
 		m_3rdVP=new scene::ViewPort("3rdPerson",0,0,0,math::rectf(0.05,0.05,0.2,0.2),0);;
 
@@ -608,6 +626,7 @@ void VTelesarRenderingState::InitState(Application* app)
 	}
 	if(1)
 	{
+		/*
 		if(VTAppGlobals::FlipCameras==false)
 		{
 			m_cameraSource[0]->SetCameraInfo(0,640,480,30);
@@ -616,7 +635,7 @@ void VTelesarRenderingState::InitState(Application* app)
 		{
 			m_cameraSource[0]->SetCameraInfo(1,640,480,30);
 			m_cameraSource[1]->SetCameraInfo(0,640,480,30);
-		}
+		}*/
 		for(int i=0;i<2;++i)
 		{
 			m_cameraSource[i]->Load();
@@ -643,6 +662,7 @@ void VTelesarRenderingState::InitState(Application* app)
 // 	lensParams[0].LensParams.set(1,0.22,0.24,0);
 // 	lensParams[1].LensParams.set(1,0.22,0.24,0);
 // 	lensParams[0];
+
 
 	for(int i=0;i<c;++i)
 	{
@@ -773,6 +793,7 @@ void VTelesarRenderingState::InitState(Application* app)
 	if(VTAppGlobals::IsDebugging)
 		m_collisionDebugger->Init(m_gameManager);
 	//m_physicsUpdateThread->start(0);
+
 
 
 }
@@ -936,6 +957,11 @@ void VTelesarRenderingState::OnEvent(Event* event)
 					_Clear();
 					LoadEnvironment("Cubes.xml");
 					_Reload(m_modelName);
+				}
+
+				if (e->key == KEY_S)
+				{
+					m_seeThrough = !m_seeThrough;
 				}
 			}else		
 			{
@@ -1240,7 +1266,8 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 	scene::ViewPort* vp=Engine::getInstance().getDevice()->getViewport();
 	video::IVideoDevice* device=Engine::getInstance().getDevice();
 
-	video::ITexture* roboVis=_RenderRobotVision(left);
+	m_cameraSource[index]->SetTargetRect(rc.getSize());
+
 	if(m_firstrender && VT::VTAppGlobals::IsDebugging)
 	{
 		m_3rdVP->setAbsViewPort(math::rectf(0,m_current3rdVPSize.getSize()));
@@ -1250,67 +1277,98 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 	device->setViewport(vp);
 
 	{
+		video::ITexture* roboVis = 0;
+		if (!m_seeThrough)
+			roboVis = _RenderRobotVision(left);
 		device->setRenderTarget(m_finalRT[index],true,true,video::SColor(1,1,1,0));
 		device->useShader(0);
 		video::TextureUnit tex;
 
-		if(!m_previewRenderingSteps)
+		if (m_seeThrough)
+		{
+			if (m_oculusDevice->IsConnected())
+			{
+				math::matrix4x4 m, pm;
+				device->getTransformationState(video::TS_PROJECTION, m);
+				pm.f14 = m_oculusComponents[index]->GetPerspectiveOffset();
+				pm = pm*m;
+				device->setTransformationState(video::TS_PROJECTION, pm);
+			}
+			tex.SetTexture(m_cameraSource[index]->GetTexture());
+			device->useTexture(0, &tex);
+			device->draw2DImage(rc, video::DefaultColors::White);
+		}
+		else
 		{
 
-			if(roboVis)
+			device->set2DMode();
+			if (!m_previewRenderingSteps)
 			{
-				tex.SetTexture(roboVis);
-				device->useTexture(0,&tex);
-				device->draw2DImage(rc,video::DefaultColors::White);
-			}
 
-			if( VT::VTAppGlobals::IsDebugging)
-			{
-				if(m_3rdVP->getRenderOutput())
-					tex.SetTexture(m_3rdVP->getRenderOutput()->getColorTexture());
-				else tex.SetTexture(0);
-				math::rectf rc(m_current3rdVPSize);
-				device->useTexture(0,&tex);
-				device->draw2DImage(rc,video::DefaultColors::White);
-			}
-		}else
-		{
-			video::ITexturePtr textures[]={m_cameraSource[0]->GetTexture(),
-				m_maskExtractor[0]->getOutput()->getColorTexture(0),
-				m_maskExtractor[0]->getOutput()->getColorTexture(1),
-				roboVis};
-			bool flipTex[]={1,1,1,0};
-			core::string title[]={"Camera Image","Mask Image","Color Correction","Fused Image"};
-			GUI::IFont* font= gFontResourceManager.getDefaultFont();
-			GUI::FontAttributes attrs;
-			attrs.fontSize=24;
-			attrs.fontColor.Set(1,1,1,1);
-			attrs.fontAligment=GUI::EFA_TopLeft;
-
-			int r=2;
-			int c=2;
-			math::vector2d sz=rc.getSize();
-			sz.x/=c;
-			sz.y/=r;
-
-			math::rectf pRC;
-
-			for(int i=0;i<r;++i)
-			{
-				pRC.ULPoint.y=i*sz.y;
-				for(int j=0;j<c;++j)
+				if (roboVis)
 				{
-					pRC.ULPoint.x=j*sz.x;
-					pRC.BRPoint=pRC.ULPoint+sz;
-					int idx=(i*c)+j;
-					tex.SetTexture(textures[idx]);
-					device->useTexture(0,&tex);
-					device->draw2DImage(pRC,video::DefaultColors::White,0,flipTex[idx]?&math::rectf(0,1,1,0):0);
-					font->print(pRC,&attrs,0,title[idx],m_guiManager->GetRenderQueue());
+					tex.SetTexture(roboVis);
+					device->useTexture(0, &tex);
+					device->draw2DImage(rc, video::DefaultColors::White);
+				}
+
+				if (VT::VTAppGlobals::IsDebugging)
+				{
+					if (m_3rdVP->getRenderOutput())
+						tex.SetTexture(m_3rdVP->getRenderOutput()->getColorTexture());
+					else tex.SetTexture(0);
+					math::rectf rc(m_current3rdVPSize);
+					device->useTexture(0, &tex);
+					device->draw2DImage(rc, video::DefaultColors::White);
 				}
 			}
-			m_guiManager->GetRenderQueue()->Flush();
+			else 
+			{
+				if (m_oculusDevice->IsConnected() )
+				{
+					math::matrix4x4 m, pm;
+					device->getTransformationState(video::TS_PROJECTION, m);
+					pm.f14 = m_oculusComponents[index]->GetPerspectiveOffset();
+					pm = pm*m;
+					device->setTransformationState(video::TS_PROJECTION, pm);
+				}
+				video::ITexturePtr textures[] = { m_cameraSource[index]->GetTexture(),
+					m_maskExtractor[index]->getOutput()->getColorTexture(0),
+					m_maskExtractor[index]->getOutput()->getColorTexture(1),
+					roboVis };
+				bool flipTex[] = { 1, 1, 1, 0 };
+				core::string title[] = { "Camera Image", "Mask Image", "Color Correction", "Fused Image" };
+				GUI::IFont* font = gFontResourceManager.getDefaultFont();
+				GUI::FontAttributes attrs;
+				attrs.fontSize = 24;
+				attrs.fontColor.Set(1, 1, 1, 1);
+				attrs.fontAligment = GUI::EFA_TopLeft;
 
+				int r = 2;
+				int c = 2;
+				math::vector2d sz = rc.getSize();
+				sz.x /= c;
+				sz.y /= r;
+
+				math::rectf pRC;
+
+				for (int i = 0; i < r; ++i)
+				{
+					pRC.ULPoint.y = i*sz.y;
+					for (int j = 0; j < c; ++j)
+					{
+						pRC.ULPoint.x = j*sz.x;
+						pRC.BRPoint = pRC.ULPoint + sz;
+						int idx = (i*c) + j;
+						tex.SetTexture(textures[idx]);
+						device->useTexture(0, &tex);
+						device->draw2DImage(pRC, video::DefaultColors::White, 0, flipTex[idx] ? &math::rectf(0, 1, 1, 0) : 0);
+						font->print(pRC, &attrs, 0, title[idx], m_guiManager->GetRenderQueue());
+					}
+				}
+				m_guiManager->GetRenderQueue()->Flush();
+
+			}
 		}
 		if(false)
 		{
@@ -1355,7 +1413,7 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 			}
 			m_guiManager->GetRenderQueue()->Flush();
 		}
-		if(true)
+		if(false)
 		{
 
 			GUI::IFont* font= gFontResourceManager.getDefaultFont();
@@ -1375,10 +1433,10 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 			m_guiManager->GetRenderQueue()->Flush();
 
 		
-			device->setRenderTarget(0,false,false);
-			m_oculusRenderer[index]->Setup(math::rectf(0,0,m_finalRT[index]->getSize().x,m_finalRT[index]->getSize().y));
-			m_oculusRenderer[index]->render(m_finalRT[index]);
 		}
+		device->setRenderTarget(0, false, false);
+		m_oculusRenderer[index]->Setup(math::rectf(0, 0, m_finalRT[index]->getSize().x, m_finalRT[index]->getSize().y));
+		m_oculusRenderer[index]->render(m_finalRT[index]);
 
 	}
 	
@@ -1397,6 +1455,9 @@ void VTelesarRenderingState::LoadFromXML(xml::XMLElement* e)
 {
 	IRenderingState::LoadFromXML(e);
 	xml::XMLAttribute* attr;
+
+	m_cameraSource[0]->LoadFromXML(e->getSubElement("CameraLeft"));
+	m_cameraSource[1]->LoadFromXML(e->getSubElement("CameraRight"));
 }
 
 void VTelesarRenderingState::onRenderDone(scene::ViewPort*vp)
