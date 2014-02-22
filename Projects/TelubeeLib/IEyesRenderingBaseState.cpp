@@ -82,6 +82,7 @@ IEyesRenderingBaseState::IEyesRenderingBaseState()
 	m_useLensCorrection = false;
 	m_correctionParamsU.set(1, 0, 0, 0);
 	m_correctionParamsV.set(1, 0, 0, 0);
+	m_enablePanning = false;
 }
 
 
@@ -378,6 +379,7 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	tc.BRPoint.y = 1 - tc.BRPoint.y;
 	//tc = math::rectf(0, 0, 1, 1);
 
+	if (m_enablePanning)
 	{
 		math::vector2d center = tc.getCenter();
 		math::vector2d halfSz = tc.getSize()*0.5f;
@@ -449,28 +451,23 @@ void IEyesRenderingBaseState::Update(float dt)
 {
 	m_robotConnector->UpdateStatus();
 
-	if (AppData::Instance()->oculusDevice)
+	if (m_enablePanning)
 	{
-		math::quaternion ori= AppData::Instance()->oculusDevice->GetOrientation();
-		math::vector3d angles;
-		ori.toEulerAngles(angles);
+		if (AppData::Instance()->oculusDevice)
+		{
+			math::quaternion ori = AppData::Instance()->oculusDevice->GetOrientation();
+			math::vector3d angles;
+			ori.toEulerAngles(angles);
 
-		float maxAngle = 20 * m_panningScale;
-		angles.x = math::clamp(angles.x, -maxAngle, maxAngle);
-		angles.y = math::clamp(angles.y, -maxAngle, maxAngle);
-		m_headPan = angles.y / maxAngle;
-		m_headTilt = angles.x / maxAngle;
+			float maxAngle = 20 * m_panningScale;
+			angles.x = math::clamp(angles.x, -maxAngle, maxAngle);
+			angles.y = math::clamp(angles.y, -maxAngle, maxAngle);
+			m_headPan = angles.y / maxAngle;
+			m_headTilt = angles.x / maxAngle;
 
-// 		m_headPan = m_headPan*0.5 + 0.5;
-// 		m_headTilt = m_headTilt*0.5 + 0.5;
-	}
-	else
-	{
-		static float time = 0;
-		m_headPan = sin(time);
-		m_headTilt = sin(time*2.5 + 0.1);
-
-		time += dt;
+			// 		m_headPan = m_headPan*0.5 + 0.5;
+			// 		m_headTilt = m_headTilt*0.5 + 0.5;
+		}
 	}
 }
 
@@ -507,6 +504,11 @@ void IEyesRenderingBaseState::LoadFromXML(xml::XMLElement* e)
 		m_eyes[0].flip90 = m_eyes[1].flip90 = core::StringConverter::toBool(attr->value);
 	}
 
+	attr = e->getAttribute("EnablePanning");
+	if (attr)
+	{
+		m_enablePanning = core::StringConverter::toBool(attr->value);
+	}
 	attr = e->getAttribute("PanningScale");
 	if (attr)
 	{

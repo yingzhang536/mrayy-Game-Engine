@@ -53,9 +53,9 @@ protected:
 	float m_hmdFov;
 	math::vector2d m_hmdSize;
 	float m_panningScale;//used to give some freedom to look around using Oculus in a scaled up mode
-
 	float m_headPan;
 	float m_headTilt;
+	bool m_enablePanning;
 
 	bool m_useLensCorrection;
 	math::vector4d m_correctionParamsU;

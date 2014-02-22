@@ -403,7 +403,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AugTelWhiteBoard", "Project
 EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 114
+		SccNumberOfProjects = 115
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Engine\\mrayEngine\\mrayEngine.vcxproj
 		SccProjectTopLevelParentUniqueName1 = mrayEngine.sln
@@ -857,6 +857,10 @@ Global
 		SccProjectTopLevelParentUniqueName113 = mrayEngine.sln
 		SccLocalPath113 = .
 		SccProjectFilePathRelativizedFromConnection113 = Projects\\TelubeeLib\\
+		SccProjectUniqueName114 = Projects\\AugTelWhiteBoard\\AugTelWhiteBoard.vcxproj
+		SccProjectTopLevelParentUniqueName114 = mrayEngine.sln
+		SccLocalPath114 = .
+		SccProjectFilePathRelativizedFromConnection114 = Projects\\AugTelWhiteBoard\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Unicode|Any CPU = Debug_Unicode|Any CPU
