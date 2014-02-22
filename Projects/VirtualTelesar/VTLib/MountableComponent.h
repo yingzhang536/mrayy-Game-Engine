@@ -33,7 +33,7 @@ protected:
 	math::quaternion m_orientation;
 
 	core::string m_targetNode;
-	scene::ISceneNode* m_node;
+	scene::IMovable* m_node;
 
 public:
 	DECLARE_PROPERTY_TYPE(TargetNode,core::string,);
@@ -57,7 +57,7 @@ public:
 	bool SetDistance(float v);
 	float GetDistance();
 	
-	scene::ISceneNode* GetNode(){return m_node;}
+	scene::IMovable* GetNode(){ return m_node; }
 
 	math::vector3d GetAbsolutePosition();
 	math::quaternion GetAbsoluteOrientation();

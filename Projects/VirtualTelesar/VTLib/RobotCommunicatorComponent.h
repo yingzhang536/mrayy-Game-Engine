@@ -25,6 +25,8 @@ namespace VT
 	class CommunicationData;
 	class SoundListenerComponent;
 	class CameraComponent;
+	class MotorConnection;
+	class RobotCommunicator;
 
 class RobotCommunicatorComponent:public ICommunicatorComponent,public IFeedbackControlListener
 {
@@ -39,6 +41,10 @@ protected:
 	CameraComponent* m_cameraComp;
 
 	EControlSource m_controlSource;
+
+	VT::RobotCommunicator* m_communicator;
+
+	std::vector<MotorConnection*> m_motorConnections;
 public:
 	DECLARE_PROPERTY_TYPE(UseKinematic,bool,);
 
@@ -47,6 +53,10 @@ public:
 	virtual~RobotCommunicatorComponent();
 
 	CommunicatorScheme* GetScheme(){return m_scheme;}
+
+	const std::vector<MotorConnection*>& GetMotorConnections(){ return m_motorConnections; }
+	RobotCommunicator* GetRobotCommunicator(){ return m_communicator; }
+
 
 	bool SetUseKinematics(bool k){m_controlSource=k?EControl_Kinematic:EControl_Realtime;return true;}
 	bool GetUseKinematics(){return m_controlSource==EControl_Kinematic;}

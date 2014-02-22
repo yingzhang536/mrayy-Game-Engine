@@ -144,7 +144,7 @@ void IGUIPanelElement::Update(float dt)
 
 }
 
-void IGUIPanelElement::Draw(video::IRenderArea*vp)
+void IGUIPanelElement::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

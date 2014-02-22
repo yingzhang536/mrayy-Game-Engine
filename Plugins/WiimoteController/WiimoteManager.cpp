@@ -1,6 +1,8 @@
 
+#include "stdafx.h"
+
 #include "WiimoteManager.h"
-#include "wiiusecpp.h"
+#include "wiimote.h"
 #include "EventQueue.h"
 #include "WiiEvent.h"
 #include "EventMemoryManager.h"
@@ -9,6 +11,7 @@
 #include "IThreadManager.h"
 #include "IThread.h"
 #include "IMutex.h"
+#include "CWiimote.h"
 
 
 namespace mray
@@ -17,18 +20,57 @@ namespace controllers
 {
 
 
-	class WiimoteManagerPollThread:public OS::IThreadFunction
+	class WiimoteManagerImpl
 	{
-		WiimoteManager* m_manager;
-	public:
-		WiimoteManagerPollThread(WiimoteManager* m)
+		WiimoteManager* m_owner;
+		OS::IMutex* m_eventMutex;
+		bool m_eventHappened;
+		OS::IThreadFunction* m_threadFunction;
+		OS::IThread* m_thread;
+
+		std::vector<CWiimote*> m_wiimotes;
+
+		struct wiievent
 		{
-			m_manager=m;
+
+			EWiiEventType event;
+
+			controllers::CWiimote* mote;
+		};
+		std::list<wiievent> m_events;
+	public:
+		WiimoteManagerImpl(WiimoteManager* owner);
+		~WiimoteManagerImpl();
+		void _PollEvents();
+
+		void RefreshWiimotes();
+
+		CWiimote* GetByID(int ID);
+		std::vector<CWiimote*>& GetWiimotes();
+
+
+		int Find(int timeout);
+		std::vector<CWiimote*>& ConnectWithAllMotes();
+		CWiimote* Connect(int i);
+
+		void DisconnectWithAllMotes();
+		void Disconnect(int i);
+
+		void PollEvents();
+};
+
+	class WiimoteManagerPollThread :public OS::IThreadFunction
+	{
+		WiimoteManagerImpl* m_manager;
+	public:
+		WiimoteManagerPollThread(WiimoteManagerImpl* m)
+		{
+			m_manager = m;
 		}
 		virtual void setup()
 		{
 		}
-		virtual void execute(OS::IThread*caller,void*arg)
+		virtual void execute(OS::IThread*caller, void*arg)
 		{
 			while (caller->isActive())
 			{
@@ -38,9 +80,8 @@ namespace controllers
 		}
 	};
 
-WiimoteManager::WiimoteManager():m_eventHappened(false)
+WiimoteManagerImpl::WiimoteManagerImpl(WiimoteManager* owner) :m_eventHappened(false), m_owner(owner)
 {
-	m_wiiMngr=new CWii();
 
 	m_eventMutex=OS::IThreadManager::getInstance().createMutex();
 	m_threadFunction=new WiimoteManagerPollThread(this);
@@ -48,150 +89,167 @@ WiimoteManager::WiimoteManager():m_eventHappened(false)
 	m_thread=OS::IThreadManager::getInstance().createThread(m_threadFunction);
 	m_thread->start(0);
 }
-WiimoteManager::~WiimoteManager()
+WiimoteManagerImpl::~WiimoteManagerImpl()
 {
 	OS::IThreadManager::getInstance().killThread(m_thread);
 	delete m_thread;
 	delete m_threadFunction;
 	delete m_eventMutex;
-	delete m_wiiMngr;
+
+	DisconnectWithAllMotes();
 }
 
-void WiimoteManager::SetMaxWiimotesCount(int c)
+
+void WiimoteManagerImpl::RefreshWiimotes()
 {
-	m_wiiMngr->SetMaxWiimotesCount(c);
 }
-int WiimoteManager::GetNumConnectedWiimotes()
+
+CWiimote* WiimoteManagerImpl::GetByID(int ID)
 {
-	return m_wiiMngr->GetNumConnectedWiimotes();
+	if (ID < 0 || ID >= m_wiimotes.size())
+		return 0;
+	return m_wiimotes[ID];
+}
+std::vector<CWiimote*>& WiimoteManagerImpl::GetWiimotes()
+{
+	return m_wiimotes;
+}
+
+std::vector<CWiimote*>& WiimoteManagerImpl::ConnectWithAllMotes()
+{
+	DisconnectWithAllMotes();
+	while (true)
+	{
+		CWiimote* mote = new CWiimote();
+		if (!mote->Connect())
+		{
+			delete mote;
+			break;;
+		}
+		m_wiimotes.push_back(mote);
+	}
+	return m_wiimotes;
+}
+CWiimote* WiimoteManagerImpl::Connect(int ID)
+{
+	if (ID < 0 || ID >= m_wiimotes.size())
+		return 0;
+	if (!m_wiimotes[ID]->IsConnected())
+		m_wiimotes[ID]->Connect(ID);
+	return m_wiimotes[ID];
+}
+
+void WiimoteManagerImpl::DisconnectWithAllMotes()
+{
+	for (int i = 0; i < m_wiimotes.size();++i)
+	{
+		m_wiimotes[i]->Disconnect();
+	}
+	m_wiimotes.clear();
+}
+void WiimoteManagerImpl::Disconnect(int ID)
+{
+	if (ID < 0 || ID >= m_wiimotes.size())
+		return;
+	m_wiimotes[ID]->Disconnect();
+}
+
+void WiimoteManagerImpl::PollEvents()
+{
+	if (m_eventMutex->tryLock()){
+		std::list<wiievent>::iterator it = m_events.begin();
+		for (; it != m_events.end();++it)
+		{
+			WiiEvent* evt = (WiiEvent*)EventMemoryManager::getInstance().createEvent(WiiEvent::EventID).pointer();
+			if (!evt)
+				evt = new WiiEvent();
+			evt->event = it->event;
+			evt->mote = it->mote;
+			EventQueue::getInstance().pushEvent(evt);
+		}
+		m_events.clear();
+		m_eventMutex->unlock();
+	}
+
+}
+
+void WiimoteManagerImpl::_PollEvents()
+{
+
+	m_eventMutex->lock();
+	for (int i = 0; i < m_wiimotes.size(); ++i)
+	{
+		CWiimote*w = m_wiimotes[i];
+		if (!w)continue;
+
+		state_change_flags flags = w->RefreshState();
+		EWiiEventType type = EWiiEvent_Unkown;
+		if (flags & CONNECTED)type = EWiiEvent_Connect;
+		else if (flags & CONNECTION_LOST)type = EWiiEvent_Disconnect;
+		else if (flags & BATTERY_CHANGED)type = EWiiEvent_BatteryChanged;
+		else if (flags & BATTERY_DRAINED)type = EWiiEvent_BatteryDrained;
+		else if (flags & BUTTONS_CHANGED)type = EWiiEvent_ButtonChanged;
+		else if (flags & ACCEL_CHANGED)type = EWiiEvent_AccelChanged;
+		else if (flags & ORIENTATION_CHANGED)type = EWiiEvent_OrintationChanged;
+		else if (flags & IR_CHANGED)type = EWiiEvent_IRChanged;
+		else if (flags & NUNCHUK_CONNECTED)type = EWiiEvent_NunchukInserted;
+		else if (flags & BALANCE_CONNECTED)type = EWiiEvent_BalanceConnected;
+		else if (flags & BALANCE_WEIGHT_CHANGED)type = EWiiEvent_BalanceWeightChanged;
+		else
+			continue;
+		wiievent e;
+		e.event = type;
+		e.mote = w;
+		m_events.push_back(e);
+	}
+	m_eventMutex->unlock();
+}
+
+WiimoteManager::WiimoteManager()
+{
+	m_impl = new WiimoteManagerImpl(this);
+}
+WiimoteManager::~WiimoteManager()
+{
+	delete m_impl;
 }
 
 void WiimoteManager::RefreshWiimotes()
 {
-	 m_wiiMngr->RefreshWiimotes();
+	m_impl->RefreshWiimotes();
 }
 
-CWiimote* WiimoteManager::GetByID(int ID, int Refresh)
+CWiimote* WiimoteManager::GetByID(int ID)
 {
-	return m_wiiMngr->GetByID(ID,Refresh);
+	return m_impl->GetByID(ID);
 }
-std::vector<CWiimote*>& WiimoteManager::GetWiimotes(int Refresh)
+std::vector<CWiimote*>& WiimoteManager::GetWiimotes()
 {
-	return m_wiiMngr->GetWiimotes(Refresh);
-}
-
-//void SetBluetoothStack(BTStacks Type);
-void WiimoteManager::SetTimeout(int NormalTimeout, int ExpTimeout)
-{
-	 m_wiiMngr->SetTimeout(NormalTimeout,ExpTimeout);
+	return m_impl->GetWiimotes();
 }
 
-int WiimoteManager::Find(int timeout)
-{
-	return m_wiiMngr->Find(timeout);
-}
+
 std::vector<CWiimote*>& WiimoteManager::ConnectWithAllMotes()
 {
-	return m_wiiMngr->ConnectWithAllMotes();
+	return m_impl->ConnectWithAllMotes();
 }
 CWiimote* WiimoteManager::Connect(int i)
 {
-	return m_wiiMngr->Connect(i);
+	return m_impl->Connect(i);
 }
 
 void WiimoteManager::DisconnectWithAllMotes()
 {
-	m_wiiMngr->DisconnectWithAllMotes();
+	m_impl->DisconnectWithAllMotes();
 }
 void WiimoteManager::Disconnect(int i)
 {
-	m_wiiMngr->Disconnect(i);
+	m_impl->Disconnect(i);
 }
 
 void WiimoteManager::PollEvents()
 {
-	if(m_eventMutex->tryLock()){
-		if(!m_eventHappened)
-		{
-			m_eventMutex->unlock();
-			return;
-		}
-		m_eventHappened=false;
-		m_eventMutex->unlock();
-	}else
-		return;
-	std::vector<CWiimote*>& vec=m_wiiMngr->GetWiimotes(false);
-	for (int i=0;i<vec.size();++i)
-	{
-		CWiimote*w=vec[i];
-		if(!w)continue;
-		CWiimote::EventTypes e= w->GetEvent();
-		EWiiEventType type=EWiiEvent_Unkown;
-		switch (e)
-		{
-		case CWiimote::EVENT_NONE:break;
-		case CWiimote::EVENT_EVENT:
-			type=EWiiEvent_Event;
-			break;
-		case CWiimote::EVENT_STATUS:
-			type=EWiiEvent_Status;
-			break;
-		case CWiimote::EVENT_CONNECT:
-			type=EWiiEvent_Connect;
-			break;
-		case CWiimote::EVENT_DISCONNECT:
-			type=EWiiEvent_Disconnect;
-			break;
-		case CWiimote::EVENT_UNEXPECTED_DISCONNECT:
-			type=EWiiEvent_UnexpectedDisconnect;
-			break;
-		case CWiimote::EVENT_READ_DATA:
-			type=EWiiEvent_ReadData;
-			break;
-		case CWiimote::EVENT_NUNCHUK_INSERTED:
-			type=EWiiEvent_NunchukInserted;
-			break;
-		case CWiimote::EVENT_NUNCHUK_REMOVED:
-			type=EWiiEvent_NunchukRemoved;
-			break;
-		case CWiimote::EVENT_CLASSIC_CTRL_INSERTED:
-			type=EWiiEvent_ClassicControlInserted;
-			break;
-		case CWiimote::EVENT_CLASSIC_CTRL_REMOVED:
-			type=EWiiEvent_ClassicControlRemoved;
-			break;
-		case CWiimote::EVENT_GUITAR_HERO_3_CTRL_INSERTED:
-			type=EWiiEvent_GuitarHero3Inserted;
-			break;
-		case CWiimote::EVENT_GUITAR_HERO_3_CTRL_REMOVED:
-			type=EWiiEvent_GuitarHero3Removed;
-			break;
-		}
-		if(type==EWiiEvent_Unkown)
-			continue;
-
-		WiiEvent* evt=(WiiEvent*)EventMemoryManager::getInstance().createEvent(WiiEvent::EventID).pointer();
-		if(!evt)
-			evt=new WiiEvent();
-		evt->event=type;
-		evt->WiimoteNumber=i;
-		EventQueue::getInstance().pushEvent(evt);
-	}
-}
-
-void WiimoteManager::_PollEvents()
-{
-
-	if(m_wiiMngr->Poll()==0)
-		return;
-	m_eventMutex->lock();
-	m_eventHappened=true;
-	m_eventMutex->unlock();
-}
-
-CWii* WiimoteManager::GetInternalWiiManager()
-{
-	return m_wiiMngr;
+	m_impl->PollEvents();
 }
 
 

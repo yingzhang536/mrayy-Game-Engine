@@ -2267,6 +2267,12 @@
     <ClInclude Include="include\TextureSourceFactory.h">
       <Filter>Source Files\video\Textures</Filter>
     </ClInclude>
+    <ClInclude Include="include\IFileMonitor.h">
+      <Filter>Source Files\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IMonitorFileInformation.h">
+      <Filter>Source Files\OS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">

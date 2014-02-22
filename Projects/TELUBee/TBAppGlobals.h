@@ -16,7 +16,7 @@
 #define ___TBAppGlobals___
 
 
-#include "StereoRenderer.h"
+#include "AppData.h"
 
 namespace mray
 {
@@ -37,7 +37,6 @@ namespace TBee
 	class RobotInfoManager;
 	class TBRobotInfo;
 	class SeeThroughWindow;
-	class TBeeOptiTrackObject;
 
 
 	enum class EController
@@ -45,58 +44,47 @@ namespace TBee
 		XBox,
 		Logicool
 	};
-class TBAppGlobals
+
+
+class TBAppGlobals:public AppData
 {
 protected:
 
-	static script::CSettingsFile s_values;
 public:
+	TBAppGlobals()
+	{
+		seeTrough = 0;
+		App = 0;
+		mapObj = 0;
+		selectedRobot = 0;
+		sqlManager = 0;
 
-	static SeeThroughWindow* seeTrough;
-	static Application* App;
-	static bool IsDebugging;
-	static core::string ServerIP;
-	static TBeeOptiTrackObject* optiObj;
+	}
 
-	static EController m_controller;
+	SeeThroughWindow* seeTrough;
+	Application* App;
+	core::string ServerIP;
 
-	static int MajorVer;
-	static int MinorVer;
+	EController m_controller;
 
-	static core::string GetVersion();
-	static core::string GetBuild();
+	math::vector2d GetStereoScaleRatio();
 
-	static scene::EStereoMode StereoMode;
+	core::string DVIPort;
 
-	static math::vector2d GetStereoScaleRatio();
+	MapObject* mapObj;
 
-	static core::string DVIPort;
+	TBRobotInfo* selectedRobot;
 
-	static MapObject* mapObj;
+	core::string userName;
+	core::string userPassword;
 
-	static TBRobotInfo* selectedRobot;
+	db::ISQLManager* sqlManager;
 
-	static RobotInfoManager* robotInfoManager;
-
-	static core::string userName;
-	static core::string userPassword;
-
-	static bool usingOculus;
-
-	static db::ISQLManager* sqlManager;
-
-	static video::OculusDevice* oculusDevice;
-
-	static InputManager* inputMngr;
 	
-	static void SetValue(const core::string&catagory,const core::string&name,const core::string& v);
-	static core::string GetValue(const core::string&catagory,const core::string&name);
+	void Load(const core::string& path);
+	void Save(const core::string& path);
 
-	static void ConnectOpti();
-	static void DisconnectOpti();
-
-	static void Load(const core::string& path);
-	static void Save(const core::string& path);
+	static TBAppGlobals* Instance(){ return (TBAppGlobals*)s_instance; }
 };
 
 }

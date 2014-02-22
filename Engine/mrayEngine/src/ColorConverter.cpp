@@ -42,9 +42,11 @@ float ColorConverter::normal32(int x,int y,int cd,int width,int height,uchar*ptr
 	if(x>=width)x=0;
 	if(y<0)y=height-1;
 	if(y>=height)y=0;
+
+	int idx = (y*width + x)*cd;
 	//a r g b
 	//uint v=(ptr[y*pitch+x +0]<<24) | (ptr[y*pitch+x +0]<<16) | (ptr[y*pitch+x +1]<<8) | ptr[y*pitch+x +2];
-	return (ptr[(y*width+x)*cd +0]+ptr[(y*width+x)*cd +1]+ptr[(y*width+x)*cd +2])/3.0f;//red
+	return (ptr[idx + 0] + ptr[idx + 1] + ptr[idx + 2]) / 3.0f;//red
 }
 
 void ColorConverter::convert1BitTo16Bit(const uchar*clrIn,uchar*clrOut,const math::vector2di& size,
@@ -376,55 +378,47 @@ void ColorConverter::convert32BitToGreyscale(const uchar*clrIn,uchar*clrOut,cons
 //not bad method to rescale images
 void ColorConverter::resizeImage(const video::ImageInfo* tIn,video::ImageInfo* tOut,const math::Point2di& newSize)
 {
-/*	if(!tIn)return;
-	float dw=(float)(tIn->getSize().x)/(float)newSize.x;
-	float dh=(float)(tIn->getSize().y)/(float)newSize.y;
+	if (!tIn || !tOut)return;
+	tOut->createData(math::vector3d(newSize.x, newSize.y, 1), tIn->format);
 
-	int depth;
-	
-//	(*tOut)=tIn->getDuplicate();
-	if(dw==1 && dh==1)//just copy
+	float dw = (float)tIn->Size.x / (float)newSize.x;
+	float dh = (float)tIn->Size.y / (float)newSize.y;
+
+	int depth = video::PixelUtil::getPixelDescription(tIn->format).componentsCount;
+
+	if (dw == 1 && dh == 1)//just copy
 	{
-		(*tOut)=tIn->getDuplicate();
+		memcpy(tOut->imageData, tIn->imageData, tIn->imageDataSize);
 		return;
 	}
-
-	delete [] (*tOut)->imageData;
-	(*tOut)->imageData=0;
-	(*tOut)->imageData=new uchar[newSize.x*newSize.y*depth];
-	if(!(*tOut)->imageData){
-		gLogManager.log("error - ColorConverter::resizeimgture() ","Out Of Memory to create imgture");
-		(*tOut)->subRef();
-		return;
+	uchar*buffer = (uchar*)tOut->imageData;
+	uchar*inData = (uchar*)tIn->imageData;
+	int width = tIn->Size.x;
+	//	int x=0,y=0;
+	//	byte clrArr[4];
+	for (int i = 0; i<newSize.x; ++i){
+		//		x=i*dw;
+		for (int j = 0; j<newSize.y; j++){
+			//		y=j*dh;
+			int index = (j*newSize.x + i)*depth;
+			//averageValue(inData,x,y,width,dw,dh,depth).ToByteArrayRGBA(clrArr);
+			int nearestMatch = (((int)(j * dh) * (tOut->Size.x)) + ((int)(i *dw)))*depth;
+			if (depth == 1)
+				buffer[index] = inData[nearestMatch];
+			else if (depth == 3){
+				buffer[index + 0] = inData[nearestMatch + 0];
+				buffer[index + 1] = inData[nearestMatch + 1];
+				buffer[index + 2] = inData[nearestMatch + 2];
+			}
+			else{
+				buffer[index + 0] = inData[nearestMatch + 0];
+				buffer[index + 1] = inData[nearestMatch + 1];
+				buffer[index + 2] = inData[nearestMatch + 2];
+				buffer[index + 3] = inData[nearestMatch + 3];
+			}
+		}
 	}
-	(*tOut)->imageSize=newSize;
-	(*tOut)->imageDataSize=newSize.x*newSize.y*depth;
-
-
-	(*tOut)=tIn->getDevice()->createimgture(tIn->getimgFileName(),newSize,tIn->getImageType());
-
-	int res=gluScaleImage(tIn->imageDataFormat,tIn->imageSize.x,tIn->imageSize.y,
-	tIn->imageDataType,tIn->imageData,newSize.x,newSize.y,tIn->imageDataType,(*tOut)->imageData);
-	if(res){
-		gLogManager.log("error - ColorConverter::resizeimgture() ",(const mchar*)gluErrorString(res),ELL_WARNING);
-		(*tOut)->subRef();
-		(*tOut)=0;
-		return;
-	}
-	(*tOut)->unlock(1);
 	return;
-
-	for(int i=0;i<newSize.y;++i)
-	for(int j=0;j<newSize.x;j++){
-		int iIndex=(i*dw)*tIn->imageSize.x+j*dh;
-		int oIndex=i*newSize.x+j;
-		iIndex*=depth;
-		oIndex*=depth;
-		
-		for(int k=0;k<depth;k++)
-			(*tOut)->imageData[oIndex+k]=tIn->imageData[iIndex+k];
-	}
-	(*tOut)->unimageData;*/
 }
 
 
@@ -444,14 +438,6 @@ void ColorConverter::resizeImage(video::ImageInfo*img,const math::Point2di& newS
 
 	uchar*buffer=new uchar[newSize.x*newSize.y*depth];
 
-/*
-	int res=gluScaleImage(img->imageDataFormat,img->imageSize.x,img->imageSize.y,
-		img->imageDataType,img->imageData,newSize.x,newSize.y,img->imageDataType,buffer);
-	if(res){
-		gLogManager.log("error - ColorConverter::resizeimgture() ",(const mchar*)gluErrorString(res),ELL_WARNING);
-		delete []buffer;
-		return;
-	}*/
 	uchar*inData=(uchar*)img->imageData;
 	int width=img->Size.x;
 //	int x=0,y=0;
@@ -581,8 +567,10 @@ void ColorConverter::createNormalMap(video::ImageInfo*img,float amplitude){
 					convert24BitTo32BitAndResize((uchar*)img->imageData,buff,sz,sz);
 					break;
 			};
-			img->setData(buff,img->Size,EPixel_R8G8B8A8);
-			delete [] buff;
+			delete[] img->imageData;
+			img->imageData = buff;
+			img->Size = img->Size;
+			img->format=EPixel_R8G8B8A8;
 		}
 	}
 	uchar*ptr=(uchar*)img->imageData;
@@ -600,10 +588,12 @@ void ColorConverter::createNormalMap(video::ImageInfo*img,float amplitude){
 	uchar*in=new uchar[pitch*d.y];
 	mraySystem::memCopy(in,ptr,sizeof(uchar)*d.y*pitch);
 
+
 	for(int x=0;x<d.x;x++){
 		for(int y=0;y<d.y;y++){
 			math::vector3d h1((x-1)*hh,normal32(x-1,y,cd,d.x,d.y,in)*amplitude,y*vh);
-			math::vector3d h2((x+1)*hh,normal32(x+1,y,cd,d.x,d.y,in)*amplitude,y*vh);
+			math::vector3d h2((x+1)*hh,normal32(
+				x+1,y,cd,d.x,d.y,in)*amplitude,y*vh);
 
 			math::vector3d v1(x*hh,normal32(x,y+1,cd,d.x,d.y,in)*amplitude,(y-1)*vh);
 			math::vector3d v2(x*hh,normal32(x,y-1,cd,d.x,d.y,in)*amplitude,(y+1)*vh);
@@ -618,10 +608,10 @@ void ColorConverter::createNormalMap(video::ImageInfo*img,float amplitude){
 			n*=255;
 
 			uchar height=normal32(x,y,cd,d.x,d.y,in);
-			ptr[(y*d.y+x)*4 +0]=(uchar)n.x;
-			ptr[(y*d.y+x)*4 +1]=(uchar)n.z;
-			ptr[(y*d.y+x)*4 +2]=(uchar)n.y;
-			ptr[(y*d.y+x)*4 +3]=height;
+			ptr[(y*d.x+x)*4 +0]=(uchar)n.x;
+			ptr[(y*d.x+x)*4 +1]=(uchar)n.z;
+			ptr[(y*d.x+x)*4 +2]=(uchar)n.y;
+			ptr[(y*d.x+x)*4 +3]=height;
 		}
 	}
 

@@ -30,7 +30,7 @@ namespace TBee
 
 LoginScreenState::LoginScreenState()
 {
-	m_connection=TBAppGlobals::sqlManager->CreateConnection();
+	m_connection=TBAppGlobals::Instance()->sqlManager->CreateConnection();
 	m_loginMenu=new GUILoginMenu();
 	m_isConnecting=false;
 
@@ -48,10 +48,11 @@ LoginScreenState::LoginScreenState()
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnSeeThroughPressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectLocalPressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectRemotePressed));
+	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnPlayVideoPressed));
 }
 LoginScreenState::~LoginScreenState()
 {
-	TBAppGlobals::sqlManager->RemoveConnection(m_connection);
+	TBAppGlobals::Instance()->sqlManager->RemoveConnection(m_connection);
 	delete m_connectionData;
 }
 
@@ -72,6 +73,16 @@ void LoginScreenState::OnConnectLocalPressed(IObject* caller, void* args)
 	m_exitCode = ToLocalCamera_CODE;
 
 	return; 
+}
+
+void LoginScreenState::OnPlayVideoPressed(IObject* caller, void* args)
+{
+	m_state = EDone;
+	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
+	m_exitTimeOut = 0;
+	m_exitCode = ToVideo_CODE;
+
+	return;
 }
 
 void LoginScreenState::OnLoginPressed(IObject* caller,void* args)
@@ -100,17 +111,17 @@ void LoginScreenState::OnLoginPressed(IObject* caller,void* args)
 }
 void LoginScreenState::OnExitPressed(IObject* caller,void* args)
 {
-	TBAppGlobals::App->terminate();
+	TBAppGlobals::Instance()->App->terminate();
 }
 void LoginScreenState::OnSeeThroughPressed(IObject* caller,void* args)
 {
 	m_exitCode=ToLocalCamera_CODE;
 }
-void LoginScreenState::InitState(Application* app)
+void LoginScreenState::InitState()
 {
-	IRenderingState::InitState(app);
+	IRenderingState::InitState();
 
-	m_guiManager=new GUI::GUIManager(app->getDevice());
+	m_guiManager=new GUI::GUIManager(Engine::getInstance().getDevice());
 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
 
 	m_guiroot=(GUI::IGUIPanelElement*)new GUI::IGUIPanelElement(core::string(""),m_guiManager);
@@ -129,12 +140,13 @@ void LoginScreenState::InitState(Application* app)
 	}
 }
 
-void LoginScreenState::OnEvent(Event* e)
+bool LoginScreenState::OnEvent(Event* e, const math::rectf& rc)
 {
 	if(m_guiManager && m_state!=EDone)
 	{
-		m_guiManager->OnEvent(e);
+		return m_guiManager->OnEvent(e,&rc);
 	}
+	return false;
 }
 
 void LoginScreenState::_OnConnectionCallback(db::ISQLConnection*c,bool res,void* ud)
@@ -178,7 +190,7 @@ void LoginScreenState::_OnAuthenticatingCallback(db::ISQLConnection*c,db::ISQLRe
 		info.name= (*res)[1];
 		info.email=( (*res)[2]==0? "":(*res)[2]);
 		_OnUserAuthenticated(info);
-		TBAppGlobals::userName=info.name;
+		TBAppGlobals::Instance()->userName=info.name;
 
 		db::NonBlockingQueryCmdDelegate delg=new ClassDelegate3<LoginScreenState,void,db::ISQLConnection*,db::ISQLResult* ,void* >("",this,&LoginScreenState::_OnRetrieveCallback);
 		core::string cmd="Select r.ID ID, r.Name Name,r.IP IP,r.Lat Lat,r.Lng Lng, s.Connected Connected,s.Avaliable Avaliable "\
@@ -198,7 +210,7 @@ void LoginScreenState::_OnRetrieveCallback(db::ISQLConnection*c,db::ISQLResult* 
 		m_loginMenu->MessageLbl->SetText(core::string("Couldn't retrieve robot data.."));
 	}else
 	{
-		TBAppGlobals::robotInfoManager->ClearRobots();
+		TBAppGlobals::Instance()->robotInfoManager->ClearRobots();
 		for(int i=0;i<res->RowsCount();++i)
 		{
 			res->NextRow();
@@ -219,7 +231,7 @@ void LoginScreenState::_OnRetrieveCallback(db::ISQLConnection*c,db::ISQLResult* 
 			roboIfo.Connected=core::StringConverter::toBool(Connected);
 			roboIfo.Avaliable=core::StringConverter::toBool(Avaliable);
 
-			TBAppGlobals::robotInfoManager->AddRobotInfo(roboIfo);
+			TBAppGlobals::Instance()->robotInfoManager->AddRobotInfo(roboIfo);
 		}
 		//record users time stamp
 		m_state=EDone;
@@ -248,9 +260,9 @@ video::IRenderTarget* LoginScreenState::Render(const math::rectf& rc,ETargetEye 
 	video::IVideoDevice* dev=Engine::getInstance().getDevice();
 	dev->setRenderTarget(m_renderTarget[GetEyeIndex(eye)]);
 	dev->set2DMode();
-	TBAppGlobals::App->getDevice()->draw2DRectangle(rc,video::DefaultColors::Black);
+	TBAppGlobals::Instance()->App->getDevice()->draw2DRectangle(rc,video::DefaultColors::Black);
 
-	m_guiManager->DrawAll(m_renderTarget[GetEyeIndex(eye)]);
+	m_guiManager->DrawAll(&rc);// m_renderTarget[GetEyeIndex(eye)]);
 	if(m_state==EDone)
 	{
 		dev->draw2DRectangle(rc,video::SColor(0,0,0,m_exitTimeOut));
@@ -276,11 +288,11 @@ video::IRenderTarget* LoginScreenState::Render(const math::rectf& rc,ETargetEye 
 		attr.wrap=0;
 		attr.RightToLeft=0;
 		core::string msg=mT("Version= ");
-		msg+=TBAppGlobals::GetVersion();
+		msg+=TBAppGlobals::Instance()->GetVersion();
 		font->print(math::rectf(rc.BRPoint.x-300,rc.BRPoint.y-100+yoffset,10,10),&attr,0,msg,&renderer);
 		yoffset+=attr.fontSize;
 		msg=mT("Build= ");
-		msg+=TBAppGlobals::GetBuild();
+		msg+=TBAppGlobals::Instance()->GetBuild();
 		font->print(math::rectf(rc.BRPoint.x-300,rc.BRPoint.y-100+yoffset,10,10),&attr,0,msg,&renderer);
 		yoffset+=attr.fontSize;
 

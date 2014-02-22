@@ -75,13 +75,12 @@ protected:
 	GCPtr<scene::CameraNode> m_camera3rd;
 	//GCPtr<VT::VTSharedMemory> m_telesarLayer;
 	GCPtr<VT::ICommunicationLayer> m_telesarLayer;
-	GCPtr<VT::RobotCommunicator> m_robotCommunicator;
 	GCPtr<VT::CommunicationDataRecorder> m_dataRecorder;
 	GCPtr<scene::ViewPort> m_3rdVP;
 	GCPtr<VT::ContactCollisionDebugger> m_collisionDebugger;
 	GCPtr<scene::IDebugDrawManager> m_debugRenderer;
-	//GCPtr<video::CameraTextureSource> m_cameraSource[2];
-	GCPtr<CameraCorrectionGrabber> m_cameraSource[2];
+	GCPtr<video::CameraTextureSource> m_cameraSource[2];
+	//GCPtr<CameraCorrectionGrabber> m_cameraSource[2];
 
 	GCPtr<OS::IThread> m_physicsUpdateThread;
 

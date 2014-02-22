@@ -95,9 +95,10 @@ public:
 	virtual void PreUpdate();
 	virtual void Update(float dt);
 	virtual void DebugRender(scene::IDebugDrawManager* renderer);
+	virtual void GUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp);
 
-	virtual bool loadFromFile(const core::string& path);
-	virtual void loadXMLSettings(xml::XMLElement* elem);
+	virtual bool loadFromFile(const core::string& path,std::vector<game::GameEntity*>* ents=0);
+	virtual void loadXMLSettings(xml::XMLElement* elem, std::vector<game::GameEntity*>* ents = 0);
 	virtual xml::XMLElement*  exportXMLSettings(xml::XMLElement* elem);
 };
 

@@ -24,6 +24,7 @@ RobotCommunicatorComponent::RobotCommunicatorComponent(game::GameEntityManager*m
 	m_listenerComp=0;
 	m_controlSource=EControl_Kinematic;
 	m_scheme=new CommunicatorScheme();
+	m_communicator = new RobotCommunicator();
 	CPropertieDictionary* dic;
 	if(CreateDictionary(&dic))
 	{
@@ -33,6 +34,11 @@ RobotCommunicatorComponent::RobotCommunicatorComponent(game::GameEntityManager*m
 RobotCommunicatorComponent::~RobotCommunicatorComponent()
 {
 	delete m_scheme;
+
+	VT::CommunicationManager::getInstance().RemoveCommunicator(this);
+	VT::CommunicationManager::getInstance().RemoveRobotCommunication(m_communicator);
+
+	delete m_communicator;
 }
 
 bool RobotCommunicatorComponent::InitComponent()
@@ -69,6 +75,20 @@ bool RobotCommunicatorComponent::InitComponent()
 	}
 
 	CommunicationManager::getInstance().AddCommunicator(this);
+	CommunicationManager::getInstance().AddRobotCommunication(m_communicator);
+	ICommunicationLayer* layer= CommunicationManager::getInstance().GetCommunicationLayer(m_name);
+	if (layer)
+		m_communicator->SetCommunicatorLayer(layer);
+
+
+	{
+		const std::map<uint, VT::IControllableComponent*>& controllables = GetControllables();
+		std::map<uint, VT::IControllableComponent*>::const_iterator it = controllables.begin();
+		for (; it != controllables.end(); ++it)
+		{
+			m_motorConnections.push_back(m_communicator->AddConnection(it->second->GetControllableName(), it->second->GetControllableName()));
+		}
+	}
 
 	return true;
 }

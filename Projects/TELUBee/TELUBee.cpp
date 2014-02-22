@@ -70,6 +70,36 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
+		op.name = "Head";
+		op.value = "Oculus";
+		op.valueSet.insert("Keyboard");
+		op.valueSet.insert("Oculus");
+		op.valueSet.insert("OptiTrack");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
+		op.name = "Robot";
+		op.value = "Joystick";
+		op.valueSet.insert("Keyboard");
+		op.valueSet.insert("Joystick");
+		op.valueSet.insert("Wiiboard");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
+		op.name = "Stereoscopic";
+		op.value = "None";
+		op.valueSet.insert("None");
+		op.valueSet.insert("Side-by-side");
+		op.valueSet.insert("Up-bottom");
+		op.valueSet.insert("StereoTV");
+		op.valueSet.insert("Oculus");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+
+	}
+	{
 		op.name="DVIPort";
 		OS::OFSerialPortService spProvider;
 		std::vector<OS::SerialPortInfo> ports= spProvider.EnumAvaliablePorts();

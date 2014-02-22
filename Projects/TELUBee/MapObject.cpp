@@ -146,7 +146,7 @@ void MapObject::MouseMoved(Event*e)
 		rw=e->GetOwnerRenderWindow();
 	else
 	{
-		rw=TBAppGlobals::App->GetRenderWindow();
+		rw = TBAppGlobals::Instance()->App->GetRenderWindow();
 	}
 	evt.SetOwnerRenderWindow(rw);
 	evt.pos.x=rw->GetSize().x/2;

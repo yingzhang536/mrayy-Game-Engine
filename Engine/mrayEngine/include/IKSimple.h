@@ -43,9 +43,9 @@ protected:
 		math::quaternion rotation;
 	};
 
-	std::vector<math::quaternion> m_changeRotation;
+	std::vector<float> m_changeRotation;
 	std::vector<JoinData> m_jointData;
-	std::vector<IJointQuery::JointDOF> m_jointsDOF;
+	const std::vector<IJointQuery::JointDOF> *m_jointsDOF;
 
 public:
 	IKSimple();

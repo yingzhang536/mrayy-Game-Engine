@@ -59,7 +59,7 @@ void GUICatagoryPanel::ClearElements()
 {
 	m_panel->ClearElements();
 }
-bool GUICatagoryPanel::_UpdateRegion(video::IRenderArea*vp)
+bool GUICatagoryPanel::_UpdateRegion(const math::rectf*vp)
 {
 	if(IGUIElement::_UpdateRegion(vp))
 	{
@@ -132,7 +132,7 @@ const math::rectf& GUICatagoryPanel::GetClippedRect()
 	return m_clippedRect;
 }*/
 
-void GUICatagoryPanel::Draw(video::IRenderArea*vp)
+void GUICatagoryPanel::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

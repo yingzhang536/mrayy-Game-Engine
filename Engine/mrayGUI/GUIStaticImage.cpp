@@ -72,7 +72,7 @@ const core::string& GUIStaticImage::GetSourceImage()
 	return m_source;
 }
 
-void GUIStaticImage::Draw(video::IRenderArea*vp)
+void GUIStaticImage::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 	IGUIManager* creator=GetCreator();

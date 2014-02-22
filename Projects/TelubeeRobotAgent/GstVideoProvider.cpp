@@ -29,6 +29,7 @@
 #include "CMySrc.h"
 
 
+//http://cgit.freedesktop.org/gstreamer/gstreamer/tree/docs/random/porting-to-1.0.txt
 namespace mray
 {
 
@@ -57,6 +58,7 @@ public:
 	float m_timeAcc;
 	int m_frames;
 	int m_wasted;
+	int m_sentBytes;
 
 	int sourceid;
 
@@ -78,7 +80,15 @@ public:
 		GstBuffer* buffer;// = gst_buffer_new();
 		if(data->NeedData(&buffer))
 		{
+#if GST_VERSION_MAJOR==1
+			GstFlowReturn ret;
+			g_signal_emit_by_name(data->gstSrc, "push-buffer", buffer, &ret);
+			gst_buffer_unref (buffer);
+			if(ret!=GST_FLOW_OK)
+				return false;
+#else
 			gst_app_src_push_buffer((GstAppSrc*)(data->gstSrc), buffer);
+#endif
 		}
 
 #if 0
@@ -211,6 +221,7 @@ public:
 	}
 	/* The appsink has received a buffer */
 	static GstFlowReturn new_preroll(GstAppSink * sink, void * data) {
+#if GST_VERSION_MAJOR == 0
 		GstBuffer *buffer;
 
 		/* Retrieve the buffer */
@@ -221,6 +232,21 @@ public:
 			//((GstVideoProviderImpl*)data)->SendData(buffer,0);
 			gst_buffer_unref(buffer);
 		}
+#else 
+		GstSample *sample;
+		GstBuffer* buffer;
+
+		/* Retrieve the buffer */
+		sample = gst_app_sink_pull_preroll(GST_APP_SINK(sink));
+		if (sample) {
+			buffer = gst_sample_get_buffer(sample);
+			/* The only thing we do in this example is print a * to indicate a received buffer */
+
+			//((GstVideoProviderImpl*)data)->SendData(buffer,0);
+			gst_buffer_unref(buffer);
+			gst_sample_unref(sample);
+		}
+#endif
 		return GST_FLOW_OK;
 	}
 public:
@@ -282,7 +308,7 @@ public:
 			return false;
 		}
 
-
+		GstBuffer* buffer;
 		src->Lock();
 
 		if (src->GetGrabber()->GetBufferID()==m_lastBufferID)
@@ -293,31 +319,46 @@ public:
 			return false;
 		}
 		m_lastBufferID = src->GetGrabber()->GetBufferID();
-		GstBuffer* buffer = gst_buffer_new();
 		const video::ImageInfo* image = src->GetGrabber()->GetLastFrame();
+#if GST_VERSION_MAJOR ==0
 		if (image->imageDataSize != pixelsCount)
 		{
 			pixelsCount = image->imageDataSize;
 			pixels = new uchar[image->imageDataSize];
 		}
+		memcpy(pixels, image->imageData, pixelsCount);
+#else
+		pixelsCount = image->imageDataSize;
+		buffer = gst_buffer_new_and_alloc(pixelsCount);
+#endif
 		//	GST_BUFFER_SIZE(buffer) = 1280 * 720 * 3;
 		//	GST_BUFFER_DATA(buffer) = pixels;
-		memcpy(pixels, image->imageData, pixelsCount);
-
 
 		src->Unlock();
 
+#if GST_VERSION_MAJOR ==0
+		buffer = gst_buffer_new();
 		GST_BUFFER_SIZE(buffer) = pixelsCount;
 		GST_BUFFER_DATA(buffer) = pixels;
+#else
+		GstMapInfo mapinfo;
+		gst_buffer_map(buffer, &mapinfo, GST_MAP_WRITE);
+		memcpy(mapinfo.data, image->imageData, pixelsCount);
+		gst_buffer_unmap(buffer, &mapinfo);
+
+		//gst_buffer_insert_memory(buffer,0,)
+#endif
+
 		m_timeAcc += ms;
 		m_time = t;
 		m_frames++;
 		if (m_timeAcc >= 1000)
 		{
-			printf("%d/%d, ", m_frames,m_wasted);
+			printf("%d F/%d B, ", m_frames, m_sentBytes);
 			m_timeAcc -= 1000;
 			m_frames = 0;
 			m_wasted = 0;
+			m_sentBytes = 0;
 		}
 
 		//time_t  now = time(0);
@@ -375,16 +416,27 @@ public:
 
 	void SendData(GstBuffer* buffer,int index)
 	{
+#if GST_VERSION_MAJOR==0
 		guint8* data = GST_BUFFER_DATA(buffer);
 		int size = GST_BUFFER_SIZE(buffer);
+#else
+		GstMapInfo mapinfo;
+		gst_buffer_map(buffer, &mapinfo, GST_MAP_READ);
+
+		guint8* data = mapinfo.data;
+		int size = mapinfo.size;
+#endif
 		network::NetAddress addr;
 		addr.address = m_targetAddress.address;
 		addr.port = m_targetPorts[index];
 		m_udpClient[index]->SendTo(&addr, (char*)data, size);
+		m_sentBytes += size;
 //		printf("data sent: %d\n", size);
 
-		//printf("[%d] ", index);
-
+	//	printf("%d-",size);
+#if GST_VERSION_MAJOR==1
+		gst_buffer_unmap(buffer, &mapinfo);
+#endif
 		return;
 		int remaining = size;
 		int offset = 0;
@@ -443,7 +495,7 @@ public:
 		//gstString = "appsrc name=src !  video/x-raw-rgb, width=1408,height=1152,framerate=25/1 !ffmpegcolorspace !  ffenc_h263 name=enc !  rtph263pay name=pay ! rtph263depay ! ffdec_h263! autovideosink name=sink ";//bitrate=1024  
 		// 
 		core::string pass="pass1";
-		int quanizer=20;
+		float quanizer = 20;
 		int bitrate=2048;
 		int mu = 1400;
 		switch (quality)
@@ -451,32 +503,46 @@ public:
 		case EStreamingQuality::UltraLow:
 			pass = "pass1";
 			quanizer = 40;
-			bitrate = 1000;
-			m_frameRate = 15;
+			bitrate = 2000;
+			m_frameRate = 25;
+
+			quanizer = 15;
 			break;
 		case EStreamingQuality::Low:
 			pass = "pass1";
 			quanizer = 30;
-			bitrate = 1000;
-			m_frameRate = 20;
+			bitrate = 3000;
+			m_frameRate = 25;
+
+			quanizer = 15;
+
 			break;
 		case EStreamingQuality::Medium:
 			pass = "qual";
 			quanizer = 20;
-			bitrate = 2000;
+			bitrate = 3000;
 			m_frameRate = 25;
+
+			quanizer = 10;
+
 			break;
 		case EStreamingQuality::High:
 			pass = "qual";
 			quanizer = 10;
 			bitrate = 3000;
-			m_frameRate = 25;
+			m_frameRate = 30;
+			
+			quanizer = 5;
+
 			break;
 		case EStreamingQuality::UltraHigh:
-			pass = "qual"; 
+			pass = "pass1"; 
 			quanizer = 5;
 			bitrate = 4000;
-			m_frameRate = 25;
+			m_frameRate = 30;
+
+			quanizer = 1;
+
 			break;
 		default:
 			break;
@@ -484,8 +550,7 @@ public:
 		if (m_isLocal)
 			mu = 1400*5;
 // 		pass = "pass1";
- 		m_frameRate = 25;
-		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc rc-lookahead=1 cabac=true pass=" + pass +
+		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate !   x264enc  name=enc rc-lookahead=1 cabac=true pass=" + pass +
 			" quantizer=" + core::StringConverter::toString(quanizer) +
 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			"  ! rtph264pay mtu=1400 ! mysink name=sink sync=false " ;
@@ -493,20 +558,48 @@ public:
 		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode
 		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc "// rc - lookahead = 1 cabac = true pass = " + pass +
 			//" quantizer=" + core::StringConverter::toString(quanizer) +
-			"   speed-preset=ultrafast "// sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			"   speed-preset=ultrafast  sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			"  ! rtph264pay mtu=1400 ! tee name=videoTee " 
 			" dshowaudiosrc ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=2!  audioconvert  ! audioresample ! vorbisenc  !tee name=audioTee "  //oggmux max-delay=50 max-page-delay=50 
 			"videoTee. ! queue ! mysink name=sink sync=false " 
 			"audioTee. ! queue ! mysink name=audiosink sync=false";
 
 		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode, rc-lookahead=1 cabac=true
-		gstString = "appsrc name=src ! queue! ffmpegcolorspace! videorate!   x264enc  name=enc pass=" + pass +
+#if GST_VERSION_MAJOR==0
+		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace !    "
+			"x264enc  name=enc"
+			" pass=" + pass +
 			"  quantizer=" + core::StringConverter::toString(quanizer) +
 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			" tune=zerolatency"
-			"  ! rtph264pay mtu=" + core::StringConverter::toString(mu) + 
+			//" rc-lookahead=1"
+			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 			" ! mysink name=sink sync=false ";
 
+		
+		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace !    "
+			"ffenc_mpeg4   name=enc "
+			"idct-algo=14 dct-algo=3 quant-type=1 gop-size=24 flags=0x00000010 "//qmin=2 qmax=31 
+			" pass=2" 
+			"  quantizer= "+ core::StringConverter::toString(quanizer) +
+		//	"   bitrate=" + core::StringConverter::toString(bitrate*10) +
+ 			"  ! rtpmp4vpay send-config=true"// mtu=" + core::StringConverter::toString(mu) + 
+// 			" ! rtpmp4vdepay ! ffdec_mpeg4 ! autovideosink";
+			" ! mysink name=sink sync=false ";/**/
+#else
+
+		gstString = "appsrc name=src ! "
+			"video/x-raw,format=RGB,framerate=" + core::StringConverter::toString(m_frameRate) + "/1" +
+			",width=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().x) +
+			",height=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().y) +
+			" ! videoconvert !  videorate!  "
+		"x264enc  name=enc pass=" + pass +
+// 			"  quantizer=" + core::StringConverter::toString(quanizer) +
+// 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+// 			" tune=zerolatency"
+			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+			" ! mysink name=sink sync=false ";
+#endif
 		if (m_streamAudio)
 			gstString+=" dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert   !audioresample ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 		//audio/x-raw-int, endianness=1234, signed=true, width=16, depth=16, rate=22000, channels=1
@@ -521,7 +614,6 @@ public:
 		}
 
 		gstSrc = gst_bin_get_by_name(GST_BIN(gstPipeline), "src");
-		GstElement* mpg = gst_bin_get_by_name(GST_BIN(gstPipeline), "mpeg");
 		GstElement* enc = gst_bin_get_by_name(GST_BIN(gstPipeline), "enc");
 		GstElement* pay = gst_bin_get_by_name(GST_BIN(gstPipeline), "pay");
 		GstElement* sink = gst_bin_get_by_name(GST_BIN(gstPipeline), "sink");
@@ -534,8 +626,11 @@ public:
 // 		g_signal_connect(gstSrc, "enough-data", G_CALLBACK(stop_feed), this);
 
 		GstMySink* mySink = GST_MYSINK(sink);
-		mySink->new_buffer = new_buffer;
-		mySink->data = this;
+		if (mySink)
+		{
+			mySink->new_buffer = new_buffer;
+			mySink->data = this;
+		}
 		if (audioSink)
 		{
 			audioSink->new_buffer = new_audiobuffer;
@@ -580,18 +675,25 @@ public:
 	
 
 		GstCaps* caps;
-		/*
-		caps = gst_caps_new_simple("video/x-raw-yuv",
-			"rate", G_TYPE_INT, 180000,
+#if GST_VERSION_MAJOR==0
+		caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y, m_frameRate,  1, 4, 3);
+#else
+
+		/*caps = gst_caps_new_simple("video/x-raw",
+			"format", G_TYPE_STRING, "RGB",
+			//"rate", G_TYPE_INT, 180000,
 			//"bpp", G_TYPE_INT, 24,
 			//"depth", G_TYPE_INT, 24,
-			"width", G_TYPE_INT, src->GetFrameSize().x,
-			"height", G_TYPE_INT, src->GetFrameSize().y,
-			NULL);
-		*/
-		caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y, m_frameRate, 1, 4, 3);
-		//g_object_set(gstSrc, "caps", caps, NULL);
-		gst_app_src_set_caps(GST_APP_SRC(gstSrc), caps);
+ 			"width", G_TYPE_INT, src->GetGrabber()->GetFrameSize().x,
+			"height", G_TYPE_INT, src->GetGrabber()->GetFrameSize().y,
+			NULL);*/
+		GstVideoInfo info;
+		gst_video_info_set_format(&info, GST_VIDEO_FORMAT_RGB, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y);
+		caps = gst_video_info_to_caps(&info);
+		
+#endif
+		g_object_set(gstSrc, "caps", caps, NULL);
+		//gst_app_src_set_caps(GST_APP_SRC(gstSrc), caps);
 		gst_caps_unref(caps);
 
 // 		caps = gst_caps_new_simple("application/x-rtp",
@@ -606,6 +708,7 @@ public:
 		m_counter = 0;
 		m_wasted = 0;
 		m_lastBufferID = -1;
+		m_sentBytes = 0;
 		try
 		{
 			for (int i = 0; i < 2; ++i)
@@ -696,21 +799,39 @@ public:
 	}
 
 	void close(){
+			src->Lock();
 		if (bPlaying){
-			stopPlay();
+			try
+			{
+				stopPlay();
+			}
+			catch (...)
+			{
+				
+			}
 		}
 		if (bLoaded){
-			gst_element_set_state(GST_ELEMENT(gstPipeline), GST_STATE_NULL);
-			gst_element_get_state(gstPipeline, NULL, NULL, 2 * GST_SECOND);
+			try
+			{
+ 			gst_element_set_state(GST_ELEMENT(gstPipeline), GST_STATE_NULL);
+ 			gst_element_get_state(gstPipeline, NULL, NULL, 2 * GST_SECOND);
 			// gst_object_unref(gstSink); this crashes, why??
+			}
+			catch (...)
+			{
+
+			}
 
 			gst_object_unref(gstPipeline);
 			gstPipeline = NULL;
 			gstSink = NULL;
 		}
+		src->Unlock();
 		
 		stopGstMainLoop();
 		bLoaded = false;
+		bPlaying = false;
+		bPaused = true;
 
 	}
 	void play()
@@ -846,7 +967,7 @@ bool GstVideoProviderImpl::HandleMessage(GstBus * bus, GstMessage * msg){
 	}break;
 #else
 	case GST_MESSAGE_DURATION_CHANGED:
-		gst_element_query_duration(gstPipeline, GST_FORMAT_TIME, &durationNanos);
+	//	gst_element_query_duration(gstPipeline, GST_FORMAT_TIME, &durationNanos);
 		break;
 
 #endif

@@ -98,6 +98,9 @@ public:
 	virtual void QueueSoundBuffer(ISoundStreamFrame*data);
 	virtual void UnqueueSoundBuffer(ISoundStreamFrame*data);
 
+	void GetSamples(float* samples, float count, int channel){};
+	void GetSpectrum(float* samples, float count, int channel, EFFT_WindowType window){};
+
 	virtual xml::XMLElement* exportXMLSettings(xml::XMLElement* e);
 	virtual xml::XMLElement* loadXMLSettings(xml::XMLElement*e);
 };

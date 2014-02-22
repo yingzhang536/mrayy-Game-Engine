@@ -40,12 +40,9 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\Program Files (x86)\OSSBuild\GStreamer\v0.10.6\sdk\share\vs\2010\libs\gstreamer-0.10.props" />
-    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -64,14 +61,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;;..\..\plugins\WiimoteController;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mrayOIS.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
       <OptimizeReferences>false</OptimizeReferences>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -85,7 +82,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
@@ -95,8 +92,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mrayOIS.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib;mrayGStreamer.lib</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -112,22 +109,13 @@
   <ItemGroup>
     <ClInclude Include="..\VirtualTelesar\VTelesar5\resource.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="ApplicationStateManager.h" />
-    <ClInclude Include="BaseAppState.h" />
     <ClInclude Include="BaseDataReceiver.h" />
-    <ClInclude Include="BaseRenderState.h" />
-    <ClInclude Include="CameraRenderingState.h" />
     <ClInclude Include="CinematicController.h" />
     <ClInclude Include="ConnectingToRobotScreen.h" />
-    <ClInclude Include="CRobotConnector.h" />
     <ClInclude Include="DBConnectionCommands.h" />
     <ClInclude Include="DVISwitcherController.h" />
     <ClInclude Include="DynamicMemoryStream.h" />
-    <ClInclude Include="GSTCameraRenderingState.h" />
     <ClInclude Include="GStreamerTestState.h" />
-    <ClInclude Include="GStreamVideoProvider.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="GUIBlinkingText.h" />
     <ClInclude Include="GUIConnectingToRobot.h" />
     <ClInclude Include="GUIDateElement.h" />
@@ -139,20 +127,11 @@
     <ClInclude Include="GUIOculusDetectImpl.h" />
     <ClInclude Include="GUIRobotPanel.h" />
     <ClInclude Include="GUIRobotPanelImpl.h" />
-    <ClInclude Include="HMDCameraRenderer.h" />
     <ClInclude Include="HMDRobotRenderer.h" />
-    <ClInclude Include="IApplicationState.h" />
-    <ClInclude Include="IEyesRenderingBaseState.h" />
-    <ClInclude Include="IHMDRenderer.h" />
     <ClInclude Include="IMapController.h" />
     <ClInclude Include="IndicatorComponent.h" />
     <ClInclude Include="InMapRenderState.h" />
-    <ClInclude Include="IRenderingState.h" />
-    <ClInclude Include="IRobotCommunicator.h" />
     <ClInclude Include="ISerialPort.h" />
-    <ClInclude Include="ITransitionBlender.h" />
-    <ClInclude Include="IVideoProvider.h" />
-    <ClInclude Include="JoystickDefinitions.h" />
     <ClInclude Include="JoystickMapController.h" />
     <ClInclude Include="LocalRobotCommunicator.h" />
     <ClInclude Include="LoginScreenState.h" />
@@ -161,10 +140,9 @@
     <ClInclude Include="MapEntity.h" />
     <ClInclude Include="MapMarker.h" />
     <ClInclude Include="MapObject.h" />
-    <ClInclude Include="multicast.h" />
     <ClInclude Include="NetworkMessage.h" />
-    <ClInclude Include="NullRenderState.h" />
     <ClInclude Include="OculusDetectState.h" />
+    <ClInclude Include="GSTVideoState.h" />
     <ClInclude Include="_ofGstUtilsWin32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -175,21 +153,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="RemoteRobotCommunicator.h" />
-    <ClInclude Include="TBeeOptiTrackObject.h" />
-    <ClInclude Include="RenderBlender.h" />
-    <ClInclude Include="RenderingStateManager.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="RobotInfoManager.h" />
     <ClInclude Include="SeeThroughWindow.h" />
-    <ClInclude Include="shmem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TBRobotInfo.h" />
     <ClInclude Include="IntroRenderingState.h" />
     <ClInclude Include="TBAppGlobals.h" />
-    <ClInclude Include="TBRobotUserInfo.h" />
-    <ClInclude Include="TBUserInfo.h" />
     <ClInclude Include="telubee\shmem.h" />
     <ClInclude Include="UDPDataReceiver.h" />
     <ClInclude Include="TBSharedMemory.h" />
@@ -198,34 +167,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="ApplicationStateManager.cpp" />
-    <ClCompile Include="BaseAppState.cpp" />
-    <ClCompile Include="BaseRenderState.cpp" />
-    <ClCompile Include="CameraRenderingState.cpp" />
     <ClCompile Include="CinematicController.cpp" />
     <ClCompile Include="ConnectingToRobotScreen.cpp" />
-    <ClCompile Include="CRobotConnector.cpp" />
     <ClCompile Include="DBConnectionCommands.cpp" />
     <ClCompile Include="DVISwitcherController.cpp" />
     <ClCompile Include="DynamicMemoryStream.cpp" />
-    <ClCompile Include="GSTCameraRenderingState.cpp" />
     <ClCompile Include="GStreamerTestState.cpp" />
-    <ClCompile Include="GStreamVideoProvider.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="GSTVideoState.cpp" />
     <ClCompile Include="GUIBlinkingText.cpp" />
     <ClCompile Include="GUIDateElement.cpp" />
     <ClCompile Include="GUILoadingElement.cpp" />
     <ClCompile Include="GUIOculusDetectImpl.cpp" />
     <ClCompile Include="GUIRobotPanelImpl.cpp" />
-    <ClCompile Include="HMDCameraRenderer.cpp" />
     <ClCompile Include="HMDRobotRenderer.cpp" />
-    <ClCompile Include="IEyesRenderingBaseState.cpp" />
     <ClCompile Include="IndicatorComponent.cpp" />
     <ClCompile Include="InMapRenderState.cpp" />
-    <ClCompile Include="IRenderingState.cpp" />
     <ClCompile Include="ISerialPort.cpp" />
-    <ClCompile Include="JoystickDefinitions.cpp" />
     <ClCompile Include="JoystickMapController.cpp" />
     <ClCompile Include="LocalRobotCommunicator.cpp" />
     <ClCompile Include="LoginScreenState.cpp" />
@@ -233,10 +190,6 @@
     <ClCompile Include="MapEntity.cpp" />
     <ClCompile Include="MapMarker.cpp" />
     <ClCompile Include="MapObject.cpp" />
-    <ClCompile Include="multicast.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="NetworkMessage.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
     </ClCompile>
@@ -254,16 +207,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="RemoteRobotCommunicator.cpp" />
-    <ClCompile Include="TBeeOptiTrackObject.cpp" />
-    <ClCompile Include="RenderBlender.cpp" />
-    <ClCompile Include="RenderingStateManager.cpp" />
-    <ClCompile Include="RobotInfoManager.cpp" />
     <ClCompile Include="SeeThroughWindow.cpp" />
-    <ClCompile Include="shmem.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

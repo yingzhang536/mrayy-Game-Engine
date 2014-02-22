@@ -9,6 +9,8 @@
 #include "Skeleton.h"
 #include "SMesh.h"
 #include "MeshBufferData.h"
+#include "IDebugDrawManager.h"
+#include "DefaultColors.h"
 
 namespace mray
 {
@@ -109,6 +111,18 @@ IObject* BoneComponent::GetAttachedObject()
 scene::IMovable* BoneComponent::GetMovableObject()
 {
 	return m_attachedBone;
+}
+
+void BoneComponent::DebugRender(scene::IDebugDrawManager* renderer)
+{
+	if (!m_attachedBone)
+		return;
+	const scene::BonesList& lst=m_attachedBone->getSubBones();
+	scene::BonesList::const_iterator it = lst.begin();
+	for (; it != lst.end();++it)
+	{
+		renderer->AddLine(m_attachedBone->getAbsolutePosition(), (*it)->getAbsolutePosition(), video::DefaultColors::GreenYellow, 1, 0,false);
+	}
 }
 
 

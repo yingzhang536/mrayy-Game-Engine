@@ -20,6 +20,7 @@ BoneNode::BoneNode(const core::string&name,uint id,Skeleton*skeleton,BoneNode*pa
 	m_id=id;
 
 	m_updateChilds=true;
+	m_inheritTransformation = true;
 
 }
 BoneNode::~BoneNode(){
@@ -41,7 +42,30 @@ math::box3d BoneNode::getTransformedBoundingBox(){
 	return math::box3d::Empty;
 }
 
-void BoneNode::removeChild(IMovable*elem,bool parentSpace){
+void BoneNode::removeChild(IMovable*elem, bool parentSpace){
+	if (elem && elem->getParent() == this)
+	{
+		if (parentSpace)
+		{
+			elem->setPosition(elem->getAbsolutePosition());
+			elem->setOrintation(elem->getAbsoluteOrintation());
+			elem->setScale(elem->getAbsoluteScale());
+		}
+		MovableNodeList::iterator it = m_children.begin();
+		for (; it != m_children.end();++it)
+		{
+			if ((*it).pointer() == elem)
+			{
+				m_children.erase(it);
+				break;;
+			}
+		}
+		if (dynamic_cast<BoneNode*>(elem))
+		{
+			removeBone(dynamic_cast<BoneNode*>(elem));
+		}
+		elem->setParent(0);
+	}
 }
 void BoneNode::addChild(IMovableCRef elem,bool parentSpace){
 	if(elem)
@@ -241,7 +265,7 @@ const math::vector3d& BoneNode::getAbsoluteBasePosition()const
 void BoneNode::updateBaseTransformation()
 {
 	
-	if(m_parent){
+	if (m_parent && m_inheritTransformation){
 		if(m_parentBone){
 			m_absBaseOrintation=m_parentBone->getAbsoluteBaseOrintation()*getBaseOrintation();
 			m_absBasePosition=m_parentBone->getBaseTransformation()*(m_basePosition);
@@ -376,20 +400,12 @@ void BoneNode::updateAbsoluteTransformation()
 
 	bool shouldUpdate=m_transformationDirty;
 	if(m_parent){
-		shouldUpdate=true;//shouldUpdate || m_parent->NeedChildUpdate();
+		shouldUpdate = shouldUpdate || m_parent->NeedChildUpdate() && m_inheritTransformation;
 	}
-	if(!shouldUpdate)return ;
-/*
-	bool shouldUpdate=false;
-	shouldUpdate=hasChanged();
-	if(m_parent){
-		shouldUpdate=shouldUpdate || m_parent->NeedChildUpdate();
-	}
-	if(!shouldUpdate){
-		return;
-	}*/
+	//if(!shouldUpdate)return ;
+
 	updateRelativeTransformation();
-	if(m_parent)
+	if (m_parent && m_inheritTransformation)
 	{
 		math::vector3d absPos;
 		m_absOrintation=m_parent->getAbsoluteOrintation()*m_orintation;

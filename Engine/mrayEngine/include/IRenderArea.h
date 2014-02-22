@@ -33,7 +33,7 @@ public:
 	virtual~IRenderArea()
 	{
 	}
-
+	//virtual math::vector2di getPosition(){ return math::vector2di::Zero; }
 	virtual math::vector2di getSize()=0;
 
 	virtual const ITexturePtr& getColorTexture(int i=0)=0;

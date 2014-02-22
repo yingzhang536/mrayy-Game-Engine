@@ -109,7 +109,7 @@ bool XMLExpatParser::parserXML(OS::IStream*stream,XMLTree*tree){
 		//listner->onDone(false);
 		int line=XML_GetCurrentLineNumber(parser);
 		XML_ParserFree(parser);
-		gLogManager.log(core::string(mT("XMLExpatParser::parserXML()-couldn't parse \""))+stream->getStreamName()+mT("\" at line :")+core::StringConverter::toString(line),ELL_ERROR);
+		gLogManager.log(core::string(mT("XMLExpatParser::parserXML()-couldn't parse \""))+stream->getStreamName()+mT("\" at line :")+core::StringConverter::toString(line),ELL_WARNING);
 		return false;
 	}
 	//listner->onDone(true);

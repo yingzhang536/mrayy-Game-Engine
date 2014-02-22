@@ -98,6 +98,7 @@ void KinematicJointDOF6Component::_OnTargetChanged()
 			if(m_parent==n1)
 			{
 				n1->GetRootNode()->addChild(n2->GetRootNode(),true);
+				//n2->GetRootNode()->setPosition(m_jointDesc.localAnchor[1]);
 				n2->GetRootNode()->updateAbsoluteTransformation();
 			}else if(m_parent==n2)
 			{

@@ -40,7 +40,7 @@ public:
 	IVideoProvider* GetProvider(){return m_provider;}
 
 	void Grab();
-	virtual void Init(Application*app);
+	virtual void Init();
 	virtual void Render(const math::rectf &rc,ETargetEye eye);
 	virtual void Update(float dt);
 

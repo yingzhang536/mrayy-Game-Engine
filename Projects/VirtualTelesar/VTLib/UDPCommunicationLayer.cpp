@@ -95,8 +95,11 @@ void UDPCommunicationLayer::Close()
 {
 	m_client->Close();
 
-	m_thread->terminate();
-	OS::IThreadManager::getInstance().killThread(m_thread);
+	if (m_thread)
+	{
+		m_thread->terminate();
+		OS::IThreadManager::getInstance().killThread(m_thread);
+	}
 }
 void UDPCommunicationLayer::_ReceiveData(OS::IStream* stream)
 {

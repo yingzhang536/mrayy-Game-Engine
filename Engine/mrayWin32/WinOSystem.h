@@ -53,6 +53,8 @@ public:
 	virtual ISystemProcess* CreateSystemProcess();
 
 	virtual ulong HandleWindowEvent(const OptionContainer& params);
+
+	virtual IFileMonitor* CreateFileMonitor() ;
 };
 
 }

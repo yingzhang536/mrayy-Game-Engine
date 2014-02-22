@@ -213,7 +213,9 @@
     <ClInclude Include="WinDllManager.h" />
     <ClInclude Include="WinDynamicLibrary.h" />
     <ClInclude Include="WinFile.h" />
+    <ClInclude Include="WinFileMonitor.h" />
     <ClInclude Include="WinFileSystem.h" />
+    <ClInclude Include="WinMonitorFileInformation.h" />
     <ClInclude Include="WinMutex.h" />
     <ClInclude Include="WinOSClipboard.h" />
     <ClInclude Include="WinOSystem.h" />
@@ -240,7 +242,9 @@
     <ClCompile Include="WinDllManager.cpp" />
     <ClCompile Include="WinDynamicLibrary.cpp" />
     <ClCompile Include="WinFile.cpp" />
+    <ClCompile Include="WinFileMonitor.cpp" />
     <ClCompile Include="WinFileSystem.cpp" />
+    <ClCompile Include="WinMonitorFileInformation.cpp" />
     <ClCompile Include="WinMutex.cpp" />
     <ClCompile Include="WinOSClipboard.cpp" />
     <ClCompile Include="WinOSystem.cpp" />

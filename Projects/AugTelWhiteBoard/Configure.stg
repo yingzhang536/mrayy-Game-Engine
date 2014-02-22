@@ -1,0 +1,10 @@
+Settings{
+	Bits	"24"
+	Debugging	"Yes"
+	Fullscreen	"False"
+	Monitor	"0"
+	Multisample	"0"
+	OptiServer	"192.168.20.105"
+	Resolution	"1280,720"
+	VSync	"False"
+}

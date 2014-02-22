@@ -70,6 +70,9 @@ bool DirectShowVideoGrabber::InitDevice(int device,int w,int h,int fps)
 		s_videoInput->stopDevice(m_device);
 
 	m_device=device;
+	if (m_device < 0)
+		return false
+		;
 
 	//int format = VI_NTSC_M;
 	//s_videoInput->setFormat(device, format);

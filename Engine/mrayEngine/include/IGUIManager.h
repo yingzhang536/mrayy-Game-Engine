@@ -86,12 +86,17 @@ public:
 
 	virtual IGUIElement*	GetElementFromPoint(float x,float y)=0;
 
-	virtual bool OnEvent(Event* event)=0;
-	virtual void DrawAll(video::IRenderArea*vp)=0;
+	virtual bool OnEvent(Event* event, const math::rectf*vp = 0) = 0;
+	virtual void DrawAll(const math::rectf*vp)=0;
 
 	virtual void Update(float dt)=0;
 
-	virtual IGUIElement* CreateElement(const GUID& type)=0;
+	virtual IGUIElement* CreateElement(const GUID& type) = 0;
+
+	template<class T>
+	T* CreateElement() {
+		return dynamic_cast<T*>(CreateElement(T::ElementType));
+	}
 
 	virtual void SetEventListener(IEventReciver*l);
 };

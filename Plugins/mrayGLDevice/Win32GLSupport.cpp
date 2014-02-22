@@ -130,7 +130,7 @@ void Win32GLSupport::InitaliseWGL()
 	pfd.nVersion = 1;
 	pfd.cColorBits = 16;
 	pfd.cDepthBits = 15;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_DOUBLEBUFFER;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_STEREO;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 
 	// if these fail, wglCreateContext will also quietly fail
@@ -227,7 +227,7 @@ bool Win32GLSupport::selectPixelFormat(HDC hdc, int colourDepth, int multisample
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_STEREO;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = (colourDepth > 16)? 24 : colourDepth;
 	pfd.cAlphaBits = (colourDepth > 16)? 8 : 0;
@@ -258,6 +258,7 @@ bool Win32GLSupport::selectPixelFormat(HDC hdc, int colourDepth, int multisample
 		attribList.push_back(WGL_ALPHA_BITS_ARB); attribList.push_back(pfd.cAlphaBits);
 		attribList.push_back(WGL_DEPTH_BITS_ARB); attribList.push_back(24);
 		attribList.push_back(WGL_STENCIL_BITS_ARB); attribList.push_back(8);
+		attribList.push_back(WGL_STEREO_ARB); attribList.push_back(GL_TRUE);
 		attribList.push_back(WGL_SAMPLES_ARB); attribList.push_back(multisample);
 		if (useHwGamma && CheckExtension(mT("WGL_EXT_framebuffer_sRGB")))
 		{

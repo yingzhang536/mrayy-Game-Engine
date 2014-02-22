@@ -38,7 +38,7 @@ void OculusCameraComponent::Update(float dt)
 	IGameComponent::Update(dt);
 	//if(!m_isDirty || !m_device || !m_vp || !m_shader)
 	//	return;
-	if(!m_device || !m_device->IsConnected())
+	if (!m_device || !m_device->IsConnected() || !m_vp)
 		return;
 	const video::OculusDeviceData& data= m_device->GetDeviceInfo();
 	math::vector2d vpSize=math::vector2d(m_vp->getSize().x,m_vp->getSize().y);

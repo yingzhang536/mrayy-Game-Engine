@@ -68,8 +68,8 @@ namespace TBee
 		}
 		virtual void Render(const math::rectf& rc)
 		{
-			TBAppGlobals::App->getDevice()->useTexture(0,&m_image);
-			TBAppGlobals::App->getDevice()->draw2DImage(rc,video::SColor(1,1,1,m_fadeAmount));
+			Engine::getInstance().getDevice()->useTexture(0,&m_image);
+			Engine::getInstance().getDevice()->draw2DImage(rc, video::SColor(1, 1, 1, m_fadeAmount));
 		}
 		virtual void Update(float dt)
 		{
@@ -105,7 +105,7 @@ namespace TBee
 		VideoIntroItem()
 		{
 			m_video=new video::VideoGrabberTexture();
-			m_texture=TBAppGlobals::App->getDevice()->createEmptyTexture2D(true);
+			m_texture = Engine::getInstance().getDevice()->createEmptyTexture2D(true);
 		}
 		~VideoIntroItem()
 		{
@@ -140,8 +140,8 @@ namespace TBee
 			m_video->Blit();
 			video::TextureUnit tex;
 			tex.SetTexture(m_video->GetTexture());
-			TBAppGlobals::App->getDevice()->useTexture(0,&tex);
-			TBAppGlobals::App->getDevice()->draw2DImage(math::rectf(math::vector2d(0),rc.getSize()),video::SColor(1,1,1,m_fadeAmount));
+			Engine::getInstance().getDevice()->useTexture(0, &tex);
+			Engine::getInstance().getDevice()->draw2DImage(math::rectf(math::vector2d(0), rc.getSize()), video::SColor(1, 1, 1, m_fadeAmount));
 
 		}
 		virtual void Update(float dt)
@@ -197,10 +197,10 @@ IntroRenderingState::~IntroRenderingState()
 	m_introItems.clear();
 }
 
-void IntroRenderingState::InitState(Application* app)
+void IntroRenderingState::InitState()
 {
 
-	IRenderingState::InitState(app);
+	IRenderingState::InitState();
 
 }
 

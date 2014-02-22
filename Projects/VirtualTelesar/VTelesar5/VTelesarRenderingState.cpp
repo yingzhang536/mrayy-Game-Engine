@@ -231,9 +231,11 @@ VTelesarRenderingState::VTelesarRenderingState()
 {
 	m_closed=false;
 	m_collisionDebugger=new VT::ContactCollisionDebugger();
-	g_udpListener.m_owner=this;
-	m_cameraSource[0]=new CameraCorrectionGrabber(0);
-	m_cameraSource[1] = new CameraCorrectionGrabber(1);
+	g_udpListener.m_owner = this;
+// 	m_cameraSource[0] = new CameraCorrectionGrabber(0);
+// 	m_cameraSource[1] = new CameraCorrectionGrabber(1);
+	m_cameraSource[0] = new video::CameraTextureSource();
+	m_cameraSource[1] = new video::CameraTextureSource();
 	m_previewRenderingSteps=false;
 	
 }
@@ -243,7 +245,7 @@ VTelesarRenderingState::~VTelesarRenderingState()
 	m_closed=true;
 	m_physicsUpdateThread->terminate();
 	OS::IThreadManager::getInstance().killThread(m_physicsUpdateThread);
-	VT::ShutdownVTLib();
+	VT::ReleaseVTLib();
 	m_dataRecorder=0;
 	m_gameManager=0;
 	m_phManager=0;
@@ -273,7 +275,7 @@ void VTelesarRenderingState::CreatePhysicsSystem()
 	else desc.maxIter=core::StringConverter::toInt(maxIter);
 
 	if(maxTimestepDiv=="")
-		desc.maxTimestep=1/(16*60);
+		desc.maxTimestep=1.0f/(16*60.0f);
 	else desc.maxTimestep=1.0f/core::StringConverter::toFloat(maxTimestepDiv);
 	desc.useFixedTimeStep=true;
 	m_phManager=new physics::PhysXManager(&desc);
@@ -403,12 +405,10 @@ void VTelesarRenderingState::_Reload(const core::string& scene)
 	if(m_robot)
 	{
 		//Create dummy list of connections until we get the list of source connectors from communication layer
-		const std::map<uint,VT::IControllableComponent*>& controllables= m_robot->GetControllables();
-		std::map<uint,VT::IControllableComponent*>::const_iterator it=controllables.begin();
-		for (;it!=controllables.end();++it)
+		const std::vector<MotorConnection*> & conn= m_robot->GetMotorConnections();
+		for (int i = 0; i < conn.size();++i)
 		{
-			VT::MotorConnection* con= m_robotCommunicator->AddConnection("",it->second->GetControllableName());
-			m_connectionPanel->AddConnection(con);
+			m_connectionPanel->AddConnection(conn[i]);
 		}
 
 	}
@@ -524,7 +524,7 @@ void VTelesarRenderingState::InitState(Application* app)
 	m_app=app;
 	m_stereo=app->IsStereo();
 	CreatePhysicsSystem();
-	VT::InitVTLib();
+	VT::RefVTLib();
 	VT::DebugRenderSettings::DebugInterface=new VTDebugManager();
 
 	game::GameComponentCreator::getInstance().AddAlias("CoupledJointComponent","RobotJoint");
@@ -572,7 +572,7 @@ void VTelesarRenderingState::InitState(Application* app)
 		VT::VTAppGlobals::oculusDevice = m_oculusDevice;
 	}
 
-	m_modelName="Skinned.xml";
+	m_modelName="skinned.xml";
 
 	g_udpListener.Prepare();
 	//VT::UDPCommunicationLayer* udpComm=new VT::UDPCommunicationLayer(1234);
@@ -580,13 +580,12 @@ void VTelesarRenderingState::InitState(Application* app)
 	//udpComm->SetMsgListener(&g_udpListener);
 	
 	m_telesarLayer=new VT::VTSharedMemory(mT("TelesarV"));//
+
+	CommunicationManager::getInstance().AddCommunicationLayer(mT("TelesarV"), m_telesarLayer);
 	m_dataRecorder=new VT::CommunicationDataRecorder();
 
-	m_robotCommunicator=new VT::RobotCommunicator();
-	m_robotCommunicator->SetCommunicatorLayer(m_telesarLayer);
 	m_telesarLayer->AddListener(m_connectionPanel);
 
-	VT::CommunicationManager::getInstance().AddRobotCommunication(m_robotCommunicator);
 	m_telesarLayer->Start();
 
 	m_robot=0;
@@ -1266,7 +1265,7 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 	scene::ViewPort* vp=Engine::getInstance().getDevice()->getViewport();
 	video::IVideoDevice* device=Engine::getInstance().getDevice();
 
-	m_cameraSource[index]->SetTargetRect(rc.getSize());
+	//m_cameraSource[index]->SetTargetRect(rc.getSize());
 
 	if(m_firstrender && VT::VTAppGlobals::IsDebugging)
 	{
@@ -1391,7 +1390,7 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 		}
 
 
-		m_guiManager->DrawAll(m_finalRT[index]);
+		//m_guiManager->DrawAll(m_finalRT[index]);
 
 		if(VTAppGlobals::IsDebugging)
 			((VTDebugManager*)VT::DebugRenderSettings::DebugInterface)->Render(rc);
@@ -1435,20 +1434,36 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 		
 		}
 		device->setRenderTarget(0, false, false);
-		m_oculusRenderer[index]->Setup(math::rectf(0, 0, m_finalRT[index]->getSize().x, m_finalRT[index]->getSize().y));
-		m_oculusRenderer[index]->render(m_finalRT[index]);
+		if (m_oculusDevice && m_oculusDevice->IsConnected())
+		{
+			m_oculusRenderer[index]->Setup(math::rectf(0, 0, m_finalRT[index]->getSize().x, m_finalRT[index]->getSize().y));
+			m_oculusRenderer[index]->render(m_finalRT[index]);
+		}
 
 	}
 	
 
-	return m_oculusRenderer[index]->getOutput();//m_finalRT[index];//
+	if (m_oculusDevice && m_oculusDevice->IsConnected())
+	{
+		return m_oculusRenderer[index]->getOutput();
+	}
+	else
+	{
+		return m_finalRT[index];
+	}
 }
 video::IRenderTarget* VTelesarRenderingState::GetLastFrame(bool left)
 {
 	int index=m_app->getEyeIndex(left);
-	return m_oculusRenderer[index]->getOutput();//m_finalRT[index];
 
-//	return m_finalRT[m_stereo?(left?0:1):0];
+	if (m_oculusDevice && m_oculusDevice->IsConnected())
+	{
+		return m_oculusRenderer[index]->getOutput();
+	}
+	else
+	{
+		return m_finalRT[index];
+	}
 }
 
 void VTelesarRenderingState::LoadFromXML(xml::XMLElement* e)

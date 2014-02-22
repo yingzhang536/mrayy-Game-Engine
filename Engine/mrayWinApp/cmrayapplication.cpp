@@ -342,8 +342,11 @@ void CMRayApplication::WindowClosed(video::RenderWindow* wnd)
 
 void CMRayApplication::draw(scene::ViewPort* vp){
 
-	if(m_enableGUIManager && getGUIManager())
-		getGUIManager()->DrawAll(vp);
+	if (m_enableGUIManager && getGUIManager())
+	{
+		math::rectf rc(0, vp->getSize());
+		getGUIManager()->DrawAll(&rc);
+	}
 
 }
 void CMRayApplication::update(float dt){

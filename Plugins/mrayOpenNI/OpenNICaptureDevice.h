@@ -40,11 +40,13 @@ public:
 	virtual~OpenNICaptureDevice();
 
 
-	openni::Status Open();
+	openni::Status Open(int w,int h,bool depth=true,bool color=true);
 	bool IsOpen();
 	void Close();
 
 	bool Update();
+
+	bool CreateUserTracker();
 
 
 	openni::VideoStream& GetDepthStream(){return m_depthStream;}

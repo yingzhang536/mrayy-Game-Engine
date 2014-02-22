@@ -169,6 +169,12 @@ void IMovable::preRender(){
 void IMovable::update(float dt){
 	_UpdateAnimationTrackState();
 	updateAbsoluteTransformation();
+	const MovableNodeList& lst= getChildren();
+	MovableNodeList::const_iterator it = lst.begin();
+	for (; it != lst.end();++it)
+	{
+		(*it)->update(dt);
+	}
 /*
 	core::IteratorPair<NodeList> chP=getChildren();
 	for(;!chP.done();chP++){

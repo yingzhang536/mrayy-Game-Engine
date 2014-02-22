@@ -63,7 +63,7 @@ bool GUIStaticText::SetBorder(const bool& val)
 	}
 	return false;
 }
-void GUIStaticText::Draw(video::IRenderArea*vp)
+void GUIStaticText::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

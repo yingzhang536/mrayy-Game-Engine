@@ -33,7 +33,7 @@ public:
 	OculusDetectState();
 	virtual~OculusDetectState();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	void SetState(GUIOculusDetectImpl::EState s){m_statePanel->SetState(s);}
 

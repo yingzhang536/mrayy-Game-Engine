@@ -58,6 +58,8 @@ public:
 
 	virtual IObject* GetAttachedObject();
 	virtual scene::IMovable* GetMovableObject();
+	virtual void DebugRender(scene::IDebugDrawManager* renderer);
+
 };
 
 DECLARE_GAMECOMPONENT_FACTORY(BoneComponent);

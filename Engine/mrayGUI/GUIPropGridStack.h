@@ -37,7 +37,7 @@ protected:
 	bool m_isActive;
 
 	float m_height;
-	virtual bool _UpdateRegion(video::IRenderArea*vp);
+	virtual bool _UpdateRegion(const math::rectf*vp);
 public:
 	GUIPropGridStack(GUIPropertyGrid* grid);
 	virtual~GUIPropGridStack();
@@ -46,7 +46,7 @@ public:
 	void Clear();
 
 	//virtual const math::rectf& GetUnclippedRect();
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
  
  	virtual bool _OnMouseEvent(MouseEvent*e);
  	virtual bool _OnKeyboardEvent(KeyboardEvent*e);

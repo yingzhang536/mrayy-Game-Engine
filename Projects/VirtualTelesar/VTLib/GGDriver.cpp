@@ -45,18 +45,20 @@ public:
 	{
 		if(!m_sender)
 			return;
-		char sendBuff[128];
+		core::string sendBuff;
 		GGFeedbackValue* v=dynamic_cast<GGFeedbackValue*>(res);
 		if(v)
 		{
 			const int sendMlt=1000;
-			int vals[6];
-			for (int i=0;i<6;++i)
+			int vals[18];
+			for (int i = 0; i<GGFeedbackValue::ChannelsCount; ++i)
 			{
 				vals[i]= v->channels[i]*sendMlt;
+
+				sendBuff += core::StringConverter::toString(vals[i])+" ";
 			}
 			//convert data 
-			sprintf(sendBuff,"%5d %5d %5d %5d %5d %5d",vals[0],vals[1],vals[2],vals[3],vals[4],vals[5]);
+			//sprintf(sendBuff,"%5d %5d %5d %5d %5d %5d ",vals[0],vals[1],vals[2],vals[3],vals[4],vals[5]);
 			m_sender->setBuffer(sendBuff);
 		}
 	}

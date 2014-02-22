@@ -29,10 +29,10 @@ OculusDetectState::~OculusDetectState()
 }
 
 
-void OculusDetectState::InitState(Application* app)
+void OculusDetectState::InitState()
 {
-	IRenderingState::InitState(app);
-	m_guiManager=new GUI::GUIManager(app->getDevice());
+	IRenderingState::InitState();
+	m_guiManager=new GUI::GUIManager(Engine::getInstance().getDevice());
 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
 
 	GUI::IGUIPanelElement* root=(GUI::IGUIPanelElement*)new GUI::IGUIPanelElement(core::string(""),m_guiManager);
@@ -89,9 +89,9 @@ video::IRenderTarget* OculusDetectState::Render(const math::rectf& rc,ETargetEye
 	video::IVideoDevice* dev=Engine::getInstance().getDevice();
 	dev->set2DMode();
 	dev->setRenderTarget(m_renderTarget[GetEyeIndex(eye)]);
-	TBAppGlobals::App->getDevice()->draw2DRectangle(rc,video::DefaultColors::Black);
+	Engine::getInstance().getDevice()->draw2DRectangle(rc,video::DefaultColors::Black);
 
-	m_guiManager->DrawAll(m_renderTarget[GetEyeIndex(eye)]);
+	m_guiManager->DrawAll(&rc);// m_renderTarget[GetEyeIndex(eye)]);
 
 	dev->setRenderTarget(0);
 	return m_renderTarget[GetEyeIndex(eye)];

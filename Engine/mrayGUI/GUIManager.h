@@ -64,8 +64,8 @@ public:
 
 	virtual IGUIElement*	GetElementFromPoint(float x,float y);
 
-	virtual bool OnEvent(Event* event);
-	virtual void DrawAll(video::IRenderArea*vp);
+	virtual bool OnEvent(Event* event, const math::rectf*vp = 0);
+	virtual void DrawAll(const math::rectf*vp);
 
 	virtual void Update(float dt);
 

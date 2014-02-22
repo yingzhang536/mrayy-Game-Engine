@@ -35,7 +35,7 @@ protected:
 	virtual bool _OnKeyboardEvent(KeyboardEvent* e);
 
 	virtual math::vector2d _GetElementSize();
-	virtual void _DrawElement(video::IRenderArea* vp);
+	virtual void _DrawElement(const math::rectf* vp);
 public:
 	GUIElementRT();
 	virtual~GUIElementRT();

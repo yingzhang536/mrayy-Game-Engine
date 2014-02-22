@@ -43,6 +43,24 @@ CommunicationManager::~CommunicationManager()
 	ClearCommunicators();
 }
 
+
+void CommunicationManager::AddCommunicationLayer(const core::string& name, ICommunicationLayer* layer)
+{
+	m_commLayers[name] = layer;
+}
+ICommunicationLayer* CommunicationManager::GetCommunicationLayer(const core::string& name)
+{
+	CommunicationLayerMap::iterator it = m_commLayers.find(name);
+	if (it != m_commLayers.end())
+		return it->second;
+	return 0;
+}
+
+void CommunicationManager::RemoveCommunicationLayer(const core::string& name)
+{
+	m_commLayers.erase(name);
+}
+
 void CommunicationManager::_OnUpdateTick(float dt)
 {
 }

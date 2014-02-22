@@ -28,6 +28,10 @@ namespace scene
 {
 	class IDebugDrawManager;
 }
+namespace GUI
+{
+	class IGUIRenderer;
+}
 namespace game
 {
 	class GameEntity;
@@ -97,6 +101,7 @@ public:
 	virtual void Update(float dt);
 	virtual void LateUpdate(float dt);
 	virtual void DebugRender(scene::IDebugDrawManager* renderer);
+	virtual void OnGUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp);
 
 	virtual void OnDestroy();
 

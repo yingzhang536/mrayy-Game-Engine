@@ -2,6 +2,7 @@
 #include "shmem.h"
 #include "VTSharedMemory.h"
 #include "CommunicationData.h"
+#include <windows.h>
 
 //#include "StringConverter.h"
 
@@ -50,6 +51,8 @@ namespace VT
 		void GetDebugString(std::vector<core::string>& lst);
 
 		const std::vector<core::string>& GetScheme();
+		bool InjectCommand(const core::string& cmd, const core::string& args);
+
 	};
 
 	class AverageWindow
@@ -236,7 +239,7 @@ VTSharedMemoryImpl::~VTSharedMemoryImpl()
 
 void VTSharedMemoryImpl::Start()
 {
-	m_data->agent->createRead();
+	m_data->agent->openWrite();
 	m_owner->FIRE_LISTENR_METHOD(OnSchemeChanged,(m_owner,m_schemeNames));
 }
 void VTSharedMemoryImpl::Close()
@@ -246,6 +249,8 @@ void VTSharedMemoryImpl::Close()
 
 void VTSharedMemoryImpl::Update(float dt)
 {
+	if (!m_data->agent->data)
+		return;
 	CommunicationData data;
 	data.SetTargetName(m_name);
 	ControlInputValues v;
@@ -343,6 +348,19 @@ const std::vector<core::string>& VTSharedMemoryImpl::GetScheme()
 	return m_schemeNames;
 }
 
+bool VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const core::string& args)
+{
+	if (cmd.equals_ignore_case("calib"))
+	{
+		m_data->agent->data->status.calibration = true;
+		Update(0.01f);
+		Sleep(20);
+		m_data->agent->data->status.calibration = false;
+		return true;
+	}
+	return false;
+}
+
 VTSharedMemory::VTSharedMemory(const core::string& name)
 {
 	m_impl=new VTSharedMemoryImpl(name,this);
@@ -383,6 +401,11 @@ void VTSharedMemory::GetDebugString(std::vector<core::string>& lst)
 const std::vector<core::string>& VTSharedMemory::GetScheme()
 {
 	return m_impl->GetScheme();
+}
+
+bool VTSharedMemory::InjectCommand(const core::string& cmd, const core::string& args)
+{
+	return m_impl->InjectCommand(cmd, args);
 }
 
 }

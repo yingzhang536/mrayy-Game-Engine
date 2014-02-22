@@ -68,7 +68,7 @@ protected:
 	virtual void fillProperties();
 
 	void _GetRects(const math::rectf& rc,math::rectf& title,math::rectf& frame);
-	virtual bool _UpdateRegion(video::IRenderArea*vp);
+	virtual bool _UpdateRegion(const math::rectf*vp);
 public:
 	static const GUID ElementType;
 
@@ -82,7 +82,7 @@ public:
 	virtual~GUIWindow();
 
 	//virtual const math::rectf& GetUnclippedRect();
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual void AddElement(IGUIElement* e);
 

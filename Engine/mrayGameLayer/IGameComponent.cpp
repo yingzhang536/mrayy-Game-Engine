@@ -24,10 +24,10 @@ IMPLEMENT_PROPERTY_TYPE_GENERIC(Enabled,IGameComponent,bool,SetEnabled,IsEnabled
 IMPLEMENT_PROPERTY_TYPE_HEADER(Name,IGameComponent,core::string,mT("Name"),EPBT_Basic,mT(""),mT(""));
 IMPLEMENT_PROPERTY_TYPE_GENERIC(Name,IGameComponent,core::string,SetName,GetName,,,false);
 
-game::IGameComponent* IGameComponent::RetriveComponent(IObjectComponent*comp,const core::string& type,const core::string& name)
+game::IGameComponent* IGameComponent::RetriveComponent(IObjectComponent*comp, const core::string& type, const core::string& name)
 {
-	ComponentsMap::const_iterator it=comp->GetComponents().begin();
-	for(;it!=comp->GetComponents().end();++it)
+	ComponentsMap::const_iterator it = comp->GetComponents().begin();
+	for (; it != comp->GetComponents().end(); ++it)
 	{
 		if(!it->first->isKindOf(type))
 			continue;
@@ -178,6 +178,16 @@ void IGameComponent::DebugRender(scene::IDebugDrawManager* renderer)
 		IGameComponent* comp=dynamic_cast<IGameComponent*>(*it);
 		if(comp)
 			comp->DebugRender(renderer);
+	}
+}
+void IGameComponent::OnGUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp)
+{
+	std::list<IObjectComponent*>::iterator it = m_componentList.begin();
+	for (; it != m_componentList.end(); ++it)
+	{
+		IGameComponent* comp = dynamic_cast<IGameComponent*>(*it);
+		if (comp)
+			comp->OnGUIRender(renderer,vp);
 	}
 }
 

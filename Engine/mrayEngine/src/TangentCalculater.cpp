@@ -115,32 +115,33 @@ void TangentCalculater::calculateTangents(IMeshBuffer* buffer)
 
 			//tangent vectors
 			vA=vPos[1]-vPos[0];
-			vB=vPos[2]-vPos[0];
+			vB = vPos[2] - vPos[0];
+			vA.Normalize();
+			vB.Normalize();
 
-			float DeltaU1=vUV[1].x-vUV[0].x;
-			float DeltaU2=vUV[2].x-vUV[0].x;
-			float DeltaV1=vUV[1].y-vUV[0].y;
-			float DeltaV2=vUV[2].y-vUV[0].y;
+			math::vector2d Delta1(vUV[1].x - vUV[0].x, vUV[1].y - vUV[0].y);
+			math::vector2d Delta2(vUV[2].x - vUV[0].x, vUV[2].y - vUV[0].y);
+			Delta1.Normalize();
+			Delta2.Normalize();
 
-			float div=(DeltaU1*DeltaV2 - DeltaU2*DeltaV1);
+			float div=(Delta1.x*Delta2.y - Delta2.x*Delta1.y);
 			if(_isnan(div))
 			{
 				bTextureCoordinatesBroken=true;
 				div=0;
 			}
-
-			vN=vA.crossProduct(vB).Normalize();
+			vN = vA.crossProduct(vB);// .Normalize();
 			if(div!=0)
 			{
 				float area=fabs(div);
 				div=1.0f/div;
 
-				float a=DeltaV2*div;
-				float b=-DeltaV1*div;
-				float c=-DeltaU2*div;
-				float d=DeltaU1*div;
-				vU=(vA*a+vB*b).Normalize()*area;
-				vV=(vA*c+vB*d).Normalize()*area;
+				float a=Delta2.y*div;
+				float b=-Delta1.y*div;
+				float c=-Delta2.x*div;
+				float d=Delta1.x*div;
+				vU = (vA*a + vB*b).Normalize()*area;
+				vV = (vA*c + vB*d).Normalize()*area;
 			}else
 			{
 // 				vU.set(1,0,0);

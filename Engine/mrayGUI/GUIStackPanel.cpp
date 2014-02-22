@@ -112,10 +112,10 @@ void GUIStackPanel::_RecalcPositions()
 		m_acctualSize.y=pos.y;
 		m_sliderComp->itemsCount=pos.y;
 	}
-	m_size=m_acctualSize;
+	//m_size=m_acctualSize;
 
 }
-void GUIStackPanel::Draw(video::IRenderArea*vp)
+void GUIStackPanel::Draw(const math::rectf*vp)
 {
 	_RecalcPositions();
 	_UpdateRegion(vp);
@@ -123,23 +123,31 @@ void GUIStackPanel::Draw(video::IRenderArea*vp)
 
 	const math::rectf& rc=GetDefaultRegion()->GetClippedRect();
 	m_sliderComp->rc=rc;
+	bool show = false;
 	if(m_direction==EHorizontal)
 	{
 		m_sliderComp->rc.ULPoint.y=math::Max(rc.ULPoint.y,rc.BRPoint.y-20);
 		m_sliderComp->pageSize=rc.getWidth();
+		if (m_acctualSize.x > rc.getWidth())
+			show = true;
 	}
 	else
 	{
 		m_sliderComp->rc.ULPoint.x=math::Max(rc.ULPoint.x,rc.BRPoint.x-20);
-		m_sliderComp->pageSize=rc.getHeight();
+		m_sliderComp->pageSize = rc.getHeight();
+		if (m_acctualSize.y > rc.getHeight())
+			show = true;
 	}
 
 
-	math::rectf oldScissor=GetCreator()->GetDevice()->getScissorRect();
-	GetCreator()->GetDevice()->setScissorRect(m_sliderComp->rc);
-	m_sliderComp->Draw();
-	GetCreator()->GetRenderQueue()->Flush();
-	GetCreator()->GetDevice()->setScissorRect(oldScissor);
+	if (show)
+	{
+		math::rectf oldScissor=GetCreator()->GetDevice()->getScissorRect();
+		GetCreator()->GetDevice()->setScissorRect(m_sliderComp->rc);
+		m_sliderComp->Draw();
+		GetCreator()->GetRenderQueue()->Flush();
+		GetCreator()->GetDevice()->setScissorRect(oldScissor);
+	}
 }
 
 

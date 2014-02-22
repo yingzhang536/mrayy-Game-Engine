@@ -38,7 +38,7 @@ scene::BoneNode* mdlLoaderV0::LoadBone(scene::Skeleton*skeleton,scene::BoneNode*
 	core::stringc str=reader.binReadStringC();
 	stream->read(&jointHeader,sizeof(jointHeader));
 	core::char_to_string(str.c_str(),tmpStr);
-	scene::BoneNode* bone=skeleton->createBone(tmpStr,parent);
+	scene::BoneNodePtr bone=skeleton->createBone(tmpStr,parent);
 	bone->setID(jointHeader.index);
 	bone->setBasePosition(jointHeader.basePosition);
 	bone->setBaseOrintation(jointHeader.baseRotation);

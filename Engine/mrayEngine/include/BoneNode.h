@@ -70,6 +70,7 @@ protected:
 
 	bool m_transformationDirty;
 
+	bool m_inheritTransformation;
 
 	BonesList m_subBones;
 
@@ -99,6 +100,9 @@ public:
 	virtual void addChild(IMovableCRef elem,bool parentSpace=false);
 	virtual void removeFromParent(bool parentSpace=false);
 	virtual const MovableNodeList& getChildren();
+
+	virtual void SetInheritTransformation(bool inherit){ m_inheritTransformation = inherit; }
+	virtual bool GetInheritTransformation()const{ return m_inheritTransformation; }
 
 	BoneNode*getParentBone();
 	void setParentBone(BoneNode*p);

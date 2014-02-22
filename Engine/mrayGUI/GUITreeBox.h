@@ -63,7 +63,7 @@ public:
 
 	virtual GUITreeNodeList& GetNodes();
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 	virtual void Update(float dt);
 
 

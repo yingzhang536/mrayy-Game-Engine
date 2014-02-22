@@ -67,7 +67,7 @@ void GUIEditBox::fillProperties()
 	}
 }
 
-void GUIEditBox::Draw(video::IRenderArea*vp)
+void GUIEditBox::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

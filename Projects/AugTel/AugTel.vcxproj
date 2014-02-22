@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2006268A-30C8-4E05-85AA-767EA1228F19}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>AugTel</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\Engine\BuildRules\overlay.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\Bin\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\Bin\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;VTSharedMem.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;fglove.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="ArmComponent.h" />
+    <ClInclude Include="ArmExtenderComponent.h" />
+    <ClInclude Include="ArmsTrajectoryGenerator.h" />
+    <ClInclude Include="ATAppGlobal.h" />
+    <ClInclude Include="ATGameComponents.h" />
+    <ClInclude Include="AugCameraRenderState.h" />
+    <ClInclude Include="CompositeBoneComponent.h" />
+    <ClInclude Include="DataCommunicator.h" />
+    <ClInclude Include="DepthRequesterComponent.h" />
+    <ClInclude Include="FingerTipComponent.h" />
+    <ClInclude Include="GeomDepthState.h" />
+    <ClInclude Include="GloveController5.h" />
+    <ClInclude Include="GUILoadingElement.h" />
+    <ClInclude Include="GUILoginMenu.h" />
+    <ClInclude Include="HeadCameraComponent.h" />
+    <ClInclude Include="HeadMount.h" />
+    <ClInclude Include="IFingerDataProvider.h" />
+    <ClInclude Include="LoginScreenState.h" />
+    <ClInclude Include="PenComponent.h" />
+    <ClInclude Include="RobotSpaceComponent.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SurfaceWrapper.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TriggerObjectComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="ArmComponent.cpp" />
+    <ClCompile Include="ArmExtenderComponent.cpp" />
+    <ClCompile Include="ArmsTrajectoryGenerator.cpp" />
+    <ClCompile Include="ATAppGlobal.cpp" />
+    <ClCompile Include="ATGameComponents.cpp" />
+    <ClCompile Include="AugTel.cpp" />
+    <ClCompile Include="AugCameraRenderState.cpp" />
+    <ClCompile Include="CompositeBoneComponent.cpp" />
+    <ClCompile Include="DataCommunicator.cpp" />
+    <ClCompile Include="FingerTipComponent.cpp" />
+    <ClCompile Include="GeomDepthState.cpp" />
+    <ClCompile Include="GloveController5.cpp" />
+    <ClCompile Include="GUILoadingElement.cpp" />
+    <ClCompile Include="HeadCameraComponent.cpp" />
+    <ClCompile Include="LoginScreenState.cpp" />
+    <ClCompile Include="PenComponent.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="RobotSpaceComponent.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SurfaceWrapper.cpp" />
+    <ClCompile Include="TriggerObjectComponent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
+      <FileType>Document</FileType>
+      <SubType>Designer</SubType>
+    </Overlay>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\Engine\BuildRules\overlay.targets" />
+  </ImportGroup>
+</Project>

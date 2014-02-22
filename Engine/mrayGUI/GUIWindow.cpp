@@ -73,7 +73,7 @@ void GUIWindow::_GetRects(const math::rectf& rc,math::rectf& title,math::rectf& 
 	frame.ULPoint.y=title.BRPoint.y;
 	frame.BRPoint=rc.BRPoint;
 }
-bool GUIWindow::_UpdateRegion(video::IRenderArea*vp)
+bool GUIWindow::_UpdateRegion(const math::rectf*vp)
 {
 	if(IGUIElement::_UpdateRegion(vp))
 	{
@@ -115,7 +115,7 @@ void GUIWindow::AddElement(IGUIElement* e)
 	IGUIPanelElement::AddElement(e,m_frameRegion);
 }
 
-void GUIWindow::Draw(video::IRenderArea*vp)
+void GUIWindow::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

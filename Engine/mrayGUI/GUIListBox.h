@@ -54,7 +54,7 @@ public:
 	void SetSelectionColor(const video::SColor& clr);
 	const video::SColor& GetSelectionColor()const;
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

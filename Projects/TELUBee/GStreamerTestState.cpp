@@ -26,10 +26,10 @@ GStreamerTestState::~GStreamerTestState()
 
 
 
-void GStreamerTestState::InitState(Application* app)
+void GStreamerTestState::InitState()
 {
-	IRenderingState::InitState(app);
-	m_remoteTex = app->getDevice()->createEmptyTexture2D(true);
+	IRenderingState::InitState();
+	m_remoteTex = Engine::getInstance().getDevice()->createEmptyTexture2D(true);
 }
 
 

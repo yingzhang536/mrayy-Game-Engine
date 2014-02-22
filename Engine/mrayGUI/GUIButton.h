@@ -30,7 +30,7 @@ public:
 
 	GUIButton(IGUIManager* creator);
 	virtual~GUIButton();
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 	virtual bool SetText(const core::UTFString&t);
 	virtual const core::UTFString& GetText()const;
 	

@@ -33,7 +33,6 @@
 #include "GUIBlinkingText.h"
 #include "GUILoadingElement.h"
 
-#include "TBeeOptiTrackObject.h"
 
 #include "OculusManager.h"
 #include "OculusDevice.h"
@@ -43,6 +42,19 @@
 #include "OculusDetectState.h"
 
 #include "JoystickDefinitions.h"
+#include "OptiTrackDataSource.h"
+
+#include "GSTCameraRenderingState.h"
+#include "IntroRenderingState.h"
+#include "LoginScreenState.h"
+#include "InMapRenderState.h"
+#include "CameraRenderingState.h"
+#include "NullRenderState.h"
+#include "ConnectingToRobotScreen.h"
+#include "GStreamVideoProvider.h"
+#include "GSTVideoState.h"
+
+#include "IFileMonitor.h"
 
 
 namespace mray
@@ -55,7 +67,7 @@ namespace TBee
 	public:
 		ApplicationOculusData()
 		{
-			TBAppGlobals::oculusDevice = 0;
+			TBAppGlobals::Instance()->oculusDevice = 0;
 
 		}
 		GCPtr<video::OculusManager> oculusManager;
@@ -69,7 +81,7 @@ namespace TBee
 		{
 			oculusRenderer[0]=0;
 			oculusRenderer[1]=0;
-			TBAppGlobals::oculusDevice=0;
+			TBAppGlobals::Instance()->oculusDevice = 0;
 			oculusManager=0;
 		}
 	};
@@ -77,22 +89,21 @@ namespace TBee
 
 Application::Application()
 {
-	TBee::TBAppGlobals::App=this;
+	new TBAppGlobals();
+	TBAppGlobals::Instance()->App = this;
 	m_drawUI=false;
 	m_seeThroughWindow=0;
-
-	m_oculusData=new ApplicationOculusData();
+	m_tbRenderer = 0;
 }
 Application::~Application()
 {
-	delete m_oculusData;
+	delete m_tbRenderer;
 	m_appStateManager=0;
-	delete TBee::TBAppGlobals::sqlManager;
+	delete TBAppGlobals::Instance()->sqlManager;
 	m_videoManager=0;
 	m_soundManager=0;
-	delete TBAppGlobals::robotInfoManager;
+	delete TBAppGlobals::Instance()->robotInfoManager;
 	delete m_seeThroughWindow;
-	delete TBAppGlobals::optiObj;
 }
 
 void Application::_InitResources()
@@ -120,8 +131,14 @@ void Application::onEvent(Event* event)
 	{
 		MouseEvent* e=(MouseEvent* )event;
 	}
-	if(m_appStateManager)
-		m_appStateManager->OnEvent(event);
+	if (m_appStateManager)
+	{
+		for (int i = 0; i < m_tbRenderer->GetViewportCount(); ++i)
+		{
+			if (m_appStateManager->OnEvent(event,m_tbRenderer->GetViewport(i)->getAbsRenderingViewPort()))
+				break;
+		}
+	}
 
 
 	if(event->getType()==ET_Keyboard)
@@ -130,6 +147,10 @@ void Application::onEvent(Event* event)
 		if(e->press && e->key==KEY_F12)
 		{
 			m_drawUI=!m_drawUI;
+		}
+		if (e->press && e->key == KEY_F9)
+		{
+			AppData::Instance()->IsDebugging = !AppData::Instance()->IsDebugging;
 		}
 		/*	if(e->press && e->key==KEY_F12)
 		{
@@ -144,23 +165,98 @@ void Application::onEvent(Event* event)
 
 }
 
+void Application::_initStates()
+{
+	IRenderingState *nullState, *streamerTest, *introState, *oc, *ls, *maps, *ctr,*cameraState,* videoState;
+	nullState = new TBee::NullRenderState();
+	nullState->InitState();
+	m_renderingState->AddState(nullState, "Null");
+
+	streamerTest = new TBee::GSTCameraRenderingState();
+	streamerTest->InitState();
+	m_renderingState->AddState(streamerTest, "CameraRemote");
+
+	videoState = new TBee::GSTVideoState();
+	videoState->InitState();
+	m_renderingState->AddState(videoState, "Video");
+
+	introState = new TBee::IntroRenderingState();
+	introState->InitState();
+	m_renderingState->AddState(introState, "Intro");
+
+	 oc = TBee::OculusDetectState::Instance();
+	oc->InitState();
+	m_renderingState->AddState(oc, "Oculus");
+
+	ls = new TBee::LoginScreenState();
+	ls->InitState();
+	m_renderingState->AddState(ls, "Login");
+
+	maps = new TBee::InMapRenderState();
+	//maps->InitState();
+	m_renderingState->AddState(maps, "Map");
+
+	ctr = new TBee::ConnectingToRobotScreen();
+	ctr->InitState();
+	m_renderingState->AddState(ctr, "Connecting");
+
+	cameraState = new TBee::CameraRenderingState();
+	cameraState->InitState();
+	m_renderingState->AddState(cameraState, "CameraLocal");
+
+	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
+	//AddTransition("Streamer","Intro",STATE_EXIT_CODE);
+	if (TBAppGlobals::Instance()->headController==EHeadControllerType::Oculus)
+	{
+		m_renderingState->AddTransition("Intro", "Oculus", STATE_EXIT_CODE);
+		m_renderingState->AddTransition("Oculus", "Login", STATE_EXIT_CODE);
+	}
+	else
+		m_renderingState->AddTransition("Intro", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition("Login", "Map", ToMap_CODE);
+	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
+	m_renderingState->AddTransition("Login", "CameraLocal", ToLocalCamera_CODE);//Camera
+	m_renderingState->AddTransition("Login", "Video", ToVideo_CODE);//Video
+	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition("CameraLocal", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition("Video", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition("Map", "Login", BackToTile_Code);
+	m_renderingState->AddTransition("Map", "Connecting", ConnectToRobot_Code);
+	m_renderingState->AddTransition("Connecting", "Map", BackToMap_Code);
+	m_renderingState->SetInitialState("Null");
+}
+
+class FileMonitorListener : public OS::IFileMonitorListener
+{
+	virtual void OnMonitorFiles(OS::IFileMonitor* sender, OS::IMonitorFileInformation* f, OS::EMonitorAction action)
+	{
+		printf("%s\n", f->GetPath().c_str());
+	}
+
+}gFileMonitorL;
+
 void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
 
-	TBee::TBAppGlobals::Load("TBSettings.conf");
+	OS::IFileMonitor* monitor= OS::IOSystem::getInstance().CreateFileMonitor();
+	monitor->AddListener(&gFileMonitorL);
+	monitor->SetDirectory(gFileSystem.getCurrPath());
+	monitor->StartMonitoring();
+
+	TBAppGlobals::Instance()->Load("TBSettings.conf");
 	{
 		core::string v=extraOptions.GetOptionValue("Debugging");
 		if(v=="Yes")
-			TBee::TBAppGlobals::IsDebugging=true;
+			TBAppGlobals::Instance()->IsDebugging = true;
 		else
-			TBee::TBAppGlobals::IsDebugging=false;
+			TBAppGlobals::Instance()->IsDebugging=false;
 	
-		TBee::TBAppGlobals::DVIPort=extraOptions.GetOptionValue("DVIPort");
+		TBAppGlobals::Instance()->DVIPort=extraOptions.GetOptionValue("DVIPort");
 
-		TBee::TBAppGlobals::m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
+		TBAppGlobals::Instance()->m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
 
-		if (TBee::TBAppGlobals::m_controller == EController::XBox)
+		if (TBAppGlobals::Instance()->m_controller == EController::XBox)
 		{
 			JOYSTICK_SelectButton = 6;
 			JOYSTICK_StartButton = 7;
@@ -170,15 +266,42 @@ void Application::init(const OptionContainer &extraOptions)
 			JOYSTICK_Axis2 = 0;
 			JOYSTICK_Axis3 = 1;
 		}
-		
+		v = extraOptions.GetOptionValue("Head");
+		if (v == "Keyboard")
+			AppData::Instance()->headController = EHeadControllerType::Keyboard;
+		else if (v == "Oculus")
+			AppData::Instance()->headController = EHeadControllerType::Oculus;
+		else if (v == "OptiTrack")
+			AppData::Instance()->headController = EHeadControllerType::OptiTrack;
 
+		v = extraOptions.GetOptionValue("Robot");
+		if (v == "Keyboard")
+			AppData::Instance()->robotController = ERobotControllerType::Keyboard;
+		else if (v == "Joystick")
+			AppData::Instance()->robotController = ERobotControllerType::Joystick;
+		else if (v == "Wiiboard")
+			AppData::Instance()->robotController = ERobotControllerType::Wiiboard;
+
+		v = extraOptions.GetOptionValue("Stereoscopic");
+		if (v == "None")
+			AppData::Instance()->stereoMode=ERenderStereoMode::None;
+		else if (v == "Side-by-side")
+			AppData::Instance()->stereoMode = ERenderStereoMode::SideBySide;
+		else if (v == "Up-bottom")
+			AppData::Instance()->stereoMode = ERenderStereoMode::TopDown;
+		else if (v == "StereoTV")
+			AppData::Instance()->stereoMode = ERenderStereoMode::StereoTV;
+		else if (v == "Oculus")
+			AppData::Instance()->stereoMode = ERenderStereoMode::Oculus;
 	}
 	_InitResources();
 
 	LoadSettingsXML("TBeeSettings.xml");
 
+	this->m_limitFps = false;
 
 	network::createWin32Network();
+
 
 
 	REGISTER_COMPONENT_FACTORY(IndicatorComponent);
@@ -187,12 +310,15 @@ void Application::init(const OptionContainer &extraOptions)
 	REGISTER_GUIElement_FACTORY(GUILoadingElement);
 	REGISTER_GUIElement_FACTORY(GUIBlinkingText);
 
-	TBee::TBAppGlobals::sqlManager=new db::mySqlManager();
+	m_wiimoteManager = new controllers::WiimoteManager;
+	m_wiimoteManager->ConnectWithAllMotes();
+
+	TBAppGlobals::Instance()->sqlManager=new db::mySqlManager();
 
 	m_guiRender=new GUI::GUIBatchRenderer();
 	m_guiRender->SetDevice(getDevice());
 
-	TBAppGlobals::inputMngr = m_inputManager;
+	TBAppGlobals::Instance()->inputMngr = m_inputManager;
 // 	m_guiManager=new GUI::GUIManager(getDevice());
 // 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
 	gLogManager.log("Managers", ELL_INFO);
@@ -205,102 +331,51 @@ void Application::init(const OptionContainer &extraOptions)
 	m_screenShot->setMipmapsFilter(false);
 	m_screenShot->createTexture(math::vector3d(GetRenderWindow()->GetSize().x,GetRenderWindow()->GetSize().y,1),video::EPixel_B8G8R8A8);
 
-	gLogManager.log("Robots", ELL_INFO);
+	m_tbRenderer = new TBeeRenderer();
+	m_tbRenderer->AddListener(this);
+	m_tbRenderer->Init(GetRenderWindow(0));
 
-	TBAppGlobals::robotInfoManager=new RobotInfoManager();
-	TBAppGlobals::robotInfoManager->LoadRobots("RobotsMap.xml");
+	TBAppGlobals::Instance()->robotInfoManager=new RobotInfoManager();
+	TBAppGlobals::Instance()->robotInfoManager->LoadRobots("RobotsMap.xml");
 
 	m_appStateManager=new TBee::ApplicationStateManager();
 
 	gLogManager.log("States", ELL_INFO);
 
 //	TBee::ApplicationMenuState* menuState=new TBee::ApplicationMenuState();
-	m_renderingState=new TBee::RenderingStateManager(this);
+	m_renderingState=new TBee::RenderingStateManager();
+	_initStates();
 	//m_appStateManager->AddState(menuState,"Menu");
 	m_appStateManager->AddState(m_renderingState,"Rendering");
 	m_appStateManager->SetInitialState("Rendering");
 	//m_appStateManager->AddTransition("Menu","Rendering",STATE_EXIT_CODE);
-	{
-
-		m_rtTexture=getDevice()->createEmptyTexture2D(true);
-		m_rtTexture->setMipmapsFilter(false);
-
-		m_renderTarget=getDevice()->createRenderTarget("",m_rtTexture,0,0,0);
-	}
 
 	if (false)
 	{
-		TBAppGlobals::optiObj = new TBeeOptiTrackObject();
-		TBAppGlobals::ConnectOpti();
-
-		m_seeThroughWindow=new SeeThroughWindow();
-		TBAppGlobals::seeTrough=m_seeThroughWindow;
-		m_seeThroughWindow->Init(this,extraOptions);
+		m_seeThroughWindow = new SeeThroughWindow();
+		TBAppGlobals::Instance()->seeTrough = m_seeThroughWindow;
+		m_seeThroughWindow->Init(this, extraOptions);
 		GetRenderWindow(0)->SetActive(true);
 	}
-
-	// check for Oculus
-	if(TBAppGlobals::usingOculus)
-	{
-		gLogManager.log("Initing Oculus", ELL_INFO);
-
-		TBAppGlobals::StereoMode=scene::EStereo_SideBySide;
-		//Create Oculus
-		m_oculusData->oculusManager=new video::OculusManager();
-		TBAppGlobals::oculusDevice=m_oculusData->oculusManager->CreateDevice(0);
-
-		if(!TBAppGlobals::oculusDevice)
-		{
-			OculusDetectState::Instance()->SetState(GUIOculusDetectImpl::EFailedToConnect);
-			//		gLogManager.log("Failed to detect OculusVR!",ELL_ERROR);
-		}else
-		{
-			OculusDetectState::Instance()->SetState(GUIOculusDetectImpl::EFound);
-
-			int w=TBAppGlobals::oculusDevice->GetDeviceInfo().deviceInfo.HResolution;
-			int h=TBAppGlobals::oculusDevice->GetDeviceInfo().deviceInfo.VResolution;
-			game::OculusCameraComponent::ETargetCamera cams[2]=
-			{
-				game::OculusCameraComponent::LeftCamera,
-				game::OculusCameraComponent::RightCamera
-			};
-			m_viewPort[0]=GetRenderWindow()->CreateViewport("MainVPL",0,0,math::rectf(0,0,0.5,1),0);
-			m_viewPort[0]->AddListener(this);
-			m_viewPort[1]=GetRenderWindow()->CreateViewport("MainVPR",0,0,math::rectf(0.5,0,1,1),0);
-			m_viewPort[1]->AddListener(this);
-			//m_viewPort[1]->setActive(false);
-			for(int i=0;i<2;++i)
-			{
-				m_oculusData->oculusRenderer[i]=new video::ParsedShaderPP(getDevice());
-				m_oculusData->oculusRenderer[i]->LoadXML(gFileSystem.openFile("OculusLens.peff"));
-				m_oculusData->oculusRenderer[i]->Setup(math::rectf(0,0,w/2,h));
-				m_oculusData->oculusComponents[i]=new game::OculusCameraComponent(0);
-				m_oculusData->oculusComponents[i]->InitCamera(TBAppGlobals::oculusDevice,m_viewPort[i],cams[i],m_oculusData->oculusRenderer[i]);
-
-			}
-
-			m_oculusData->rtTexture=getDevice()->createEmptyTexture2D(true);
-			m_oculusData->rtTexture->setMipmapsFilter(false);
-			m_oculusData->rtTexture->createTexture(math::vector3d(w/2,h,1),video::EPixel_R8G8B8);
-
-			m_oculusData->renderTarget=getDevice()->createRenderTarget("",m_oculusData->rtTexture,0,0,0);
-		}
-	}else
-	{
-
-		m_viewPort[0]=GetRenderWindow()->CreateViewport("MainVP",0,0,math::rectf(0,0,1,1),0);
-		m_viewPort[0]->AddListener(this);
-
-	}
+	
+	_createViewports();
 	LoadSettingsXML("States.xml");
+
+	if (TBAppGlobals::Instance()->headController == EHeadControllerType::OptiTrack)
+		AppData::Instance()->optiDataSource->ConnectLocal();
 
 	gLogManager.log("Starting Application", ELL_INFO);
 
 }
-
-void Application::RenderUI(scene::ViewPort* vp)
+void Application::_createViewports()
 {
-	if(m_drawUI )
+
+	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
+	
+}
+void Application::RenderUI(const math::rectf& rc)
+{
+	if(TBAppGlobals::Instance()->IsDebugging )
 	{
 
 
@@ -323,7 +398,7 @@ void Application::RenderUI(scene::ViewPort* vp)
 			attr.RightToLeft=0;
 			core::string msg=mT("FPS= ");
 			msg+=core::StringConverter::toString((int)core::CFPS::getInstance().getFPS());
-			font->print(math::rectf(vp->getAbsRenderingViewPort().getWidth()-250,vp->getAbsRenderingViewPort().getHeight()-50,10,10),&attr,0,msg,m_guiRender);
+			font->print(math::rectf(rc.getWidth() - 250, rc.getHeight() - 50, 10, 10), &attr, 0, msg, m_guiRender);
 			yoffset+=attr.fontSize;
 
 		}
@@ -340,73 +415,25 @@ void Application::draw(scene::ViewPort* vp)
 }
 void Application::_RenderVP(int i)
 {
+	
+}
 
-	math::rectf rc=math::rectf(0,m_viewPort[i]->getAbsRenderingViewPort().getSize());
+void Application::OnRendererDraw(TBeeRenderer* r, const math::rectf& vp, video::IRenderTarget* rt, ETargetEye eye)
+{
 
-	if(m_rtTexture->getSize().x!=rc.getWidth() ||
-		m_rtTexture->getSize().y!=rc.getHeight())
-	{
-		m_rtTexture->createTexture(math::vector3d(rc.getWidth(),rc.getHeight(),1),video::EPixel_R8G8B8A8);
-	}
+	m_appStateManager->Draw(vp, rt, eye);
+	RenderUI(vp);
 
-	m_appStateManager->Draw(rc,m_renderTarget,i==0?Eye_Left:Eye_Right);
-	getDevice()->set2DMode();
-	RenderUI(m_viewPort[i]);
-	getDevice()->setRenderTarget(0,false,true,video::SColor(1,1,1,0));
-
-
-
-
-	if(TBAppGlobals::usingOculus && TBAppGlobals::oculusDevice )
-	{
-		if(m_oculusData->oculusRenderer[i])
-		{
-			video::TextureUnit tex;
-			getDevice()->set2DMode();
-			{
-				m_device->setRenderTarget(m_oculusData->renderTarget);
-				math::matrix4x4 m,pm;
-				getDevice()->getTransformationState(video::TS_PROJECTION,m);
-				pm.f14=m_oculusData->oculusComponents[i]->GetPerspectiveOffset();
-				pm=pm*m;
-				getDevice()->setTransformationState(video::TS_PROJECTION,pm);
-
-				tex.SetTexture(m_rtTexture);
-				getDevice()->useTexture(0,&tex);
-				math::rectf tc=math::rectf(0,1,1,0);
-				getDevice()->draw2DImage(math::rectf(0,m_oculusData->renderTarget->getSize()),1,0,&tc);
-				m_device->setRenderTarget(0);
-				getDevice()->setTransformationState(video::TS_PROJECTION,m);
-			}
-			m_oculusData->oculusRenderer[i]->render(m_oculusData->renderTarget);
-			tex.SetTexture(m_oculusData->oculusRenderer[i]->getOutput()->getColorTexture());
-			getDevice()->useTexture(0,&tex);
-			getDevice()->draw2DImage(rc,1);
-		}
-	}else
-	{
-		video::TextureUnit tex;
-
-		tex.SetTexture(m_rtTexture);
-		getDevice()->useTexture(0,&tex);
-		getDevice()->draw2DImage(rc,1);
-	}
 }
 
 void Application::onRenderDone(scene::ViewPort*vp)
 {
-	if(vp==m_viewPort[0])
-	{
-		_RenderVP(0);
-	}
-	if(vp==m_viewPort[1])
-	{
-		_RenderVP(1);
-	}
-
 }
 void Application::WindowPostRender(video::RenderWindow* wnd)
 {
+	getDevice()->set2DMode();
+	getDevice()->setViewport(m_mainVP);
+	m_tbRenderer->Render(m_mainVP);
 }
 void Application::update(float dt)
 {
@@ -421,21 +448,13 @@ void Application::update(float dt)
 	if(m_seeThroughWindow)
 		m_seeThroughWindow->Update(dt);
 
-	if(TBAppGlobals::usingOculus && TBAppGlobals::oculusDevice)
-	{
-		m_oculusData->oculusManager->Update(dt);
-		TBAppGlobals::oculusDevice->Update(dt);
-
-		m_oculusData->oculusComponents[0]->Update(dt);
-		m_oculusData->oculusComponents[1]->Update(dt);
-	}
-
+	m_tbRenderer->Update(dt);
 	//OS::IThreadManager::getInstance().sleep(1000/30);
 
 }
 void Application::onDone()
 {
-	//TBee::TBAppGlobals::Save("VTSettings.conf");
+	//TBAppGlobals::Instance()->Save("VTSettings.conf");
 
 }
 
@@ -462,7 +481,7 @@ void Application::LoadSettingsXML(const core::string &path)
 	e=tree.getSubElement("Application");
 	if(e)
 	{
-		TBAppGlobals::usingOculus=e->getValueBool("UsingOculus");
+		//TBAppGlobals::Instance()->usingOculus=e->getValueBool("UsingOculus");
 	}
 }
 

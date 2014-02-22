@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="WiiUse">
+    <Filter Include="Wiimote">
       <UniqueIdentifier>{5dfa52dd-c6a8-45e3-a5c1-3bf140d2c4ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -24,8 +24,11 @@
     <ClCompile Include="WiimoteManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wiiusecpp.cpp">
-      <Filter>WiiUse</Filter>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wiimote.cpp">
+      <Filter>Wiimote</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,11 +38,20 @@
     <ClInclude Include="WiimoteManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="wiiuse.h">
-      <Filter>WiiUse</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wiiusecpp.h">
-      <Filter>WiiUse</Filter>
+    <ClInclude Include="wiimote.h">
+      <Filter>Wiimote</Filter>
+    </ClInclude>
+    <ClInclude Include="wiimote_common.h">
+      <Filter>Wiimote</Filter>
+    </ClInclude>
+    <ClInclude Include="wiimote_state.h">
+      <Filter>Wiimote</Filter>
+    </ClInclude>
+    <ClInclude Include="CWiimote.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

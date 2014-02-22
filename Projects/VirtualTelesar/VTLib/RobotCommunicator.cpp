@@ -54,7 +54,9 @@ void RobotCommunicator::OnClosed(ICommunicationLayer* l)
 {
 
 }
-
+void RobotCommunicator::OnSchemeChanged(VT::ICommunicationLayer*, const std::vector<core::string>& names)
+{
+}
 MotorConnection* RobotCommunicator::AddConnection(const core::string &src,const core::string &target,bool connected)
 {
 	MotorConnection* connection=new MotorConnection();

@@ -40,7 +40,7 @@ public:
 	GUIPanel(IGUIManager*mngr);
 	virtual~GUIPanel();
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	void SetBackGroundTexture(video::ITextureCRef  tex);
 	video::TextureUnit* GetBackGroundTexture();

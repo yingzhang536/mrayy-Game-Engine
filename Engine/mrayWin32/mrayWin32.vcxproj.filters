@@ -105,6 +105,12 @@
     <ClInclude Include="Win32SerialPort.h">
       <Filter>Source Files\SerialPort</Filter>
     </ClInclude>
+    <ClInclude Include="WinFileMonitor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinMonitorFileInformation.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinErrorDialog.cpp">
@@ -178,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="Win32SerialPort.cpp">
       <Filter>Source Files\SerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="WinFileMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMonitorFileInformation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

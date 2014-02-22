@@ -275,7 +275,16 @@ bool CoupledJointComponent::SetControlValue(const std::vector<ControlInputValues
 	}
 	return true;
 }
+bool CoupledJointComponent::SetControlValue(const ControlInputValues&  v, EControlSource src)
+{
+	if (m_attachedJoints.size() == 0)
+		return false;
 
+	m_attachedJoints[0]->SetValue(v, src);
+
+	return true;
+
+}
 
 int CoupledJointComponent::GetJoints(std::vector<game::IPhysicalJointComponent*>& joints)
 {

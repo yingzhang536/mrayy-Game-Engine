@@ -46,7 +46,7 @@ GUIPropertyGrid::~GUIPropertyGrid()
 }
 
 
-bool GUIPropertyGrid::_UpdateRegion(video::IRenderArea*vp)
+bool GUIPropertyGrid::_UpdateRegion(const math::rectf*vp)
 {
 	if(IGUIElement::_UpdateRegion(vp))
 	{
@@ -129,7 +129,7 @@ void GUIPropertyGrid::SetPropertyObject(CPropertieSet* obj)
 
 }
 
-void GUIPropertyGrid::Draw(video::IRenderArea*vp)
+void GUIPropertyGrid::Draw(const math::rectf*vp)
 {
 
 	if(!IsVisible())

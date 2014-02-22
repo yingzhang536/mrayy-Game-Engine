@@ -30,7 +30,7 @@ public:
 	virtual~GUIStaticText();
 
 	virtual bool SetText(const core::UTFString&t);
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	const bool& GetBackground() ;
 	bool SetBackground(const bool& val);

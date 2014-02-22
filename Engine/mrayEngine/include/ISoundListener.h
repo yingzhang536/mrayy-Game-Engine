@@ -16,6 +16,7 @@
 
 #include <quaternion.h>
 #include "IObject.h"
+#include "SoundEnums.h"
 
 namespace mray{
 namespace scene{
@@ -56,6 +57,8 @@ public:
 	virtual void setDistanceModel(EListenerDistanceModel m)=0;
 	virtual EListenerDistanceModel getDistanceModel()=0;
 
+	virtual void GetSamples(float* samples, float count, int channel) = 0;
+	virtual void GetSpectrum(float* samples, float count, int channel, EFFT_WindowType window) = 0;
 
 	virtual void update(float dt)=0;
 };

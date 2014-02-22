@@ -22,19 +22,31 @@ namespace mray
 	enum EWiiEventType
 	{
 		EWiiEvent_Unkown,
-		EWiiEvent_Event,
-		EWiiEvent_Status,
+
 		EWiiEvent_Connect,
 		EWiiEvent_Disconnect,
-		EWiiEvent_UnexpectedDisconnect,
+
 		EWiiEvent_ReadData,
+
+		EWiiEvent_ButtonChanged,
+		EWiiEvent_AccelChanged,
+		EWiiEvent_OrintationChanged,
+		EWiiEvent_IRChanged,
+		
 		EWiiEvent_NunchukInserted,
-		EWiiEvent_NunchukRemoved,
-		EWiiEvent_ClassicControlInserted,
-		EWiiEvent_ClassicControlRemoved,
-		EWiiEvent_GuitarHero3Inserted,
-		EWiiEvent_GuitarHero3Removed
+
+		EWiiEvent_BalanceConnected,
+		EWiiEvent_BalanceWeightChanged,
+
+		EWiiEvent_BatteryChanged,
+		EWiiEvent_BatteryDrained,
+
+
 	};
+	namespace controllers
+	{
+		class CWiimote;
+	}
 
 class WiiEvent:public Event
 {
@@ -42,14 +54,14 @@ private:
 protected:
 public:
 
-	static const int EventID;
+	static const GUID EventID;
 
 	WiiEvent();
 	virtual ~WiiEvent();
 
 	EWiiEventType event;
 
-	int WiimoteNumber;
+	controllers::CWiimote* mote;
 	
 };
 

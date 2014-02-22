@@ -178,6 +178,15 @@ void GameEntityManager::DebugRender(scene::IDebugDrawManager* renderer)
 		(*it)->DebugRender(renderer);
 	}
 }
+void GameEntityManager::GUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp)
+{
+	EntityList::iterator it = m_entities.begin();
+	for (; it != m_entities.end(); ++it)
+	{
+		(*it)->OnGUIRender(renderer,vp);
+	}
+
+}
 
 void GameEntityManager::SetSceneNodeEntID(uint node,uint ent)
 {
@@ -194,16 +203,16 @@ uint GameEntityManager::GetSceneNodeEntID(uint node)
 		return 0;
 	return it->second;
 }
-bool GameEntityManager::loadFromFile(const core::string& path)
+bool GameEntityManager::loadFromFile(const core::string& path, std::vector<game::GameEntity*>* ents)
 {
 	xml::XMLTree tree;
 	if(!tree.load(path))
 		return false;
-	loadXMLSettings(&tree);
+	loadXMLSettings(&tree,ents);
 	return true;
 }
 
-void GameEntityManager::loadXMLSettings(xml::XMLElement* elem)
+void GameEntityManager::loadXMLSettings(xml::XMLElement* elem, std::vector<game::GameEntity*>* ents )
 {
 	xml::xmlSubElementsMapIT it= elem->getElementsBegin();
 	xml::xmlSubElementsMapIT end=elem->getElementsEnd();
@@ -217,6 +226,8 @@ void GameEntityManager::loadXMLSettings(xml::XMLElement* elem)
 			gent->loadXMLSettings(e);
 			gent->InitComponent();
 			AddGameEntity(gent);
+			if (ents)
+				ents->push_back(gent);
 		}
 	}
 }

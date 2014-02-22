@@ -21,10 +21,10 @@ HMDRobotRenderer::~HMDRobotRenderer()
 	delete m_provider;
 }
 
-void HMDRobotRenderer::Init(Application*app)
+void HMDRobotRenderer::Init()
 {
-	m_remoteTex[0]=app->getDevice()->createEmptyTexture2D(true);
-	m_remoteTex[1]=app->getDevice()->createEmptyTexture2D(true);
+	m_remoteTex[0] = Engine::getInstance().getDevice()->createEmptyTexture2D(true);
+	m_remoteTex[1] = Engine::getInstance().getDevice()->createEmptyTexture2D(true);
 }
 void HMDRobotRenderer::Grab()
 {

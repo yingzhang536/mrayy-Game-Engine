@@ -702,8 +702,6 @@ void GLDev::begin(bool clearColorBuf,bool clearDepthBuf)
 		mode|=GL_DEPTH_BUFFER_BIT;
 	glClear(mode);
 	setScissorTest(true);
-    
-	
 }
 
 void GLDev::end()
@@ -1393,8 +1391,10 @@ void GLDev::setScissorRect(const math::rectf& rc)
 	//scissor rect defined by the Lower Left point, and size
 	//it is necessary to map it to be Upper Left Point
 	m_scissorRect= rc;
-	glScissor(m_scissorRect.ULPoint.x,m_viewportRect.getHeight()-m_scissorRect.getHeight()-m_scissorRect.ULPoint.y,m_scissorRect.getWidth(),m_scissorRect.getHeight());
-//	glScissor(m_scissorRect.ULPoint.x,m_scissorRect.ULPoint.y,m_scissorRect.getWidth(),m_scissorRect.getHeight());
+	if (m_renderTarget && false)
+		glScissor(m_scissorRect.ULPoint.x,m_scissorRect.ULPoint.y,m_scissorRect.getWidth(),m_scissorRect.getHeight());
+	else
+		glScissor(m_scissorRect.ULPoint.x, m_viewportRect.getHeight() - m_scissorRect.getHeight() - m_scissorRect.ULPoint.y, m_scissorRect.getWidth(), m_scissorRect.getHeight());
 }
 const math::rectf& GLDev::getScissorRect()
 {
@@ -1439,7 +1439,10 @@ void GLDev::set2DMode()
 
 		math::vector2di size=getRenderTargetSize();
 
-		mat=math::MathUtil::CreateProjectionMatrixOrtho(0,size.x*0.5,0,size.y*0.5,-1,1);
+// 		if (m_renderTarget)
+// 			mat = math::MathUtil::CreateProjectionMatrixOrtho(0, size.x*0.5, size.y*0.5, 0, -1, 1);
+// 		else
+			mat = math::MathUtil::CreateProjectionMatrixOrtho(0, size.x*0.5, 0, size.y*0.5, -1, 1);
 		//mat.setTranslation(math::vector3d(-1,1,0));
 		setTransformationState(TS_PROJECTION,mat);
 		//createGLMatrix(glMat,mat);
@@ -1449,6 +1452,7 @@ void GLDev::set2DMode()
 // 		glTranslatef (0.375, 0.375, 0.0); 
 		mat.makeIdentity();
 		setTransformationState(TS_WORLD,mat);
+		
 		mat.setTranslation(math::vector3d(-0.5*size.x, -0.5*size.y, 0.0));
  		setTransformationState(TS_VIEW,mat);
 		
@@ -1578,11 +1582,13 @@ void GLDev::setTransformationState(ETransformationState state,const math::matrix
 		//glmat[12]*=-1;
 		_SetMatrixMode(GL_PROJECTION);
 		// Invert transformed y
-		/*
-		glmat[1] = -glmat[1];
-		glmat[5] = -glmat[5];
-		glmat[9] = -glmat[9];
-		glmat[13] = -glmat[13];*/
+		if (m_renderTarget && false)
+		{
+			glmat[1] = -glmat[1];
+			glmat[5] = -glmat[5];
+			glmat[9] = -glmat[9];
+			glmat[13] = -glmat[13];
+		}
 		glLoadMatrixf(glmat);
 		_SetMatrixMode(GL_MODELVIEW);
 		break;
@@ -2521,6 +2527,9 @@ bool GLDev::setRenderTarget(video::IRenderTargetPtr rt,bool clearBackBuffer,bool
 		glClear(mode);
 		m_renderTarget=0;
 	}
+
+// 	if (currentRenderMode == RM_2D)
+// 		set2DMode();
 
 	return ret;
 }

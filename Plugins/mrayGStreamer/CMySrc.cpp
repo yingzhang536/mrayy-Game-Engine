@@ -31,7 +31,7 @@ static GstStaticPadTemplate mysrc_template = GST_STATIC_PAD_TEMPLATE("src",
 	GST_PAD_SRC,
 	GST_PAD_ALWAYS,
 	GST_STATIC_CAPS_ANY);
-
+/*
 static GstCaps *
 gst_mysrc_getcaps(GstBaseSrc * src)
 {
@@ -46,7 +46,7 @@ gst_mysrc_getcaps(GstBaseSrc * src)
 		
 	return gst_caps_ref(udpsrc->caps);
 
-}
+}*/
 
 enum
 {
@@ -56,6 +56,28 @@ enum
 
 	PROP_LAST
 };
+
+#if GST_VERSION_MAJOR==0
+static GstCaps *
+gst_mysrc_getcaps(GstBaseSrc * src)
+#else
+static GstCaps *
+gst_mysrc_getcaps(GstBaseSrc * src, GstCaps * filter)
+#endif
+{
+	GstMySrc *mysrc;
+
+	mysrc = GST_MySRC(src);
+
+	if (!mysrc->caps)
+	{
+		mysrc->caps = gst_caps_new_any();
+	}
+
+	return gst_caps_ref(mysrc->caps);
+
+}
+
 static void
 gst_mysrc_class_init(GstMySrcClass * klass)
 {
@@ -126,14 +148,6 @@ gst_mysrc_finalize(GObject * object)
 	G_OBJECT_CLASS(parent_class)->finalize(object);
 }
 
-static GstCaps *
-gst_mysrc_getcaps(GstBaseSrc * src, GstCaps * filter)
-{
-	GstMySrc *mysrc;
-
-	mysrc = GST_MySRC(src);
-
-}
 
 static GstFlowReturn
 gst_mysrc_create(GstPushSrc * psrc, GstBuffer ** buf)

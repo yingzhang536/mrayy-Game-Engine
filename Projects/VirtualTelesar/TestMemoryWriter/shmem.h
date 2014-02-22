@@ -34,6 +34,10 @@ typedef struct shmem_coor {
 	shmem_point_t shoulder;
 	shmem_point_t right_arm;
 	shmem_point_t left_arm;
+	shmem_point_t T_eye_lhand;
+	shmem_point_t T_eye_rhand;
+	shmem_point_t T_sh_lhand;
+	shmem_point_t T_sh_rhand;
 } shmem_coor_t;
 
 typedef struct shmem_target {
@@ -41,7 +45,6 @@ typedef struct shmem_target {
 	shmem_coor_t kin;
 	shmem_coor_t end_effector;
 } shmem_target_t;
-
 
 
 typedef struct shmem_arms {
@@ -96,9 +99,11 @@ typedef struct shmem_shoulder {
 	float ori[9];
 } shmem_shoulder_t;
 
-typedef struct shmem_rt_data {
+typedef struct shmem_hw_data {
 	float body[9];
-} shmem_rt_data_t;
+	bool dviState; 
+	bool fsState;  
+} shmem_hw_data_t;
 
 typedef struct shmem_joints {
 	float kin_body[9];
@@ -119,15 +124,21 @@ typedef struct shmem_sensors {
 
 typedef struct shmem_status {
 	bool telexistence;
+	bool connected; 
 	bool calibration;  
 	bool home; 
 	bool initial_pose; 
 	bool glove_reset; 
+	bool finger_calibrate; 
 	bool emergency;
 	bool arm_reset;
 	bool ik_reset;
 	bool force_reset;
 	bool thermal;
+	bool dviState; 
+	bool fsState; 
+	bool logStart;
+	signed int state; 
 } shmem_status_t;
 
 
@@ -136,7 +147,7 @@ typedef struct shmem_status {
 typedef struct shmem_data {
 	unsigned long timestamp;
 	shmem_target_t target;
-	shmem_rt_data_t temp;
+	shmem_hw_data_t hardware;
 	shmem_shoulder_t shoulder;
 	shmem_glove_t glove; 
 	shmem_joints_t joints;

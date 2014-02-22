@@ -64,6 +64,8 @@ namespace OS{
 		uint BattaryFullLifeTime;
 	};
 
+	class IFileMonitor;
+
 class MRAY_DLL IOSystem:public ISingleton<IOSystem>
 {
 public:
@@ -78,6 +80,8 @@ public:
 	virtual ISystemProcess* CreateSystemProcess()=0;
 	
 	virtual ulong HandleWindowEvent(const OptionContainer& params)=0;
+
+	virtual IFileMonitor* CreateFileMonitor() = 0;
 };
 
 #define gOSystem  mray::OS::IOSystem::getInstance()

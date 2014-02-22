@@ -39,11 +39,11 @@ protected:
 	math::vector3d m_targetPos;
 	math::quaternion m_targetOri;
 	math::vector3d m_targetOriV;
-	std::vector<math::quaternion> m_changeVector;
+	std::vector<float> m_changeVector;
 
 	float m_deltaTarget[6];
 
-	std::vector<IJointQuery::JointDOF> m_jointsDOF;
+	const std::vector<IJointQuery::JointDOF> *m_jointsDOF;
 	std::vector<JoinData> m_jointsData;
 
 	bool m_calcOrintation;
@@ -55,7 +55,7 @@ protected:
 
 	float computeJacobian();
 	float computeChange();
-
+	void applyConstraints();
 public:
 	IterativeIK();
 	virtual~IterativeIK();

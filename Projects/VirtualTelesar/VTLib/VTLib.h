@@ -19,8 +19,8 @@ namespace mray
 {
 namespace VT
 {
-	void InitVTLib();
-	void ShutdownVTLib();
+	void RefVTLib();
+	void ReleaseVTLib();
 }
 }
 

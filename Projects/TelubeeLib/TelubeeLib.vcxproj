@@ -14,20 +14,23 @@
     <ProjectGuid>{EC75C431-3C9B-439F-8D24-FE2F104C0972}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TelubeeLib</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -39,7 +42,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\Lib\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\Lib\$(Configuration)</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -47,11 +55,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -62,6 +74,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -69,19 +82,107 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationStateManager.h" />
+    <ClInclude Include="BaseAppState.h" />
+    <ClInclude Include="BaseRenderState.h" />
+    <ClInclude Include="AppData.h" />
+    <ClInclude Include="CameraRenderingState.h" />
+    <ClInclude Include="CRobotConnector.h" />
+    <ClInclude Include="DepthFrame.h" />
+    <ClInclude Include="DepthVisualizer.h" />
+    <ClInclude Include="GeomDepthCalculator.h" />
+    <ClInclude Include="GeomDepthRect.h" />
+    <ClInclude Include="GSTCameraRenderingState.h" />
+    <ClInclude Include="GstFileVideoSource.h" />
+    <ClInclude Include="GstNetVideoSource.h" />
+    <ClInclude Include="GStreamVideoProvider.h" />
+    <ClInclude Include="HMDCameraRenderer.h" />
+    <ClInclude Include="IApplicationState.h" />
+    <ClInclude Include="IEyesRenderingBaseState.h" />
+    <ClInclude Include="IHeadController.h" />
+    <ClInclude Include="IHMDRenderer.h" />
+    <ClInclude Include="IInputController.h" />
+    <ClInclude Include="IRenderingState.h" />
+    <ClInclude Include="IRobotCommunicator.h" />
+    <ClInclude Include="ITransitionBlender.h" />
+    <ClInclude Include="IVideoProvider.h" />
+    <ClInclude Include="ICameraVideoSource.h" />
+    <ClInclude Include="JoystickDefinitions.h" />
+    <ClInclude Include="JoystickInputController.h" />
+    <ClInclude Include="LocalCameraVideoSource.h" />
+    <ClInclude Include="multicast.h" />
+    <ClInclude Include="NullRenderState.h" />
+    <ClInclude Include="OculusHeadController.h" />
+    <ClInclude Include="OpenNIHandler.h" />
+    <ClInclude Include="OptiTrackDataSource.h" />
+    <ClInclude Include="OptiTrackHeadController.h" />
+    <ClInclude Include="RemoteRobotCommunicator.h" />
+    <ClInclude Include="RenderBlender.h" />
+    <ClInclude Include="RenderingStateManager.h" />
+    <ClInclude Include="RobotInfoManager.h" />
+    <ClInclude Include="shmem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TBeeCommon.h" />
+    <ClInclude Include="TBeeRenderer.h" />
+    <ClInclude Include="TBRobotInfo.h" />
+    <ClInclude Include="TBRobotUserInfo.h" />
+    <ClInclude Include="TBUserInfo.h" />
+    <ClInclude Include="WiiboardInputController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AppData.cpp">
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</MinimalRebuild>
+    </ClCompile>
+    <ClCompile Include="ApplicationStateManager.cpp" />
+    <ClCompile Include="BaseAppState.cpp" />
+    <ClCompile Include="BaseRenderState.cpp" />
+    <ClCompile Include="CameraRenderingState.cpp" />
+    <ClCompile Include="CRobotConnector.cpp" />
+    <ClCompile Include="DepthFrame.cpp" />
+    <ClCompile Include="DepthVisualizer.cpp" />
+    <ClCompile Include="GeomDepthCalculator.cpp" />
+    <ClCompile Include="GeomDepthRect.cpp" />
+    <ClCompile Include="GSTCameraRenderingState.cpp" />
+    <ClCompile Include="GstFileVideoSource.cpp" />
+    <ClCompile Include="GstNetVideoSource.cpp" />
+    <ClCompile Include="GStreamVideoProvider.cpp" />
+    <ClCompile Include="HMDCameraRenderer.cpp" />
+    <ClCompile Include="IEyesRenderingBaseState.cpp" />
+    <ClCompile Include="IRenderingState.cpp" />
+    <ClCompile Include="JoystickDefinitions.cpp" />
+    <ClCompile Include="JoystickInputController.cpp" />
+    <ClCompile Include="LocalCameraVideoSource.cpp" />
+    <ClCompile Include="multicast.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="OculusHeadController.cpp" />
+    <ClCompile Include="OpenNIHandler.cpp" />
+    <ClCompile Include="OptiTrackDataSource.cpp" />
+    <ClCompile Include="OptiTrackHeadController.cpp" />
+    <ClCompile Include="RemoteRobotCommunicator.cpp" />
+    <ClCompile Include="RenderBlender.cpp" />
+    <ClCompile Include="RenderingStateManager.cpp" />
+    <ClCompile Include="RobotInfoManager.cpp" />
+    <ClCompile Include="shmem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TBeeRenderer.cpp" />
+    <ClCompile Include="WiiboardInputController.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

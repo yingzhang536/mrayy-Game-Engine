@@ -34,12 +34,14 @@ class CommunicationManager:public ISingleton<CommunicationManager>,public IRobot
 public:
 
 	typedef std::list<ICommunicatorComponent*> CommunicatorList;
+	typedef std::map<core::string,ICommunicationLayer*> CommunicationLayerMap;
 	typedef std::map<core::string,ICommunicatorComponent*> CommunicatorMap;
 
 protected:
 
 	CommunicatorList m_communicatorsList;
 	CommunicatorMap m_communicators;
+	CommunicationLayerMap m_commLayers;
 
 	std::list<RobotCommunicator*> m_robotCommunicators;
 
@@ -54,6 +56,10 @@ protected:
 public:
 	CommunicationManager();
 	virtual~CommunicationManager();
+
+	void AddCommunicationLayer(const core::string& name, ICommunicationLayer* layer);
+	ICommunicationLayer* GetCommunicationLayer(const core::string& name);
+	void RemoveCommunicationLayer(const core::string& name);
 	
 	void AddCommunicator(ICommunicatorComponent* c);
 	ICommunicatorComponent* GetCommunicator(const core::string& name);

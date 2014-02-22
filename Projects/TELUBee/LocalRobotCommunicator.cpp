@@ -1,7 +1,6 @@
 
 #include "stdafx.h"
 #include "LocalRobotCommunicator.h"
-#include "TBeeOptiTrackObject.h"
 #include "shmem.h"
 #include "multicast.h"
 #include "IUDPClient.h"
@@ -143,7 +142,7 @@ bool LocalRobotCommunicator::Connect(const core::string& ip,int port)
 #ifdef USE_OPTI
 		{
 			core::string ipaddr=inet_ntoa(m_data->data.user.ipaddress);
-		//	TBAppGlobals::optiObj->Connect(ipaddr,ipaddr);
+		//	TBAppGlobals::Instance()->optiObj->Connect(ipaddr,ipaddr);
 		}
 #endif
 		m_data->connected=true;
@@ -157,7 +156,7 @@ void LocalRobotCommunicator::Disconnect()
 	if(!m_data->connected)
 		return;
 #ifdef USE_OPTI
-	//TBAppGlobals::optiObj->Disconnect();
+	//TBAppGlobals::Instance()->optiObj->Disconnect();
 #endif
 #ifdef USE_UDPCLIENT
 	m_data->client->Disconnect();
@@ -193,14 +192,14 @@ void LocalRobotCommunicator::Update(float dt)
 	if(!m_data->connected)
 		return;
 	
+#if TELUBEE_VER==1
+	m_data->data.user.head.x=TBAppGlobals::Instance()->optiObj->GetPos().x;
+	m_data->data.user.head.y=TBAppGlobals::Instance()->optiObj->GetPos().y;
+	m_data->data.user.head.z=TBAppGlobals::Instance()->optiObj->GetPos().z;
 
-	m_data->data.user.head.x=TBAppGlobals::optiObj->GetPos().x;
-	m_data->data.user.head.y=TBAppGlobals::optiObj->GetPos().y;
-	m_data->data.user.head.z=TBAppGlobals::optiObj->GetPos().z;
-
-	m_data->data.user.head.pitch=-TBAppGlobals::optiObj->GetRotation().x;
-	m_data->data.user.head.yaw=TBAppGlobals::optiObj->GetRotation().y;
-	m_data->data.user.head.roll=-TBAppGlobals::optiObj->GetRotation().z;
+	m_data->data.user.head.pitch=-TBAppGlobals::Instance()->optiObj->GetRotation().x;
+	m_data->data.user.head.yaw=TBAppGlobals::Instance()->optiObj->GetRotation().y;
+	m_data->data.user.head.roll=-TBAppGlobals::Instance()->optiObj->GetRotation().z;
 
 #define ToStr(x) core::StringConverter::toString(x)
 	core::string str=core::string(m_data->data.user.user_id.c_str())
@@ -228,13 +227,15 @@ void LocalRobotCommunicator::Update(float dt)
 #else
 	m_data->client->setBuffer(str.c_str());
 #endif
+
+#endif
 }
 
 void LocalRobotCommunicator::_SendUpdate()
 {
 	core::string ipaddr;
-	if(TBee::TBAppGlobals::selectedRobot)
-		ipaddr=TBee::TBAppGlobals::selectedRobot->IP;//inet_ntoa(m_data->data.user.ipaddress);
+	if(TBee::TBAppGlobals::Instance()->selectedRobot)
+		ipaddr=TBee::TBAppGlobals::Instance()->selectedRobot->IP;//inet_ntoa(m_data->data.user.ipaddress);
 	else
 		return;
 	char buffer[512];

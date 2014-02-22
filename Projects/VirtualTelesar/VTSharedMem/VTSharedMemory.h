@@ -45,6 +45,8 @@ public:
 	void GetDebugString(std::vector<core::string>& lst);
 	
 	const std::vector<core::string>& GetScheme();
+
+	bool InjectCommand(const core::string& cmd, const core::string& args);
 };
 
 }

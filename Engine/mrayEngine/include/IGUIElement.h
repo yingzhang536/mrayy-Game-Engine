@@ -124,8 +124,8 @@ protected:
 
 	virtual void fillProperties();
 
-	void _UpdateDocking(video::IRenderArea*vp);
-	void _UpdateAlignment(video::IRenderArea*vp);
+	void _UpdateDocking(const math::rectf*vp);
+	void _UpdateAlignment(const math::rectf*vp);
 
 public:
 
@@ -155,7 +155,7 @@ public:
 	DECLARE_PROPERTY_TYPE(Alpha,float,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(DeriveAlpha,bool,MRAY_DLL);
 
-	virtual bool _UpdateRegion(video::IRenderArea*vp);
+	virtual bool _UpdateRegion(const math::rectf*vp);
 	virtual void _UpdateDerivedAlpha();
 public:
 	IGUIElement(const GUID& type,IGUIManager* creator);
@@ -245,8 +245,8 @@ public:
 	virtual bool OnEvent(Event* e);
 
 	virtual void Update(float dt);
-	virtual void Draw(video::IRenderArea*vp);
-	virtual void PostDraw(video::IRenderArea*vp){}
+	virtual void Draw(const math::rectf*vp);
+	virtual void PostDraw(const math::rectf*vp){}
 
 	virtual void LoadXMLSettings(xml::XMLElement*e);
 

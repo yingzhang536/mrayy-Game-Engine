@@ -414,7 +414,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		if(m_horizontalFlip)
 			trc=math::rectf(1,0,0,1);
 		else 
-			trc=math::rectf(0,0,1,1);
+			trc=math::rectf(0,1,1,0);
 		getDevice()->draw2DImage(rc,1,0,&trc);
 	//	getDevice()->draw2DRectangle(rc,video::SColor(index,1,0,1));
 		RenderUI(rc);

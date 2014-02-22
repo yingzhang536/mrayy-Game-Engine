@@ -22,6 +22,10 @@
 #include "GstVideoProvider.h"
 #include "ViewPort.h"
 #include "TelubeeRobotDLL.h"
+#include "OpenNIHandler.h"
+#include "GeomDepthRect.h"
+#include "IUDPClient.h"
+#include "OpenNIManager.h"
 
 namespace mray
 {
@@ -29,6 +33,7 @@ namespace mray
 class RobotCommunicator;
 class GstVideoGrabberImpl;
 class IRobotCommunicatorListener;
+class IMessageSink;
 class TRApplication :public CMRayApplication, public scene::IViewportListener
 {
 protected:
@@ -37,6 +42,12 @@ protected:
 	{
 		XBox,
 		Logicool
+	};
+
+	enum class EMessages
+	{
+		DepthData = 1,
+		DepthSize = 2,
 	};
 
 	EController m_controller;
@@ -59,7 +70,15 @@ protected:
 	RobotCommunicator* m_robotCommunicator;
 
 	IRobotCommunicatorListener* m_communicatorListener;
+	IMessageSink* m_msgSink;
 
+	TBee::OpenNIHandler* m_openNi;
+
+	TBee::GeomDepthRect m_depthRect;
+
+	network::NetAddress m_remoteAddr;
+	network::IUDPClient* m_commChannel;
+	GCPtr<OpenNIManager> m_openNIMngr;
 	bool m_isLocal;
 	bool m_streamAudio;
 
@@ -110,6 +129,8 @@ public:
 	void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status);
 	void OnCollisionData(RobotCommunicator* sender, float left, float right);
 	void OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address);
+
+	void OnMessage(network::NetAddress* addr,const core::string& msg, const core::string& value);
 
 };
 

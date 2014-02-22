@@ -17,7 +17,7 @@
 #ifndef __OpenNIManager__
 #define __OpenNIManager__
 
-
+#include "ISingleton.h"
 
 
 namespace mray
@@ -25,7 +25,7 @@ namespace mray
 
 	class OpenNIManagerImpl;
 	class OpenNICaptureDevice;
-class OpenNIManager
+class OpenNIManager:public ISingleton<OpenNIManager>
 {
 protected:
 	OpenNIManagerImpl* m_impl;

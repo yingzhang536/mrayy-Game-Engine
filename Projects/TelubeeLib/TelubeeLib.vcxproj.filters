@@ -13,6 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{51b4ad96-c7a0-40fb-b7a1-60cbf4248452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application States">
+      <UniqueIdentifier>{d0eb43fd-dad5-42d5-b9cc-3b1384ec8fd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{c72ba841-2600-4ab1-b658-5a2de1adc4a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{10e6b9f9-68a1-442d-8fb7-adcc9d1bf5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VideoProvider">
+      <UniqueIdentifier>{7576d382-f2ca-4c74-81aa-0434b1447dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\Rendering">
+      <UniqueIdentifier>{21062d0b-f3b7-4674-9363-87e266d5ef94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input Controller">
+      <UniqueIdentifier>{c39ee3a8-15ad-4001-b1c6-cfd779ec0d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Robot">
+      <UniqueIdentifier>{9663be8d-83bc-456a-92b1-cd8ac743c8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs">
+      <UniqueIdentifier>{e002e6f5-98e3-4b42-8f33-745943a4631b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataSource">
+      <UniqueIdentifier>{ace7b82a-34b5-4c50-a045-955e676b6ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VideoSource">
+      <UniqueIdentifier>{43536e5f-e368-461e-b222-30f97b9de2f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input Controller\Head">
+      <UniqueIdentifier>{198a27df-acb6-4bc0-82e3-e4bdd215c3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input Controller\Control">
+      <UniqueIdentifier>{30b1cd43-d2c5-4e57-9071-bd1db911bf40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Depth">
+      <UniqueIdentifier>{6311bbfa-4f16-4127-9429-508cff415469}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,10 +66,241 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationStateManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingStateManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInfoManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseAppState.h">
+      <Filter>Source Files\Application States</Filter>
+    </ClInclude>
+    <ClInclude Include="IApplicationState.h">
+      <Filter>Source Files\Application States</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingState.h">
+      <Filter>Source Files\Application States</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderBlender.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="NullRenderState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRenderState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ITransitionBlender.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="AppData.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TBRobotInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="TBRobotUserInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="TBUserInfo.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GStreamVideoProvider.h">
+      <Filter>Source Files\VideoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="IVideoProvider.h">
+      <Filter>Source Files\VideoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="GSTCameraRenderingState.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRenderingState.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="HMDCameraRenderer.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="IEyesRenderingBaseState.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteRobotCommunicator.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotCommunicator.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="shmem.h">
+      <Filter>Source Files\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="multicast.h">
+      <Filter>Source Files\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="CRobotConnector.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="JoystickDefinitions.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="IHMDRenderer.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="OptiTrackDataSource.h">
+      <Filter>Source Files\DataSource</Filter>
+    </ClInclude>
+    <ClInclude Include="TBeeRenderer.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TBeeCommon.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalCameraVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="IHeadController.h">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="OculusHeadController.h">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="OptiTrackHeadController.h">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="IInputController.h">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="WiiboardInputController.h">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="JoystickInputController.h">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenNIHandler.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="GeomDepthCalculator.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="GeomDepthRect.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthFrame.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthVisualizer.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="GstNetVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="GstFileVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationStateManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingStateManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotInfoManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseAppState.cpp">
+      <Filter>Source Files\Application States</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderingState.cpp">
+      <Filter>Source Files\Application States</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBlender.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRenderState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="AppData.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GStreamVideoProvider.cpp">
+      <Filter>Source Files\VideoProvider</Filter>
+    </ClCompile>
+    <ClCompile Include="GSTCameraRenderingState.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraRenderingState.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="HMDCameraRenderer.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="IEyesRenderingBaseState.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteRobotCommunicator.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="shmem.cpp">
+      <Filter>Source Files\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="multicast.cpp">
+      <Filter>Source Files\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="CRobotConnector.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="JoystickDefinitions.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="OptiTrackDataSource.cpp">
+      <Filter>Source Files\DataSource</Filter>
+    </ClCompile>
+    <ClCompile Include="TBeeRenderer.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalCameraVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="OculusHeadController.cpp">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="OptiTrackHeadController.cpp">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="JoystickInputController.cpp">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="WiiboardInputController.cpp">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="GeomDepthCalculator.cpp">
+      <Filter>Source Files\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenNIHandler.cpp">
+      <Filter>Source Files\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="GeomDepthRect.cpp">
+      <Filter>Source Files\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthFrame.cpp">
+      <Filter>Source Files\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthVisualizer.cpp">
+      <Filter>Source Files\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="GstNetVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="GstFileVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

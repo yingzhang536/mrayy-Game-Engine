@@ -43,7 +43,7 @@ public:
 	GUIEditBox(IGUIManager*mngr);
 	virtual~GUIEditBox();
 	
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 	virtual void Update(float dt);
 
 	virtual bool SetText(const core::UTFString&t);

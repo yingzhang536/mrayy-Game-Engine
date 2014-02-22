@@ -20,6 +20,7 @@ namespace mray
 		m_g1 = 0;
 		m_g2 = 0;
 		m_bufferID=0;
+		m_rotate90 = false;
 #if USE_GPU
 		m_rtTex = Engine::getInstance().getDevice()->createEmptyTexture2D(false);
 		m_tex1 = Engine::getInstance().getDevice()->createEmptyTexture2D(false);
@@ -55,25 +56,28 @@ namespace mray
 		return video::EPixel_R8G8B8;
 	}
 
-	void RotateImage(const video::ImageInfo* src, video::ImageInfo* dst,const math::recti &srcRect, bool cw)
+	void CombineVideoGrabber::_RotateImage(const video::ImageInfo* src, video::ImageInfo* dst, const math::recti &srcRect, bool cw)
 	{
 		dst->createData(math::vector3d(srcRect.getHeight(), srcRect.getWidth(), 1), src->format);
+
 		struct pixel
 		{
 			uchar r, g, b;
 		};
 		pixel* psrc = (pixel*)src->imageData;
 		pixel* pdst= (pixel*)dst->imageData;
+				int indexSrc = 0;
+				int indexDst = 0;
 		for (int i = srcRect.ULPoint.x; i < srcRect.BRPoint.x; ++i)
 		{
 			for (int j = srcRect.ULPoint.y; j < srcRect.BRPoint.y; ++j)
 			{
-				int indexSrc = (src->Size.y - j - 1)*src->Size.x + (i);
-				int indexDst = 0;
+
+				indexSrc = (src->Size.y - j - 1)*src->Size.x + (i);
 				if (cw)
 					indexDst = (i - srcRect.ULPoint.x)*srcRect.getHeight() + j - srcRect.ULPoint.y;
-				else 
-					indexDst = (srcRect.getWidth() - (i-srcRect.ULPoint.x) - 1)*srcRect.getHeight() + (srcRect.getHeight() - (j - srcRect.ULPoint.y) - 1);
+				else
+					indexDst = (srcRect.getWidth() - (i - srcRect.ULPoint.x) - 1)*srcRect.getHeight() + (srcRect.getHeight() - (j - srcRect.ULPoint.y) - 1);
 				pdst[indexDst] = psrc[indexSrc];
 			}
 		}
@@ -107,17 +111,41 @@ namespace mray
 		int widthDiff = abs(targetSize.x - m_g1->GetFrameSize().x);
 		math::recti srcRect = math::recti(widthDiff / 2, 0, m_g1->GetFrameSize().x - widthDiff / 2, m_g1->GetFrameSize().y);
 		srcRect.Repair();
+
+		const video::ImageInfo* f1, *f2;
+		f1 = &m_frame1;
+		f2 = &m_frame2;
+		if (m_rotate90 )
+		{
+			if (a)
+			{
+				_RotateImage(m_g1->GetLastFrame(), &m_frame1, srcRect, false);
+			}
+			if (b)
+			{
+				_RotateImage(m_g2->GetLastFrame(), &m_frame2, srcRect, true);
+			}
+		}
+		else
+		{
+			if (a)
+			{
+				m_frame1.setData(m_g1->GetLastFrame()->imageData, m_g1->GetLastFrame()->Size, m_g1->GetLastFrame()->format);
+			}
+			if (b)
+			{
+				m_frame2.setData(m_g2->GetLastFrame()->imageData, m_g2->GetLastFrame()->Size, m_g2->GetLastFrame()->format);
+			}
+		}
 		if (a)
-			RotateImage(m_g1->GetLastFrame(), &m_frame1, srcRect, false);
+			video::ColorConverter::resizeImage( &m_frame1, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
 		if (b)
-			RotateImage(m_g2->GetLastFrame(), &m_frame2, srcRect,true );
+			video::ColorConverter::resizeImage( &m_frame2, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
+
+
 
 		//if (a && b)
 		{
-			if (a)
-				video::ColorConverter::resizeImage(&m_frame1, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
-			if (b)
-				video::ColorConverter::resizeImage(&m_frame2, math::Point2di(m_targetSize.x / 2, m_targetSize.y));
 			for (int i = 0; i < m_targetSize.x / 2; ++i)
 			{
 				for (int j = 0; j < m_targetSize.y; ++j)
@@ -127,9 +155,9 @@ namespace mray
 					int index = (j*m_targetSize.x / 2 + i) * 3;//for frame
 					if (a)
 					{
-						m_lastImage.imageData[index1 + 0] = m_frame1.imageData[index + 0];
-						m_lastImage.imageData[index1 + 1] = m_frame1.imageData[index + 1];
-						m_lastImage.imageData[index1 + 2] = m_frame1.imageData[index + 2];
+						m_lastImage.imageData[index1 + 0] = f1->imageData[index + 0];
+						m_lastImage.imageData[index1 + 1] = f1->imageData[index + 1];
+						m_lastImage.imageData[index1 + 2] = f1->imageData[index + 2];
 					}
 					else
 					{
@@ -138,9 +166,9 @@ namespace mray
 
 					if (b)
 					{
-						m_lastImage.imageData[index2 + 0] = m_frame2.imageData[index + 0];
-						m_lastImage.imageData[index2 + 1] = m_frame2.imageData[index + 1];
-						m_lastImage.imageData[index2 + 2] = m_frame2.imageData[index + 2];
+						m_lastImage.imageData[index2 + 0] = f2->imageData[index + 0];
+						m_lastImage.imageData[index2 + 1] = f2->imageData[index + 1];
+						m_lastImage.imageData[index2 + 2] = f2->imageData[index + 2];
 					}
 					else
 					{

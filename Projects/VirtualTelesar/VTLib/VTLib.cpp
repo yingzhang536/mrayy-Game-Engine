@@ -29,13 +29,13 @@ namespace mray
 {
 namespace VT
 {
-	static bool s_Inited=false;
+	static int s_RefCounter=0;
 
-void InitVTLib()
+void RefVTLib()
 {
-	if(s_Inited)
+	if (s_RefCounter>0)
 		return;
-	s_Inited=true;
+	s_RefCounter ++;
 	REGISTER_COMPONENT_FACTORY(CoupledJointComponent);
 	REGISTER_COMPONENT_FACTORY(RobotCommunicatorComponent);
 	REGISTER_COMPONENT_FACTORY(PhysicsTransformComponent);
@@ -54,11 +54,13 @@ void InitVTLib()
 
 	new VT::CommunicationManager();
 }
-void ShutdownVTLib()
+void ReleaseVTLib()
 {
-	if(!s_Inited)
+	--s_RefCounter;
+
+	if (s_RefCounter > 0)
 		return;
-	s_Inited=false;
+
 	delete VT::CommunicationManager::getInstancePtr();
 
 

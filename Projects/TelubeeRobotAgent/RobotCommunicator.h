@@ -43,6 +43,12 @@ namespace mray
 		virtual void OnCollisionData(RobotCommunicator* sender, float left, float right){}
 	};
 
+	class IMessageSink
+	{
+	public:
+		virtual void OnMessage(network::NetAddress* addr,const core::string& msg, const core::string& value){};
+	};
+
 
 class RobotCommunicator:public ITelubeeRobotListener
 {
@@ -51,14 +57,15 @@ protected:
 	CTelubeeRobotDLL* m_robotController;
 	RobotStatus m_robotStatus;
 	UserStatus m_userStatus;
-	void HandleData(const core::string& name, const core::string& value);
-	void ProcessPacket(const char* buffer);
+	void HandleData(network::NetAddress* addr,const core::string& name, const core::string& value);
+	void ProcessPacket(network::NetAddress* addr,const char* buffer);
 
 	network::IUDPClient* m_client;
 
 	OS::IThread* m_thread;
 
 	IRobotCommunicatorListener* m_listener;
+	IMessageSink* m_msgSink;
 
 	bool m_localControl;
 
@@ -76,6 +83,8 @@ public:
 	void SetRobotData(const RobotStatus &st);
 
 	void SetListener(IRobotCommunicatorListener* l){ m_listener = l; }
+	void SetMessageSink(IMessageSink*s){ m_msgSink = s; }
+
 
 	int _Process();
 

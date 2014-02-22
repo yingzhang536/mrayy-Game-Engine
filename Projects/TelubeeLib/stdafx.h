@@ -12,3 +12,10 @@
 
 
 // TODO: reference additional headers your program requires here
+
+#include <vector>
+#include <list>
+#include <map>
+#include <algorithm>
+#include <mrayEngine.h>
+#include <IGameComponent.h>

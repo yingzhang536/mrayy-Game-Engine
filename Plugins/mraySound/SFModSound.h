@@ -102,6 +102,10 @@ public:
 	virtual uint getTimePosition();
 
 	virtual void update(float dt);
+
+
+	virtual void GetSamples(float* samples, float count, int channel) ;
+	virtual void GetSpectrum(float* samples, float count, int channel, EFFT_WindowType window) ;
 	
 	virtual xml::XMLElement* exportXMLSettings(xml::XMLElement* e);
 	virtual xml::XMLElement* loadXMLSettings(xml::XMLElement*e);

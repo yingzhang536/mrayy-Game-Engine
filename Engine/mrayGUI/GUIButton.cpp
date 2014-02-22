@@ -49,7 +49,7 @@ const core::UTFString& GUIButton::GetText()const
 }
 	
 
-void GUIButton::Draw(video::IRenderArea*vp)
+void GUIButton::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 	m_component->rc=GetDefaultRegion()->GetClippedRect();

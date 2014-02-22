@@ -155,7 +155,7 @@ float GUISliderBar::GetMinValue()const
 {
 	return m_minValue;
 }
-void GUISliderBar::Draw(video::IRenderArea*vp)
+void GUISliderBar::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

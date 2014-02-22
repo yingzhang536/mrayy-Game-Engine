@@ -55,7 +55,7 @@ public:
 	IntroRenderingState();
 	virtual~IntroRenderingState();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	virtual void OnEvent(Event* e);
 	virtual void OnEnter(IRenderingState*prev);

@@ -21,7 +21,7 @@ JobPool::~JobPool()
 void JobPool::SetupDefaultPools()
 {
 	//Add the default Queue
-	for(int i=0;i<4/*EDefaultJobQ_Count*/;++i)
+	for(int i=0;i<2/*EDefaultJobQ_Count*/;++i)
 		AddJobQueue(new JobQueue(i));
 }
 void JobPool::AddJobQueue(IJobQueue*q)

@@ -55,6 +55,7 @@ public:
 	
 	static bool FlipCameras;
 	static ECameraSourceType CameraType;
+
 	
 	static void SetValue(const core::string&catagory,const core::string&name,const core::string& v);
 	static core::string GetValue(const core::string&catagory,const core::string&name);

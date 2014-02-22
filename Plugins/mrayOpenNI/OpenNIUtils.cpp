@@ -12,10 +12,12 @@ bool OpenNIUtils::ConvertToTexture(openni::VideoFrameRef& stream,video::LockedPi
 	if(!stream.isValid() ||
 		buff.box.getWidth()!=stream.getVideoMode().getResolutionX() ||
 	   buff.box.getHeight()!=stream.getVideoMode().getResolutionY() ||
-	    buff.format!=video::EPixel_R8G8B8)
+	   buff.format != video::EPixel_R8G8B8 && buff.format != video::EPixel_R8G8B8A8)
 	{
 		return false;
 	}
+
+	bool hasAlpha = (buff.format == video::EPixel_R8G8B8A8);
 
 	bool isDepth=stream.getSensorType()==openni::SENSOR_DEPTH;
 
@@ -30,13 +32,15 @@ bool OpenNIUtils::ConvertToTexture(openni::VideoFrameRef& stream,video::LockedPi
 	else
 		rowSize/= sizeof(openni::RGB888Pixel);
 
+	int pixelSize = (3 + (hasAlpha ? 1 : 0));
+
 	for (int y = 0; y < stream.getHeight(); ++y)
 	{
 		const openni::DepthPixel* pDepth = pDepthRow;
 		const openni::RGB888Pixel* pColor = pColorRow;
 		char* pTex = pTexRow + stream.getCropOriginX();
 
-		for (int x = 0; x < stream.getWidth(); ++x, pTex+=3)
+		for (int x = 0; x < stream.getWidth(); ++x, pTex += pixelSize)
 		{
 			if (*pDepth != 0)
 			{
@@ -44,7 +48,7 @@ bool OpenNIUtils::ConvertToTexture(openni::VideoFrameRef& stream,video::LockedPi
 				{
 					int nHistValue = *pDepth;
 					if(histo && histo->size())
-						nHistValue=(*histo)[math::Min<int>(histo->size()-1,(histo->size())*((float)nHistValue/10000.0f))];
+						nHistValue=(*histo)[math::Min<int>(histo->size()-1,(histo->size())*((float)nHistValue/(float)histo->size()))];
 					pTex[0] = nHistValue;
 					pTex[1] = nHistValue;
 					pTex[2] = nHistValue;
@@ -59,13 +63,17 @@ bool OpenNIUtils::ConvertToTexture(openni::VideoFrameRef& stream,video::LockedPi
 			{
 				pTex[0]=pTex[1]=pTex[2]=0;
 			}
+			if (hasAlpha)
+			{
+				pTex[3] = 255;
+			}
 			if(isDepth) ++pDepth;
 			else ++pColor;
 		}
 
 		if(isDepth) pDepthRow += rowSize;
 		else pColorRow += rowSize;
-		pTexRow +=(int) buff.box.getWidth()*3;
+		pTexRow +=(int) buff.box.getWidth()*pixelSize;
 	}
 	return true;
 }

@@ -109,7 +109,7 @@ void GUIMotorConnector::SetConnector(VT::MotorConnection* c)
 	}
 }
 
-void GUIMotorConnector::Draw(video::IRenderArea*vp)
+void GUIMotorConnector::Draw(const math::rectf*vp)
 {
 	bool state=false;
 	CalculateSizes();

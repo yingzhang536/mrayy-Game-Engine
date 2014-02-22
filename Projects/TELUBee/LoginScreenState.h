@@ -38,6 +38,7 @@ namespace TBee
 #define ToMap_CODE 0x100
 #define ToLocalCamera_CODE 0x101
 #define ToRemoteCamera_CODE 0x102
+#define ToVideo_CODE 0x103
 
 	class Application;
 class LoginScreenState:public IRenderingState,public IDelegateContainer
@@ -74,6 +75,7 @@ protected:
 	void OnSeeThroughPressed(IObject* caller,void* args);
 	void OnConnectRemotePressed(IObject* caller, void* args);
 	void OnConnectLocalPressed(IObject* caller, void* args);
+	void OnPlayVideoPressed(IObject* caller, void* args);
 
 	void _OnConnectionCallback(db::ISQLConnection*c,bool res,void* ud);
 	void _OnAuthenticatingCallback(db::ISQLConnection*c,db::ISQLResult* res,void* ud);
@@ -85,9 +87,9 @@ public:
 	virtual~LoginScreenState();
 
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
-	virtual void OnEvent(Event* e);
+	virtual bool OnEvent(Event* e, const math::rectf& rc);
 	virtual void OnEnter(IRenderingState*prev);
 	virtual void OnExit();
 	virtual video::IRenderTarget* Render(const math::rectf& rc,ETargetEye eye);

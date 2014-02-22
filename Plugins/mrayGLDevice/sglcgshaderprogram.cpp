@@ -39,8 +39,13 @@ void SGLCGShaderProgram::_CG_ErrorHandler(CGcontext c, CGerror e, void * d)
 	core::string errorMsg;
 	errorMsg=mT("[ CG error] :"); 
 	errorMsg+=core::StringConverter::toString(str);
-	if(c)
-		errorMsg+="- Context: " + core::StringConverter::toString(cgGetLastListing(c));
+	if (c)
+	{
+		const char* msg = cgGetLastListing(c);
+		if (msg)
+			errorMsg += "- Context: " + core::StringConverter::toString(msg
+			);
+	}
 	gVideoLoggerSystem.log(errorMsg,ELL_WARNING);
 }
 

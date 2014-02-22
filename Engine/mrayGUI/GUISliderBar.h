@@ -60,7 +60,7 @@ public:
 	bool SetMinValue(float val);
 	float GetMinValue()const;
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

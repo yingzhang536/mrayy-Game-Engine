@@ -32,8 +32,13 @@ static GstStaticPadTemplate mysrc_template = GST_STATIC_PAD_TEMPLATE("src",
 	GST_PAD_ALWAYS,
 	GST_STATIC_CAPS_ANY);
 
+#if GST_VERSION_MAJOR==0
 static GstCaps *
 gst_mysrc_getcaps(GstBaseSrc * src)
+#else
+static GstCaps *
+gst_mysrc_getcaps(GstBaseSrc * src, GstCaps * filter)
+#endif
 {
 	GstMySrc *udpsrc;
 
@@ -126,14 +131,6 @@ gst_mysrc_finalize(GObject * object)
 	G_OBJECT_CLASS(parent_class)->finalize(object);
 }
 
-static GstCaps *
-gst_mysrc_getcaps(GstBaseSrc * src, GstCaps * filter)
-{
-	GstMySrc *mysrc;
-
-	mysrc = GST_MySRC(src);
-
-}
 
 static GstFlowReturn
 gst_mysrc_create(GstPushSrc * psrc, GstBuffer ** buf)

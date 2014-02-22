@@ -42,6 +42,8 @@ void MaterialResourceManager::parseMaterialScript(OS::IStream* file){
 
 void MaterialResourceManager::parseMaterialXML(OS::IStream* file)
 {
+	if (!file)
+		return;
 	xml::XMLTree t;
 	if(!t.load(file))
 	{

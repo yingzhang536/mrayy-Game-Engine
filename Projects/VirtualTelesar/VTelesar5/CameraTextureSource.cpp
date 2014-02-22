@@ -7,7 +7,7 @@
 
 #include "DirectShowVideoGrabber.h"
 
-#define FLYCAMERA_GRABBER
+//#define FLYCAMERA_GRABBER
 #ifdef FLYCAMERA_GRABBER
 #include "FlyCameraVideoGrabber.h"
 #endif

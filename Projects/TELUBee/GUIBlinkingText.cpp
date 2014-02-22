@@ -37,7 +37,7 @@ GUIBlinkingText::~GUIBlinkingText()
 
 
 
-void GUIBlinkingText::Draw(video::IRenderArea*vp)
+void GUIBlinkingText::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 	IGUIManager* creator=GetCreator();
@@ -60,7 +60,7 @@ void GUIBlinkingText::Draw(video::IRenderArea*vp)
 	GetCreator()->GetRenderQueue()->Flush();
 	GetCreator()->GetDevice()->setScissorRect(oldScissor);
 
-	IGUIElement::Draw(vp);
+	IGUIElement::Draw( vp);
 }
 
 void GUIBlinkingText::Update(float dt)

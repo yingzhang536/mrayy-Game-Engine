@@ -22,6 +22,7 @@ namespace sound{
 
 	class ISoundStreamFrame;
 
+
 class MRAY_DLL ISound:public IObject
 {
 	DECLARE_RTTI
@@ -96,6 +97,9 @@ public:
 
 	virtual void QueueSoundBuffer(ISoundStreamFrame*data)=0;
 	virtual void UnqueueSoundBuffer(ISoundStreamFrame*data)=0;
+
+	virtual void GetSamples(float* samples, float count, int channel)=0;
+	virtual void GetSpectrum(float* samples, float count, int channel, EFFT_WindowType window) = 0;
 
 // 	virtual xml::XMLElement* exportXMLSettings(xml::XMLElement* e);
 // 	virtual xml::XMLElement* loadXMLSettings(xml::XMLElement*e);

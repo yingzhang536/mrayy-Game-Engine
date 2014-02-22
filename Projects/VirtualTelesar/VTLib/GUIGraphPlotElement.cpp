@@ -145,7 +145,7 @@ void GUIGraphPlotElement::Update(float dt)
 	}
 }
 
-void GUIGraphPlotElement::Draw(video::IRenderArea*vp)
+void GUIGraphPlotElement::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

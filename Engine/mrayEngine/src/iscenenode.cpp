@@ -503,7 +503,7 @@ void ISceneNode::addChild(IMovableCRef elem,bool parentSpace)
 
 math::matrix4x4&ISceneNode::getAbsoluteTransformation(){
 // 	if(hasChanged())
-// 		updateAbsoluteTransformation();
+ 	updateAbsoluteTransformation();
 	return absTransformation;
 }
 const math::matrix4x4&ISceneNode::getAbsoluteTransformation()const
@@ -545,7 +545,7 @@ void ISceneNode::updateAbsoluteTransformation()
 	if(getParent()){
 		shouldUpdate=shouldUpdate || getParent()->NeedChildUpdate();
 	}
-	if(!shouldUpdate){
+	if(!shouldUpdate && false){
 		m_updateChilds=false;
 		return;
 	}
@@ -558,7 +558,8 @@ void ISceneNode::updateAbsoluteTransformation()
 
 		m_absScale=m_scale*m_parent->getAbsoluteScale();
 		m_absOrintaion=m_parent->getAbsoluteOrintation()*m_orintation;
-/*
+		absPos = absTransformation.getTranslation();
+		/*
 		absPos=m_position*m_scale;
 		parent->getAbsoluteTransformation().transformVectPost(absPos);
 

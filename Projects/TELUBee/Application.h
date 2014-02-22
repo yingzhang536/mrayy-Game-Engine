@@ -31,6 +31,8 @@
 #include "RenderingStateManager.h"
 
 #include "ApplicationStateManager.h"
+#include "TBeeRenderer.h"
+#include "WiimoteManager.h"
 
 namespace mray
 {
@@ -41,10 +43,10 @@ namespace TBee
 
 	class ApplicationOculusData;
 
-class Application:public CMRayApplication,public scene::IViewportListener
+class Application:public CMRayApplication,public scene::IViewportListener,public ITBeeRendererListener
 {
 protected:
-	scene::ViewPort* m_viewPort[2];
+	scene::ViewPort* m_mainVP;
 
 	GCPtr<GUI::GUIBatchRenderer> m_guiRender;
 	GCPtr<sound::ISoundManager> m_soundManager;
@@ -55,20 +57,23 @@ protected:
 	GCPtr<TBee::ApplicationStateManager> m_appStateManager;
 	TBee::RenderingStateManager* m_renderingState;
 
-	video::ITexturePtr m_rtTexture;
-	video::IRenderTargetPtr m_renderTarget;;
-
 	SeeThroughWindow* m_seeThroughWindow;
+
+	TBeeRenderer* m_tbRenderer;
+
+	GCPtr<controllers::WiimoteManager> m_wiimoteManager;
 
 	bool m_drawUI;
 
-	ApplicationOculusData* m_oculusData;
-
 	void _InitResources();
-	void RenderUI(scene::ViewPort* vp);
+	void RenderUI(const math::rectf& rc);
 
 	void LoadSettingsXML(const core::string &path);
 	void _RenderVP(int i);
+
+	void _initStates();
+
+	void _createViewports();
 public:
 	Application();
 	virtual~Application();
@@ -83,6 +88,9 @@ public:
 	virtual void onDone();
 
 	virtual void onRenderDone(scene::ViewPort*vp);
+
+	virtual void OnRendererDraw(TBeeRenderer* r, const math::rectf& vp, video::IRenderTarget* rt, ETargetEye eye);
+
 
 	GCPtr<video::IVideoClipManager> GetVideoManager(){return m_videoManager;}
 };

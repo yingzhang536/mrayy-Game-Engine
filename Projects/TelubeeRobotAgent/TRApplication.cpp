@@ -19,6 +19,7 @@
 #include "CombineVideoGrabber.h"
 
 #include "DirectSoundInputStream.h"
+#include "CMemoryStream.h"
 
 #define COMMUNICATION_PORT 6000
 #define VIDEO_PORT 5000
@@ -64,7 +65,7 @@ namespace mray
 		}
 		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort)
 		{
-			m_app->OnUserConnected(address,videoPort,audioPort);
+			m_app->OnUserConnected(address, videoPort, audioPort);
 		}
 		virtual void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
 		{
@@ -78,6 +79,19 @@ namespace mray
 		virtual void OnCollisionData(RobotCommunicator* sender, float left, float right)
 		{
 		}
+	};
+	class AppRobotMessageSink :public IMessageSink
+	{
+		TRApplication* m_app;
+	public:
+		AppRobotMessageSink(TRApplication* app)
+		{
+			m_app = app;
+		}
+		virtual void OnMessage(network::NetAddress* addr,const core::string& msg, const core::string& value)
+		{
+			m_app->OnMessage(addr,msg, value);
+		}
 
 	};
 
@@ -89,6 +103,9 @@ TRApplication::TRApplication()
 	m_videoProvider = 0;
 	m_videoGrabber = 0;
 	m_communicatorListener = new AppRobotCommunicatorListener(this);
+	m_msgSink = new AppRobotMessageSink(this);
+	m_openNi = 0;
+	m_commChannel= 0;
 }
 
 TRApplication::~TRApplication()
@@ -99,6 +116,9 @@ TRApplication::~TRApplication()
 	delete m_videoGrabber;
 	delete m_robotCommunicator;
 	delete m_communicatorListener;
+	delete m_msgSink;
+	delete m_openNi;
+	delete m_commChannel;
 }
 
 
@@ -181,6 +201,15 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		}
 	}
 
+	{
+
+		m_openNIMngr = new OpenNIManager();
+		m_openNIMngr->Init(0, 0);
+		m_openNi = new TBee::OpenNIHandler;
+		m_openNi->Init();
+		
+		m_openNi->Start(320,240);
+	}
 	m_guiRender = new GUI::GUIBatchRenderer();
 	m_guiRender->SetDevice(getDevice());
 
@@ -233,6 +262,12 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_robotCommunicator = new RobotCommunicator();
 	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
 	m_robotCommunicator->SetListener(m_communicatorListener);
+	m_robotCommunicator->SetMessageSink(m_msgSink);
+
+	m_commChannel = network::INetwork::getInstance().createUDPClient();
+	m_commChannel->Open();
+
+
 }
 
 
@@ -271,9 +306,11 @@ void TRApplication::update(float dt)
 				}
 			}
 			m_videoProvider->Start(m_quality);
+			//m_openNi->Start(320,240);
 		}
 		if (!m_startVideo && m_videoProvider->IsConnected())
 		{
+			//m_openNi->Close();
 			m_videoProvider->Stop();
 			if (!m_debugData.debug)
 			{
@@ -304,8 +341,9 @@ void TRApplication::update(float dt)
 			st.roll = st.yaw = st.tilt = 0;
 			m_robotCommunicator->SetRobotData(st);
 		}
-		
 	}
+
+	m_openNi->Update(dt);
 	Sleep(10);
 }
 
@@ -388,6 +426,7 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 }
 void TRApplication::OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort)
 {
+	m_remoteAddr.address = address.address;
 	//printf("User Connected : %s\n", address.toString().c_str());
 	m_videoProvider->StreamDataTo(address,videoPort,audioPort);
 	m_debugData.userAddress = address;
@@ -408,7 +447,43 @@ void TRApplication::OnUserDisconnected(RobotCommunicator* sender, const network:
 {
 	m_debugData.userConnected = false;
 	m_startVideo = false;
-
-
 }
+
+void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg, const core::string& value)
+{
+	const int BufferLen = 65537;
+	uchar buffer[BufferLen];
+	int i= msg.find('#');
+	core::string m;
+	if (i != -1)
+		m = msg.substr(0, i);
+	else m = msg;
+	if (m.equals_ignore_case("commPort"))
+	{
+		m_remoteAddr.port = core::StringConverter::toInt(value);
+	}
+	else
+	if (m.equals_ignore_case("depthSize"))
+	{
+		OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
+		int reply = (int)EMessages::DepthSize;
+		int len = stream.write(&reply, sizeof(reply));
+		math::vector2di sz= m_openNi->GetSize();
+		len += stream.write(&sz,sizeof(sz));
+		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+	}
+	else
+	if (m.equals_ignore_case("depth"))
+	{
+		math::rectf rc = core::StringConverter::toRect(value);
+		OS::CMemoryStream stream("",buffer,BufferLen,false,OS::BIN_WRITE);
+		TBee::DepthFrame* f= m_openNi->GetNormalCalculator().GetDepthFrame();
+		m_depthRect.SetFrame(f, rc);
+		int reply = (int)EMessages::DepthData;
+		int len = stream.write(&reply, sizeof(reply));
+		len+=m_depthRect.WriteToStream(&stream);
+		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+	}
+}
+
 }

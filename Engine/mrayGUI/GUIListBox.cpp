@@ -123,7 +123,7 @@ const video::SColor& GUIListBox::GetSelectionColor()const
 {
 	return m_component->GetSelectionColor();
 }
-void GUIListBox::Draw(video::IRenderArea*vp)
+void GUIListBox::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;

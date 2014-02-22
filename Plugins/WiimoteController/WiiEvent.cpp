@@ -1,4 +1,5 @@
 
+#include "stdafx.h"
 
 #include "WiiEvent.h"
 
@@ -6,9 +7,9 @@
 namespace mray
 {
 
-const int WiiEvent::EventID=100;
+const GUID WiiEvent::EventID("WiiEvent");
 
-WiiEvent::WiiEvent():Event(EventID),event(EWiiEvent_Unkown),WiimoteNumber(0)
+WiiEvent::WiiEvent():Event(EventID),event(EWiiEvent_Unkown),mote(0)
 {
 }
 WiiEvent::~WiiEvent()

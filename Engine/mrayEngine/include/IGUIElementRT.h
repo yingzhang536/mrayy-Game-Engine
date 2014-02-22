@@ -48,7 +48,7 @@ protected:
 
 	void _CheckRT();
 	virtual math::vector2d _GetElementSize()=0;
-	virtual void _DrawElement(video::IRenderArea* vp)=0;
+	virtual void _DrawElement(const math::rectf* vp) = 0;
 public:
 	IGUIElementRT();
 	virtual~IGUIElementRT();

@@ -31,6 +31,9 @@ class RobotCommunicator;
 	};
 	typedef std::map<uint,MotorConnection*> MotorConnectionMap;
 
+
+	//////////////////////////////////////////////////////////////////////////
+	// Robot Communicator handles telesar data which arrives via ICommunicationLayer and delivers it to the assigned listeners
 class RobotCommunicator:public ICommunicationLayerListener,public ListenerContainer<IRobotCommunicatorListener*>
 {
 protected:
@@ -46,6 +49,7 @@ public:
 
 	void SetCommunicatorLayer(ICommunicationLayer* c);
 
+	virtual void OnSchemeChanged(VT::ICommunicationLayer*, const std::vector<core::string>& names);
 	virtual void OnDataArrived(ICommunicationLayer* layer,const CommunicationData*d);
 	virtual void OnClosed(ICommunicationLayer* l);
 

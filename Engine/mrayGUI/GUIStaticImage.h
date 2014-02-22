@@ -58,7 +58,7 @@ public:
 	bool SetSourceImage(const core::string&path);
 	const core::string& GetSourceImage();
 
-	void Draw(video::IRenderArea*vp);
+	void Draw(const math::rectf*vp);
 
 	IGUIElement* Duplicate();
 	FontAttributes* GetFontAttributes();

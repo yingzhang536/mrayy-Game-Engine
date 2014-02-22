@@ -920,12 +920,12 @@ void MeshGenerator::generatePlane(int widthSegment,int lengthSegment,IMeshBuffer
 //	math::vector2df *uv=buf->getOrginalUV();
 
 	for(int i=0;i<=lengthSegment;++i){
-		yPos=((float)i/(float)lengthSegment)-0.5f;
+		yPos=((float)i/(float)(lengthSegment));
 		for(int j=0;j<=widthSegment;j++){
-			xPos=((float)j/(float)widthSegment)-0.5f;
-			vert[n]=math::vector3d(xPos,0,yPos);
+			xPos = ((float)j / (float)(widthSegment)) ;
+			vert[n]=math::vector3d(xPos-0.5f,0,yPos- 0.5f);
 			norm[n]=math::vector3d(0,1,0);
-			tc[n]=math::vector2d(xPos+0.5f,yPos+0.5f);
+			tc[n]=math::vector2d(xPos,yPos);
 			n++;
 		}
 	}
@@ -1012,7 +1012,7 @@ void MeshGenerator::generateSkyDome(video::ITexture*tex,int uSegments,int vSegme
 	math::vector3d*vert=(math::vector3d*)vStream->lock(0,0,video::IHardwareStreamBuffer::ELO_Discard);
 	math::vector2d*tc=(math::vector2d*)uvStream->lock(0,0,video::IHardwareStreamBuffer::ELO_Discard);
 
-	uint NumberOfTri=(2*uSegments-1)*vSegments;
+	uint NumberOfTri=(uSegments)*vSegments*6;
 
 	curr=0;
 	azimuth=0;
@@ -1036,17 +1036,14 @@ void MeshGenerator::generateSkyDome(video::ITexture*tex,int uSegments,int vSegme
 		azimuth+=azimuth_step;
 	}
 
-	m_tmpIndiciesUSHORT.resize(3*NumberOfTri);
+	m_tmpIndiciesUSHORT.resize(NumberOfTri);
 
 	ushort*ind=&m_tmpIndiciesUSHORT[0];
 	curr=0;
 	for(uint i=0;i<vSegments;++i)
 	{
-		ind[curr++]=uSegments+2+(uSegments+1)*i;
-		ind[curr++]=(uSegments+1)*i;
-		ind[curr++]=1+(uSegments+1)*i;
 
-		for(uint j=1;j<uSegments;j++)
+		for(uint j=0;j<uSegments;j++)
 		{
 			ind[curr++]=uSegments+2+(uSegments+1)*i+j;
 			ind[curr++]=(uSegments+1)*i+j;

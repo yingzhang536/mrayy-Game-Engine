@@ -315,6 +315,7 @@
     <ClInclude Include="include\GUIManagerRT.h" />
     <ClInclude Include="include\GUITreeNode.h" />
     <ClInclude Include="include\ICustomParticleEmitter.h" />
+    <ClInclude Include="include\IFileMonitor.h" />
     <ClInclude Include="include\IGUIElementCreator.h" />
     <ClInclude Include="include\IGUIElementRT.h" />
     <ClInclude Include="include\IGUITreeBox.h" />
@@ -322,6 +323,7 @@
     <ClInclude Include="include\ISQLConnection.h" />
     <ClInclude Include="include\ISQLManager.h" />
     <ClInclude Include="include\ISQLResult.h" />
+    <ClInclude Include="include\IMonitorFileInformation.h" />
     <ClInclude Include="include\mrayEngine.h" />
     <ClInclude Include="include\ISound.h" />
     <ClInclude Include="include\ISoundEmitter.h" />

@@ -39,7 +39,7 @@ void GUIPropGridStack::Clear()
 	m_items.clear();
 }
 
-bool GUIPropGridStack::_UpdateRegion(video::IRenderArea*vp)
+bool GUIPropGridStack::_UpdateRegion(const math::rectf*vp)
 {
 	if(IGUIElement::_UpdateRegion(vp))
 	{
@@ -53,7 +53,7 @@ bool GUIPropGridStack::_UpdateRegion(video::IRenderArea*vp)
 	return false;
 }
 
-void GUIPropGridStack::Draw(video::IRenderArea*vp)
+void GUIPropGridStack::Draw(const math::rectf*vp)
 {
 	math::rectf clipRect;
 	//if(m_attachedRegion)

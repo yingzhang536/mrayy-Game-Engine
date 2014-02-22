@@ -38,7 +38,7 @@ public:
 	const GCPtr<IVideoGrabber>& GetGrabber(){return m_grabber;}
 	ITextureCRef GetTexture(){return m_texture;}
 
-	void Blit();
+	bool Blit();
 	
 };
 

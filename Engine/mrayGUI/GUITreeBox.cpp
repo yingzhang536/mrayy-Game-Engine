@@ -135,7 +135,7 @@ GUITreeNodeList& GUITreeBox::GetNodes()
 }
 
 
-void GUITreeBox::Draw(video::IRenderArea*vp)
+void GUITreeBox::Draw(const math::rectf*vp)
 {
 	_UpdateRegion(vp);
 	if(!IsVisible())return;

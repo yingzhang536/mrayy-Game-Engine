@@ -44,7 +44,7 @@ bool GUIElementRT_Manager::_OnKeyboardEvent(KeyboardEvent* e)
 }
 
 
-void GUIElementRT_Manager::_DrawElement(video::IRenderArea* vp)
+void GUIElementRT_Manager::_DrawElement(const math::rectf* vp)
 {
 	if(!m_mngr)
 		return;

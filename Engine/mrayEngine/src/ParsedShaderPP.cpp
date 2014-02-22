@@ -110,7 +110,6 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 	IVideoDevice*device=m_owner->getDevice();
 	IShaderConstantsCallback callBack;
 
-	device->useShader(m_shader);
 	callBack.setConstants(m_shader);
 
 	TextureUnit* texUnit;
@@ -138,7 +137,8 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 
 	for (int tex=0;tex<m_targetRenderTarget.size();++tex)
 	{
-		device->setRenderTarget(m_targetRenderTarget[tex],1,1,0);
+		device->setRenderTarget(m_targetRenderTarget[tex], 1, 1, 0);
+		device->useShader(m_shader);
 		
 		texUnit=m_targetTexture[tex];
 		for(int i=0;i<m_valus.size();++i)
@@ -1044,7 +1044,14 @@ ParsedShaderPP::MappedParams* ParsedShaderPP::GetParam(const core::string&name)
 			int id=pass->GetPassID(splits[i]);
 			if(id==-1)
 				return 0;
-			pass=((SubPostEffect*)pass->GetPass(id))->GetEffect();
+
+			SubPostEffect* p = dynamic_cast<SubPostEffect*>(pass->GetPass(id));
+
+			if (!p)
+			{
+				break;
+			}
+			pass=p->GetEffect();
 		}
 
 		if(!pass)return 0;

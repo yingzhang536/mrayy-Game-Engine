@@ -53,7 +53,7 @@ public:
 	ConnectingToRobotScreen();
 	virtual~ConnectingToRobotScreen();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	virtual void OnEvent(Event* e);
 	virtual void OnEnter(IRenderingState*prev);

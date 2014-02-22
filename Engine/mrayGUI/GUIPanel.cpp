@@ -41,7 +41,7 @@ bool GUIPanel::SetBackground(bool val)
 	m_drawBackground=val;
 	return true;
 }
-void GUIPanel::Draw(video::IRenderArea*vp)
+void GUIPanel::Draw(const math::rectf*vp)
 {
 	_UpdateRegion(vp);
 	if(!IsVisible())return;

@@ -36,7 +36,7 @@ public:
 	GStreamerTestState();
 	virtual~GStreamerTestState();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 
 	virtual void OnEvent(Event* e);

@@ -224,7 +224,9 @@ public:
 uint PhysXManager::s_physXRefCount=0;
 NxPhysicsSDK* PhysXManager::m_PhysicsSDK=0;
 NxCookingInterface* PhysXManager::m_Cooking=0;
-NxControllerManager* PhysXManager::m_charControllerManager=0;
+NxControllerManager* PhysXManager::m_charControllerManager = 0;
+NxUserAllocator* PhysXManager::m_userAllocator = 0;
+ErrorStream* PhysXManager::m_errorStream = 0;
 
 PhysXManager::PhysXManager(PhysicsSystemDesc* desc){
 
@@ -258,7 +260,6 @@ PhysXManager::~PhysXManager()
 	delete m_physXTriggerReport;
 
 	delete m_benchmarkItem;
-	delete m_errorStream;
 	delete m_renderer;
 }
 
@@ -703,6 +704,8 @@ void PhysXManager::releaseNX()
 		NxReleaseControllerManager(m_charControllerManager);
 
 	delete m_userAllocator;
+	m_userAllocator=0;
+	delete m_errorStream;
 	gLogManager.log(mT("PhysX shutdown.."), ELL_SUCCESS);
 }
 

@@ -27,12 +27,12 @@ void VideoGrabberTexture::Set(const GCPtr<IVideoGrabber>& grabber,ITextureCRef t
 }
 
 
-void VideoGrabberTexture::Blit()
+bool VideoGrabberTexture::Blit()
 {
 	if(!m_texture || !m_grabber )
-		return;
+		return false;
 	if(!m_grabber->GrabFrame())
-		return;
+		return false;
 	if(m_texture->getSize().x!=m_grabber->GetFrameSize().x ||
 		m_texture->getSize().y!=m_grabber->GetFrameSize().y )
 	{
@@ -43,6 +43,7 @@ void VideoGrabberTexture::Blit()
 
 	video::LockedPixelBox box(math::box3d(0,ifo->Size),ifo->format,ifo->imageData);
 	m_texture->getSurface(0)->blitFromMemory(box);
+	return true;
 }
 
 }

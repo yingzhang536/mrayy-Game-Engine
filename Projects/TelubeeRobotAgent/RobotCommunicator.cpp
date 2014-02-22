@@ -42,6 +42,8 @@ RobotCommunicator::RobotCommunicator()
 
 	m_localControl = 0;
 	m_robotController = new CTelubeeRobotDLL();
+
+	m_msgSink = 0;
 		
 }
 
@@ -52,7 +54,7 @@ RobotCommunicator::~RobotCommunicator()
 	delete m_robotController;
 }
 
-void RobotCommunicator::HandleData(const core::string& name, const core::string& value)
+void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string& name, const core::string& value)
 {
 
 	std::vector<core::string> vals;
@@ -68,6 +70,11 @@ void RobotCommunicator::HandleData(const core::string& name, const core::string&
 		m_robotStatus.tilt = atof(vals[0].c_str());
 		m_robotStatus.yaw = atof(vals[1].c_str());
 		m_robotStatus.roll = atof(vals[2].c_str());
+
+		//do head limits
+		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
+		m_robotStatus.yaw = math::clamp(m_robotStatus.yaw, -70.0f, 70.0f);
+		m_robotStatus.roll = math::clamp(m_robotStatus.roll, -40.0f, 40.0f);
 	}
 	else if (name == "Rotation" && vals.size() == 1)
 	{
@@ -98,6 +105,11 @@ void RobotCommunicator::HandleData(const core::string& name, const core::string&
 			}
 		}
 	}
+	else
+	{
+		if (m_msgSink)
+			m_msgSink->OnMessage(addr,name, value);
+	}
 }
 
 void RobotCommunicator::SetRobotData(const RobotStatus &st)
@@ -112,7 +124,7 @@ void RobotCommunicator::_RobotStatus(const RobotStatus& st)
 	if (m_listener)
 		m_listener->OnRobotStatus(this, st);
 }
-void RobotCommunicator::ProcessPacket(const char* buffer)
+void RobotCommunicator::ProcessPacket(network::NetAddress* addr,const char* buffer)
 {
 
 	tinyxml2::XMLDocument doc;
@@ -136,7 +148,7 @@ void RobotCommunicator::ProcessPacket(const char* buffer)
 	{
 		std::string name = node->Attribute("N");//name of the value
 		std::string value = node->Attribute("V");//name of the value
-		HandleData(name, value);
+		HandleData(addr,name, value);
 		node = node->NextSiblingElement("Data");
 	}
 	if (!m_localControl)
@@ -154,7 +166,7 @@ int RobotCommunicator::_Process()
 	if (m_client->RecvFrom(buffer, &len, &src) != network::UDP_SOCKET_ERROR_NONE)
 		return 0;//failed to receive the packet
 
-	ProcessPacket(buffer);
+	ProcessPacket(&src,buffer);
 	return 0;
 }
 

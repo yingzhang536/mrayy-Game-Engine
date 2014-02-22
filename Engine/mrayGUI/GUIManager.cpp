@@ -161,17 +161,24 @@ LanguageFontSpecification* GUIManager::GetLanguageSpecification()
 	return m_specifications;
 }
 
-bool GUIManager::OnEvent(Event* event)
+bool GUIManager::OnEvent(Event* event, const math::rectf*vp)
 {
-
+	MouseEvent tmp;
+	Event* evt = event;
+	if (event->getType() == ET_Mouse && vp)
+	{
+		tmp = *(MouseEvent*)event;
+		tmp.pos -= vp->ULPoint;
+		evt = &tmp;
+	}
 	bool res=false;
 	if(m_focusElement!=0)
-		res=m_focusElement->OnEvent(event);
-	if(!event->isRecived() && m_rootElement)
-		res=m_rootElement->OnEvent(event);
-	if(!res || !event->isRecived())
+		res=m_focusElement->OnEvent(evt);
+	if (!evt->isRecived() && m_rootElement)
+		res = m_rootElement->OnEvent(evt);
+	if (!res || !evt->isRecived())
 	{
-		if (event->getType()==ET_Mouse)
+		if (evt->getType() == ET_Mouse)
 		{
 			MouseEvent*e=dynamic_cast<MouseEvent*>(event);
 				
@@ -180,6 +187,9 @@ bool GUIManager::OnEvent(Event* event)
 				RemoveFocus();
 		}
 	}
+
+	if (evt->isRecived() && evt == &tmp)
+		event->setRecived();
 	return res;
 	//GUIElementContainer::onEvent(event);
 	/*
@@ -233,7 +243,7 @@ bool GUIManager::OnEvent(Event* event)
 
 
 
-void GUIManager::DrawAll(video::IRenderArea*vp)
+void GUIManager::DrawAll(const math::rectf*vp)
 {
 	_AUTO_BENCHMARK(m_renderBI);
 	m_device->set2DMode();

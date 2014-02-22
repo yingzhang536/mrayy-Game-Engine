@@ -94,32 +94,8 @@
     <ClInclude Include="Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseAppState.h">
-      <Filter>Source Files\ApplicationStates</Filter>
-    </ClInclude>
-    <ClInclude Include="IApplicationState.h">
-      <Filter>Source Files\ApplicationStates</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderingState.h">
-      <Filter>Source Files\ApplicationStates</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationStateManager.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseRenderState.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingStateManager.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="TBAppGlobals.h">
       <Filter>Source Files\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderBlender.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
-    <ClInclude Include="ITransitionBlender.h">
-      <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
     <ClInclude Include="GUIMainMenu.h">
       <Filter>Source Files\GUI</Filter>
@@ -130,23 +106,11 @@
     <ClInclude Include="InMapRenderState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
-    <ClInclude Include="TBRobotInfo.h">
-      <Filter>Source Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="IntroRenderingState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
     <ClInclude Include="DBConnectionCommands.h">
       <Filter>Source Files\DB</Filter>
-    </ClInclude>
-    <ClInclude Include="TBUserInfo.h">
-      <Filter>Source Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="TBRobotUserInfo.h">
-      <Filter>Source Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="RobotInfoManager.h">
-      <Filter>Source Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="GUILoginMenu.h">
       <Filter>Source Files\GUI</Filter>
@@ -175,9 +139,6 @@
     <ClInclude Include="SeeThroughWindow.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
-    <ClInclude Include="NullRenderState.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
     <ClInclude Include="telubee\shmem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,9 +150,6 @@
     </ClInclude>
     <ClInclude Include="MapMarker.h">
       <Filter>Source Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="JoystickDefinitions.h">
-      <Filter>Source Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="GUIDateElement.h">
       <Filter>Source Files\GUI</Filter>
@@ -229,23 +187,11 @@
     <ClInclude Include="DynamicMemoryStream.h">
       <Filter>Source Files\VideoStreams</Filter>
     </ClInclude>
-    <ClInclude Include="multicast.h">
-      <Filter>Source Files\SharedMemory</Filter>
-    </ClInclude>
-    <ClInclude Include="shmem.h">
-      <Filter>Source Files\SharedMemory</Filter>
-    </ClInclude>
     <ClInclude Include="TBSharedMemory.h">
       <Filter>Source Files\SharedMemory</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRobotCommunicator.h">
-      <Filter>Source Files\Communicator</Filter>
-    </ClInclude>
-    <ClInclude Include="TBeeOptiTrackObject.h">
-      <Filter>Source Files\Communicator</Filter>
     </ClInclude>
     <ClInclude Include="LocalRobotCommunicator.h">
       <Filter>Source Files\Communicator</Filter>
@@ -253,13 +199,7 @@
     <ClInclude Include="UDPVideoGrabber.h">
       <Filter>Source Files\VideoStreams</Filter>
     </ClInclude>
-    <ClInclude Include="IVideoProvider.h">
-      <Filter>Source Files\Communicator</Filter>
-    </ClInclude>
     <ClInclude Include="UDPVideoProvider.h">
-      <Filter>Source Files\Communicator</Filter>
-    </ClInclude>
-    <ClInclude Include="GStreamVideoProvider.h">
       <Filter>Source Files\Communicator</Filter>
     </ClInclude>
     <ClInclude Include="DVISwitcherController.h">
@@ -274,15 +214,6 @@
     <ClInclude Include="OFSerialPort.h">
       <Filter>Source Files\DVI</Filter>
     </ClInclude>
-    <ClInclude Include="CameraRenderingState.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClInclude>
-    <ClInclude Include="IHMDRenderer.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClInclude>
-    <ClInclude Include="HMDCameraRenderer.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClInclude>
     <ClInclude Include="HMDRobotRenderer.h">
       <Filter>Source Files\RenderingStates\HMD</Filter>
     </ClInclude>
@@ -295,9 +226,6 @@
     <ClInclude Include="OculusDetectState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
-    <ClInclude Include="RemoteRobotCommunicator.h">
-      <Filter>Source Files\Communicator</Filter>
-    </ClInclude>
     <ClInclude Include="GStreamerTestState.h">
       <Filter>Source Files\RenderingStates\Test States</Filter>
     </ClInclude>
@@ -307,14 +235,8 @@
     <ClInclude Include="_ofGstUtilsWin32.h">
       <Filter>GST</Filter>
     </ClInclude>
-    <ClInclude Include="IEyesRenderingBaseState.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClInclude>
-    <ClInclude Include="GSTCameraRenderingState.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClInclude>
-    <ClInclude Include="CRobotConnector.h">
-      <Filter>Source Files\Communicator</Filter>
+    <ClInclude Include="GSTVideoState.h">
+      <Filter>Source Files\RenderingStates\Test States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,26 +246,8 @@
     <ClCompile Include="TELUBee.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BaseAppState.cpp">
-      <Filter>Source Files\ApplicationStates</Filter>
-    </ClCompile>
-    <ClCompile Include="IRenderingState.cpp">
-      <Filter>Source Files\ApplicationStates</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationStateManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseRenderState.cpp">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingStateManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="TBAppGlobals.cpp">
       <Filter>Source Files\Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderBlender.cpp">
-      <Filter>Source Files\RenderingStates</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
@@ -356,9 +260,6 @@
     </ClCompile>
     <ClCompile Include="DBConnectionCommands.cpp">
       <Filter>Source Files\DB</Filter>
-    </ClCompile>
-    <ClCompile Include="RobotInfoManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="LoginScreenState.cpp">
       <Filter>Source Files\RenderingStates</Filter>
@@ -411,17 +312,8 @@
     <ClCompile Include="NetworkMessage.cpp">
       <Filter>Source Files\VideoStreams</Filter>
     </ClCompile>
-    <ClCompile Include="multicast.cpp">
-      <Filter>Source Files\SharedMemory</Filter>
-    </ClCompile>
-    <ClCompile Include="shmem.cpp">
-      <Filter>Source Files\SharedMemory</Filter>
-    </ClCompile>
     <ClCompile Include="TBSharedMemory.cpp">
       <Filter>Source Files\SharedMemory</Filter>
-    </ClCompile>
-    <ClCompile Include="TBeeOptiTrackObject.cpp">
-      <Filter>Source Files\Communicator</Filter>
     </ClCompile>
     <ClCompile Include="LocalRobotCommunicator.cpp">
       <Filter>Source Files\Communicator</Filter>
@@ -430,9 +322,6 @@
       <Filter>Source Files\VideoStreams</Filter>
     </ClCompile>
     <ClCompile Include="UDPVideoProvider.cpp">
-      <Filter>Source Files\Communicator</Filter>
-    </ClCompile>
-    <ClCompile Include="GStreamVideoProvider.cpp">
       <Filter>Source Files\Communicator</Filter>
     </ClCompile>
     <ClCompile Include="DVISwitcherController.cpp">
@@ -447,12 +336,6 @@
     <ClCompile Include="OFSerialPort.cpp">
       <Filter>Source Files\DVI</Filter>
     </ClCompile>
-    <ClCompile Include="CameraRenderingState.cpp">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClCompile>
-    <ClCompile Include="HMDCameraRenderer.cpp">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClCompile>
     <ClCompile Include="HMDRobotRenderer.cpp">
       <Filter>Source Files\RenderingStates\HMD</Filter>
     </ClCompile>
@@ -461,9 +344,6 @@
     </ClCompile>
     <ClCompile Include="OculusDetectState.cpp">
       <Filter>Source Files\RenderingStates</Filter>
-    </ClCompile>
-    <ClCompile Include="RemoteRobotCommunicator.cpp">
-      <Filter>Source Files\Communicator</Filter>
     </ClCompile>
     <ClCompile Include="GStreamerTestState.cpp">
       <Filter>Source Files\RenderingStates\Test States</Filter>
@@ -474,17 +354,8 @@
     <ClCompile Include="_ofGstUtilsWin32.cpp">
       <Filter>GST</Filter>
     </ClCompile>
-    <ClCompile Include="IEyesRenderingBaseState.cpp">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClCompile>
-    <ClCompile Include="GSTCameraRenderingState.cpp">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
-    </ClCompile>
-    <ClCompile Include="CRobotConnector.cpp">
-      <Filter>Source Files\Communicator</Filter>
-    </ClCompile>
-    <ClCompile Include="JoystickDefinitions.cpp">
-      <Filter>Source Files\Controllers</Filter>
+    <ClCompile Include="GSTVideoState.cpp">
+      <Filter>Source Files\RenderingStates\Test States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

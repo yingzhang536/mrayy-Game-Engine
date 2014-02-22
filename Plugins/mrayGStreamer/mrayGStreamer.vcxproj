@@ -37,11 +37,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Program Files (x86)\OSSBuild\GStreamer\v0.10.6\sdk\share\vs\2010\libs\gstreamer-0.10.props" />
+    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Program Files (x86)\OSSBuild\GStreamer\v0.10.6\sdk\share\vs\2010\libs\gstreamer-0.10.props" />
+    <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -68,7 +68,7 @@
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>pthreadVC2.lib;gstbase-0.10.lib;gstapp-0.10.lib;gstvideo-0.10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gstreamer-0.10.lib;gstbase-0.10.lib;gstapp-0.10.lib;gstvideo-0.10.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/OPT:NOREF %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>..\..\Dependencies\lib\$(Configuration);$(GSTREAMER_SDK_ROOT_X86)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
@@ -81,7 +81,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayMath;$(GSTREAMER_SDK_ROOT_X86_64)\include\gstreamer-0.10;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -100,11 +100,14 @@
   <ItemGroup>
     <ClInclude Include="CMySink.h" />
     <ClInclude Include="CMySrc.h" />
+    <ClInclude Include="GStreamerCore.h" />
+    <ClInclude Include="GStreamerFilePlayer.h" />
     <ClInclude Include="GStreamerManager.h" />
     <ClInclude Include="GStreamerPlayback.h" />
-    <ClInclude Include="ofGstUtils.h" />
-    <ClInclude Include="ofGstVideoGrabber.h" />
-    <ClInclude Include="ofGstVideoPlayer.h" />
+    <ClInclude Include="IGStreamerPlayer.h" />
+    <ClInclude Include="IGstAppListener.h" />
+    <ClInclude Include="GstUtils.h" />
+    <ClInclude Include="GstVideoPlayer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -113,13 +116,13 @@
     <ClCompile Include="CMySrc.cpp" />
     <ClCompile Include="GStreamerManager.cpp" />
     <ClCompile Include="GStreamerPlayback.cpp" />
-    <ClCompile Include="ofGstUtils.cpp" />
-    <ClCompile Include="ofGstVideoGrabber.cpp" />
-    <ClCompile Include="ofGstVideoPlayer.cpp" />
+    <ClCompile Include="GstUtils.cpp" />
+    <ClCompile Include="GstVideoPlayer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="GStreamerCore.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,12 +30,13 @@ namespace VT
 	class GGFeedbackValue:public IFeedbackResult
 	{
 	public:
-		float channels[16];
+		static const int ChannelsCount=18;
+		float channels[ChannelsCount];
 
 
 		GGFeedbackValue()
 		{
-			for(int i=0;i<16;++i)
+			for (int i = 0; i<ChannelsCount; ++i)
 				channels[i]=0;
 		}
 		virtual void* GetData()
@@ -45,7 +46,7 @@ namespace VT
 		virtual core::string ToString()
 		{
 			core::string ret;
-			for(int i=0;i<16;++i)
+			for (int i = 0; i<ChannelsCount; ++i)
 			{
 				ret+=core::StringConverter::toString(channels[i])+" ";
 			}

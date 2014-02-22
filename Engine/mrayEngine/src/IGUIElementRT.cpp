@@ -135,7 +135,8 @@ void IGUIElementRT::DrawElement()
 	video::IRenderTargetPtr rt= device->getRenderTarget();
 	math::recti vpRc(0,_GetElementSize());
 	device->setRenderTarget(m_renderTarget,1,1,0,&vpRc);
-	_DrawElement(m_renderTarget);//&CustomRenderArea(_GetElementSize()));
+	math::rectf vp(0, m_renderTarget->getSize());
+	_DrawElement(&vp);//&CustomRenderArea(_GetElementSize()));
 
 	if(rt.isNull())
 		device->setRenderTarget(0,0,0,0);

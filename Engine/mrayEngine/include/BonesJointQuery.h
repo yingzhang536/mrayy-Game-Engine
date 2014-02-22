@@ -27,23 +27,38 @@ class MRAY_DLL BonesJointQuery:public IJointQuery
 {
 private:
 protected:
-	scene::BoneNode* m_endEffector;
-	std::vector<scene::BoneNode*> m_bones;
+	
+	scene::IMovable* m_endEffector;
+	std::vector<JointDOF> m_bones;
+	std::vector<float> m_values;
+	typedef std::map<scene::IMovable*, std::vector<int>> JointMap;
+	JointMap m_jointsMap;
 	int m_dofs;
 public:
 	BonesJointQuery();
 	virtual~BonesJointQuery();
 
-	void addBone(scene::BoneNode*bone,bool endEffector=false);
+	IJointQuery::JointDOF* addBone(scene::IMovable*bone, EIKJointType type, const math::vector3d& axis);
+	void SetEndEffector(scene::IMovable*bone);
 	void clearBones();
 
-	virtual void getJointsDOF(std::vector<JointDOF>& dof,const math::vector3d&target);
-	virtual int getJointsDOFCount();
+	virtual void OnIKBegin();
+	virtual void OnIKEnd();
 
+	virtual std::vector<JointDOF>&  getJointsDOF();
+	virtual std::vector<float>& getJointVector();
+	virtual int getJointsDOFCount();
+	virtual bool IsLimited(int joint) { return m_bones[joint].hasLimit; }
+	virtual bool getLimits(int joint, float &lower, float &upper)
+	{ 
+		lower = m_bones[joint].lowerLimit;
+		upper = m_bones[joint].upperLimit;
+		return m_bones[joint].hasLimit; 
+	}
 	virtual math::vector3d getEndEffectorPos();
 	virtual math::quaternion getEndEffectorOri();
 
-	virtual void applyChange(const std::vector<math::quaternion> &change);
+	virtual void applyChange(const std::vector<float> &change);
 };
 
 }

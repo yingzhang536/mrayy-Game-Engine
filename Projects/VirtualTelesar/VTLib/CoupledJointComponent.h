@@ -106,7 +106,8 @@ public:
 	virtual bool SetEnabled(bool enabled);
 
 
-	virtual bool SetControlValue(const std::vector<ControlInputValues>&  v,EControlSource src);
+	virtual bool SetControlValue(const std::vector<ControlInputValues>&  v, EControlSource src);
+	virtual bool SetControlValue(const ControlInputValues&  v, EControlSource src);
 	//virtual const std::vector<ControlInputValues>&  GetControlValue(){return m_fedValues;}
 
 	virtual int GetJoints(std::vector<game::IPhysicalJointComponent*>& joints);

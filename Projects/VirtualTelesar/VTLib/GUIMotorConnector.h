@@ -62,7 +62,7 @@ public:
 	VT::MotorConnection* GetConnector(){return m_connector;}
 	void SetConnector(VT::MotorConnection* c);
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 	virtual void Update(float dt);
 
 	void SetSourceList(const std::vector<core::string>& lst);

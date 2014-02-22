@@ -132,7 +132,7 @@ const video::SColor& GUIComboList::GetSelectionColor()const
 {
 	return m_component->GetSelectionColor();
 }
-void GUIComboList::Draw(video::IRenderArea*vp)
+void GUIComboList::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())
 		return;
@@ -145,7 +145,7 @@ void GUIComboList::Draw(video::IRenderArea*vp)
 	GetCreator()->GetDevice()->setScissorRect(oldScissor);
 	IGUIElement::Draw(vp);
 }
-void GUIComboList::PostDraw(video::IRenderArea*vp)
+void GUIComboList::PostDraw(const math::rectf*vp)
 {
 	m_component->PostDraw();
 }

@@ -43,6 +43,26 @@ EListenerDistanceModel SFModListener::getDistanceModel()
 {
 	return LinearDistance;
 }
+void SFModListener::GetSamples(float* samples, float count, int c)
+{
+	m_system->getWaveData(samples, count, c);
+}
+void SFModListener::GetSpectrum(float* samples, float count, int c, EFFT_WindowType window)
+{
+	FMOD_DSP_FFT_WINDOW windowtype;
+	switch (c)
+	{
+	case FFT_WT_Rect: windowtype = FMOD_DSP_FFT_WINDOW_RECT; break;
+	case FFT_WT_Triangle: windowtype = FMOD_DSP_FFT_WINDOW_TRIANGLE; break;
+	case FFT_WT_Hamming: windowtype = FMOD_DSP_FFT_WINDOW_HAMMING; break;
+	case FFT_WT_Hanning: windowtype = FMOD_DSP_FFT_WINDOW_HANNING; break;
+	case FFT_WT_Blackman: windowtype = FMOD_DSP_FFT_WINDOW_BLACKMAN; break;
+	case FFT_WT_BlackmanHarris: windowtype = FMOD_DSP_FFT_WINDOW_BLACKMANHARRIS; break;
+	default:
+		windowtype = FMOD_DSP_FFT_WINDOW_HAMMING;
+	}
+	m_system->getSpectrum(samples, count, c, windowtype);
+}
 
 void SFModListener::update(float dt){
 	if(m_node){

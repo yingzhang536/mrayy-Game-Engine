@@ -26,7 +26,7 @@ GUILoadingElement::~GUILoadingElement()
 {
 }
 
-void GUILoadingElement::Draw(video::IRenderArea*vp)
+void GUILoadingElement::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 	IGUIManager* creator=GetCreator();
@@ -40,7 +40,7 @@ void GUILoadingElement::Draw(video::IRenderArea*vp)
 	device->useTexture(0,&m_layer3);
 	device->draw2DImageRot(rect,rect.getSize()/2,video::SColor(1),-10*m_time);
 
-	IGUIElement::Draw(vp);
+	IGUIElement::Draw( vp);
 }
 void GUILoadingElement::Update(float dt)
 {

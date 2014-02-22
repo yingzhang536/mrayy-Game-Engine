@@ -49,6 +49,9 @@ public:
 
 	virtual void Update(float dt);
 
+	virtual void OnGUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp);
+
+
 };
 
 DECLARE_GAMECOMPONENT_FACTORY(GGComponent);

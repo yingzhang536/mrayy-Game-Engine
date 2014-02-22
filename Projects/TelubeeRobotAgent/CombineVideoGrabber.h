@@ -42,13 +42,16 @@ protected:
 
 #endif
 
+	bool m_rotate90;
 	ulong m_bufferID;
+	void _RotateImage(const video::ImageInfo* src, video::ImageInfo* dst, const math::recti &srcRect, bool cw);
 
 public:
 
 	CombineVideoGrabber();
 
 	void SetGrabbers(video::IVideoGrabber* g1, video::IVideoGrabber* g2);
+	void SetRotate90(bool r){ m_rotate90 = r; }
 
 	virtual void SetFrameSize(int w, int h);
 	virtual const math::vector2di& GetFrameSize();

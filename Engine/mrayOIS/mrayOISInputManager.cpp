@@ -360,6 +360,15 @@ mrayOISInputManager::~mrayOISInputManager(){
 	if(EventQueue::isExist()){
 		EventQueue::getInstance().removeEventHandler(this);
 	}
+
+	if (m_mouse)
+		delete m_mouse;
+	if (m_keyboard)
+		delete m_keyboard;
+	for (int i = 0; i < m_joystics.size(); ++i)
+		delete m_joystics[i];
+	m_joystics.clear();
+
 	delete m_oisHandler;
 	if(!m_inputManagerOIS)
 		return;
@@ -377,13 +386,6 @@ mrayOISInputManager::~mrayOISInputManager(){
 	m_joysticsOIS.clear();
 	OIS::InputManager::destroyInputSystem(m_inputManagerOIS);
 	m_inputManagerOIS=0;
-	if(m_mouse)
-		delete m_mouse;
-	if(m_keyboard)
-		delete m_keyboard;
-	for(int i=0;i<m_joystics.size();++i)
-		delete m_joystics[i];
-	m_joystics.clear();
 }
 
 

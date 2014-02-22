@@ -49,7 +49,7 @@ public:
 
 	bool OnEvent(Event* e);
 	virtual void Update(float dt);
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual const ElementList& GetElements(){return m_elements;}
 

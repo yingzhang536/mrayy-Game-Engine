@@ -20,8 +20,6 @@
 #include <vector>
 #include "CMutexVar.h"
 
-class CWii;
-class CWiimote;
 
 namespace mray
 {
@@ -33,32 +31,23 @@ namespace mray
 	}
 namespace controllers
 {
-
+	class CWiimote;
+	class WiimoteManagerImpl;
 class WiimoteManager:public ISingleton<WiimoteManager>
 {
 private:
 protected:
-	CWii* m_wiiMngr;
-	OS::IMutex* m_eventMutex;
-	bool m_eventHappened;
-	OS::IThreadFunction* m_threadFunction;
-	OS::IThread* m_thread;
+	WiimoteManagerImpl* m_impl;
 public:
 	WiimoteManager();
 	virtual ~WiimoteManager();
 
-	void SetMaxWiimotesCount(int c);
-	int GetNumConnectedWiimotes();
-
 	void RefreshWiimotes();
 
-	CWiimote* GetByID(int ID, int Refresh=1);
-	std::vector<CWiimote*>& GetWiimotes(int Refresh=1);
+	CWiimote* GetByID(int ID);
+	std::vector<CWiimote*>& GetWiimotes();
 
-	//void SetBluetoothStack(BTStacks Type);
-	void SetTimeout(int NormalTimeout, int ExpTimeout);
 
-	int Find(int timeout);
 	std::vector<CWiimote*>& ConnectWithAllMotes();
 	CWiimote* Connect(int i);
 
@@ -67,9 +56,6 @@ public:
 
 	void PollEvents();
 
-	void _PollEvents();
-
-	CWii* GetInternalWiiManager();
 };
 
 }

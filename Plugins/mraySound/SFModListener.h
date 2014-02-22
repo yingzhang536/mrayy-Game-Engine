@@ -57,6 +57,9 @@ public:
 
 	void setDistanceModel(EListenerDistanceModel m);
 	EListenerDistanceModel getDistanceModel();
+	
+	void GetSamples(float* samples, float count, int channel);
+	void GetSpectrum(float* samples, float count, int channel, EFFT_WindowType window) ;
 
 	virtual void update(float dt);
 };

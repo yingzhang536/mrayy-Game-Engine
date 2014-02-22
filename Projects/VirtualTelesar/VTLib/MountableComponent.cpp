@@ -41,11 +41,11 @@ bool MountableComponent::InitComponent()
 {
 	game::IGameComponent::InitComponent();
 
-	game::SceneComponent* comp=RetriveComponent<game::SceneComponent>(GetOwnerComponent(),m_targetNode);
+	game::IMovableComponent* comp = RetriveComponent<game::IMovableComponent>(GetOwnerComponent(), m_targetNode);
 	if(comp)
 	{
 		comp->InitComponent();
-		m_node=comp->GetSceneNode();
+		m_node=comp->GetMovableObject();
 	}
 
 	return true;

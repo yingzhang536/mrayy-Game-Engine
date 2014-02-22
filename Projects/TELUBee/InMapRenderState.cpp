@@ -28,6 +28,7 @@
 #include "JoystickDefinitions.h"
 #include "CinematicController.h"
 #include "SceneComponent.h"
+#include "TBAppGlobals.h"
 
 
 namespace mray
@@ -66,11 +67,13 @@ void InMapRenderState::SwitchIndicatorVisibility()
 	}
 }
 
-void InMapRenderState::InitState(Application* app)
+void InMapRenderState::InitState()
 {
-	IRenderingState::InitState(app);
+	IRenderingState::InitState();
+
+	Application* app = TBAppGlobals::Instance()->App;
 	m_pageManager=new GUI::GUIPageManager();
-	m_mapGUIManager=new GUI::GUIManager(app->getDevice());
+	m_mapGUIManager = new GUI::GUIManager(Engine::getInstance().getDevice());
 	m_entManager=new game::GameEntityManager();
 	m_mapWebpage=m_pageManager->CreateWebPage(m_mapGUIManager);
 	math::vector2d rw=app->GetRenderWindow()->GetSize();
@@ -139,11 +142,11 @@ void InMapRenderState::InitState(Application* app)
 		}
 	}
 
-	MapCamera* cam=new MapCamera(m_sceneManager,app->GetInputManager());
+	MapCamera* cam = new MapCamera(m_sceneManager, AppData::Instance()->inputMngr);
 	m_sceneManager->addSceneNode(cam);
 	cam->UpdatePosition();
 
-	m_mapController=new CinematicController(app->GetInputManager()); //new JoystickMapController(app->GetInputManager());
+	m_mapController=new CinematicController(AppData::Instance()->inputMngr); //new JoystickMapController(app->GetInputManager());
 	m_mapObject=new MapObject();
 	m_mapObject->AddListener(this);
 	m_mapObject->Init(cam,m_mapWebpage);
@@ -153,19 +156,19 @@ void InMapRenderState::InitState(Application* app)
 		m_viewport=new scene::ViewPort("MapCam",cam,0,0,math::rectf(0,0.2,1,0.8),0);
 		m_viewport->SetClearColor(video::SColor(0,1,0,1));
 
-		video::ITexturePtr renderTargetTex=app->getDevice()->createTexture2D(math::vector2d(1,1),video::EPixel_R8G8B8A8,true);
+		video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), video::EPixel_R8G8B8A8, true);
 		renderTargetTex->setBilinearFilter(false);
 		renderTargetTex->setTrilinearFilter(false);
 		renderTargetTex->setMipmapsFilter(false);
 		m_viewport->SetClearColor(video::SColor(1,1,1,1));
 
-		video::IRenderTargetPtr rt=app->getDevice()->createRenderTarget(mT(""),renderTargetTex,video::IHardwareBufferPtr::Null,video::IHardwareBufferPtr::Null,false);
+		video::IRenderTargetPtr rt = Engine::getInstance().getDevice()->createRenderTarget(mT(""), renderTargetTex, video::IHardwareBufferPtr::Null, video::IHardwareBufferPtr::Null, false);
 		m_viewport->setRenderTarget(rt);
 		m_viewport->setOnlyToRenderTarget(true);
 		m_viewport->SetAutoUpdateRTSize(true);
 		m_viewport->enablePostProcessing(true);
 
-		video::ParsedShaderPP* pp=new video::ParsedShaderPP(app->getDevice());
+		video::ParsedShaderPP* pp = new video::ParsedShaderPP(Engine::getInstance().getDevice());
 		pp->LoadXML(gFileSystem.openFile("BrowserEffect.peff"));
 		m_viewport->setPostProcessing(pp);
 
@@ -211,7 +214,7 @@ void InMapRenderState::OnEnter(IRenderingState*prev)
 	m_time=0;
 	m_dropedMarkers=0;
 
-	m_mapScreenGUI->UserNameLbl->SetText(TBAppGlobals::userName);
+	m_mapScreenGUI->UserNameLbl->SetText(TBAppGlobals::Instance()->userName);
 }
 
 void InMapRenderState::OnExit()
@@ -235,7 +238,7 @@ void InMapRenderState::Update(float dt)
 	{
 		m_dropedMarkers=true;
 
-		const std::vector<TBRobotInfo>& robots=TBAppGlobals::robotInfoManager->GetRobots();
+		const std::vector<TBRobotInfo>& robots = TBAppGlobals::Instance()->robotInfoManager->GetRobots();
 		for(int i=0;i<robots.size();++i)
 		{
 			m_mapObject->AddMarker(robots[i].lat,robots[i].lng,robots[i].ID);
@@ -267,7 +270,7 @@ video::IRenderTarget* InMapRenderState::Render(const math::rectf& rc,ETargetEye 
 	device->setRenderTarget(m_renderTarget[GetEyeIndex(eye)],1,1,video::SColor(0,0,0,1));
 	device->useTexture(0,&tex);
 	device->draw2DImage(vprect,1);
-	m_guiManager->DrawAll(m_renderTarget[GetEyeIndex(eye)]);
+	m_guiManager->DrawAll(&rc);// m_renderTarget[GetEyeIndex(eye)]);
 	device->setRenderTarget(0,0,0);
 	device->setViewport(vp);
 
@@ -286,16 +289,16 @@ void InMapRenderState::LoadFromXML(xml::XMLElement* e)
 
 void InMapRenderState::OnMarkerlClicked(MapObject* map,float x,float y,int id)
 {
-	TBRobotInfo* ifo=TBAppGlobals::robotInfoManager->GetRobotInfoByID(id);
+	TBRobotInfo* ifo = TBAppGlobals::Instance()->robotInfoManager->GetRobotInfoByID(id);
 	if(!ifo)
 		return;
-	TBAppGlobals::selectedRobot=ifo;
+	TBAppGlobals::Instance()->selectedRobot = ifo;
 	m_exitCode=ConnectToRobot_Code;
 }
 
 void InMapRenderState::OnMarkerlHovered(MapObject* map,float x,float y,int id)
 {
-	TBRobotInfo* ifo=TBAppGlobals::robotInfoManager->GetRobotInfoByID(id);
+	TBRobotInfo* ifo = TBAppGlobals::Instance()->robotInfoManager->GetRobotInfoByID(id);
 	if(!ifo)
 		return;
 	m_robotPanel->SetRobotInfo(*ifo);

@@ -51,7 +51,7 @@ protected:
 
 	bool m_isOpen;
 
-	virtual bool _UpdateRegion(video::IRenderArea*vp);
+	virtual bool _UpdateRegion(const math::rectf*vp);
 	virtual bool _OnMouseEvent(MouseEvent*evt);
 public:
 	GUICatagoryPanel(IGUIManager*mngr);
@@ -64,7 +64,7 @@ public:
 
 	//virtual const math::rectf& GetUnclippedRect();
 	//virtual const math::rectf& GetClippedRect();
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

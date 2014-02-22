@@ -58,7 +58,7 @@ GUI::IGUIElement* GUIElementRT::GetElement()
 }
 
 
-void GUIElementRT::_DrawElement(video::IRenderArea* vp)
+void GUIElementRT::_DrawElement(const math::rectf* vp)
 {
 	if(!m_element)
 		return;

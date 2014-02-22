@@ -9,7 +9,6 @@
 #include "HMDRobotRenderer.h"
 #include "HMDCameraRenderer.h"
 #include "IVideoProvider.h"
-#include "TBeeOptiTrackObject.h"
 #include "TBAppGlobals.h"
 #include "IGUIPanelElement.h"
 #include "GUIOverlayManager.h"
@@ -96,10 +95,10 @@ void SeeThroughWindow::Init(Application *app,const OptionContainer& appOptions)
 			m_camera->SetCameraInfo(Eye_Left,ifo);
 		}
 	}
-	m_camera->Init(app);
+	m_camera->Init();
 	m_camera->Enter();
 
-	m_robot->Init(app);
+	m_robot->Init();
 
 	OptionContainer opt=appOptions;
 	if(opt["Monitor"].value=="1")
@@ -231,7 +230,8 @@ void SeeThroughWindow::onRenderDone(scene::ViewPort*vp)
 		Engine::getInstance().getDevice()->setScissorTest(true);
 
 
-		m_guiManager->DrawAll(vp);
+		math::rectf rc(0, vp->getSize());
+		m_guiManager->DrawAll(&rc);// vp);
 
 		if(false)
 		{
@@ -319,7 +319,7 @@ void SeeThroughWindow::Update(float dt)
 	{
 		m_camera->Update(dt);
 
-		m_lookAtScreenFactor=math::clamp<float>(abs(TBAppGlobals::optiObj->GetRotation().y)-20,0,30)/3.0f;
+//		m_lookAtScreenFactor = math::clamp<float>(abs(TBAppGlobals::Instance()->optiObj->GetRotation().y) - 20, 0, 30) / 3.0f;
 
 	}
 }

@@ -175,7 +175,7 @@ void quaternion::fromAngle(float angle,const vector3d &axis){
 void quaternion::toAngle(float &angle,vector3d &axis){
 	float sqrtLen=x*x+y*y+z*z;
 	if(sqrtLen>0){
-		angle=2*acosf(sqrtLen);
+		angle=toDeg(2*acosf(w));
 		float invLen=1.0f/sqrtLen;
 		axis.x=x*invLen;
 		axis.y=y*invLen;
@@ -467,19 +467,20 @@ quaternion quaternion::log () const
 	return kResult;
 }
 
-void quaternion::fromEulerAngles(float _x,float _y,float _z){
+void quaternion::fromEulerAngles(float pitch,float yaw,float roll){
 
+	/*
 	double angle;
 
-	angle = toRad(_x) * 0.5;
+	angle = toRad(_z) * 0.5;
 	double sr = (double)sin(angle);
 	double cr = (double)cos(angle);
 
-	angle = toRad(_y) * 0.5;
+	angle = toRad(_x) * 0.5;
 	double sp = (double)sin(angle);
 	double cp = (double)cos(angle);
 
-	angle = toRad(_z) * 0.5;
+	angle = toRad(_y) * 0.5;
 	double sy = (double)sin(angle);
 	double cy = (double)cos(angle);
 
@@ -488,10 +489,30 @@ void quaternion::fromEulerAngles(float _x,float _y,float _z){
 	double cpsy = cp * sy;
 	double spsy = sp * sy;
 
+
 	x = (float)(sr * cpcy - cr * spsy);
 	y = (float)(cr * spcy + sr * cpsy);
 	z = (float)(cr * cpsy - sr * spcy);
 	w = (float)(cr * cpcy + sr * spsy);
+	*/
+	float num = toRad(roll * 0.5f);
+	float num2 = (float)sin((double)num);
+	float num3 = (float)cos((double)num);
+	float num4 = toRad(pitch * 0.5f);
+	float num5 = (float)sin((double)num4);
+	float num6 = (float)cos((double)num4);
+	float num7 = toRad(yaw * 0.5f);
+	float num8 = (float)sin((double)num7);
+	float num9 = (float)cos((double)num7);
+	x = num9 * num5 * num3 + num8 * num6 * num2;
+	y = num8 * num6 * num3 - num9 * num5 * num2;
+	z = num9 * num6 * num2 - num8 * num5 * num3;
+	w = num9 * num6 * num3 + num8 * num5 * num2;
+
+	/*	x = (float)(cr * cpcy + sr * spsy);
+	y = (float)(sr * cpcy - spsy * cr);
+	z = (float)(cr * spcy + sy *cp*sr);
+	w = (float)(sy * cp* cr - cy* sp * sr);*/
 
 	Normalize();
 }
@@ -504,6 +525,7 @@ void quaternion::toEulerAngles(vector3d &angles)const{
 
 
 	// rotation about x-axis
+	
 	angles.x = (float) (atan2(2.0 * (y*z +x*w),(-sqx - sqy + sqz + sqw)));
 
 	// rotation about y-axis
@@ -511,7 +533,17 @@ void quaternion::toEulerAngles(vector3d &angles)const{
 
 	// rotation about z-axis
 	angles.z = (float) (atan2(2.0 * (x*y +z*w),(sqx - sqy - sqz + sqw)));
+	/*
+	angles.y = (float)(asin(clamp<double>(2.0 * (x*z - y*w), -1, 1)));
+
+// rotation about y-axis
+
+	angles.x = (float)(atan2(2.0 * (y*z + x*w), 1-2*(sqz + sqw)));
+
 	
+	// rotation about z-axis
+	angles.z = (float)(atan2(2.0 * (x*y + z*w), 1 - 2 * (sqy + sqz)));*/
+
 	angles.x=(float)toDeg(angles.x);
 	angles.y=(float)toDeg(angles.y);
 	angles.z=(float)toDeg(angles.z);

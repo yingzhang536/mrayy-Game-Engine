@@ -467,6 +467,35 @@ proc int bc_MakeSceneNode()
 	return 1;
 }
 
+proc int bc_MakeBoneNode()
+{
+	
+	string $object[]=`ls -sl -tr -o -sn`;
+	int $count=size($object);
+	if($count<2)
+	{
+		error("Select at least one bone and the owner mesh node");
+		return 0;
+	}
+	int $i;
+	for($i=0;$i<$count-1;$i++)
+	{
+		if(`attributeExists NodeType $object[$i]`==false)
+		{
+			addAttr -ln NodeType -dt "string" $object[$i];
+			setAttr($object[$i]+".NodeType") -lock true -type "string" "BoneNode";
+			
+			addAttr -ln OwnerNode -dt "string" $object[$i];
+			setAttr($object[$i]+".OwnerNode") -lock true -type "string" $object[$count-1];
+			
+			addAttr -ln AttachedNode -dt "string" $object[$i];
+			setAttr($object[$i]+".AttachedNode") -lock false -type "string" "";
+		}
+		
+	}
+	return 1;
+}
+
 proc int bc_CreateContactSensor()
 {
 	string $parent[]=`ls -sl -tr -o -sn`;
@@ -1502,6 +1531,20 @@ proc string ExportSceneObject(string $object)
 	return $tagElement;
 }
 
+proc string ExportBoneObject(string $object)
+{
+
+
+	string $targetNode=GetAttribValue($object,"TargetNode");
+	string $ownerNode=GetAttribValue($object,"OwnerNode");
+	string $tagElement="";
+	
+	print ("\t\tExporting Bone Node:"+$object+"\n");
+	$tagElement+="<BoneComponent Name=\""+$object+"\" TargetNode=\""+$targetNode+"\" OwnerNode=\""+$ownerNode+"\" BoneName=\""+$object+"\"/>\n";
+
+	return $tagElement;
+}
+
 proc string ExportCommunicatorObject(string $object)
 {
 
@@ -1617,6 +1660,9 @@ proc int ExportObjectsAct(string $filename, string $fileType )
 		}else if($type=="PhysicsMaterial")
 		{
 			$tagElement+=ExportPhysicsMaterial($object[$loop]);
+		}else if($type=="BoneNode")
+		{
+			$tagElement+=ExportBoneObject($object[$loop]);
 		}
 	}
 	for($loop=0;$loop<$objectsCount;$loop++)
@@ -1717,6 +1763,7 @@ global proc VTelesarMenu()
 					menuItem -label "Convex" -c "bc_MakeConvexMesh()"; 
 					setParent -menu ..;
 				menuItem -label "Physical Material"  -c "bc_CreateMaterialNode()"; 
+				menuItem -label "Make Bone" -c "bc_MakeBoneNode()";  
 				setParent -menu ..;
 			menuItem -subMenu true -label "Joints";
 				menuItem -label "Add 1-Axis Motor" -c "bc_CreateConstraint1A()";

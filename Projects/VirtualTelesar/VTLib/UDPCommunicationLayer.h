@@ -46,6 +46,7 @@ namespace VT
 		virtual void OnCustomMessage(OS::IStream* stream){};
 	};
 
+	//UDP CommunicationLayer implementation, converts to robot scheme, and pass robot data to the assigned listener
 class UDPCommunicationLayer:public ICommunicationLayer
 {
 protected:

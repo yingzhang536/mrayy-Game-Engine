@@ -210,6 +210,28 @@ void SFModSound::update(float dt){
 	lastPos=position;
 
 }
+void SFModSound::GetSamples(float* samples, float count, int c)
+{
+	if (!channel)return;
+	channel->getWaveData(samples, count, c);
+}
+void SFModSound::GetSpectrum(float* samples, float count, int c, EFFT_WindowType window)
+{
+	if (!channel)return;
+	FMOD_DSP_FFT_WINDOW windowtype;
+	switch (c)
+	{
+	case FFT_WT_Rect: windowtype = FMOD_DSP_FFT_WINDOW_RECT; break;
+	case FFT_WT_Triangle: windowtype = FMOD_DSP_FFT_WINDOW_TRIANGLE; break;
+	case FFT_WT_Hamming: windowtype = FMOD_DSP_FFT_WINDOW_HAMMING; break;
+	case FFT_WT_Hanning: windowtype = FMOD_DSP_FFT_WINDOW_HANNING; break;
+	case FFT_WT_Blackman: windowtype = FMOD_DSP_FFT_WINDOW_BLACKMAN; break;
+	case FFT_WT_BlackmanHarris: windowtype = FMOD_DSP_FFT_WINDOW_BLACKMANHARRIS; break;
+	default:
+		windowtype = FMOD_DSP_FFT_WINDOW_HAMMING;
+	}
+	channel->getSpectrum(samples, count,c, windowtype);
+}
 
 xml::XMLElement* SFModSound::exportXMLSettings(xml::XMLElement* e)
 {

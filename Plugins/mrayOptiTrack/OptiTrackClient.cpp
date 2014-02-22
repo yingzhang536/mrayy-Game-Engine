@@ -108,6 +108,19 @@ namespace animation
 		math::quaternion ori;
 
 		for(int i=0; i < data->nRigidBodies; i++){
+
+			//check if the body is visible or not 
+			bool ok = false;
+			for (int j = 0; j < data->RigidBodies[i].nMarkers; ++j)
+			{
+				if (data->RigidBodies[i].Markers[j][0] != 0)
+				{
+					ok = true;
+					break;;
+				}
+			}
+			if (!ok)
+				continue;
 			pos.x = data->RigidBodies[i].x;
 			pos.y = data->RigidBodies[i].y;
 			pos.z = data->RigidBodies[i].z;
@@ -131,13 +144,17 @@ namespace animation
 			
 			/**/
 			// Same ground plane with FST
-			double sqx = data->RigidBodies[i].qx*data->RigidBodies[i].qx;
-			double sqy = data->RigidBodies[i].qy*data->RigidBodies[i].qy;
-			double sqz = data->RigidBodies[i].qz*data->RigidBodies[i].qz;
-			double sqw = data->RigidBodies[i].qw*data->RigidBodies[i].qw;
+			double sqx = data->RigidBodies[i].qx;
+			double sqy = data->RigidBodies[i].qy;
+			double sqz = data->RigidBodies[i].qz;
+			double sqw = data->RigidBodies[i].qw;
 #if 1
+			sqx = data->RigidBodies[i].qx*data->RigidBodies[i].qx;
+			sqy = data->RigidBodies[i].qy*data->RigidBodies[i].qy;
+			sqz = data->RigidBodies[i].qz*data->RigidBodies[i].qz;
+			sqw = data->RigidBodies[i].qw*data->RigidBodies[i].qw;
 			// invs (inverse square length) is only required if quaternion is not already normalised
-			double invs = 1 / (sqx + sqy + sqz + sqw);
+			double invs = 1 / sqrt(sqx + sqy + sqz + sqw);
 
 			// Tracking Tools, Original Convension
 			float rotMatrix[16];
@@ -159,15 +176,24 @@ namespace animation
 			tmp2 = data->RigidBodies[i].qw*data->RigidBodies[i].qx;
 			rotMatrix[7] = 2.0 * (tmp1 + tmp2)*invs;
 			rotMatrix[5] = 2.0 * (tmp1 - tmp2)*invs; 
-
+			
+			float x = math::toDeg(-atan2(rotMatrix[7], rotMatrix[8]));	// x
+			float y = math::toDeg(-asin(rotMatrix[6]));					// y
+			float z = math::toDeg(-atan2(rotMatrix[3], rotMatrix[0]));		// z
 
 			// Euler calculations
-			float x = -atan2(rotMatrix[7], rotMatrix[8]);	// x
-			float y = -asin(rotMatrix[6]);					// y 
-			float z= -atan2(rotMatrix[3], rotMatrix[0]);		// z
-			ori.fromEulerAngles(math::toDeg(x),math::toDeg(y),math::toDeg(z));
+			/*float z = math::toDeg(atan2(rotMatrix[7], rotMatrix[8]));	// x
+			float y = math::toDeg(-asin(rotMatrix[6]));					// y 
+			float x = math::toDeg(atan2(rotMatrix[3], rotMatrix[0]));		// z*/
+			ori.fromEulerAngles(x,y,z);
+			//ori.fromMatrix(rotMatrix);
 #else
-			ori=math::quaternion(sqw,sqx,sqy,sqz);	
+			ori = math::quaternion(sqw, sqx, sqy, sqz);
+// 			math::vector3d angles;
+// 			ori.toEulerAngles(angles);
+// 			angles.x = -angles.x;
+// 			angles.z = -angles.z;
+	//		ori.fromEulerAngles(angles.x, angles.y, angles.z);
 #endif
 
 			owner->m_rigidBodies[i].SetName(data->MocapData[i].szName);

@@ -180,7 +180,7 @@ bool GUICheckBox::OnEvent(Event* e)
 }
 
 
-void GUICheckBox::Draw(video::IRenderArea*vp)
+void GUICheckBox::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 

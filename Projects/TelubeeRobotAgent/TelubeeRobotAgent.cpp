@@ -58,6 +58,14 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
+		op.name = "DepthStream";
+		op.value = "No";
+		op.valueSet.insert("Yes");
+		op.valueSet.insert("No");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
 		op.name = "Controller";
 		op.value = "Logicool";
 		op.valueSet.insert("Logicool");

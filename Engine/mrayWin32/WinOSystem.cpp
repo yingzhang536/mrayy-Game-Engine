@@ -14,6 +14,7 @@
 #include "WinProcess.h"
 #include "Win32CallbackProc.h"
 #include "OptionContainer.h"
+#include "WinFileMonitor.h"
 
 namespace mray{
 namespace OS{
@@ -166,6 +167,11 @@ ulong WinOSystem::HandleWindowEvent(const OptionContainer& params)
 	lParam=core::StringConverter::toUInt(p->value);
 
 	return Win32MessageProc::getInstance().WndProc(hWnd,msg,wParam,lParam);
+}
+
+IFileMonitor* WinOSystem::CreateFileMonitor()
+{
+	return new WinFileMonitor();
 }
 
 }

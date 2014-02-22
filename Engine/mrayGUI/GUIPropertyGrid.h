@@ -48,7 +48,7 @@ protected:
 // 	virtual bool _OnMouseEvent(MouseEvent*evt);
 // 	virtual bool _OnKeyboardEvent(KeyboardEvent*evt);
 
-	virtual bool _UpdateRegion(video::IRenderArea*vp);
+	virtual bool _UpdateRegion(const math::rectf*vp);
 
 public:
 
@@ -61,7 +61,7 @@ public:
 
 	virtual bool OnEvent(Event*e);
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

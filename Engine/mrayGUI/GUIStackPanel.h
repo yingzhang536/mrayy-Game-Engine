@@ -44,7 +44,7 @@ public:
 
 
 	//virtual const math::rectf& GetUnclippedRect();
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

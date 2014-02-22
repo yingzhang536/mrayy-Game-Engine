@@ -78,7 +78,7 @@ void IGUIElement::fillProperties()
 	AddEvent(&OnLostFocus);
 }
 
-void IGUIElement::_UpdateDocking(video::IRenderArea*vp)
+void IGUIElement::_UpdateDocking(const math::rectf*vp)
 {
 	if(!m_attachedRegion && !vp)
 		return;
@@ -123,7 +123,7 @@ void IGUIElement::_UpdateDocking(video::IRenderArea*vp)
 	m_defaultRegion->SetRect(m_unclippedRect);
 }
 
-void IGUIElement::_UpdateAlignment(video::IRenderArea*vp)
+void IGUIElement::_UpdateAlignment(const math::rectf*vp)
 {
 	const math::vector2d& pos=GetDerivedPosition();
 	const math::vector2d& size=GetSize();
@@ -387,7 +387,7 @@ const math::rectf& IGUIElement::GetClippedRect()
 	return m_clippedRect;
 }
 */
-bool IGUIElement::_UpdateRegion(video::IRenderArea*vp)
+bool IGUIElement::_UpdateRegion(const math::rectf*vp)
 {
 	bool res=false;
 	if(!m_attachedRegion && vp && vp->getSize()!=m_defaultRegion->GetRect().getSize())
@@ -498,7 +498,7 @@ bool IGUIElement::OnEvent(Event* e)
 void IGUIElement::Update(float dt)
 {
 }
-void IGUIElement::Draw(video::IRenderArea*vp)
+void IGUIElement::Draw(const math::rectf*vp)
 {
 
 }

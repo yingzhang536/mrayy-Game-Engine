@@ -61,9 +61,10 @@ protected:
 	static NxPhysicsSDK*	m_PhysicsSDK;
 	static NxCookingInterface *m_Cooking;
 	static NxControllerManager* m_charControllerManager;
+	static NxUserAllocator* m_userAllocator;
+	static ErrorStream* m_errorStream;
 
 
-	ErrorStream* m_errorStream;
 	NxScene*        m_Scene;
 
 	bool			m_enableDebugRender;
@@ -94,7 +95,6 @@ protected:
 	BenchmarkItem* m_simulateBI;
 
 
-	NxUserAllocator* m_userAllocator;
 
 	PhysXContactReporter* m_physXReport;
 	PhysXTriggerReporter* m_physXTriggerReport;

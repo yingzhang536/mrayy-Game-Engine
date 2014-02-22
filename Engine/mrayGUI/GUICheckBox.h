@@ -31,7 +31,7 @@ public:
 	GUICheckBox(IGUIManager* creator);
 	virtual~GUICheckBox();
 
-	virtual void Draw(video::IRenderArea*vp);
+	virtual void Draw(const math::rectf*vp);
 	virtual bool OnEvent(Event*  event);
 
 	void ChangeState();
