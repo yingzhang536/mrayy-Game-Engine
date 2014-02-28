@@ -39,6 +39,8 @@ public:
 	virtual void Disconnect();
 	virtual bool IsConnected();
 
+	void SetFrameSize(int w, int h);
+
 	virtual bool HasNewImage(int id);
 	virtual const video::ImageInfo* GetImage(int id);
 	math::rectf	GetTexRect(int id);

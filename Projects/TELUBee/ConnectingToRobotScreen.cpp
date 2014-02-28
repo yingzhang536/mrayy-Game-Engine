@@ -9,7 +9,6 @@
 #include "GUIOverlay.h"
 #include "TBAppGlobals.h"
 #include "TBRobotInfo.h"
-#include "SeeThroughWindow.h"
 #include "JoystickDefinitions.h"
 #include "INetwork.h"
 #include "LocalRobotCommunicator.h"
@@ -21,7 +20,7 @@ namespace mray
 {
 namespace TBee
 {
-#define USE_SEETHROUGH
+//#define USE_SEETHROUGH
 
 ConnectingToRobotScreen::ConnectingToRobotScreen()
 {
@@ -61,13 +60,13 @@ void ConnectingToRobotScreen::_Connect()
 {
 	m_connectingPnl->StatusLbl->SetText(core::string(core::string("Connected! You are now at: ")+TBAppGlobals::Instance()->selectedRobot->name));
 	m_connectingPnl->InstructionLbl->SetVisible(false);
-	TBAppGlobals::Instance()->seeTrough->SwitchToRemoteVision();
+	//TBAppGlobals::Instance()->seeTrough->SwitchToRemoteVision();
 	m_roboComm->ConnectRobot(true);
 //	m_dviSwitcher->SwitchToSource2();
 }
 void ConnectingToRobotScreen::_Disconnect()
 {
-	TBAppGlobals::Instance()->seeTrough->SwitchToSeeThrough();
+	//TBAppGlobals::Instance()->seeTrough->SwitchToSeeThrough();
 	m_roboComm->ConnectRobot(false);
 	m_roboComm->ConnectUser(false);
 //	m_dviSwitcher->SwitchToSource1();

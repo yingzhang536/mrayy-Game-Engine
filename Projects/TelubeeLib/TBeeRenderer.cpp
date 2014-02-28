@@ -124,7 +124,7 @@ public:
 		if (AppData::Instance()->headController == EHeadControllerType::Oculus || AppData::Instance()->stereoMode == ERenderStereoMode::Oculus)
 		{
 			gLogManager.log("Initing Oculus", ELL_INFO);
-			AppData::Instance()->headController = EHeadControllerType::Oculus;
+			//AppData::Instance()->headController = EHeadControllerType::Oculus;
 			//AppData::Instance()->stereoMode = ERenderStereoMode::Oculus;
 			//Create Oculus
 			oculusManager = new video::OculusManager();
@@ -213,7 +213,7 @@ public:
 			texU.SetTexture(m_preFinalRT[i]->getColorTexture());
 			device->setRenderTarget(m_finalRT[i], false, true, video::SColor(1, 1, 1, 0));
 			device->useTexture(0, &texU);
-			math::rectf tc = math::rectf(0, 1, 1, 0);
+			math::rectf tc = math::rectf(0, 0, 1, 1);
 			device->draw2DImage(rc, 1,0,&tc);
 			device->setRenderTarget(0, false, true, video::SColor(1, 1, 1, 0));
 		}
@@ -276,15 +276,15 @@ public:
 			}
 			for (int i = 0; i < vpCount; ++i)
 			{
-				if (AppData::Instance()->stereoMode == ERenderStereoMode::NVidia)
-				{
-					if (i == 0)
-						glDrawBuffer(GL_BACK_LEFT);
-					else
-						glDrawBuffer(GL_BACK_RIGHT);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-				}
+// 				if (AppData::Instance()->stereoMode == ERenderStereoMode::NVidia)
+// 				{
+// 					if (i == 0)
+// 						glDrawBuffer(GL_BACK_LEFT);
+// 					else
+// 						glDrawBuffer(GL_BACK_RIGHT);
+// 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 
+// 				}
 				tex.SetTexture(m_finalRT[i]->getColorTexture());
 				device->useTexture(0, &tex);
 				device->draw2DImage(targetRect[i], 1);
@@ -296,7 +296,7 @@ public:
 				break;
 				}*/
 			}
-			glDrawBuffer(GL_BACK);
+		//	glDrawBuffer(GL_BACK);
 
 		}
 	}

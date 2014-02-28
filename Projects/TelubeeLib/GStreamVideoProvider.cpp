@@ -22,7 +22,11 @@ GStreamVideoProvider::~GStreamVideoProvider()
 {
 	delete m_playBack;
 }
+void GStreamVideoProvider::SetFrameSize(int w, int h)
+{
+	m_playBack->SetFrameSize(w,h);
 
+}
 
 void GStreamVideoProvider::LoadSideBySideMovie(const core::string& left, const core::string& right)
 {

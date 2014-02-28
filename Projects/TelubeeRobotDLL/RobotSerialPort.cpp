@@ -108,13 +108,17 @@ RobotSerialPort::RobotSerialPort()
 	m_impl = new RobotSerialPortImpl();
 	m_impl->listener = 0;
 	load_parameters();
-	m_impl->comROBOT = new Tserial_event();
-	m_impl->comHEAD = new Tserial_event();
+
+	for (int i = 0; i < 3; i++){
+		m_impl->mvRobot[BASE][i] = new MovAvg();
+		m_impl->mvRobot[HEAD][i] = new MovAvg();
+	}
 	ConnectRobot();
 }
 
 RobotSerialPort::~RobotSerialPort()
 {
+	DisconnectRobot();
 	delete m_impl;
 }
 
@@ -122,6 +126,8 @@ RobotSerialPort::~RobotSerialPort()
 void RobotSerialPort::ConnectRobot()
 {
 	int ret=0;
+	m_impl->comROBOT = new Tserial_event();
+	m_impl->comHEAD = new Tserial_event();
 	if (m_impl->comROBOT != 0){
 		m_impl->comROBOT->setManager(robot_SerialEventManager);
 		ret = m_impl->comROBOT->connect(robotCOM, robot_baudRate, SERIAL_PARITY_NONE, 8, FALSE);
@@ -133,6 +139,7 @@ void RobotSerialPort::ConnectRobot()
 			printf("Robot not connected (%ld)\n", ret);
 			m_impl->comROBOT->disconnect();
 			delete m_impl->comROBOT;
+			m_impl->comROBOT = 0;
 		}
 	}
 
@@ -147,21 +154,39 @@ void RobotSerialPort::ConnectRobot()
 			printf("Head not connected (%ld)\n", ret);
 			m_impl->comHEAD->disconnect();
 			delete m_impl->comHEAD;
+			m_impl->comHEAD = 0;
 		}
 	}
-
-
-
-	for (int i = 0; i < 3; i++){
-		m_impl->mvRobot[BASE][i] = new MovAvg();
-		m_impl->mvRobot[HEAD][i] = new MovAvg();
-	}
+}
+bool RobotSerialPort::IsConnected()
+{
+	return m_impl->comHEAD != 0 || m_impl->comROBOT != 0;
 }
 
+void RobotSerialPort::DisconnectRobot()
+{
+	int ret = 0;
+	printf("Disconnecting Robot\n", ret);
+	if (m_impl->comROBOT != 0){
+		m_impl->comROBOT->disconnect();
+	}
+
+	if (m_impl->comHEAD != 0){
+		m_impl->comHEAD->disconnect();
+	}
+	delete m_impl->comROBOT;
+	delete m_impl->comHEAD;
+	m_impl->comROBOT = 0;
+	m_impl->comHEAD = 0;
+
+
+}
 
 int RobotSerialPort::robot_control(int velocity_x, int velocity_y, int rotation, int control){
 	int packet_size;
 	char sCommand[128];
+	if (!m_impl->comROBOT)
+		return FALSE;
 
 	if (control == RUN)
 		sprintf_s(sCommand,128, "V,%d,%d,%d\r\n", velocity_x, velocity_y, rotation);
@@ -179,6 +204,8 @@ int RobotSerialPort::robot_control(int velocity_x, int velocity_y, int rotation,
 int RobotSerialPort::head_control(float pan, float tilt, float roll){
 	int packet_size;
 	char sCommand[128];
+	if (!m_impl->comHEAD)
+		return FALSE;
 
 	sprintf_s(sCommand, 128, "%3.2f,%3.2f,%3.2f,\n", pan, tilt, roll);
 
@@ -192,7 +219,15 @@ int RobotSerialPort::head_control(float pan, float tilt, float roll){
 
 void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 {
-	if (!st.connected)
+	if (IsConnected() && !st.connected)
+	{
+		DisconnectRobot();
+	}
+	else if (!IsConnected() && st.connected)
+	{
+		ConnectRobot();
+	}
+	if (!IsConnected())
 		return;
 	//todo: send the data to control the robot
 	int robot_vx, robot_vy, robot_rot;

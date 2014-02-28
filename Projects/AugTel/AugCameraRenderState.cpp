@@ -45,6 +45,11 @@
 #include "RenderPass.h"
 #include "DepthVisualizer.h"
 #include "DataCommunicator.h"
+#include "ParsedShaderPP.h"
+
+#include "ATAppGlobal.h"
+#include "RenderWindow.h"
+#include "Application.h"
 
 #define VT_USING_SHAREDMEM
 #define VIDEO_PORT 5000
@@ -308,10 +313,34 @@ void AugCameraRenderState::InitState()
 		std::vector<game::GameEntity*> entLst;
 		m_gameManager->loadFromFile(m_model, &entLst);
 
+		math::vector2d dir[3];
+		for (int i = 0; i < 3; ++i)
+		{
+			float a = i*math::PI32*2.0f / 3.0f;
+			dir[i].set(sinf(a), cosf(a));
+		}
+
 		HeadMount* hm = new HeadMount(m_sceneManager, 1);
 		scene::CameraNode* cam[2];
+
+		float power = 3;// powf(10.0f, 1);
 		for (int i = 0; i < 2; ++i)
 		{
+			video::ParsedShaderPP* pp = new video::ParsedShaderPP(Engine::getInstance().getDevice());
+			pp->LoadXML(gFileSystem.openFile("AugTel.peff"));
+
+			video::ParsedShaderPP::MappedParams* radiusP = pp->GetParam("LensBlur.Radius");
+			video::ParsedShaderPP::MappedParams* powerP = pp->GetParam("LensBlur.Power");
+			video::ParsedShaderPP::MappedParams* delta0P = pp->GetParam("LensBlur.Delta0");
+			video::ParsedShaderPP::MappedParams* delta1P = pp->GetParam("LensBlur.Delta1");
+			video::ParsedShaderPP::MappedParams* delta2P = pp->GetParam("LensBlur.Delta2");
+
+			if (radiusP)radiusP->SetValue(5);
+			if (powerP)powerP->SetValue(power);
+			if (delta0P)delta0P->SetValue(dir[0]);
+			if (delta1P)delta1P->SetValue(dir[1]);
+			if (delta2P)delta2P->SetValue(dir[2]);
+
 			cam[i] = m_sceneManager->createCamera();
 			m_viewport[i] = new scene::ViewPort("", cam[i], 0, 0, math::rectf(0, 0, 1, 1), 0);
 			m_viewport[i]->SetClearColor(video::SColor(1,1,1,0));
@@ -327,6 +356,8 @@ void AugCameraRenderState::InitState()
 			m_viewport[i]->SetAutoUpdateRTSize(true);
 			m_viewport[i]->enablePostProcessing(true);
 			m_viewport[i]->AddListener(this);
+
+			m_viewport[i]->setPostProcessing(pp);
 
 			hm->addChild(cam[i]);
 			cam[i]->setZNear(0.001);
@@ -426,7 +457,28 @@ void AugCameraRenderState::OnExit()
 
 	ATAppGlobal::Instance()->dataCommunicator->Stop();
 }
+void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
+{
+	ETargetEye eye;
+	if (vp == m_viewport[GetEyeIndex(Eye_Left)])
+	{
+		eye = Eye_Left;
+	}
+	else
+	{
+		eye = Eye_Right;
+	}
 
+	Engine::getInstance().getDevice()->set2DMode();
+	video::TextureUnit tu;
+	tu.SetTexture(gTextureResourceManager.loadTexture2D("00353_full.jpg"));
+	Engine::getInstance().getDevice()->useTexture(0, &tu);
+	Engine::getInstance().getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1);
+
+
+	Engine::getInstance().getDevice()->set3DMode();
+
+}
 void AugCameraRenderState::onRenderDone(scene::ViewPort*vp)
 {
 
@@ -510,10 +562,9 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 
 	math::rectf vprect = rc;
 	video::TextureUnit tex;
-
-
-	
+	//Parent::Render(vp->getAbsRenderingViewPort(), eye);
 	Parent::Render(rc, eye);
+
 	if (/*m_openNiHandler->IsStarted() &&*/ m_viewDepth)
 	{
 		tex.SetTexture(m_depthVisualizer->GetTexture());
@@ -531,7 +582,7 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 
 	tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
 	device->useTexture(0, &tex);
-	math::rectf tc = math::rectf(0, 1, 1, 0);
+	math::rectf tc = math::rectf(0, 0, 1, 1);
 	device->draw2DImage(vprect, 1,0,&tc);
 
 	math::rectf vp(0, m_renderTarget[index]->getSize());

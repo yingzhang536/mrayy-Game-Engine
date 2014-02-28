@@ -31,7 +31,7 @@ public:
 
 
 	virtual math::quaternion GetHeadOrientation() = 0;
-	virtual math::quaternion GetHeadPosition() = 0;
+	virtual math::vector3d GetHeadPosition() = 0;
 };
 
 }

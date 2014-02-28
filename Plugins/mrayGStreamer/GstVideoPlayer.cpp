@@ -675,8 +675,8 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 		" ffdec_mpeg4  name=dec max-threads=3 ! ffmpegcolorspace ! video/x-raw-rgb  ! appsink name=sink sync=false "//"appsink name=sink sync=false";
 		" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 
-
-	gstString = "appsrc name=src ! gdpdepay ! rtph264depay ! ffdec_h264! ffmpegcolorspace  ! video/x-raw-rgb !  appsink name = sink sync = false ";//"appsink name = sink sync = false";
+	//gdpdepay !
+	gstString = "appsrc name=src !application/x-rtp, payload=96 !   rtph264depay ! ffdec_h264! ffmpegcolorspace  ! video/x-raw-rgb !  appsink name = sink sync = false ";//"appsink name = sink sync = false";
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 #else
 	gstString = "appsrc name=src ! application/x-rtp, media=video, clock-rate=90000, payload=96, encoding-name=H264 !  rtph264depay name=depay !"

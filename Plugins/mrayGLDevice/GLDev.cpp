@@ -1391,7 +1391,7 @@ void GLDev::setScissorRect(const math::rectf& rc)
 	//scissor rect defined by the Lower Left point, and size
 	//it is necessary to map it to be Upper Left Point
 	m_scissorRect= rc;
-	if (m_renderTarget && false)
+	if (m_renderTarget )
 		glScissor(m_scissorRect.ULPoint.x,m_scissorRect.ULPoint.y,m_scissorRect.getWidth(),m_scissorRect.getHeight());
 	else
 		glScissor(m_scissorRect.ULPoint.x, m_viewportRect.getHeight() - m_scissorRect.getHeight() - m_scissorRect.ULPoint.y, m_scissorRect.getWidth(), m_scissorRect.getHeight());
@@ -1559,7 +1559,7 @@ void GLDev::createGLMatrix(float mat[16],const math::matrix4x4&m)
 void GLDev::setTransformationState(ETransformationState state,const math::matrix4x4&mat)
 {
 	//if(currentRenderMode==RM_3D)
-	mrayDev::setTransformationState(state,mat);
+	mrayDev::setTransformationState(state, mat);
 	float glmat[16];
 	Matrices[state]=mat;
 
@@ -1582,7 +1582,7 @@ void GLDev::setTransformationState(ETransformationState state,const math::matrix
 		//glmat[12]*=-1;
 		_SetMatrixMode(GL_PROJECTION);
 		// Invert transformed y
-		if (m_renderTarget && false)
+		if (m_renderTarget)
 		{
 			glmat[1] = -glmat[1];
 			glmat[5] = -glmat[5];
@@ -2485,8 +2485,12 @@ bool GLDev::setRenderTarget(video::IRenderTargetPtr rt,bool clearBackBuffer,bool
 			glCopyTexSubImage2D(GL_TEXTURE_2D,0,0,0,0,0,renderTargetTexture->getSize().x,renderTargetTexture->getSize().y);
 		}*/
 	}
+
+	bool changed = false;
 		
 	if(rt){
+		if (!m_renderTarget)
+			changed = true;
 		m_renderTarget = rt;
 
 		m_renderTarget->bind();
@@ -2506,6 +2510,8 @@ bool GLDev::setRenderTarget(video::IRenderTargetPtr rt,bool clearBackBuffer,bool
 	}
 	else
 	{
+		if (m_renderTarget)
+			changed = true;
 	/*	if(m_renderTarget){
 			m_rtViewPort=false;
 			m_renderTarget = 0;
@@ -2527,7 +2533,11 @@ bool GLDev::setRenderTarget(video::IRenderTargetPtr rt,bool clearBackBuffer,bool
 		glClear(mode);
 		m_renderTarget=0;
 	}
-
+	if (changed)
+	{
+		//update projection matrix
+		setTransformationState(TS_PROJECTION,Matrices[TS_PROJECTION]);
+	}
 // 	if (currentRenderMode == RM_2D)
 // 		set2DMode();
 
@@ -2710,8 +2720,15 @@ void GLDev::_SetAlphaFunc(GLenum func,GLclampf c)
 }
 void GLDev::_SetFrontFace(GLenum f)
 {
+
+	if (m_renderTarget)
+	{
+		f = (f==GL_CW )? GL_CCW : GL_CW;
+	}
+
 	if(m_frontFace==f)
 		return;
+
 	m_frontFace=f;
 	glFrontFace(f);
 }

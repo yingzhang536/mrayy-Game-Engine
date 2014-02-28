@@ -4,14 +4,20 @@
 #include "IMorphAnimator.h"
 #include "RenderTechnique.h"
 #include "RenderPass.h"
+#include "MaterialResourceManager.h"
 
 namespace mray{
 namespace scene{
 
 MeshBufferData::MeshBufferData():m_isVisible(1)
 {
-	m_material=new video::RenderMaterial();
-	m_material->CreateTechnique(mT("Default"))->CreatePass(mT("Default"));
+	m_material= gMaterialResourceManager.getMaterial("Default");
+	if (!m_material)
+	{
+		m_material=new video::RenderMaterial();
+		m_material->CreateTechnique(mT("Default"))->CreatePass(mT("Default"));
+		gMaterialResourceManager.addResource(m_material,mT("Default"));
+	}
 
 	shaderCallback=new video::IShaderConstantsCallback();
 

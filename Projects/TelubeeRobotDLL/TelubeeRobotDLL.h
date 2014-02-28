@@ -32,7 +32,8 @@ struct RobotStatus
 	bool connected;
 	float speedX, speedY;
 	float rotation;
-	float tilt, yaw, roll;
+	float tilt, yaw, roll;//head rotation
+	float X, Y, Z;//head position
 
 	RobotStatus()
 	{
@@ -40,6 +41,7 @@ struct RobotStatus
 		speedX = speedY = 0;
 		rotation = 0;
 		tilt = yaw = roll = 0;
+		X = Y = Z = 0;
 	}
 };
 

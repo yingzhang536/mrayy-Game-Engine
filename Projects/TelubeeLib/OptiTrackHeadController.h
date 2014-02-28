@@ -33,7 +33,7 @@ public:
 	void SetHeadID(int id){ m_headID = id; }
 
 	virtual math::quaternion GetHeadOrientation() ;
-	virtual math::quaternion GetHeadPosition();
+	virtual math::vector3d GetHeadPosition();
 };
 
 }

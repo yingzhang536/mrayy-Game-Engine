@@ -1,7 +1,7 @@
 
 
 #include "stdafx.h"
-#include "CameraRenderingState.h"
+#include "LocalCameraRenderingState.h"
 
 
 #include "TextureResourceManager.h"
@@ -17,6 +17,7 @@
 #include "FontResourceManager.h"
 #include "RobotInfoManager.h"
 #include "LocalCameraVideoSource.h"
+#include "LocalRobotCommunicator.h"
 
 
 namespace mray
@@ -25,13 +26,14 @@ namespace TBee
 {
 	int s_id=0;
 
-CameraRenderingState::CameraRenderingState()
+LocalCameraRenderingState::LocalCameraRenderingState()
 {
 	m_exitCode=0;
 
 	m_VerticalShift=0;
 	m_eyes[1].cw = true;
 	m_cameraSource = new LocalCameraVideoSource();
+	m_robotConnector->SetCommunicator(new LocalRobotCommunicator());
 
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
@@ -44,20 +46,20 @@ CameraRenderingState::CameraRenderingState()
 }
 
 
-CameraRenderingState::~CameraRenderingState()
+LocalCameraRenderingState::~LocalCameraRenderingState()
 {
 	delete m_cameraSource;
 
 	delete m_guiRenderer;
 }
 
-video::ICameraVideoGrabber* CameraRenderingState::GetCamera(ETargetEye eye)
+video::ICameraVideoGrabber* LocalCameraRenderingState::GetCamera(ETargetEye eye)
 { 
 	return m_cameraSource->GetCamera(GetEyeIndex(eye));
 }
 
 
-void CameraRenderingState::InitState()
+void LocalCameraRenderingState::InitState()
 {
 	IEyesRenderingBaseState::InitState();
 
@@ -68,7 +70,7 @@ void CameraRenderingState::InitState()
 	m_cameraSource->Init();
 }
 
-void CameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
+void LocalCameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
 {
 	m_cameraSource->SetCameraID(GetEyeIndex(eye), id);
 
@@ -78,7 +80,7 @@ void CameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
 
 
 
-bool CameraRenderingState::OnEvent(Event* e,const math::rectf& rc)
+bool LocalCameraRenderingState::OnEvent(Event* e,const math::rectf& rc)
 {
 	if (IEyesRenderingBaseState::OnEvent(e, rc))
 		return true;
@@ -155,7 +157,7 @@ bool CameraRenderingState::OnEvent(Event* e,const math::rectf& rc)
 }
 
 
-void CameraRenderingState::OnEnter(IRenderingState*prev)
+void LocalCameraRenderingState::OnEnter(IRenderingState*prev)
 {
 	IEyesRenderingBaseState::OnEnter(prev);
 	//VCameraType* cam=(VCameraType*)m_camera;//m_video->GetGrabber().pointer();
@@ -174,14 +176,14 @@ void CameraRenderingState::OnEnter(IRenderingState*prev)
 }
 
 
-void CameraRenderingState::OnExit()
+void LocalCameraRenderingState::OnExit()
 {
 	IRenderingState::OnExit();
 	//VCameraType* cam=(VCameraType*)m_video->GetGrabber().pointer();
 	m_cameraSource->Close();
 
 }
-video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETargetEye eye)
+video::IRenderTarget* LocalCameraRenderingState::Render(const math::rectf& rc,ETargetEye eye)
 {
 	video::IRenderTarget*ret=IEyesRenderingBaseState::Render(rc, eye);
 
@@ -198,14 +200,14 @@ video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc,ETarget
 	return ret;
 }
 
-void CameraRenderingState::Update(float dt)
+void LocalCameraRenderingState::Update(float dt)
 {
 	IEyesRenderingBaseState::Update(dt);
 	m_cameraSource->Blit();
 }
 
 
-void CameraRenderingState::_RenderUI(const math::rectf& rc)
+void LocalCameraRenderingState::_RenderUI(const math::rectf& rc)
 {
 	IEyesRenderingBaseState::_RenderUI(rc);
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
@@ -253,7 +255,7 @@ void CameraRenderingState::_RenderUI(const math::rectf& rc)
 }
 
 
-void CameraRenderingState::LoadFromXML(xml::XMLElement* e)
+void LocalCameraRenderingState::LoadFromXML(xml::XMLElement* e)
 {
 	IEyesRenderingBaseState::LoadFromXML(e);
 	m_cameraSource->LoadFromXML(e);

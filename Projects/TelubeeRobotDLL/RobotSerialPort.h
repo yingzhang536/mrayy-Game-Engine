@@ -36,6 +36,8 @@ public:
 
 	void SetListener(ITelubeeRobotListener* l);
 	void ConnectRobot();
+	void DisconnectRobot();
+	bool IsConnected();
 	void UpdateRobotStatus(const RobotStatus& st);
 };
 

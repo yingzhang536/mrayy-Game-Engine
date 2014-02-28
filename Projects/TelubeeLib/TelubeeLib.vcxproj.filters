@@ -114,15 +114,6 @@
     <ClInclude Include="IVideoProvider.h">
       <Filter>Source Files\VideoProvider</Filter>
     </ClInclude>
-    <ClInclude Include="GSTCameraRenderingState.h">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraRenderingState.h">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="HMDCameraRenderer.h">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="IEyesRenderingBaseState.h">
       <Filter>Source Files\States\Rendering</Filter>
     </ClInclude>
@@ -143,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="JoystickDefinitions.h">
       <Filter>Source Files\Robot</Filter>
-    </ClInclude>
-    <ClInclude Include="IHMDRenderer.h">
-      <Filter>Source Files\States\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="OptiTrackDataSource.h">
       <Filter>Source Files\DataSource</Filter>
@@ -195,11 +183,32 @@
     <ClInclude Include="DepthVisualizer.h">
       <Filter>Source Files\Depth</Filter>
     </ClInclude>
-    <ClInclude Include="GstNetVideoSource.h">
-      <Filter>Source Files\VideoSource</Filter>
-    </ClInclude>
     <ClInclude Include="GstFileVideoSource.h">
       <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalRobotCommunicator.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteCameraRenderingState.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalCameraRenderingState.h">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardHeadController.h">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="GstStereoNetVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="GstSingleNetVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="GstStereoStreamVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyingTelubeeRobotCommunicator.h">
+      <Filter>Source Files\Robot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,15 +241,6 @@
     </ClCompile>
     <ClCompile Include="GStreamVideoProvider.cpp">
       <Filter>Source Files\VideoProvider</Filter>
-    </ClCompile>
-    <ClCompile Include="GSTCameraRenderingState.cpp">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraRenderingState.cpp">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="HMDCameraRenderer.cpp">
-      <Filter>Source Files\States\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="IEyesRenderingBaseState.cpp">
       <Filter>Source Files\States\Rendering</Filter>
@@ -296,11 +296,32 @@
     <ClCompile Include="DepthVisualizer.cpp">
       <Filter>Source Files\Depth</Filter>
     </ClCompile>
-    <ClCompile Include="GstNetVideoSource.cpp">
-      <Filter>Source Files\VideoSource</Filter>
-    </ClCompile>
     <ClCompile Include="GstFileVideoSource.cpp">
       <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalRobotCommunicator.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteCameraRenderingState.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalCameraRenderingState.cpp">
+      <Filter>Source Files\States\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardHeadController.cpp">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="GstStereoNetVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="GstSingleNetVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="GstStereoStreamVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyingTelubeeRobotCommunicator.cpp">
+      <Filter>Source Files\Robot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,17 +3,17 @@
 /********************************************************************
 	created:	2014/02/09
 	created:	9:2:2014   19:28
-	filename: 	C:\Development\mrayEngine\Projects\TelubeeLib\GstNetVideoSource.h
+	filename: 	C:\Development\mrayEngine\Projects\TelubeeLib\GstStereoNetVideoSource.h
 	file path:	C:\Development\mrayEngine\Projects\TelubeeLib
-	file base:	GstNetVideoSource
+	file base:	GstStereoNetVideoSource
 	file ext:	h
 	author:		MHD Yamen Saraiji
 	
 	purpose:	
 *********************************************************************/
 
-#ifndef __GstNetVideoSource__
-#define __GstNetVideoSource__
+#ifndef __GstStereoNetVideoSource__
+#define __GstStereoNetVideoSource__
 
 #include "ICameraVideoSource.h"
 
@@ -27,15 +27,15 @@ namespace TBee
 {
 	class GStreamVideoProvider;
 
-class GstNetVideoSource:public ICameraVideoSource
+class GstStereoNetVideoSource:public ICameraVideoSource
 {
 protected:
 	GStreamVideoProvider* m_providers;
 	video::ITexturePtr m_remoteTex;
 	core::string m_ip;
 public:
-	GstNetVideoSource(const core::string& ip = "127.0.0.1");
-	virtual~GstNetVideoSource();
+	GstStereoNetVideoSource(const core::string& ip = "127.0.0.1");
+	virtual~GstStereoNetVideoSource();
 
 	void SetIP(const core::string& ip){ m_ip = ip; }
 

@@ -58,7 +58,21 @@ void mrayDev::setTransformationState(ETransformationState state,const math::matr
 			ShaderSemanticTable::getInstance().setViewMatrix(mat);
 			break;
 		case TS_PROJECTION:
-			ShaderSemanticTable::getInstance().setProjectionMatrix(mat);
+
+			if (ShaderSemanticTable::getInstance().getRenderTarget())
+			{
+				//flip y axis
+				math::matrix4x4 m(mat);
+				m.f12 = -m.f12;
+				m.f22 = -m.f22;
+				m.f32 = -m.f32;
+				m.f42 = -m.f42;
+				ShaderSemanticTable::getInstance().setProjectionMatrix(m);
+			}
+			else
+			{
+				ShaderSemanticTable::getInstance().setProjectionMatrix(mat);
+			}
 			break;
 		case TS_TEXTURE0:
 		case TS_TEXTURE1:

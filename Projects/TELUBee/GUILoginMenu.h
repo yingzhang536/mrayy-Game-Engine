@@ -2,6 +2,7 @@
 #include "GUIButton.h"
 #include "GUIEditBox.h"
 #include "GUIPanel.h"
+#include "GUIStackPanel.h"
 #include "GUIStaticText.h"
 namespace mray{
 
@@ -17,13 +18,14 @@ public:
 	GUIButton* ExitBtn;
 	GUIButton* ConnectRemoteBtn;
 	GUIButton* ConnectLocalBtn;
+	GUIButton* ConnectFlyingBtn;
 	GUIButton* PlayVideoBtn;
 	GUIStaticText* WarningLbl;
 	GUIStaticText* MessageLbl;
 
 public:
 
-	GUILoginMenu():UserTxt(0),PasswordTxt(0),StartBtn(0),SeeThroughBtn(0),ExitBtn(0),ConnectRemoteBtn(0),ConnectLocalBtn(0),PlayVideoBtn(0),WarningLbl(0),MessageLbl(0)
+	GUILoginMenu():UserTxt(0),PasswordTxt(0),StartBtn(0),SeeThroughBtn(0),ExitBtn(0),ConnectRemoteBtn(0),ConnectLocalBtn(0),ConnectFlyingBtn(0),PlayVideoBtn(0),WarningLbl(0),MessageLbl(0)
 	{		
 		m_elementsMap["UserTxt"]=(IGUIElement**)&UserTxt;
 		m_elementsMap["PasswordTxt"]=(IGUIElement**)&PasswordTxt;
@@ -32,6 +34,7 @@ public:
 		m_elementsMap["ExitBtn"]=(IGUIElement**)&ExitBtn;
 		m_elementsMap["ConnectRemoteBtn"]=(IGUIElement**)&ConnectRemoteBtn;
 		m_elementsMap["ConnectLocalBtn"]=(IGUIElement**)&ConnectLocalBtn;
+		m_elementsMap["ConnectFlyingBtn"]=(IGUIElement**)&ConnectFlyingBtn;
 		m_elementsMap["PlayVideoBtn"]=(IGUIElement**)&PlayVideoBtn;
 		m_elementsMap["WarningLbl"]=(IGUIElement**)&WarningLbl;
 		m_elementsMap["MessageLbl"]=(IGUIElement**)&MessageLbl;

@@ -36,12 +36,13 @@
 #include "NullRenderState.h"
 #include "AugCameraRenderState.h"
 #include "LoginScreenState.h"
-#include "GSTCameraRenderingState.h"
+#include "LocalCameraRenderingState.h"
+#include "RemoteCameraRenderingState.h"
 #include "GeomDepthState.h"
 
 #include "JoystickDefinitions.h"
 #include "LocalCameraVideoSource.h"
-#include "GstCameraVideoSource.h"
+#include "GstNetVideoSource.h"
 #include "DataCommunicator.h"
 
 #include "TBRobotInfo.h"
@@ -191,7 +192,7 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-	streamerTest = new AugCameraRenderState(new TBee::GstCameraVideoSource(ip));
+	streamerTest = new AugCameraRenderState(new TBee::GstNetVideoSource(ip));
 	m_renderingState->AddState(streamerTest, "CameraRemote");
 
 // 	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
@@ -330,7 +331,7 @@ void Application::init(const OptionContainer &extraOptions)
 
 void Application::RenderUI(const math::rectf& rc)
 {
-	if ((ATAppGlobal::Instance()->IsDebugging || m_drawUI) && false)
+	if ((ATAppGlobal::Instance()->IsDebugging || m_drawUI) )
 	{
 		GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 		getDevice()->set2DMode();

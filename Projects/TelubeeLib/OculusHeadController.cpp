@@ -24,7 +24,7 @@ math::quaternion OculusHeadController::GetHeadOrientation()
 		return math::quaternion::Identity;
 	return AppData::Instance()->oculusDevice->GetOrientation();
 }
-math::quaternion OculusHeadController::GetHeadPosition()
+math::vector3d OculusHeadController::GetHeadPosition()
 {
 	 return math::vector3d::Zero;
 }

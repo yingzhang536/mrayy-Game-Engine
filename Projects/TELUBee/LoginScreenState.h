@@ -39,6 +39,7 @@ namespace TBee
 #define ToLocalCamera_CODE 0x101
 #define ToRemoteCamera_CODE 0x102
 #define ToVideo_CODE 0x103
+#define ToFlyingTelubee_CODE 0x104
 
 	class Application;
 class LoginScreenState:public IRenderingState,public IDelegateContainer
@@ -74,6 +75,7 @@ protected:
 	void OnExitPressed(IObject* caller,void* args);
 	void OnSeeThroughPressed(IObject* caller,void* args);
 	void OnConnectRemotePressed(IObject* caller, void* args);
+	void OnConnectFlyingTbeePressed(IObject* caller, void* args);
 	void OnConnectLocalPressed(IObject* caller, void* args);
 	void OnPlayVideoPressed(IObject* caller, void* args);
 

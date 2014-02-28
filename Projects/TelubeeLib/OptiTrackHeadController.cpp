@@ -29,7 +29,7 @@ math::quaternion OptiTrackHeadController::GetHeadOrientation()
 	
 	return math::quaternion(-a.z,a.y,-a.x);
 }
-math::quaternion OptiTrackHeadController::GetHeadPosition()
+math::vector3d OptiTrackHeadController::GetHeadPosition()
 {
 	math::vector3d* v=AppData::Instance()->optiDataSource->GetPositionByID(m_headID);
 	if (!v)

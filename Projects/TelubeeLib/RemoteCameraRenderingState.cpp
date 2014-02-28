@@ -1,7 +1,7 @@
 
 
 #include "stdafx.h"
-#include "GSTCameraRenderingState.h"
+#include "RemoteCameraRenderingState.h"
 #include "RobotInfoManager.h"
 #include "FontResourceManager.h"
 #include "CRobotConnector.h"
@@ -10,7 +10,8 @@
 #include "GStreamVideoProvider.h"
 
 #include "TextureResourceManager.h"
-#include "GstNetVideoSource.h"
+#include "GstStereoNetVideoSource.h"
+#include "RemoteRobotCommunicator.h"
 
 namespace mray
 {
@@ -18,15 +19,15 @@ namespace TBee
 {
 
 
-GSTCameraRenderingState::GSTCameraRenderingState()
+RemoteCameraRenderingState::RemoteCameraRenderingState()
 {
 
 	m_fps = 0;
 	m_timeAcc = 0;
 	IEyesRenderingBaseState::InitState();
-	
+	m_robotConnector->SetCommunicator(new RemoteRobotCommunicator());
 
-	m_cameraSource = new GstNetVideoSource();
+	m_cameraSource = new GstStereoNetVideoSource();
 // 	m_eyes[0].flip90 = true;
 // 	m_eyes[1].flip90 = true;
  	m_eyes[0].cw = true;
@@ -37,13 +38,13 @@ GSTCameraRenderingState::GSTCameraRenderingState()
 }
 
 
-GSTCameraRenderingState::~GSTCameraRenderingState()
+RemoteCameraRenderingState::~RemoteCameraRenderingState()
 {
 	delete m_cameraSource;
 }
 
 
-void GSTCameraRenderingState::InitState()
+void RemoteCameraRenderingState::InitState()
 {
 	m_cameraSource->Init();
 
@@ -51,7 +52,7 @@ void GSTCameraRenderingState::InitState()
 
 
 
-bool GSTCameraRenderingState::OnEvent(Event* e, const math::rectf &rc)
+bool RemoteCameraRenderingState::OnEvent(Event* e, const math::rectf &rc)
 {
 	if (IEyesRenderingBaseState::OnEvent(e, rc))
 		return true;
@@ -82,7 +83,7 @@ bool GSTCameraRenderingState::OnEvent(Event* e, const math::rectf &rc)
 }
 
 
-void GSTCameraRenderingState::OnEnter(IRenderingState*prev)
+void RemoteCameraRenderingState::OnEnter(IRenderingState*prev)
 {
 
 	IEyesRenderingBaseState::OnEnter(prev);
@@ -98,14 +99,14 @@ void GSTCameraRenderingState::OnEnter(IRenderingState*prev)
 }
 
 
-void GSTCameraRenderingState::OnExit()
+void RemoteCameraRenderingState::OnExit()
 {
 	IEyesRenderingBaseState::OnExit();
 	m_cameraSource->Close();
 }
 
 
-void GSTCameraRenderingState::Update(float dt)
+void RemoteCameraRenderingState::Update(float dt)
 {
 	IEyesRenderingBaseState::Update(dt);
 	if (m_cameraSource->Blit())
@@ -122,7 +123,7 @@ void GSTCameraRenderingState::Update(float dt)
 	m_timeAcc += dt;
 }
 
-void GSTCameraRenderingState::_RenderUI(const math::rectf& rc)
+void RemoteCameraRenderingState::_RenderUI(const math::rectf& rc)
 {
 	IEyesRenderingBaseState::_RenderUI(rc);
 
@@ -155,7 +156,7 @@ void GSTCameraRenderingState::_RenderUI(const math::rectf& rc)
 
 }
 
-video::IRenderTarget* GSTCameraRenderingState::Render(const math::rectf& rc, ETargetEye eye)
+video::IRenderTarget* RemoteCameraRenderingState::Render(const math::rectf& rc, ETargetEye eye)
 {
 	video::IRenderTarget*ret = IEyesRenderingBaseState::Render(rc, eye);
 	//draw a grid
@@ -172,7 +173,7 @@ video::IRenderTarget* GSTCameraRenderingState::Render(const math::rectf& rc, ETa
 
 
 
-void GSTCameraRenderingState::LoadFromXML(xml::XMLElement* e)
+void RemoteCameraRenderingState::LoadFromXML(xml::XMLElement* e)
 {
 	IEyesRenderingBaseState::LoadFromXML(e);
 	xml::XMLAttribute* attr;

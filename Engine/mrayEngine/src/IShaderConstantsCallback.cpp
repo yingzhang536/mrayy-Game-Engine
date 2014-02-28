@@ -84,8 +84,8 @@ void IShaderConstantsCallback::setUniform(IGPUShaderProgram*shader,GPUUniform* u
 		case ESS_ProjectionMatrix:
 			{
 				;
-				shader->setConstant(u, ShaderSemanticTable::getInstance().getViewNode()->getProjectionMatrix().getMatPointer(),16);
-				//shader->setConstant(u,ShaderSemanticTable::getInstance().getProjectionMatrix().getMatPointer(),16);
+				//shader->setConstant(u, ShaderSemanticTable::getInstance().getViewNode()->getProjectionMatrix().getMatPointer(),16);
+				shader->setConstant(u,ShaderSemanticTable::getInstance().getProjectionMatrix().getMatPointer(),16);
 			}
 			break;
 		case ESS_ViewProjMatrix:

@@ -64,8 +64,11 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 	{
 		m_robotStatus.speedX = atof(vals[0].c_str());
 		m_robotStatus.speedY = atof(vals[1].c_str());
+		//limit the speed
+		m_robotStatus.speedX = math::clamp<float>(m_robotStatus.speedX, -1, 1);
+		m_robotStatus.speedY = math::clamp<float>(m_robotStatus.speedY, -1, 1);
 	}
-	else if (name == "Head" && vals.size() == 3)
+	else if (name == "HeadRotation" && vals.size() == 3)
 	{
 		m_robotStatus.tilt = atof(vals[0].c_str());
 		m_robotStatus.yaw = atof(vals[1].c_str());
@@ -76,9 +79,17 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 		m_robotStatus.yaw = math::clamp(m_robotStatus.yaw, -70.0f, 70.0f);
 		m_robotStatus.roll = math::clamp(m_robotStatus.roll, -40.0f, 40.0f);
 	}
+	else if (name == "HeadPosition" && vals.size() == 3)
+	{
+		m_robotStatus.X = atof(vals[0].c_str());
+		m_robotStatus.Y = atof(vals[1].c_str());
+		m_robotStatus.Z = atof(vals[2].c_str());
+
+	}
 	else if (name == "Rotation" && vals.size() == 1)
 	{
 		m_robotStatus.rotation = atof(vals[0].c_str());
+		m_robotStatus.rotation = math::clamp<float>(m_robotStatus.rotation, -1, 1);
 	}
 	else if (name == "Connect" && vals.size() == 3)
 	{

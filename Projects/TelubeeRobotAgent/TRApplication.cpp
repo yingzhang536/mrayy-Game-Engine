@@ -106,6 +106,9 @@ TRApplication::TRApplication()
 	m_msgSink = new AppRobotMessageSink(this);
 	m_openNi = 0;
 	m_commChannel= 0;
+
+	this->m_limitFps = true;
+	this->m_limitFpsCount = 30;
 }
 
 TRApplication::~TRApplication()
@@ -170,9 +173,10 @@ void TRApplication::init(const OptionContainer &extraOptions)
 
 		m_cameraIfo[0].w = m_cameraIfo[1].w = 1280;
 		m_cameraIfo[0].h = m_cameraIfo[1].h = 720;
-		m_cameraIfo[0].fps = m_cameraIfo[1].fps = 30;
+		m_cameraIfo[0].fps = m_cameraIfo[1].fps = 25;
 
-		m_debugData.debug = extraOptions.GetOptionByName("Debugging")->getValue()=="Yes";
+		m_debugData.debug = extraOptions.GetOptionByName("Debugging")->getValue() == "Yes";
+		m_depthSend = extraOptions.GetOptionByName("DepthStream")->getValue() == "Yes";
 
 		m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox"? EController::XBox : EController::Logicool;
 
@@ -201,6 +205,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		}
 	}
 
+	if (m_depthSend)
 	{
 
 		m_openNIMngr = new OpenNIManager();
@@ -343,8 +348,9 @@ void TRApplication::update(float dt)
 		}
 	}
 
-	m_openNi->Update(dt);
-	Sleep(10);
+	if (m_depthSend)
+		m_openNi->Update(dt);
+	Sleep(30);
 }
 
 void TRApplication::onDone()
@@ -410,7 +416,10 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 					msg = core::string("Rotation: ") + core::StringConverter::toString(m_debugData.robotData.rotation);
 					LOG_OUT(msg, 100, 100);
 
-					msg = core::string("Head: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.tilt, m_debugData.robotData.yaw, m_debugData.robotData.roll));
+					msg = core::string("Head Rotation: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.tilt, m_debugData.robotData.yaw, m_debugData.robotData.roll));
+					LOG_OUT(msg, 100, 100);
+
+					msg = core::string("Head Position: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.X, m_debugData.robotData.Y, m_debugData.robotData.Z));
 					LOG_OUT(msg, 100, 100);
 
 				}
@@ -463,7 +472,7 @@ void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg
 		m_remoteAddr.port = core::StringConverter::toInt(value);
 	}
 	else
-	if (m.equals_ignore_case("depthSize"))
+	if (m.equals_ignore_case("depthSize") && m_depthSend)
 	{
 		OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
 		int reply = (int)EMessages::DepthSize;
@@ -473,7 +482,7 @@ void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg
 		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
 	}
 	else
-	if (m.equals_ignore_case("depth"))
+	if (m.equals_ignore_case("depth") && m_depthSend)
 	{
 		math::rectf rc = core::StringConverter::toRect(value);
 		OS::CMemoryStream stream("",buffer,BufferLen,false,OS::BIN_WRITE);

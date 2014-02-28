@@ -86,7 +86,7 @@ void Application::onEvent(Event* event)
 		KeyboardEvent* e=(KeyboardEvent*)event;
 		if(e->press && e->key==KEY_F9)
 		{
-			m_drawUI=!m_drawUI;
+			VT::VTAppGlobals::IsDebugging = !VT::VTAppGlobals::IsDebugging;
 		}else if(e->press && e->key==KEY_F10)
 		{
 			m_horizontalFlip=!m_horizontalFlip;
@@ -391,6 +391,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 		scene::ViewPort* vp=m_stereoVP[index];
 		vp->updateViewPort();
+		getDevice()->setViewport(vp);
 
 		math::rectf rc=math::rectf(0,vp->getAbsRenderingViewPort().getSize());//vp->getAbsRenderingViewPort().getSize());
 		if(singleWindow)
@@ -414,7 +415,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		if(m_horizontalFlip)
 			trc=math::rectf(1,0,0,1);
 		else 
-			trc=math::rectf(0,1,1,0);
+			trc=math::rectf(0,0,1,1);
 		getDevice()->draw2DImage(rc,1,0,&trc);
 	//	getDevice()->draw2DRectangle(rc,video::SColor(index,1,0,1));
 		RenderUI(rc);

@@ -34,6 +34,8 @@ protected:
 	LineDrawer m_lineDrawer;
 
 	OptiTrackDataSource* m_optiProvider;
+
+	video::IRenderTargetPtr m_rt;
 	
 public:
 	Application();

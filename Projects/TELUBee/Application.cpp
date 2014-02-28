@@ -15,7 +15,6 @@
 
 #include "IThreadManager.h"
 #include "RenderWindowUtils.h"
-#include "SeeThroughWindow.h"
 
 #include "TBAppGlobals.h"
 #include "TextureResourceManager.h"
@@ -44,11 +43,12 @@
 #include "JoystickDefinitions.h"
 #include "OptiTrackDataSource.h"
 
-#include "GSTCameraRenderingState.h"
+#include "LocalCameraRenderingState.h"
+#include "RemoteCameraRenderingState.h"
+#include "FlyingTelubeeRenderState.h"
 #include "IntroRenderingState.h"
 #include "LoginScreenState.h"
 #include "InMapRenderState.h"
-#include "CameraRenderingState.h"
 #include "NullRenderState.h"
 #include "ConnectingToRobotScreen.h"
 #include "GStreamVideoProvider.h"
@@ -92,7 +92,6 @@ Application::Application()
 	new TBAppGlobals();
 	TBAppGlobals::Instance()->App = this;
 	m_drawUI=false;
-	m_seeThroughWindow=0;
 	m_tbRenderer = 0;
 }
 Application::~Application()
@@ -103,7 +102,6 @@ Application::~Application()
 	m_videoManager=0;
 	m_soundManager=0;
 	delete TBAppGlobals::Instance()->robotInfoManager;
-	delete m_seeThroughWindow;
 }
 
 void Application::_InitResources()
@@ -167,14 +165,22 @@ void Application::onEvent(Event* event)
 
 void Application::_initStates()
 {
-	IRenderingState *nullState, *streamerTest, *introState, *oc, *ls, *maps, *ctr,*cameraState,* videoState;
+	IRenderingState *nullState, *streamerTest, *flyingTbeeState, *introState, *oc, *ls, *maps, *ctr, *cameraState, *videoState;
 	nullState = new TBee::NullRenderState();
 	nullState->InitState();
 	m_renderingState->AddState(nullState, "Null");
 
-	streamerTest = new TBee::GSTCameraRenderingState();
+	streamerTest = new TBee::RemoteCameraRenderingState();
 	streamerTest->InitState();
 	m_renderingState->AddState(streamerTest, "CameraRemote");
+
+	flyingTbeeState = new TBee::FlyingTelubeeRenderState();
+	flyingTbeeState->InitState();
+	m_renderingState->AddState(flyingTbeeState, "FlyingTbee");
+
+	cameraState = new TBee::LocalCameraRenderingState();
+	cameraState->InitState();
+	m_renderingState->AddState(cameraState, "CameraLocal");
 
 	videoState = new TBee::GSTVideoState();
 	videoState->InitState();
@@ -200,9 +206,6 @@ void Application::_initStates()
 	ctr->InitState();
 	m_renderingState->AddState(ctr, "Connecting");
 
-	cameraState = new TBee::CameraRenderingState();
-	cameraState->InitState();
-	m_renderingState->AddState(cameraState, "CameraLocal");
 
 	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
 	//AddTransition("Streamer","Intro",STATE_EXIT_CODE);
@@ -215,6 +218,7 @@ void Application::_initStates()
 		m_renderingState->AddTransition("Intro", "Login", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("Login", "Map", ToMap_CODE);
 	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
+	m_renderingState->AddTransition("Login", "FlyingTbee", ToFlyingTelubee_CODE);//Camera
 	m_renderingState->AddTransition("Login", "CameraLocal", ToLocalCamera_CODE);//Camera
 	m_renderingState->AddTransition("Login", "Video", ToVideo_CODE);//Video
 	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
@@ -349,14 +353,6 @@ void Application::init(const OptionContainer &extraOptions)
 	m_appStateManager->AddState(m_renderingState,"Rendering");
 	m_appStateManager->SetInitialState("Rendering");
 	//m_appStateManager->AddTransition("Menu","Rendering",STATE_EXIT_CODE);
-
-	if (false)
-	{
-		m_seeThroughWindow = new SeeThroughWindow();
-		TBAppGlobals::Instance()->seeTrough = m_seeThroughWindow;
-		m_seeThroughWindow->Init(this, extraOptions);
-		GetRenderWindow(0)->SetActive(true);
-	}
 	
 	_createViewports();
 	LoadSettingsXML("States.xml");
@@ -445,8 +441,6 @@ void Application::update(float dt)
 		m_soundManager->runSounds(dt);
 
 	m_appStateManager->Update(dt);
-	if(m_seeThroughWindow)
-		m_seeThroughWindow->Update(dt);
 
 	m_tbRenderer->Update(dt);
 	//OS::IThreadManager::getInstance().sleep(1000/30);
@@ -471,11 +465,6 @@ void Application::LoadSettingsXML(const core::string &path)
 		if(se)
 		{
 			m_renderingState->LoadSettingsXML(se);
-		}
-		se=e->getSubElement("Camera");
-		if(se && m_seeThroughWindow)
-		{
-			m_seeThroughWindow->LoadFromXML(se);
 		}
 	}
 	e=tree.getSubElement("Application");

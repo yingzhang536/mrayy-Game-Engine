@@ -177,6 +177,8 @@ void RenderGroup::RenderPassGroup::addOperation(RenderOperation*op)
 
 void RenderGroup::RenderPassGroup::render(RenderGroup*grp)
 {
+	if (isNew)
+		return;
 	video::IShaderConstantsCallback c;
 	video::IVideoDevice*dev= grp->getDevice();
 	IRenderPass*pass=grp->getRenderManager()->getSceneManager()->getCurrnetRenderPass();
@@ -204,6 +206,7 @@ bool RenderGroup::RenderPassGroup::CanBeAdded(RenderOperation*op)
 void RenderGroup::RenderPassGroup::Clear()
 {
 	isNew=true;
+	mtrl = 0;
 	SortGroupList::iterator it=m_subGroup.begin();
 	for(;it!=m_subGroup.end();++it)
 	{
@@ -257,6 +260,8 @@ void RenderGroup::SVBGroup::addOperation(RenderOperation*op)
 
 void RenderGroup::SVBGroup::render(mray::scene::RenderGroup *grp)
 {
+	if (isNew)
+		return;
 	video::IVideoDevice*dev= grp->getDevice();
 	dev->setStreamMap(stream);
 
@@ -279,6 +284,7 @@ bool RenderGroup::SVBGroup::CanBeAdded(RenderOperation*op)
 void RenderGroup::SVBGroup::Clear()
 {
 	isNew=true;
+	stream = 0;
 	SortGroupList::iterator it=m_subGroup.begin();
 	for(;it!=m_subGroup.end();++it)
 	{

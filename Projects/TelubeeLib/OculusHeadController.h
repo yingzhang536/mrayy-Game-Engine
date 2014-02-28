@@ -32,7 +32,7 @@ public:
 	virtual~OculusHeadController();
 
 	virtual math::quaternion GetHeadOrientation();
-	virtual math::quaternion GetHeadPosition();
+	virtual math::vector3d GetHeadPosition();
 };
 
 }

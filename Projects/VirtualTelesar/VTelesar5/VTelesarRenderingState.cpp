@@ -245,7 +245,6 @@ VTelesarRenderingState::~VTelesarRenderingState()
 	m_closed=true;
 	m_physicsUpdateThread->terminate();
 	OS::IThreadManager::getInstance().killThread(m_physicsUpdateThread);
-	VT::ReleaseVTLib();
 	m_dataRecorder=0;
 	m_gameManager=0;
 	m_phManager=0;
@@ -256,6 +255,7 @@ VTelesarRenderingState::~VTelesarRenderingState()
 	delete VT::DebugRenderSettings::DebugInterface;
 	m_oculusManager = 0;
 	m_seeThrough = false;
+	VT::ReleaseVTLib();
 }
 
 void VTelesarRenderingState::CreatePhysicsSystem()
@@ -572,7 +572,7 @@ void VTelesarRenderingState::InitState(Application* app)
 		VT::VTAppGlobals::oculusDevice = m_oculusDevice;
 	}
 
-	m_modelName="skinned.xml";
+	m_modelName="test.xml";
 
 	g_udpListener.Prepare();
 	//VT::UDPCommunicationLayer* udpComm=new VT::UDPCommunicationLayer(1234);
@@ -714,7 +714,7 @@ void VTelesarRenderingState::InitState(Application* app)
 			FP=pp->GetValue("CameraComposer.final.CameraTex");
 			if(FP)
 			{
-				FP->texParam->SetTexture(m_cameraSource[i]->GetTexture());
+				FP->texParam->SetTexture(gTextureResourceManager.loadTexture2D("FPV.png"));// m_cameraSource[i]->GetTexture());
 			}
 			FP=pp->GetValue("CameraComposer.final.UseLighting");
 			if(FP)
@@ -1323,7 +1323,7 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 			}
 			else 
 			{
-				if (m_oculusDevice->IsConnected() )
+				if (m_oculusDevice && m_oculusDevice->IsConnected())
 				{
 					math::matrix4x4 m, pm;
 					device->getTransformationState(video::TS_PROJECTION, m);
@@ -1335,7 +1335,7 @@ video::IRenderTarget* VTelesarRenderingState::Render(bool left,const math::rectf
 					m_maskExtractor[index]->getOutput()->getColorTexture(0),
 					m_maskExtractor[index]->getOutput()->getColorTexture(1),
 					roboVis };
-				bool flipTex[] = { 1, 1, 1, 0 };
+				bool flipTex[] = { 0,0,0, 0 };
 				core::string title[] = { "Camera Image", "Mask Image", "Color Correction", "Fused Image" };
 				GUI::IFont* font = gFontResourceManager.getDefaultFont();
 				GUI::FontAttributes attrs;

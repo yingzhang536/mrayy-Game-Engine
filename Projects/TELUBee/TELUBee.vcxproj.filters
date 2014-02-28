@@ -46,20 +46,17 @@
     <Filter Include="Source Files\SharedMemory">
       <UniqueIdentifier>{581498bc-0cf8-477a-b2d6-8c9c237b97d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Communicator">
-      <UniqueIdentifier>{316ee2d1-85ad-45a0-8aaf-4222d76ca5c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GST">
       <UniqueIdentifier>{1d2b8e26-716a-47fc-b5e8-719a549dab26}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\DVI">
       <UniqueIdentifier>{92d7f396-43bb-4829-b4fc-9a9e773d6d41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\RenderingStates\HMD">
-      <UniqueIdentifier>{a6342773-7b4f-43f9-9ef7-d9e3b5991541}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\RenderingStates\Test States">
       <UniqueIdentifier>{3bd25efc-8205-4f08-962d-114efcf0a45a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderingStates\States">
+      <UniqueIdentifier>{16b13160-c686-4712-b99f-cbf3c55cf80b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +133,6 @@
     <ClInclude Include="GUILoadingElement.h">
       <Filter>Source Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="SeeThroughWindow.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
     <ClInclude Include="telubee\shmem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -193,14 +187,8 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LocalRobotCommunicator.h">
-      <Filter>Source Files\Communicator</Filter>
-    </ClInclude>
     <ClInclude Include="UDPVideoGrabber.h">
       <Filter>Source Files\VideoStreams</Filter>
-    </ClInclude>
-    <ClInclude Include="UDPVideoProvider.h">
-      <Filter>Source Files\Communicator</Filter>
     </ClInclude>
     <ClInclude Include="DVISwitcherController.h">
       <Filter>Source Files\DVI</Filter>
@@ -213,9 +201,6 @@
     </ClInclude>
     <ClInclude Include="OFSerialPort.h">
       <Filter>Source Files\DVI</Filter>
-    </ClInclude>
-    <ClInclude Include="HMDRobotRenderer.h">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
     </ClInclude>
     <ClInclude Include="GUIOculusDetect.h">
       <Filter>Source Files\GUI</Filter>
@@ -237,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="GSTVideoState.h">
       <Filter>Source Files\RenderingStates\Test States</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyingTelubeeRenderState.h">
+      <Filter>Source Files\RenderingStates\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,9 +264,6 @@
     <ClCompile Include="GUILoadingElement.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="SeeThroughWindow.cpp">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClCompile>
     <ClCompile Include="MapEntity.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -315,14 +300,8 @@
     <ClCompile Include="TBSharedMemory.cpp">
       <Filter>Source Files\SharedMemory</Filter>
     </ClCompile>
-    <ClCompile Include="LocalRobotCommunicator.cpp">
-      <Filter>Source Files\Communicator</Filter>
-    </ClCompile>
     <ClCompile Include="UDPVideoGrabber.cpp">
       <Filter>Source Files\VideoStreams</Filter>
-    </ClCompile>
-    <ClCompile Include="UDPVideoProvider.cpp">
-      <Filter>Source Files\Communicator</Filter>
     </ClCompile>
     <ClCompile Include="DVISwitcherController.cpp">
       <Filter>Source Files\DVI</Filter>
@@ -335,9 +314,6 @@
     </ClCompile>
     <ClCompile Include="OFSerialPort.cpp">
       <Filter>Source Files\DVI</Filter>
-    </ClCompile>
-    <ClCompile Include="HMDRobotRenderer.cpp">
-      <Filter>Source Files\RenderingStates\HMD</Filter>
     </ClCompile>
     <ClCompile Include="GUIOculusDetectImpl.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -356,6 +332,9 @@
     </ClCompile>
     <ClCompile Include="GSTVideoState.cpp">
       <Filter>Source Files\RenderingStates\Test States</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyingTelubeeRenderState.cpp">
+      <Filter>Source Files\RenderingStates\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

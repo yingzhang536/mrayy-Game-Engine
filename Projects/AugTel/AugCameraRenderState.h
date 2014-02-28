@@ -15,7 +15,7 @@
 #ifndef __AugCameraRenderState__
 #define __AugCameraRenderState__
 
-#include "CameraRenderingState.h"
+#include "IEyesRenderingBaseState.h"
 #include "SceneManager.h"
 #include "ViewPort.h"
 #include "GameEntityManager.h"
@@ -24,7 +24,6 @@
 #include "GUIManager.h"
 
 #include "IGUISliderBar.h"
-#include "GSTCameraRenderingState.h"
 
 
 namespace mray
@@ -85,6 +84,7 @@ public:
 	//virtual video::IRenderTarget* GetLastFrame(ETargetEye eye){ return m_viewport->getRenderTarget(); }
 	virtual bool CanSleep(){ return false; }
 
+	virtual void onRenderBegin(scene::ViewPort*vp);
 	virtual void onRenderDone(scene::ViewPort*vp);
 
 	virtual void LoadFromXML(xml::XMLElement* e);

@@ -79,6 +79,12 @@ void GstFileVideoSource::LoadFromXML(xml::XMLElement* e)
 	attr = e->getAttribute("RightVideo");
 	if (attr)
 		m_right = attr->value;
+	attr = e->getAttribute("FrameSize");
+	if (attr)
+	{
+		math::vector2d sz = core::StringConverter::toVector2d(attr->value);
+		m_providers->SetFrameSize(sz.x,sz.y);
+	}
 
 
 }

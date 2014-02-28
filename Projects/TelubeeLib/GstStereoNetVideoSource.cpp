@@ -1,7 +1,7 @@
 
 
 #include "stdafx.h"
-#include "GstNetVideoSource.h"
+#include "GstStereoNetVideoSource.h"
 #include "ICameraVideoGrabber.h"
 #include "GStreamVideoProvider.h"
 
@@ -12,33 +12,33 @@ namespace mray
 namespace TBee
 {
 
-GstNetVideoSource::GstNetVideoSource(const core::string& ip )
+GstStereoNetVideoSource::GstStereoNetVideoSource(const core::string& ip )
 {
 	m_providers = new GStreamVideoProvider();
 	SetIP(ip);
 }
 
-GstNetVideoSource::~GstNetVideoSource()
+GstStereoNetVideoSource::~GstStereoNetVideoSource()
 {
 	m_providers->Disconnect();
 	delete m_providers;
 }
 
-void GstNetVideoSource::Init()
+void GstStereoNetVideoSource::Init()
 {
 	m_remoteTex = Engine::getInstance().getDevice()->createTexture2D(4, video::EPixel_R8G8B8, true);
 	m_remoteTex->setMipmapsFilter(false);
 }
-void GstNetVideoSource::Open()
+void GstStereoNetVideoSource::Open()
 {
 	m_providers->ConnectToCameras(m_ip, 5000, 5002, 5001);
 }
-void GstNetVideoSource::Close()
+void GstStereoNetVideoSource::Close()
 {
 	m_providers->Disconnect();
 
 }
-bool GstNetVideoSource::Blit()
+bool GstStereoNetVideoSource::Blit()
 {
 
 	bool dirty = false;
@@ -57,12 +57,12 @@ bool GstNetVideoSource::Blit()
 	return false;
 }
 
-math::vector2d GstNetVideoSource::GetEyeResolution(int i)
+math::vector2d GstStereoNetVideoSource::GetEyeResolution(int i)
 {
 	math::vector3di sz = m_remoteTex->getSize();
 	return math::vector2d(sz.x / 2, sz.y);
 }
-video::ITexturePtr GstNetVideoSource::GetEyeTexture(int i)
+video::ITexturePtr GstStereoNetVideoSource::GetEyeTexture(int i)
 {
 	return m_remoteTex;
 }

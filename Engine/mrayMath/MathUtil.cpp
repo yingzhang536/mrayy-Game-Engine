@@ -70,6 +70,7 @@ matrix4x4 MathUtil::CreateProjectionMatrixPerspectiveFov(float fov,float aspect,
 
 	return CreateProjectionMatrixPerspective(left,right,bottom,top,znear,zfar);
 }
+#if 1
 matrix4x4 MathUtil::CreateProjectionMatrixOrtho(float left,float right,float bottom,float top,float znear,float zfar)
 {
 	matrix4x4 m;
@@ -99,6 +100,59 @@ matrix4x4 MathUtil::CreateProjectionMatrixOrtho(float left,float right,float bot
 	m.flagNotIdentity();
 	return m;
 }
+#elif 0
+
+matrix4x4 m;
+float invW=1.0f/(right-left);
+float invH = 1.0f / (top - bottom);
+float invZ=1.0f/(zfar-znear);
+
+/*
+m.f11= 2.0f*invW;
+m.f14= -(right+left)*invW;
+
+
+m.f22= 2.0f*invH;
+m.f24= -(bottom+top)*invH;
+
+m.f33= -2*invZ;
+m.f34= - (zfar+znear)*invZ;
+
+m.f44=  1;*/
+m.f11 = 2 * invW;
+m.f14 = -(right+left) * invW;
+m.f22 = 2 * invH;
+m.f24 = -(top + bottom)* invH;
+m.f33 = -2 * invZ;
+m.f34= - (zfar+znear)*invZ;
+
+m.f44=  1;
+#else
+
+matrix4x4 MathUtil::CreateProjectionMatrixOrtho(float left, float right, float bottom, float top, float znear, float zfar)
+{
+	matrix4x4 m;
+	float A = 2 * znear / (right - left);
+	float B = 2 * znear / ( top- bottom);
+	float C = (right+left) / (right - left);
+	float D = (top+bottom) / (top-bottom);
+	float q = -(zfar+znear) / (zfar - znear);
+	float qn = -2*(zfar*znear) / (zfar - znear);
+
+	m.f11 = A;
+	m.f13 = C;
+	m.f22 = B;
+	m.f23 = D;
+	m.f33 = q;
+	m.f34 = qn;
+
+	m.f44 = 0;
+	m.f43 = -1;
+
+	m.flagNotIdentity();
+	return m;
+}
+#endif
 matrix4x4 MathUtil::CreateProjectionMatrixPerspective(float left,float right,float bottom,float top,float znear,float zfar)
 {
 	matrix4x4 m;

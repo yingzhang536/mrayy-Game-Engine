@@ -39,7 +39,6 @@ namespace mray
 namespace TBee
 {
 	class RenderingStateManager;
-	class SeeThroughWindow;
 
 	class ApplicationOculusData;
 
@@ -57,7 +56,6 @@ protected:
 	GCPtr<TBee::ApplicationStateManager> m_appStateManager;
 	TBee::RenderingStateManager* m_renderingState;
 
-	SeeThroughWindow* m_seeThroughWindow;
 
 	TBeeRenderer* m_tbRenderer;
 

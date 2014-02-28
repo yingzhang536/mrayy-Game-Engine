@@ -70,7 +70,7 @@ void ApplicationMenuState::OnDraw(bool left,const math::rectf& rc,video::IRender
 {
 
 	Engine::getInstance().getDevice()->setRenderTarget(rt);
-	m_guiManager->DrawAll(rt);
+	m_guiManager->DrawAll(&rc);
 }
 
 }

@@ -3,16 +3,16 @@
 /********************************************************************
 created:	2012/10/10
 created:	10:10:2012   18:39
-filename: 	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5\GSTCameraRenderingState.h
+filename: 	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5\RemoteCameraRenderingState.h
 file path:	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5
-file base:	GSTCameraRenderingState
+file base:	RemoteCameraRenderingState
 file ext:	h
 author:		MHD YAMEN SARAIJI
 
 purpose:
 *********************************************************************/
-#ifndef ___GSTCameraRenderingState___
-#define ___GSTCameraRenderingState___
+#ifndef ___RemoteCameraRenderingState___
+#define ___RemoteCameraRenderingState___
 
 
 #include "IEyesRenderingBaseState.h"
@@ -26,11 +26,11 @@ class ICameraVideoGrabber;
 }
 namespace TBee
 {
-	class GstNetVideoSource;
-class GSTCameraRenderingState :public IEyesRenderingBaseState
+	class GstStereoNetVideoSource;
+class RemoteCameraRenderingState :public IEyesRenderingBaseState
 {
 protected:
-	GstNetVideoSource *m_cameraSource;
+	GstStereoNetVideoSource *m_cameraSource;
 	std::string m_hostIp;
 	int m_hostPort;
 	int m_localPort;
@@ -41,8 +41,8 @@ protected:
 
 	virtual void _RenderUI(const math::rectf& rc);
 public:
-	GSTCameraRenderingState();
-	virtual~GSTCameraRenderingState();
+	RemoteCameraRenderingState();
+	virtual~RemoteCameraRenderingState();
 
 	virtual void InitState();
 

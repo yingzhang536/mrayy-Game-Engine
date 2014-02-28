@@ -3,16 +3,16 @@
 /********************************************************************
 	created:	2012/10/10
 	created:	10:10:2012   18:39
-	filename: 	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5\CameraRenderingState.h
+	filename: 	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5\LocalCameraRenderingState.h
 	file path:	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5
-	file base:	CameraRenderingState
+	file base:	LocalCameraRenderingState
 	file ext:	h
 	author:		MHD YAMEN SARAIJI
 	
 	purpose:	
 *********************************************************************/
-#ifndef ___CameraRenderingState___
-#define ___CameraRenderingState___
+#ifndef ___LocalCameraRenderingState___
+#define ___LocalCameraRenderingState___
 
 
 #include "IEyesRenderingBaseState.h"
@@ -29,7 +29,7 @@ namespace mray
 namespace TBee
 {
 	class LocalCameraVideoSource;
-class CameraRenderingState:public IEyesRenderingBaseState
+class LocalCameraRenderingState:public IEyesRenderingBaseState
 {
 protected:
 
@@ -45,8 +45,8 @@ protected:
 
 	void _RenderUI(const math::rectf& rc);
 public:
-	CameraRenderingState();
-	virtual~CameraRenderingState();
+	LocalCameraRenderingState();
+	virtual~LocalCameraRenderingState();
 
 	virtual void InitState();
 	void SetCameraInfo(ETargetEye eye,int id);

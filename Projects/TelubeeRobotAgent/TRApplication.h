@@ -81,6 +81,7 @@ protected:
 	GCPtr<OpenNIManager> m_openNIMngr;
 	bool m_isLocal;
 	bool m_streamAudio;
+	bool m_depthSend;
 
 	core::string m_ip;
 

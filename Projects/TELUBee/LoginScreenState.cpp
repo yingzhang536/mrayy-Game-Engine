@@ -48,6 +48,7 @@ LoginScreenState::LoginScreenState()
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnSeeThroughPressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectLocalPressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectRemotePressed));
+	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnConnectFlyingTbeePressed));
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState, this, OnPlayVideoPressed));
 }
 LoginScreenState::~LoginScreenState()
@@ -73,6 +74,16 @@ void LoginScreenState::OnConnectLocalPressed(IObject* caller, void* args)
 	m_exitCode = ToLocalCamera_CODE;
 
 	return; 
+}
+
+void LoginScreenState::OnConnectFlyingTbeePressed(IObject* caller, void* args)
+{
+	m_state = EDone;
+	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
+	m_exitTimeOut = 0;
+	m_exitCode = ToFlyingTelubee_CODE;
+
+	return;
 }
 
 void LoginScreenState::OnPlayVideoPressed(IObject* caller, void* args)

@@ -21,6 +21,7 @@
 
 #include "WiiboardInputController.h"
 #include "JoystickInputController.h"
+#include "KeyboardHeadController.h"
 
 namespace mray
 {
@@ -34,6 +35,7 @@ IEyesRenderingBaseState::IEyesRenderingBaseState()
 	m_cameraFov = 25;
 	m_videoSource = 0;
 
+	m_hmdDistance = 0;
 
 	m_robotConnector = new CRobotConnector();
 
@@ -46,6 +48,7 @@ IEyesRenderingBaseState::IEyesRenderingBaseState()
 	switch (AppData::Instance()->headController)
 	{
 	case EHeadControllerType::Keyboard:
+		m_robotConnector->SetHeadController(new KeyboardHeadController);
 		break;;
 	case EHeadControllerType::Oculus:
 		m_robotConnector->SetHeadController(new OculusHeadController);
@@ -269,7 +272,7 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
 		if (m_robotConnector->GetHeadController())
 		{
 			math::vector3d head;
-			head=m_robotConnector->GetHead();
+			head=m_robotConnector->GetHeadRotation();
 			core::string msg = mT("Head: ")+core::StringConverter::toString(head);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
@@ -394,7 +397,7 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 		math::vector2d panMargin = (eyeTc.getSize()*0.5 - halfSz );
 		panMargin.x = math::Max<float>(panMargin.x, 0);
 		panMargin.y = math::Max<float>(panMargin.y, 0);
-		math::vector2d panning(panMargin.x*m_headPan, panMargin.y*m_headTilt);
+		math::vector2d panning(panMargin.x*m_headPan * 2, panMargin.y*m_headTilt * 2);
 		tc.ULPoint += panning;
 		tc.BRPoint += panning;
 	}
@@ -463,7 +466,7 @@ void IEyesRenderingBaseState::Update(float dt)
 			angles.x = math::clamp(angles.x, -maxAngle, maxAngle);
 			angles.y = math::clamp(angles.y, -maxAngle, maxAngle);
 			m_headPan = angles.y / maxAngle;
-			m_headTilt = angles.x / maxAngle;
+			m_headTilt = -angles.x / maxAngle;
 
 			// 		m_headPan = m_headPan*0.5 + 0.5;
 			// 		m_headTilt = m_headTilt*0.5 + 0.5;

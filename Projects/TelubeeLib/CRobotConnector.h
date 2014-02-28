@@ -22,7 +22,7 @@ namespace mray
 {
 	namespace TBee
 	{
-		class RemoteRobotCommunicator;
+		class IRobotCommunicator;
 		class IHeadController;
 		class IInputController;
 
@@ -30,14 +30,15 @@ class CRobotConnector
 {
 protected:
 	core::string m_robotIP;
-	TBee::RemoteRobotCommunicator* m_communicator;
+	TBee::IRobotCommunicator* m_communicator;
 	bool m_connected;
 	bool m_status;
 
 	IHeadController* m_headController;
 	IInputController* m_robotController;
 	math::vector2d m_speed;
-	math::vector3d m_head;
+	math::vector3d m_headRotation;
+	math::vector3d m_headPosition;
 	float m_rotation;
 
 	int m_videoPort;
@@ -53,6 +54,8 @@ public:
 	void SetRobotController(IInputController* c){ m_robotController = c; }
 	IInputController* SetRobotController(){ return m_robotController; }
 
+	void SetCommunicator(IRobotCommunicator* comm){ m_communicator = comm; }
+
 	bool IsRobotConnected();
 	void ConnectRobot();
 	void ConnectRobotIP(const core::string& ip,int videport,int audioPort,int commPort);
@@ -65,7 +68,8 @@ public:
 	void RemoveData(const core::string& key);
 
 	const math::vector2d& GetSpeed(){ return m_speed; }
-	const math::vector3d& GetHead(){ return m_head; }
+	const math::vector3d& GetHeadRotation(){ return m_headRotation; }
+	const math::vector3d& GetHeadPosition(){ return m_headPosition; }
 	float GetRotation(){ return m_rotation; }
 
 	void HandleController();

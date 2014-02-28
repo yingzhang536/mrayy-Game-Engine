@@ -11,11 +11,12 @@ namespace mray
 {
 namespace TBee
 {
+#define  ROBOT_PORT 6000
 CRobotConnector::CRobotConnector()
 {
 	m_connected = false;
 	m_status = false;
-	m_communicator = new TBee::RemoteRobotCommunicator();
+	m_communicator = 0;
 	m_headController = 0;
 	m_robotController = 0;
 
@@ -33,9 +34,11 @@ bool CRobotConnector::IsRobotConnected()
 }
 void CRobotConnector::ConnectRobot()
 {
+	if (!m_communicator)
+		return;
 	if (m_connected)
 		m_communicator->Disconnect();
-	m_connected = m_communicator->Connect(m_robotIP, 6000);
+	m_connected = m_communicator->Connect(m_robotIP, ROBOT_PORT);
 	m_communicator->ClearData(true);
 	//	m_roboComm->Connect("127.0.0.1",3000);
 	m_communicator->SetUserID("yamens");
@@ -66,6 +69,8 @@ void CRobotConnector::ConnectRobotIP(const core::string& ip, int videoport, int 
 
 void CRobotConnector::DisconnectRobot()
 {
+	if (!m_communicator)
+		return;
 	if (!m_connected)
 		return;
 	network::NetAddress addr;
@@ -83,6 +88,8 @@ void CRobotConnector::DisconnectRobot()
 }
 void CRobotConnector::StartUpdate()
 {
+	if (!m_communicator)
+		return;
 	if (!m_connected)
 		return;
 	m_status = true;
@@ -91,6 +98,8 @@ void CRobotConnector::StartUpdate()
 }
 void CRobotConnector::EndUpdate()
 {
+	if (!m_communicator)
+		return;
 	m_status = false;
 	m_communicator->ConnectRobot(false);
 }
@@ -105,10 +114,14 @@ void CRobotConnector::LoadXML(xml::XMLElement* e)
 }
 void CRobotConnector::SetData(const core::string& key, const core::string& val,bool status)
 {
+	if (!m_communicator)
+		return;
 	m_communicator->SetData(key, val,status);
 }
 void CRobotConnector::RemoveData(const core::string& key)
 {
+	if (!m_communicator)
+		return;
 	m_communicator->RemoveData(key);
 
 }
@@ -126,12 +139,18 @@ void CRobotConnector::HandleController()
 }
 void CRobotConnector::UpdateStatus()
 {
+	if (!m_communicator)
+		return;
 	if (!m_status || !m_connected)
 		return;
 	HandleController();
 	if (m_headController)
-		m_headController->GetHeadOrientation().toEulerAngles(m_head);
-	m_communicator->SetData("Head", core::StringConverter::toString(m_head),false);
+	{
+		m_headController->GetHeadOrientation().toEulerAngles(m_headRotation);
+		m_headPosition = m_headController->GetHeadPosition();
+	}
+	m_communicator->SetData("HeadRotation", core::StringConverter::toString(m_headRotation), false);
+	m_communicator->SetData("HeadPosition", core::StringConverter::toString(m_headPosition), false);
 	m_communicator->SetData("Speed", core::StringConverter::toString(m_speed), false);
 	m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation), false);
 }

@@ -7,7 +7,9 @@
 #include "FontResourceManager.h"
 #include "win32NetInterface.h"
 #include "OptiTrackDataSource.h"
+#include "TextureResourceManager.h"
 
+#include <windows.h>
 
 namespace mray
 {
@@ -16,6 +18,7 @@ namespace mray
 Application::Application()
 {
 	m_optiProvider = new OptiTrackDataSource;
+	this->m_limitFps = true;
 }
 
 Application::~Application()
@@ -52,6 +55,14 @@ void Application::init(const OptionContainer &extraOptions)
 	}
 	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
 	m_mainVP->SetClearColor(video::DefaultColors::White);
+	{
+		video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), video::EPixel_R8G8B8A8, true);
+		renderTargetTex->setBilinearFilter(false);
+		renderTargetTex->setTrilinearFilter(false);
+		renderTargetTex->setMipmapsFilter(false);
+		m_rt = getDevice()->createRenderTarget("", renderTargetTex, 0, 0, 0);
+		renderTargetTex->createTexture(math::vector3di(512, 512, 1), video::EPixel_R8G8B8A8);
+	}
 	network::createWin32Network();
 
 	m_lineDrawer.StartReciver(5123);
@@ -69,15 +80,30 @@ void Application::draw(scene::ViewPort* vp)
 
 void Application::WindowPostRender(video::RenderWindow* wnd)
 {
+	video::TextureUnit tu;
+	//getDevice()->setRenderTarget(m_rt);
 	getDevice()->set2DMode();
-	getDevice()->setViewport(m_mainVP);
 	m_lineDrawer.Draw(m_mainVP->getAbsRenderingViewPort());
+
+	tu.SetTexture(gTextureResourceManager.loadTexture2D("FPV.png"));
+	getDevice()->useTexture(0, &tu);
+	getDevice()->draw2DImage(math::rectf(0, 100), 1);
+	/*
+	getDevice()->draw2DRectangle(math::rectf(0, 0, 20, 20), 0.5);
+	getDevice()->setRenderTarget(0);
+	getDevice()->setViewport(m_mainVP);
+
+	tu.SetTexture(m_rt->getColorTexture());
+	getDevice()->useTexture(0, &tu);
+	getDevice()->draw2DImage(math::rectf(0, m_mainVP->getSize()), 1);*/
 }
 
 void Application::update(float dt)
 {
 	CMRayApplication::update(dt);
 	m_lineDrawer.Update(dt);
+
+	Sleep(10);
 }
 
 void Application::onDone()
