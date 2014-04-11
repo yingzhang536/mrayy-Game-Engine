@@ -9,7 +9,7 @@ namespace mray{
 namespace GUI{
 
 
-IGUIManager::IGUIManager():m_device(0),m_rootElement(0),m_focusElement(0),m_MouseOnElement(0),m_listener(0)
+IGUIManager::IGUIManager():m_device(0),m_rootElement(0),m_focusElement(0),m_MouseOnElement(0)
 {
 
 }
@@ -58,6 +58,7 @@ void IGUIManager::SetFocus(IGUIElement*  elem)
 		m_focusElement->_notifyReceiveFocus();
 
 	OnChangeFocus(elem);
+	FIRE_LISTENR_METHOD(OnChangeGUIFocusElement, (this, elem));
 }
 
 bool IGUIManager::HasMouseOn(IGUIElement* elem)
@@ -79,6 +80,7 @@ void IGUIManager::SetMouseOn(IGUIElement*  elem)
 		m_MouseOnElement->_notifyMouseEnter();
 
 	OnChangeMouseOn(elem);
+	FIRE_LISTENR_METHOD(OnChangeGUIHoverElement, (this, elem));
 }
 IGUIElement* IGUIManager::GetMouseOn()
 {
@@ -86,10 +88,6 @@ IGUIElement* IGUIManager::GetMouseOn()
 }
 
 
-void IGUIManager::SetEventListener(IEventReciver*l)
-{
-	m_listener=l;
-}
 
 
 }

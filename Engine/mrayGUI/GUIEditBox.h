@@ -12,6 +12,7 @@
 #include "TypedProperty.h"
 #include "FontAttributes.h"
 #include "GUIElementFactoryDef.h"
+#include "GUIEditBoxComponent.h"
 
 namespace mray
 {
@@ -21,9 +22,9 @@ namespace mray
 namespace GUI
 {
 
-	class GUIEditBoxComponent;
+	//class GUIEditBoxComponent;
 
-class MRAYGUI_API GUIEditBox:public IGUIEditBox
+class MRAYGUI_API GUIEditBox:public IGUIEditBox,public GUIEditBoxComponent::IListener
 {
 	DECLARE_RTTI
 protected:
@@ -49,6 +50,9 @@ public:
 	virtual bool SetText(const core::UTFString&t);
 	virtual const core::UTFString& GetText()const ;
 	bool CheckIsValideText(const core::UTFString&t);
+
+	virtual void OnTextChangeCallback(GUIEditBoxComponent*caller);
+
 
 	core::string getSelectedText();
 

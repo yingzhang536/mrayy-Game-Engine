@@ -16,12 +16,16 @@
 #ifndef __IListItem__
 #define __IListItem__
 
+#include "UTFString.h"
 
 namespace mray
 {
 namespace GUI
 {
 
+	class IGUIElement;
+	class IFont;
+	class IGUIRenderer;
 
 class IListItem
 {
@@ -33,13 +37,17 @@ public:
 	virtual~IListItem(){}
 
 	virtual core::UTFString toString()const=0;
+
+	virtual void Draw(const math::rectf& rc, IGUIElement* lstBox, IFont* font, IGUIRenderer* renderer) = 0;
+
+	virtual float GetHeight(IGUIElement* lstBox) = 0;
 };
 
-class StringListItem:public IListItem
+class MRAY_DLL StringListItem:public IListItem
 {
 	core::UTFString m_text;
 public:
-	StringListItem(const core::string& txt,void* ud=0):IListItem(ud),m_text(txt)
+	StringListItem(const core::UTFString& txt,void* ud=0):IListItem(ud),m_text(txt)
 	{}
 	virtual~StringListItem()
 	{}
@@ -48,6 +56,8 @@ public:
 	{
 		return m_text;
 	}
+	virtual void Draw(const math::rectf& rc, IGUIElement* lstBox, IFont* font, IGUIRenderer* renderer);
+	virtual float GetHeight(IGUIElement* lstBox);
 };
 
 typedef std::vector<IListItem*> ItemList;

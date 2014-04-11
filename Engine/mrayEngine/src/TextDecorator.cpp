@@ -22,7 +22,7 @@ TextDecorator::TextDecorator()
 TextDecorator::~TextDecorator()
 {
 }
-TextDecorator::EPredictionResult TextDecorator::GetPrediction(const mchar*ptr)
+TextDecorator::EPredictionResult TextDecorator::GetPrediction(const utf32*ptr)
 {
 	if(*ptr=='<')
 	{
@@ -36,7 +36,7 @@ TextDecorator::EPredictionResult TextDecorator::GetPrediction(const mchar*ptr)
 	return ENormalText;
 }
 
-const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* parent)
+const utf32* TextDecorator::_ParserText(const utf32*ptr, ITextDecorateNode* parent)
 {
 
 	enum EState
@@ -53,9 +53,10 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 
 	bool tagStart=false;
 	bool tagEnd=false;
-	core::string tagName;
-	core::string tagValue;
-	core::string text;
+	core::UTFString tagName;
+	core::UTFString tagValue;
+	core::UTFString text;
+
 	bool readingValue=false;
 	bool skipChar=false;
 
@@ -63,7 +64,7 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 
 	while(*ptr)
 	{
-		mchar c=*ptr;
+		utf32 c = *ptr;
 		if(!skipChar)
 		{
 			switch (c)
@@ -71,19 +72,19 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 			case '<':
 				{
 					EPredictionResult r=GetPrediction(ptr);
-					if(r!=ENormalText && text!=mT(""))
+					if(r!=ENormalText && text!=core::UTFString::Empty)
 					{
-						TextDecorateNode*d=new TextDecorateNode(text);
+						TextDecorateNode*d=new TextDecorateNode(text.GetAsString());
 						parent->AddChild(d);
-						text=mT("");
+						text = core::UTFString::Empty;
 					}
 					if(r==EOpenTag)
 					{
 						state=ETagOpen;
 						if(!tagStart)
 							tagStart=true;
-						tagName=mT("");
-						tagValue=mT("");
+						tagName = core::UTFString::Empty;
+						tagValue = core::UTFString::Empty;
 						readingValue=false;
 					}else if(r==ECloseTag)
 					{
@@ -91,7 +92,7 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 						state=EInEndTag;
 						if(!tagEnd)
 							tagEnd=true;
-						tagName=mT("");
+						tagName = core::UTFString::Empty;
 					}else
 						state=ENormal;
 				}
@@ -103,7 +104,7 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 				}else if(state==EInStartTag)
 				{
 					//create Node
-					node=TextDecorateNodeFactory::getInstance().CreateNode(tagName);
+					node=TextDecorateNodeFactory::getInstance().CreateNode(tagName.GetAsString());
 					node->ParseParameter(tagValue);
 					if(parent)
 						parent->AddChild(node);
@@ -149,9 +150,9 @@ const mchar* TextDecorator::_ParserText(const mchar*ptr,ITextDecorateNode* paren
 	return ptr;
 }
 
-ITextDecorateNode* TextDecorator::ParseText(const core::string&text)
+ITextDecorateNode* TextDecorator::ParseText(const core::UTFString&text)
 {
-	const mchar*ptr=text.c_str();
+	const utf32*ptr=text.c_str();
 
 	TextDecorateDummyNode* root=new TextDecorateDummyNode(mT("Root"));
 

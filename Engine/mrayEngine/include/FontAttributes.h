@@ -49,6 +49,7 @@ public:
 	bool			hasShadow;
 	math::vector2d	shadowOffset;
 	int				spacing;
+	int				lineSpacing;
 	bool			wrap;
 	bool			RightToLeft;
 

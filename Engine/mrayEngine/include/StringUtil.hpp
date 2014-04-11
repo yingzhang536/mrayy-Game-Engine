@@ -8,9 +8,11 @@ namespace mray
 namespace core
 {
 
-void StringUtil::SplitPathFileName(const core::string&str,core::string&path,core::string&file)
+#define _lowerChar(C)(((C)>='A' && (C)<='Z')?((C)-'A'+'a'):(C))
+	template <typename T>
+void StringUtilT<T>::SplitPathFileName(const core::tstring<T>&str,core::tstring<T>&path,core::tstring<T>&file)
 {
-	core::string fullPath(str);
+	core::tstring<T> fullPath(str);
 	NormalizePathSlashes(&fullPath[0]);
 	int i=fullPath.findlast('\\');
 	if(i!=-1)
@@ -23,9 +25,10 @@ void StringUtil::SplitPathFileName(const core::string&str,core::string&path,core
 		file="";
 	}
 }
-void StringUtil::SplitPathExt(const core::string&str,core::string&path,core::string&ext)
+template <typename T>
+void StringUtilT<T>::SplitPathExt(const core::tstring<T>&str, core::tstring<T>&path, core::tstring<T>&ext)
 {
-	core::string fullPath(str);
+	core::tstring<T> fullPath(str);
 	NormalizePathSlashes(&fullPath[0]);
 	int i=fullPath.findlast('.');
 	if(i!=-1)
@@ -39,17 +42,37 @@ void StringUtil::SplitPathExt(const core::string&str,core::string&path,core::str
 	}
 }
 
-void StringUtil::NormalizePathSlashes(mchar*str){
+template <typename T>
+void StringUtilT<T>::NormalizePathSlashes(mchar*str){
 	for(mchar*p=str;*p;p++){
 		if(*p=='/')
 			*p='\\';
 	}
 }
 
-core::string StringUtil::ToLower(const core::string& o)
+template <typename T>
+bool StringUtilT<T>::BeginsWith(const core::tstring<T>& a, const core::tstring<T>& b, bool caseSensitive)
+{
+	const T* aptr = a.c_str();
+	const T* bptr = b.c_str();
+	while ( *bptr != 0)
+	{
+		if (caseSensitive)
+		{
+			if (*aptr != *bptr)break;
+		}
+		else if (_lowerChar(*aptr) != _lowerChar(*bptr))
+			break;
+		++aptr; ++bptr;
+	}
+	return *bptr == 0;
+}
+
+template <typename T>
+core::tstring<T> StringUtilT<T>::ToLower(const core::tstring<T>& o)
 {
 	static const mchar diff = 'a' - 'A';
-	core::string ret;
+	core::tstring<T> ret;
 	if(o.length()==0)
 		return ret;
 	const mchar* ptr=o.c_str();
@@ -68,10 +91,11 @@ core::string StringUtil::ToLower(const core::string& o)
 
 
 //! Makes the tstring upper case.
-core::string StringUtil::ToUpper(const core::string& o)
+template <typename T>
+core::tstring<T> StringUtilT<T>::ToUpper(const core::tstring<T>& o)
 {
 	static const mchar diff = 'A' - 'a';
-	core::string ret;
+	core::tstring<T> ret;
 	if(o.length()==0)
 		return ret;
 	const mchar* ptr=o.c_str();
@@ -90,13 +114,14 @@ core::string StringUtil::ToUpper(const core::string& o)
 //example:	root=c:\game\bin
 //			path=c:\game\data
 //result:	..\data
-core::string StringUtil::MakePathRelative(const core::string&path,const core::string&root)
+template <typename T>
+core::tstring<T> StringUtilT<T>::MakePathRelative(const core::tstring<T>&path, const core::tstring<T>&root)
 {
 	int matched=0;
 	//	path.make_lower();
 	//	app.make_lower();
-	core::string cpy(path);
-	core::string cpyRoot(root);
+	core::tstring<T> cpy(path);
+	core::tstring<T> cpyRoot(root);
 	NormalizePathSlashes(&cpy[0]);
 	NormalizePathSlashes(&cpyRoot[0]);
 
@@ -107,7 +132,7 @@ core::string StringUtil::MakePathRelative(const core::string&path,const core::st
 		else if(cpy[i]=='\\')
 			matched=i;
 	}
-	core::string minPath;
+	core::tstring<T> minPath;
 	int appFolders=1;
 	for(int i=matched+1;i<cpyRoot.length();++i)
 	{
@@ -121,9 +146,10 @@ core::string StringUtil::MakePathRelative(const core::string&path,const core::st
 	return minPath;
 }
 
-core::string StringUtil::Trim(const core::string& str,const core::string& chars)
+template <typename T>
+core::tstring<T> StringUtilT<T>::Trim(const core::tstring<T>& str, const core::tstring<T>& chars)
 {
-	core::string ret;
+	core::tstring<T> ret;
 	bool found=false;
 	for(int i=0;i<str.length();++i)
 	{
@@ -146,12 +172,13 @@ core::string StringUtil::Trim(const core::string& str,const core::string& chars)
 	}
 	return ret.c_str();
 }
- std::vector<core::string> StringUtil::Split(const core::string& str,const core::string& delimStr,uint maxSplits)
+template <typename T>
+std::vector<core::tstring<T>> StringUtilT<T>::Split(const core::tstring<T>& str, const core::tstring<T>& delimStr, uint maxSplits)
 {
-	std::vector<core::string> ret;
+	std::vector<core::tstring<T>> ret;
 	ret.reserve(maxSplits ? maxSplits:10);
 
-	core::string temp;
+	core::tstring<T> temp;
 	const mchar*p=str.c_str();
 	int cnt=0;
 	for(;*p!=0;p++){

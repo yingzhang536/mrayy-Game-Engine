@@ -12,6 +12,7 @@
 #include "common.h"
 #include "FTFont.h"
 #include "Engine.h"
+#include "DynamicFontGenerator.h"
 
 
 namespace mray{

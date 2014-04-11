@@ -38,6 +38,8 @@ public:
 
 	void SetURL(const core::string& url){m_streamName=url;}
 
+	void Refresh();
+
 	bool canRead();
 	bool canWrite();
 	bool canSeek();

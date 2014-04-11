@@ -55,6 +55,12 @@ public:
 		return m_offset;
 	}
 
+	virtual bool SetUseScroll(bool scroll) = 0;
+	virtual bool GetUseScroll()const = 0;
+
+	virtual void SetScrollOffset(float offset) = 0;
+	virtual float GetScrollOffset() = 0;
+
 	virtual bool SetStackDirection(EStackDirection dir)
 	{
 		m_direction=dir;

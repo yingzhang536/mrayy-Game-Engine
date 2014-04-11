@@ -62,7 +62,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>TelubeeRobotDLL.lib;</AdditionalDependencies>
+      <AdditionalDependencies>TelubeeRobotDLL.lib;mrayOculusVR.lib;WiimoteController.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -84,7 +84,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>TelubeeRobotDLL.lib;</AdditionalDependencies>
+      <AdditionalDependencies>TelubeeRobotDLL.lib;mrayOculusVR.lib;WiimoteController.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>

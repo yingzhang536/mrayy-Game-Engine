@@ -32,7 +32,7 @@ public:
 	FileResourceManager();
 	virtual~FileResourceManager();
 
-	OS::IStreamPtr getFile(const core::string&name);
+	OS::IStreamPtr getFile(const core::string&name,OS::FILE_MODE mode=OS::BIN_READ);
 
 	virtual void writeResourceToDist(const core::string&resName,const core::string&fileName);
 	virtual void writeResourceToDist(const IResourcePtr& resource,const core::string&fileName);

@@ -37,7 +37,7 @@ namespace VT
 			{
 				uint len=1024;
 				network::NetAddress addr;
-				network::UDPClientError err= m_client->RecvFrom((char*)buffer,&len,&addr);
+				network::UDPClientError err= m_client->RecvFrom((char*)buffer,&len,&addr,0);
 				if(err==network::UDP_SOCKET_ERROR_NONE)
 				{
 					OS::CMemoryStream stream("",buffer,len,false);

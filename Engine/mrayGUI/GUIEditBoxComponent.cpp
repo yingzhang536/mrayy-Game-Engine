@@ -34,7 +34,7 @@ bool GUIEditBoxComponent::SetText(const core::UTFString& cap)
 	text=cap;
 	//m_CursorPos=text.Length();
 	if(listener)
-		listener->OnTextChange(this);
+		listener->OnTextChangeCallback(this);
 	return true;
 }
 bool GUIEditBoxComponent::CheckIsValideText(const core::UTFString&t)
@@ -95,7 +95,7 @@ void GUIEditBoxComponent::Draw()
 
 	if(m_background && skin)
 	{
-		video::SColor tint=m_currentTint;
+		video::SColor tint = owner->GetColor()*m_currentTint;
 		tint.A=owner->GetDerivedAlpha();
 		skin->drawSizableBox(creator->GetRenderQueue(),clipRect,0,mT("EditBox"),tint);
 	}

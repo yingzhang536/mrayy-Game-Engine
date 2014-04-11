@@ -19,6 +19,10 @@ Win32WebStream::~Win32WebStream()
 {
 }
 
+void Win32WebStream::Refresh()
+{
+	m_length = m_owner->Length();
+}
 uint Win32WebStream::calcSizeInternal()
 {
 	return sizeof(Win32WebStream);

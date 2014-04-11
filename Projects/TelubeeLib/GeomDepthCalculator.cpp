@@ -23,7 +23,7 @@ GeomDepthCalculator::GeomDepthCalculator()
 	float s = 0;
 	for (int i = 0; i < m_maxFrames; ++i)
 	{
-		float w = powf(i + 1, 2);
+		float w = powf(i + 1, 5);
 		m_frameWeights[i] = w;
 		s += w;
 	}

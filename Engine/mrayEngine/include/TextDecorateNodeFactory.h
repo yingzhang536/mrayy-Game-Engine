@@ -30,7 +30,7 @@ class MRAY_DLL TextDecorateNodeFactory:public ISingleton<TextDecorateNodeFactory
 {
 private:
 protected:
-	typedef std::map<core::string,ITextDecorateCreator*> CreatorMap;
+	typedef std::map<uint, ITextDecorateCreator*> CreatorMap;
 	CreatorMap m_creators;
 public:
 	TextDecorateNodeFactory();

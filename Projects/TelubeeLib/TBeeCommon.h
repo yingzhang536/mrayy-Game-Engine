@@ -25,6 +25,7 @@ namespace mray
 
 		enum class EHeadControllerType
 		{
+			None,
 			Keyboard,
 			Oculus,
 			OptiTrack
@@ -32,6 +33,7 @@ namespace mray
 
 		enum class ERobotControllerType
 		{
+			None,
 			Keyboard,
 			Joystick,
 			Wiiboard

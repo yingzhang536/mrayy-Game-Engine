@@ -339,118 +339,129 @@ void ParticleEmitter::AddUpdateJobs(ThreadJobManager* mngr,float dt)
 			mngr->AddPiece(p);
 	}
 }
-void ParticleEmitter::update(float dt)
+void ParticleEmitter::_ApplyAffectors(float dt)
 {
-// 	if(!m_visible)
-// 		return;
-	if(!m_stopEmitting){
+
+	int chunksCount = OS::IOSystem::getInstance().getProcessorsCount();
+	int particlesCount = 1 + m_particles.size() / chunksCount;
+	int currP = 0;
+	ParticleList::iterator it = m_particles.begin();
+	ParticleList::iterator firstIt = it;
+	std::list<IJobPiece*>::iterator lastjIt, jIt = m_jobPieces.begin();
+	lastjIt = jIt;
+	m_totalJobsRequested = 0;
+	if (it != m_particles.end())
+	{
+		std::advance(it, particlesCount - currP - 1);
+		currP = particlesCount - 1;
+	}
+	for (; it != m_particles.end(); ++it, ++currP)
+	{
+		if (currP > particlesCount)
+		{
+			if (jIt == m_jobPieces.end())
+			{
+				m_jobPieces.push_back(new ParticleEmitterJob(this));
+				jIt = m_jobPieces.end();
+				--jIt;
+			}
+			ParticleEmitterJob*j = (ParticleEmitterJob*)(*jIt);
+			j->isUsed = true;
+			j->firstParticle = firstIt;
+			j->lastParticle = it;
+			j->dt = dt;
+			j->listener = this;
+			firstIt = it;
+			lastjIt = jIt;
+			++jIt;
+			++m_totalJobsRequested;
+			currP = 0;
+		}
+	}
+
+	if (currP > 0)
+	{
+		if (jIt == m_jobPieces.end())
+		{
+			m_jobPieces.push_back(new ParticleEmitterJob(this));
+			jIt = m_jobPieces.end();
+			--jIt;
+		}
+		ParticleEmitterJob*j = (ParticleEmitterJob*)(*jIt);
+		j->isUsed = true;
+		j->firstParticle = firstIt;
+		j->lastParticle = it;
+		j->dt = dt;
+		j->listener = this;
+		++m_totalJobsRequested;
+	}
+}
+void ParticleEmitter::_SpawnParticles(float dt)
+{
+
+	if (!m_stopEmitting){
 		int currPCount;
 		float currPRate;
-		if(particlesCount.getKeysCount()>0)
-			currPCount=particlesCount.getInterpolatedKey(m_time);
+		if (particlesCount.getKeysCount() > 0)
+			currPCount = particlesCount.getInterpolatedKey(m_time);
 		else
-			currPCount=-1;
-		if(particlesRate.getKeysCount()>0)
-			currPRate=particlesRate.getInterpolatedKey(m_time);
+			currPCount = -1;
+		if (particlesRate.getKeysCount() > 0)
+			currPRate = particlesRate.getInterpolatedKey(m_time);
 		else
-			currPRate=10;
-		if((m_particlesGen<currPCount || currPCount<0) && currPRate>0){
+			currPRate = 10;
+		if ((m_particlesGen<currPCount || currPCount<0) && currPRate>0){
 
 
-			m_currRate+=currPRate*dt;
+			m_currRate += currPRate*dt;
 			IParticle*part;
 
-			if(m_currRate>0){
-				if(particlesLifeSpawn.getKeysCount()>0)
-					m_currLifeSpawn=particlesLifeSpawn.getInterpolatedKey(m_time);
+			if (m_currRate>0){
+				if (particlesLifeSpawn.getKeysCount() > 0)
+					m_currLifeSpawn = particlesLifeSpawn.getInterpolatedKey(m_time);
 				else
-					m_currLifeSpawn=1;
+					m_currLifeSpawn = 1;
 			}
 
 			//check m_deadParticles(graveyard)
-			int i=0;
-			int n=0;
-			ParticleList::iterator tmp,it=m_deadParticles.begin();
-			for(i=0;it!=m_deadParticles.end() && i<(int)m_currRate;++i)
+			int i = 0;
+			int n = 0;
+			ParticleList::iterator tmp, it = m_deadParticles.begin();
+			for (i = 0; it != m_deadParticles.end() && i < (int)m_currRate; ++i)
 			{
 				reSpawn((*it));
 				m_particles.push_back(*it);
-				tmp=it;
+				tmp = it;
 				++it;
 				m_deadParticles.erase(tmp);
 				//dont push it back to particles list cuz they are already there
 				m_particlesGen++;
 				n++;
 			}
-			m_currRate-=n;
-			n=0;
-			for(i=0;i<(int)m_currRate;++i)
+			m_currRate -= n;
+			n = 0;
+			for (i = 0; i < (int)m_currRate; ++i)
 			{
-				part=createParticle();
+				part = createParticle();
+				if (!part)
+					break;
 				reSpawn(part);
 				m_particles.push_back(part);
 				m_particlesGen++;
 				n++;
 			}
-			m_currRate-=n;
+			m_currRate -= n;
 		}
 	}
+}
 
-	{
-		int chunksCount=OS::IOSystem::getInstance().getProcessorsCount();
-		int particlesCount=1+m_particles.size()/chunksCount;
-		int currP=0;
-		ParticleList::iterator it=m_particles.begin();
-		ParticleList::iterator firstIt=it;
-		std::list<IJobPiece*>::iterator lastjIt,jIt=m_jobPieces.begin();
-		lastjIt=jIt;
-		m_totalJobsRequested=0;
-		if(it!=m_particles.end())
-		{
-			std::advance(it,particlesCount-currP-1);
-			currP=particlesCount-1;
-		}
-		for(;it!=m_particles.end();++it,++currP)
-		{
-			if(currP>particlesCount)
-			{
-				if(jIt==m_jobPieces.end())
-				{
-					m_jobPieces.push_back(new ParticleEmitterJob(this));
-					jIt=m_jobPieces.end();
-					--jIt;
-				}
-				ParticleEmitterJob*j=(ParticleEmitterJob*)(*jIt);
-				j->isUsed=true;
-				j->firstParticle=firstIt;
-				j->lastParticle=it;
-				j->dt=dt;
-				j->listener=this;
-				firstIt=it;
-				lastjIt=jIt;
-				++jIt;
-				++m_totalJobsRequested;
-				currP=0;
-			}
-		}
-
-		if(currP>0)
-		{
-			if(jIt==m_jobPieces.end())
-			{
-				m_jobPieces.push_back(new ParticleEmitterJob(this));
-				jIt=m_jobPieces.end();
-				--jIt;
-			}
-			ParticleEmitterJob*j=(ParticleEmitterJob*)(*jIt);
-			j->isUsed=true;
-			j->firstParticle=firstIt;
-			j->lastParticle=it;
-			j->dt=dt;
-			j->listener=this;
-			++m_totalJobsRequested;
-		}
-	}
+void ParticleEmitter::update(float dt)
+{
+// 	if(!m_visible)
+// 		return;
+// 		
+	_SpawnParticles(dt);
+	_ApplyAffectors(dt);
 	/*
 	{
 		ParticleList::iterator it=m_particleAffectors.begin();

@@ -63,18 +63,18 @@ public:
 	virtual ulong getAllowedMemory();
 	virtual void checkMemory();
 	virtual ulong getUsedMemory(bool recalc=false);
-/*
+/**/
 	virtual void unload(const core::string&name);
 	virtual void unload(IResourcePtr resource);
 	virtual void unload(ResourceHandle resource);
 
-	virtual void unloadAll();
+	virtual void unloadAll(bool unusedOnly=true);
 
 	virtual void reload(const core::string&name);
 	virtual void reload(IResourcePtr resource);
 	virtual void reload(ResourceHandle resource);
 	virtual void reloadAll();
-*/
+
 	virtual void addResource(const IResourcePtr& resource,const core::string&name);
 	
 	virtual void remove(const core::string&name);

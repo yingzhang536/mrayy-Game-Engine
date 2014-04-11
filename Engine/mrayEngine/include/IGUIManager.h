@@ -17,9 +17,10 @@
 #include "GUID.h"
 #include "IGUIElement.h"
 #include "IDelegate.h"
+#include "IEventReciver.h"
+#include "ListenerContainer.h"
 
 namespace mray{
-	class IEventReciver;
 	class Event;
 
 namespace video
@@ -34,7 +35,21 @@ namespace GUI{
 	class IGUITheme;
 	class IGUIElementFactory;
 
-class MRAY_DLL IGUIManager
+
+	class IGUIManager;
+	class IGUIManagerListener:public IEventReciver
+	{
+	public:
+		virtual void OnAddGUIElement(IGUIManager* m, IGUIElement* e){}
+		virtual void OnRemoveGUIElement(IGUIManager* m, IGUIElement* e){}
+		virtual void OnChangeGUIFocusElement(IGUIManager* m, IGUIElement* e){}
+		virtual void OnChangeGUIHoverElement(IGUIManager* m, IGUIElement* e){}
+		virtual void OnChangeGUITheme(IGUIManager* m, IGUITheme* t){}
+		virtual void OnGUIDrawBegin(IGUIManager* m){}
+		virtual void OnGUIDrawDone(IGUIManager* m){}
+	};
+
+class MRAY_DLL IGUIManager:public ListenerContainer<IGUIManagerListener*>
 {
 protected:
 	video::IVideoDevice* m_device;
@@ -42,9 +57,17 @@ protected:
 	GCPtr<IGUIElement>	m_rootElement;
 	IGUIElement*	m_focusElement;
 	IGUIElement*	m_MouseOnElement;
-	IEventReciver*	m_listener;
 
 	std::list<IGUIElement*> m_postDrawElements;
+
+	DECLARE_FIRE_METHOD(OnAddGUIElement, (IGUIManager* m, IGUIElement* e), (m, e));
+	DECLARE_FIRE_METHOD(OnRemoveGUIElement, (IGUIManager* m, IGUIElement* e), (m, e));
+	DECLARE_FIRE_METHOD(OnChangeGUIFocusElement, (IGUIManager* m, IGUIElement* e), (m, e));
+	DECLARE_FIRE_METHOD(OnChangeGUIHoverElement, (IGUIManager* m, IGUIElement* e), (m, e));
+	DECLARE_FIRE_METHOD(OnChangeGUITheme, (IGUIManager* m, IGUITheme* t), (m, t));
+	DECLARE_FIRE_METHOD(OnGUIDrawBegin, (IGUIManager* m), (m));
+	DECLARE_FIRE_METHOD(OnGUIDrawDone, (IGUIManager* m), (m));
+
 public:
 	typedef DelegateEvent1<IGUIElement*> IGUIElementEvent;
 
@@ -98,7 +121,6 @@ public:
 		return dynamic_cast<T*>(CreateElement(T::ElementType));
 	}
 
-	virtual void SetEventListener(IEventReciver*l);
 };
 
 }

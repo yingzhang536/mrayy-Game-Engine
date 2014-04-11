@@ -9,6 +9,8 @@
 
 #include "StringUtil.h"
 
+#include "GUID.h"
+
 namespace mray
 {
 namespace GUI
@@ -29,12 +31,12 @@ TextDecorateNodeFactory::~TextDecorateNodeFactory()
 void TextDecorateNodeFactory::RegisterCreator(ITextDecorateCreator*c)
 {
 	core::string str=core::StringUtil::ToLower(c->GetType());
-	m_creators[str]=c;
+	m_creators[GUID(str).ID()]=c;
 }
 void TextDecorateNodeFactory::UnRegisterCreator(const core::string&type)
 {
 	core::string str=core::StringUtil::ToLower(type);
-	m_creators.erase(str);
+	m_creators.erase(GUID(str).ID());
 	
 }
 void TextDecorateNodeFactory::Clear()
@@ -50,7 +52,7 @@ void TextDecorateNodeFactory::Clear()
 ITextDecorateNode* TextDecorateNodeFactory::CreateNode(const core::string&type)
 {
 	core::string str=core::StringUtil::ToLower(type);
-	CreatorMap::iterator it= m_creators.find(str);
+	CreatorMap::iterator it = m_creators.find(GUID(str).ID());
 	if(it==m_creators.end())
 		return new TextDecorateDummyNode(type);
 	return it->second->CreateNode();

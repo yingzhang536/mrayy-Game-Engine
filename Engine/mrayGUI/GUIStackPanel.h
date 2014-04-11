@@ -41,7 +41,11 @@ public:
 	virtual~GUIStackPanel();
 
 	virtual bool SetStackDirection(EStackDirection dir);
+	virtual void SetScrollOffset(float offset) { m_startPos = offset; }
+	virtual float GetScrollOffset() { return m_startPos; }
 
+	virtual bool SetUseScroll(bool scroll) ;
+	virtual bool GetUseScroll()const ;
 
 	//virtual const math::rectf& GetUnclippedRect();
 	virtual void Draw(const math::rectf*vp);

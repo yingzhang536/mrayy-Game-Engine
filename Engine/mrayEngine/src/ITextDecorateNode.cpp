@@ -26,8 +26,7 @@ core::string TextContextAttributes::GetAttribute(const core::string&attr)
 }
 //////////////////////////////////////////////////////////////////////////
 
-ITextDecorateNode::ITextDecorateNode(const core::string &type)
-	:m_type(type)
+ITextDecorateNode::ITextDecorateNode()
 {
 }
 ITextDecorateNode::~ITextDecorateNode()

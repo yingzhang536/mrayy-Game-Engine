@@ -76,6 +76,7 @@ DebugDrawManager::DebugDrawManager(video::IVideoDevice* device):m_device(device)
 //	m_buildPrimitivesJob->SetTargetQueue(EDefaultJobQ_Draw);
 
 	m_material.setRenderState(video::RS_Lighting,video::ES_DontUse);
+	m_material.SetThickness(3);
 //	m_material.SetAlphaReferenceValue(0.3);
 //	m_material.SetAlphaFunction(video::EAF_LessEqual);
 }
@@ -135,6 +136,7 @@ void DebugDrawManager::AddLine(const math::vector3d& start,const math::vector3d&
 	p->color=clr;
 	p->duration=duration;
 	p->texture=0;
+	p->thickness = lineWidth;
 
 	p->uv.resize(0);
 	p->vertices.resize(2);
@@ -154,6 +156,7 @@ void DebugDrawManager::AddArrow(const math::vector3d& start,const math::vector3d
 	p->color=clr;
 	p->duration=duration;
 	p->texture=0;
+	p->thickness = lineWidth;
 
 	p->uv.resize(0);
 	p->vertices.resize(2);

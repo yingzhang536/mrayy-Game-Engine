@@ -18,7 +18,7 @@ namespace GUI
 
 GUISliderbarComponent::GUISliderbarComponent()
 :m_direction(EVertical),m_lastMousePos(0),m_scrollOn(0),m_value(0),m_minVal(0),m_maxVal(100),
-listener(0),itemsCount(0),pageSize(0),m_botButState(0),m_upButState(0),m_startPos(0)
+listener(0), itemsCount(0), pageSize(0), m_botButState(0), m_upButState(0), m_startPos(0), m_drawScroll(true)
 {
 }
 
@@ -94,16 +94,19 @@ void GUISliderbarComponent::Draw()
 	math::rectf topArrow,botArrow;
 	math::rectf scrollerBG,scrollerBar;
 
-	GetScrollBarRects(rc,topArrow,botArrow,scrollerBG,scrollerBar);
+	if (m_drawScroll)
+	{
+		GetScrollBarRects(rc, topArrow, botArrow, scrollerBG, scrollerBar);
 
-	skin->drawBox(creator->GetRenderQueue(),scrollerBG,mT("ScrollVBG"),0,video::DefaultColors::White);
-	skin->drawBox(creator->GetRenderQueue(),topArrow,mT("ScrollVCursor"),0+2*m_upButState,video::DefaultColors::White);
-	skin->drawBox(creator->GetRenderQueue(),botArrow,mT("ScrollVCursor"),1+2*m_botButState,video::DefaultColors::White);
-	skin->drawSizableBox3PV(creator->GetRenderQueue(),scrollerBar,m_scrollOn?1:0,mT("ScrollV"));
-	if(m_upButState==2)
-		m_upButState=1;
-	if(m_botButState==2)
-		m_botButState=1;
+		skin->drawBox(creator->GetRenderQueue(), scrollerBG, mT("ScrollVBG"), 0, video::DefaultColors::White);
+		skin->drawBox(creator->GetRenderQueue(), topArrow, mT("ScrollVCursor"), 0 + 2 * m_upButState, video::DefaultColors::White);
+		skin->drawBox(creator->GetRenderQueue(), botArrow, mT("ScrollVCursor"), 1 + 2 * m_botButState, video::DefaultColors::White);
+		skin->drawSizableBox3PV(creator->GetRenderQueue(), scrollerBar, m_scrollOn ? 1 : 0, mT("ScrollV"));
+		if (m_upButState == 2)
+			m_upButState = 1;
+		if (m_botButState == 2)
+			m_botButState = 1;
+	}
 }
 
 void GUISliderbarComponent::_changeValue(float amount)
@@ -154,6 +157,9 @@ bool GUISliderbarComponent::OnKeyboardEvent(KeyboardEvent* e)
 
 bool GUISliderbarComponent::OnMouseEvent(MouseEvent* e)
 {
+	if (!m_drawScroll)
+		return false;
+
 	if(itemsCount<=0)
 		return false;
 	math::rectf topArrow,botArrow;

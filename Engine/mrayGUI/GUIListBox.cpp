@@ -107,6 +107,7 @@ int GUIListBox::GetSelectedItem()
 void GUIListBox::SetSelectedItem(int i)
 {
 	m_component->SetSelectedItem(i,m_component->items.size());
+	OnSelectChange(this, &i);
 }
 
 int GUIListBox::GetItemFromPos(const math::vector2d&pt)

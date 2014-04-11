@@ -90,13 +90,16 @@ void IParticle::render()
 void IParticle::update(float dt)
 {
 	if(!bAlive)return;
-	lifeSpawn-=dt;
-	if(lifeSpawn<=0)
+	if (lifeSpawn != -1)
 	{
-		m_emitter->addDeadParticle(this);
-		lifeSpawn=0;
-		bAlive=0;
-		return;
+		lifeSpawn -= dt;
+		if (lifeSpawn <= 0)
+		{
+			m_emitter->addDeadParticle(this);
+			lifeSpawn = 0;
+			bAlive = 0;
+			return;
+		}
 	}/*
 	rigidBody->reset();
 	std::list<SForces*>::iterator it=pSystem->getForces()->begin();

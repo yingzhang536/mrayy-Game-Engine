@@ -33,6 +33,7 @@ public:
 	bool 	loadMovie(const core::string &uri);
 	bool 	loadSideBySideMovie(const core::string& left, const core::string& right);
 	bool	Connect(const core::string& ip, int videoPort, int audioPort, int localAudioPort);
+	bool	Open2Streams( int videoPort1, int videoPort2);
 
 	void	SetElementsAttribute(const core::string& elem, ...);
 
@@ -109,11 +110,10 @@ public:
 	{
 		CConnectData()
 		{
-			sink = dec = 0;
+			sink =  0;
 			audioPort = videoPort = 0;
 		}
 		GstElement* sink;
-		GstElement* dec;
 
 
 		int audioPort;

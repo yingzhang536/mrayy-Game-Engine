@@ -25,6 +25,8 @@ namespace GUI
 
 class SizeDecorateNode:public ITextDecorateNode
 {
+public:
+	static const core::string Type;
 private:
 protected:
 	float m_Size;
@@ -33,7 +35,8 @@ public:
 	SizeDecorateNode();
 	virtual ~SizeDecorateNode();
 
-	virtual void ParseParameter(const core::string &p);
+	virtual void ParseParameter(const core::UTFString &p);
+	virtual const core::string& GetType() { return Type; }
 
 	virtual void OnEnter(TextContextAttributes*context);
 	virtual void OnExit(TextContextAttributes*context);
@@ -42,9 +45,10 @@ public:
 class SizeDecorateNodeCreator:public ITextDecorateCreator
 {
 public:
-	SizeDecorateNodeCreator():ITextDecorateCreator(mT("Size"))
+	SizeDecorateNodeCreator()
 	{
 	}
+	virtual const core::string& GetType() { return SizeDecorateNode::Type; }
 	virtual ITextDecorateNode* CreateNode()
 	{
 		return new SizeDecorateNode();

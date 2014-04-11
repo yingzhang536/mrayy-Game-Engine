@@ -16,7 +16,7 @@ TexFont::TexFont(const core::string &name):BaseFont(name)
 
 TexFont::~TexFont()
 {
-	CharacterRangesList::iterator it= m_charsAttr.begin();
+	CharacterRangesList::iterator it = m_charsAttr.begin();
 	for(;it!=m_charsAttr.end();++it)
 		delete *it;
 
@@ -38,9 +38,9 @@ void TexFont::LoadFont(xml::XMLElement* elem)
 	{
 		if((*it)->GetType()!=xml::ENT_Element)continue;
 		xml::XMLElement*e=dynamic_cast<xml::XMLElement*>(*it);
-		if(e->getName().equals_ignore_case(mT("CharacterRange")))
+		if(e->getName().equals_ignore_case(mT("FontCharacterRange")))
 		{
-			CharacterRange* range=new CharacterRange();
+			FontCharacterRange* range=new FontCharacterRange();
 			range->LoadFromXml(e);
 			m_charsAttr.push_back(range);
 		}else if(e->getName().equals_ignore_case(mT("Texture")))

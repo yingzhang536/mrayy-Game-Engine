@@ -35,7 +35,8 @@ public:
 
 	void LoadMovie(const core::string& path);
 	void LoadSideBySideMovie(const core::string& left, const core::string& right);
-	virtual void ConnectToCameras(const core::string& ip, int videoPort,int audioPort, int localPort);
+	virtual void ConnectToCameras(const core::string& ip, int videoPort, int audioPort, int localPort);
+	virtual void Open2Streams( int port1,int port2);
 	virtual void Disconnect();
 	virtual bool IsConnected();
 

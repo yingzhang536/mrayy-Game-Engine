@@ -261,6 +261,8 @@ public:
 
 	virtual void drawStencilShadow(bool clearStencilBuffer, const video::SColor &shadowColor)=0;
 
+	virtual void SetSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor)=0;
+	virtual void SetSeparateSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor, EBlendFactor srcAlphaFactor, EBlendFactor dstAlphaFactor) = 0;
 
 	virtual float getPixelDepth(int x,int y)=0;
 	virtual void getPixels(const math::rect<int> &rc,std::vector<SColor> &outPixels)=0;

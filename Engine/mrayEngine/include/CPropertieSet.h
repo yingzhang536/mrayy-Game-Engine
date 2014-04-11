@@ -56,6 +56,7 @@ protected:
 
 	const RTTI* m_rtti;
 
+
 public:
 
 	CPropertieDictionary(const RTTI*rtti);

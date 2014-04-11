@@ -264,7 +264,7 @@ void GLDev::_initGLCaps()
 
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	SetSceneBlending(EBF_SRC_ALPHA, EBF_ONE_MINUS_SRC_ALPHA);
 
 	setRenderState(RS_Smooth,true);
 
@@ -754,7 +754,8 @@ void GLDev::draw2DRectangle(const math::rect<float> &src,const video::SColor& co
 	glVertex2f(rc.ULPoint.x,(rc.BRPoint.y));
 
 	glEnd();
-// 	glPopMatrix();
+	m_batchesDrawn++;
+	// 	glPopMatrix();
 }
 
 void GLDev::draw2DRectangleRot(const math::rect<float> &pos,const math::vector2d &origin,const video::SColor &clr,float angle,bool fill){
@@ -804,6 +805,8 @@ void GLDev::draw2DRectangleRot(const math::rect<float> &pos,const math::vector2d
 
 		glVertex3f(points[3].x,points[3].y,0);
 	glEnd();
+	m_batchesDrawn++;
+
 /*	if(!rc.isValid()) 
 		return;
 
@@ -873,6 +876,8 @@ void GLDev::draw2DRectangle(const math::rect<float> &src,const video::SColor &ul
 		glColor4f(bl.R,bl.G,bl.B,bl.A);
 		glVertex2f(rc.ULPoint.x,(rc.BRPoint.y));
 	glEnd();
+	m_batchesDrawn++;
+
 // 	glPopMatrix();
 }
 
@@ -927,6 +932,7 @@ void GLDev::draw2DImage(const math::rectf &src,/*video::TextureUnit* texture,*/c
 		glTexCoord2f(coord.ULPoint.x,coord.BRPoint.y);
 		glVertex2f(rc.ULPoint.x,(rc.BRPoint.y));
 	glEnd();
+	m_batchesDrawn++;
 //	glPopMatrix();
 }
 
@@ -1001,6 +1007,8 @@ void GLDev::draw2DImage(const math::rectf &src/*,video::TextureUnit* texture*/,c
 
 	_SetGLClientState(GL_TEXTURE_COORD_ARRAY,false);
 	_SetGLClientState(GL_VERTEX_ARRAY,false);
+	m_batchesDrawn++;
+
 }
 
 
@@ -1055,6 +1063,8 @@ void GLDev::draw2DImageRot(const math::rectf &pos,const math::vector2d &origin/*
 		glTexCoord2f(coord.ULPoint.x,coord.BRPoint.y);
 		glVertex3f(points[3].x,points[3].y,0);
 	glEnd();
+	m_batchesDrawn++;
+
 //	glPopMatrix();
 }
 
@@ -1071,6 +1081,7 @@ void GLDev::draw2DImage(const math::vector2d &pos,const math::vector2d& size,flo
 		p.BRPoint=p.ULPoint+size;
 		draw2DImage(p,/*texture,*/clr,clip,&rc);
 		p.ULPoint.x+=size.x+spacing;
+
 	}
 }
 void GLDev::draw2DImage(const math::vector2d &pos,const math::vector2d &sizeFactor,float spacing,/*video::TextureUnit* texture,*/const std::vector<math::rectf>&rects,
@@ -1140,6 +1151,7 @@ void GLDev::draw2DImage(const math::vector2d &pos,const math::vector2d &sizeFact
 		glDrawElements(GL_QUADS,4,GL_UNSIGNED_SHORT,tindices);
 		//glDrawArrays(GL_QUADS,0,1);
 		//draw2DImage(p,texture,clr,clip,&rc);
+		m_batchesDrawn++;
 
 		p.ULPoint.x+=rSize.x+spacing;
 	}
@@ -1163,6 +1175,7 @@ void GLDev::draw3DLine(const math::vector3d &start,const math::vector3d &end,con
 	glVertex3f(end.x,end.y,end.z);
 
 	glEnd();
+	m_batchesDrawn++;
 
 //	glPopMatrix();
 }
@@ -1182,6 +1195,7 @@ void GLDev::draw2DLine(const math::vector2d &start,const math::vector2d &end,con
 	glVertex2f(end.x,end.y);
 
 	glEnd();
+	m_batchesDrawn++;
 
 //	glPopMatrix();
 }
@@ -1204,6 +1218,7 @@ void GLDev::draw2DLine(const math::Point2df*points,int n,const video::SColor& co
 	glVertexPointer(2,GL_FLOAT,sizeof(math::Point2df),points);
 		glDrawArrays(GL_LINE_STRIP,0,n);
 	_SetGLClientState(GL_VERTEX_ARRAY,false);
+	m_batchesDrawn++;
 
 
 //	glPopMatrix();
@@ -1234,6 +1249,8 @@ void GLDev::draw2DShape(const math::Point2df*points,const video::SColor*clr,int 
 	glDrawArrays(type,0,n);
 	_SetGLClientState(GL_VERTEX_ARRAY,false);
 	_SetGLClientState(GL_COLOR_ARRAY,false);
+	m_batchesDrawn++;
+
 }
 
 void GLDev::draw2DShapeTextured(const math::Point2df*points,const math::Point2df*texCoord,int n,const video::SColor&clr,bool fill)
@@ -1251,6 +1268,8 @@ void GLDev::draw2DShapeTextured(const math::Point2df*points,const math::Point2df
 	glDrawArrays(type,0,n);
 	_SetGLClientState(GL_VERTEX_ARRAY,false);
 	_SetGLClientState(GL_TEXTURE_COORD_ARRAY,false);
+	m_batchesDrawn++;
+
 }
 
 math::Point2di GLDev::getRenderTargetSize()
@@ -1489,9 +1508,9 @@ void GLDev::set2DMode()
 		glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 		glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 		glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
-*/
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
+		*/
+		SetSceneBlending(EBF_SRC_ALPHA, EBF_ONE_MINUS_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 
 		setLineWidth(1);
@@ -1500,6 +1519,7 @@ void GLDev::set2DMode()
 	}
 	
 }
+
 void GLDev::set3DMode()
 {
 	
@@ -1677,8 +1697,8 @@ void GLDev::useRenderPass(video::RenderPass* mtrl)
 	
 	
 
-	if(mtrl->getRenderState(RS_Blend)){
-		glBlendFunc(getGLBlend(mtrl->GetSourceBlendFactor()),getGLBlend(mtrl->GetDestinationBlendFactor()));
+	if (mtrl->getRenderState(RS_Blend)){
+		SetSceneBlending(mtrl->GetSourceBlendFactor(), mtrl->GetDestinationBlendFactor());
 	}
 	_SetAlphaFunc(getAlphaFunction(mtrl->GetAlphaFunction()),mtrl->GetAlphaReferenceValue());
 
@@ -2632,7 +2652,7 @@ void GLDev::drawStencilShadow(bool clearStencilBuffer,const  video::SColor& shad
 	glColorMask( GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE );
 
 	_SetGLState(GL_BLEND,true);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	SetSceneBlending(EBF_SRC_ALPHA,EBF_ONE_MINUS_SRC_ALPHA);
 
 	_SetGLState( GL_STENCIL_TEST,true );
 	glStencilFunc(GL_NOTEQUAL, 0, 0xff);
@@ -2710,10 +2730,40 @@ void GLDev::registerThread(){
 	_SetGLState(GL_DITHER,false);
 
 }
+
+void GLDev::SetSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor)
+{
+	/*
+	if (srcFactor == EBF_ONE && dstFactor == EBF_ZERO)
+		glDisable(GL_BLEND);
+	else */glEnable(GL_BLEND);
+
+	glBlendFunc(getGLBlend(srcFactor), getGLBlend(dstFactor));
+}
+
+void GLDev::SetSeparateSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor, EBlendFactor srcAlphaFactor, EBlendFactor dstAlphaFactor)
+{
+// 	if (srcFactor == EBF_ZERO && dstFactor == EBF_ONE &&
+// 		srcAlphaFactor == EBF_ZERO && dstAlphaFactor == EBF_ONE)
+// 	{
+// 		glDisable(GL_BLEND);
+// 	}
+// 	else
+	{
+		//		glEnable(GL_BLEND);
+		if (glBlendFuncSeparate)
+			glBlendFuncSeparate(getGLBlend(srcFactor), getGLBlend(dstFactor), getGLBlend(srcAlphaFactor), getGLBlend(dstAlphaFactor));
+		 else if(glBlendFuncSeparateEXT)
+			glBlendFuncSeparateEXT(getGLBlend(srcFactor), getGLBlend(dstFactor), getGLBlend(srcAlphaFactor), getGLBlend(dstAlphaFactor));
+		
+	}
+}
+
 void GLDev::_SetAlphaFunc(GLenum func,GLclampf c)
 {
 // 	if(m_alphaFunc==func && m_alphaFuncClamp==c)
 // 		return;
+
 	m_alphaFunc=func;
 	m_alphaFuncClamp=c;
 	glAlphaFunc(func,c);

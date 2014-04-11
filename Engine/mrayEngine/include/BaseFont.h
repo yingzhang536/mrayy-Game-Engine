@@ -19,11 +19,14 @@
 #include "IStream.h"
 #include "TextureUnit.h"
 #include "IVideoDevice.h"
+#include "BitmapFontData.h"
+
 
 namespace mray{
 namespace GUI{
 
 	class LanguageFontSpecification;
+	class TextDecorator;
 	//class GUIMultiQuadRenderOperation;
 
 class MRAY_DLL BaseFont:public IFont
@@ -31,57 +34,13 @@ class MRAY_DLL BaseFont:public IFont
 private:
 protected:
 
+	TextDecorator* m_decorator;
+
 	std::vector<video::TextureUnitPtr>  m_textures;
 	core::string attrFileName;
-	struct SCharAttr
-	{
-		uchar texID;
-		uint c;
-		math::rectf texcoords;
-		math::vector2d rectSize;
-		bool operator < (const SCharAttr &o)const{return c<o.c;}
-	};
-
-	class CharacterRange
-	{
-		ushort m_min;
-		ushort m_max;
-		std::vector<SCharAttr> m_characters;
-	public:
-
-		CharacterRange()
-		{
-			m_min=0;
-			m_max=0;
-		}
-
-		ushort GetMin()const{return m_min;}
-		ushort GetMax()const{return m_max;}
-		void SetMinMax(int min,int max)
-		{
-			m_min=min;
-			m_max=max;
-			if(m_min>m_max)
-			{
-				m_min=m_max=0;
-				return;
-			}
-			m_characters.resize(m_max-m_min+1);
-		}
-
-		inline bool IsInRange(uint c){return (c>=m_min && c<=m_max);}
-		inline SCharAttr* GetCharacterInfo(uint c){
-			if(c<m_min || c>m_max)
-				return 0;
-			return &m_characters[c-m_min];
-		}
-
-		void LoadFromXml(xml::XMLElement* e);
-
-	};
 
 	//typedef std::map<ushort,SCharAttr> CharAttrMap; 
-	typedef std::vector<CharacterRange*> CharacterRangesList;
+	typedef std::vector<FontCharacterRange*> CharacterRangesList;
 	CharacterRangesList m_charsAttr;
 /*
 	std::vector<math::rectf> m_texRects;
@@ -93,7 +52,7 @@ protected:
 
 	virtual uint calcSizeInternal();
 
-	SCharAttr* GetCharacterInfo(uint c);
+	FontCharAttr* GetCharacterInfo(uint c);
 
 	//GUIMultiQuadRenderOperation*m_renderOperation;
 

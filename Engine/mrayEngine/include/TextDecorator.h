@@ -40,14 +40,14 @@ protected:
 		ENormalText
 	};
 
-	EPredictionResult GetPrediction(const mchar*ptr);
+	EPredictionResult GetPrediction(const utf32*ptr);
 
-	const mchar* _ParserText(const mchar*ptr,ITextDecorateNode* parent);
+	const utf32* _ParserText(const utf32*ptr, ITextDecorateNode* parent);
 public:
 	TextDecorator();
 	virtual ~TextDecorator();
 
-	ITextDecorateNode* ParseText(const core::string&text);
+	ITextDecorateNode* ParseText(const core::UTFString&text);
 };
 
 }

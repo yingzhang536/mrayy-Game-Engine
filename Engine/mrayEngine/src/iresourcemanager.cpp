@@ -148,7 +148,7 @@ ulong IResourceManager::getUsedMemory(bool recalc){
 	m_resMutex->unlock();
 	return m_usedMemory;
 }
-/*
+
 
 void IResourceManager::unload(const core::string&name){
 	ResourceMap::iterator it= m_resourceMap.find(name);
@@ -166,10 +166,11 @@ void IResourceManager::unload(ResourceHandle resource){
 	it->second->unload();
 }
 
-void IResourceManager::unloadAll(){
+void IResourceManager::unloadAll(bool unusedOnly){
 	ResourceMap::iterator it=m_resourceMap.begin();
 	for(;it!=m_resourceMap.end();++it){
-		unload(it->second);
+		if (!unusedOnly || it->second.getRefCount()==2)
+			unload(it->second);
 	}
 }
 
@@ -198,7 +199,7 @@ void IResourceManager::reloadAll(){
 	for(;it!=m_resourceMap.end();++it){
 		it->second->reload();
 	}
-}*/
+}
 
 
 void IResourceManager::addResource(const IResourcePtr& resource,const core::string&name){

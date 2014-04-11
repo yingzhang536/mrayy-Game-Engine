@@ -42,10 +42,11 @@
 
 #include "JoystickDefinitions.h"
 #include "LocalCameraVideoSource.h"
-#include "GstNetVideoSource.h"
+#include "GstStereoNetVideoSource.h"
 #include "DataCommunicator.h"
 
 #include "TBRobotInfo.h"
+#include "DynamicFontGenerator.h"
 
 #include "VTLib.h"
 
@@ -121,8 +122,14 @@ void Application::_InitResources()
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
-	gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	font->SetFontName(L"Arial");
+	font->SetTextureSize(1024);
+	font->SetFontResolution(24);
+	font->Init();
+
+	//GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
+	//gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
 	gFontResourceManager.setDefaultFont(font);
 
 	gLogManager.log("Resources Loaded", ELL_SUCCESS);
@@ -192,18 +199,18 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-	streamerTest = new AugCameraRenderState(new TBee::GstNetVideoSource(ip));
+	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
 	m_renderingState->AddState(streamerTest, "CameraRemote");
 
-// 	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
-// 	m_renderingState->AddState(camera, "AugCam");
+ 	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
+ 	m_renderingState->AddState(camera, "AugCam");
 
 	depth = new GeomDepthState();
 	m_renderingState->AddState(depth, "Depth");
 
 	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
-	//m_renderingState->AddTransition("Login", "AugCam", ToLocalCamera_CODE);
+	m_renderingState->AddTransition("Login", "AugCam", ToLocalCamera_CODE);
 	m_renderingState->AddTransition("Login", "Depth", ToDepthView_CODE);
 	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("AugCam", "Login", STATE_EXIT_CODE);
@@ -284,7 +291,7 @@ void Application::init(const OptionContainer &extraOptions)
 
 	m_screenShot = getDevice()->createEmptyTexture2D(true);
 	m_screenShot->setMipmapsFilter(false);
-	m_screenShot->createTexture(math::vector3d(GetRenderWindow()->GetSize().x, GetRenderWindow()->GetSize().y, 1), video::EPixel_B8G8R8A8);
+	m_screenShot->createTexture(math::vector3d(GetRenderWindow()->GetSize().x, GetRenderWindow()->GetSize().y, 1), video::EPixel_R8G8B8A8);
 
 	gLogManager.log("Robots", ELL_INFO);
 

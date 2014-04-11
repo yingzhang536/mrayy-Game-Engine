@@ -11,9 +11,10 @@ namespace mray
 {
 namespace GUI
 {
+	const core::string ImageDecorateNode::Type = "Image";
 
 
-ImageDecorateNode::ImageDecorateNode():ITextDecorateNode(mT("Image"))
+ImageDecorateNode::ImageDecorateNode()
 {
 	m_image=new video::TextureUnit();
 	m_size=20;//default size
@@ -23,9 +24,9 @@ ImageDecorateNode::~ImageDecorateNode()
 {
 }
 
-void ImageDecorateNode::ParseParameter(const core::string &p)
+void ImageDecorateNode::ParseParameter(const core::UTFString &p)
 {
-	std::vector<core::string> parameters=core::StringUtil::Split(p,mT(","));
+	std::vector<core::string> parameters=core::StringUtil::Split(p.GetAsString(),mT(","));
 	if(parameters.size()==0)
 		return;
 

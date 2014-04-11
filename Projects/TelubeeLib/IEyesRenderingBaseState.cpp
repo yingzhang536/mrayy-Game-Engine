@@ -273,7 +273,12 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
 		{
 			math::vector3d head;
 			head=m_robotConnector->GetHeadRotation();
-			core::string msg = mT("Head: ")+core::StringConverter::toString(head);
+			core::string msg = mT("Head Rotation: ")+core::StringConverter::toString(head);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+
+			head = m_robotConnector->GetHeadPosition();
+			msg = mT("Head Position: ") + core::StringConverter::toString(head);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
@@ -283,20 +288,21 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
+		if (m_robotConnector->GetRobotController())
 		{
 
 			math::vector2d speed;
 			float rot;
 			speed = m_robotConnector->GetSpeed();
 			rot = m_robotConnector->GetRotation();
-			core::string msg = mT("Speed: ") + core::StringConverter::toString(speed);
+			core::string msg = mT("Robot Speed: ") + core::StringConverter::toString(speed);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
-			msg = mT("Rotation: ") + core::StringConverter::toString(rot);
+			msg = mT("Robot Rotation: ") + core::StringConverter::toString(rot);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
-
+		/*
 		math::vector3d correctionX(m_correctionValue[0]->floatParam[0], m_correctionValue[0]->floatParam[1], m_correctionValue[0]->floatParam[2]);
 		math::vector3d correctionY(m_correctionValue[1]->floatParam[0], m_correctionValue[1]->floatParam[1], m_correctionValue[1]->floatParam[2]);
 		core::string msg = mT("Correction X:") + core::StringConverter::toString(correctionX);
@@ -304,7 +310,7 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
 		r.ULPoint.y += attr.fontSize + 5;
 		msg = mT("Correction Y:") + core::StringConverter::toString(correctionY);
 		font->print(r, &attr, 0, msg, m_guiRenderer);
-		r.ULPoint.y += attr.fontSize + 5;
+		r.ULPoint.y += attr.fontSize + 5;*/
 		m_guiRenderer->Flush();
 	}
 
@@ -341,7 +347,7 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
 		cameraTex = m_lensCorrectionPP->getOutput()->getColorTexture();
 	}
-	dev->setRenderTarget(m_renderTarget[index],1,1,video::DefaultColors::White);
+	dev->setRenderTarget(m_renderTarget[index],1,1,video::DefaultColors::Black);
 	dev->set2DMode();
 
 	//	gTextureResourceManager.writeResourceToDist(m_video->GetTexture(),"screens\\image#"+core::StringConverter::toString(s_id++)+".jp2");
@@ -381,7 +387,6 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	tc.ULPoint.y = 1 - tc.ULPoint.y;
 	tc.BRPoint.y = 1 - tc.BRPoint.y;
 	//tc = math::rectf(0, 0, 1, 1);
-
 	if (m_enablePanning)
 	{
 		math::vector2d center = tc.getCenter();
@@ -423,8 +428,8 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	};
 	if (m_eyes[index].flip90)
 	{
-//    		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
-//    		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+    		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
+    		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
 		if (!m_eyes[index].cw)
 		{
 			coords[0].set(tc.ULPoint.x, tc.BRPoint.y);

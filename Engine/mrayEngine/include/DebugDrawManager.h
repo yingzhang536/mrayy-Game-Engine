@@ -72,13 +72,14 @@ protected:
 
 	struct PrimitiveObject
 	{
-		PrimitiveObject():texture(0),duration(0)
+		PrimitiveObject() :texture(0), duration(0), thickness(1)
 		{
 		}
 		video::ITexture* texture;
 		EPrimitiveType type;
 		video::SColor color;
 		float duration;
+		float thickness;
 		math::vector3d scale;	//used to scale a standard primitive
 		math::vector3d pos;		//used to position a standard primitive
 		std::vector<math::vector3d> vertices;

@@ -49,6 +49,12 @@ void GStreamVideoProvider::ConnectToCameras(const core::string& ip, int  videoPo
 	m_playBack->play();
 	m_startTime = gTimer.getActualTimeAccurate();
 }
+void GStreamVideoProvider::Open2Streams(int port1, int port2)
+{
+	m_playBack->Open2Streams(port1,port2);
+	m_playBack->play();
+	m_startTime = gTimer.getActualTimeAccurate();
+}
 void GStreamVideoProvider::Disconnect()
 {
 	m_playBack->close();

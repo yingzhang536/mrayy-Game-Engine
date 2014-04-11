@@ -10,6 +10,8 @@ namespace mray
 namespace core
 {
 	PoolMemoryAllocator<utf32> UTFString::s_allocator;
+	
+	const UTFString UTFString::Empty("");
 
 UTFString::UTFString():m_data(0),m_length(0),m_capacity(0)
 {
@@ -40,49 +42,79 @@ void UTFString::Set(const core::string& str)
 {
 
 #ifdef UNICODE
-	if(str.length()>=m_capacity)
-	{
-		Reserve(2*str.length()+1);
-		m_length=str.length();
-	}
-	const mchar*ptr=&str[0];
-	utf32*c=m_data;
-	for(;*ptr;)
-	{
-		*(c++)=*(ptr++);
-	}
-	*(c)=0;
+	SetW(str);
 #else
-	Set((utf8*)str.c_str());
+	SetA(str);
 #endif
 }
+
+void UTFString::SetA(const core::stringc& str)
+{
+	Set((utf8*)str.c_str());
+}
+void UTFString::SetW(const core::stringw& str)
+{
+	if (str.length() >= m_capacity)
+	{
+		Reserve(2 * str.length() + 1);
+		m_length = str.length();
+	}
+	const wchar_t*ptr = &str[0];
+	utf32*c = m_data;
+	for (; *ptr;)
+	{
+		*(c++) = *(ptr++);
+	}
+	*(c) = 0;
+}
+
+
+
 core::string UTFString::GetAsString()const
 {
 	core::string res;
 #ifdef UNICODE
-	if(m_length>0)
-	{
-		res.resize(m_length);
-		const utf32* ptr=m_data;
-		mchar* c=&res[0];
-		for(;*ptr;)
-		{
-			*(c++)=*(ptr++);
-		}
-		*(c)=0;
-	}else
-		res=mT("");
-
+	return GetAsStringW();
 #else
-	uint len=UTF32EncodeSize(m_data);
-	if(len>0)
+	return GetAsStringA();
+#endif
+}
+
+
+
+core::stringc UTFString::GetAsStringA()const
+{
+	core::stringc res;
+	uint len = UTF32EncodeSize(m_data);
+	if (len > 0)
 	{
 		res.resize(len);
-		EncodeUTF32(m_data,(utf8*)&res[0],len);
+		EncodeUTF32(m_data, (utf8*)&res[0], len);
 	}
-#endif
 	return res;
 }
+
+
+core::stringw UTFString::GetAsStringW()const
+{
+	core::stringw res;
+	if (m_length > 0)
+	{
+		res.resize(m_length);
+		const utf32* ptr = m_data;
+		wchar_t* c = &res[0];
+		for (; *ptr;)
+		{
+			*(c++) = *(ptr++);
+		}
+		*(c) = 0;
+	}
+	else
+		res = L"";
+
+	return res;
+}
+
 
 void UTFString::Reserve(uint sz)
 {
@@ -138,6 +170,40 @@ UTFString& UTFString::operator=(const utf32*buf)
 	return *this;
 }
 
+UTFString& UTFString::operator+=(utf32 c)
+{
+	Append(c);
+	return *this;
+}
+
+UTFString& UTFString::operator+=(const UTFString& buf)
+{
+	int len = buf.Length() + Length()+1;
+
+	utf32* ptr = buf.m_data;
+	utf32* dst=0;
+
+	if (m_capacity < len)
+	{
+		utf32* newD = new utf32[len];
+		dst = m_data;
+		utf32* p = newD;
+		while (*dst)
+			(*p++) = (*dst++);
+		delete [] m_data;
+		m_data = newD;
+		m_capacity = len;
+	}
+	dst = m_data + Length();
+	while (*ptr)
+	{
+		*(dst++)=*(ptr++);
+	}
+	*dst = 0;
+	m_length = len;
+	return *this;
+}
+
 bool UTFString::operator==(const UTFString& o)const
 {
 	if(m_length!=o.m_length)return false;
@@ -148,6 +214,11 @@ bool UTFString::operator==(const UTFString& o)const
 		if(*ptr1!=*ptr2)return false;
 	}
 	return true;
+}
+bool UTFString::operator!=(const UTFString& o)const
+{
+	
+	return !(*this==o);
 }
 bool UTFString::operator <(const UTFString& other) const
 {

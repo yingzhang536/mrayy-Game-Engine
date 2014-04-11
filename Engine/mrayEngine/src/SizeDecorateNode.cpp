@@ -7,8 +7,9 @@ namespace mray
 {
 namespace GUI
 {
+	const core::string SizeDecorateNode::Type = "Size";
 
-SizeDecorateNode::SizeDecorateNode():ITextDecorateNode(mT("Size"))
+SizeDecorateNode::SizeDecorateNode()
 {
 	m_Size=10;
 	m_SavedSize=0;
@@ -17,9 +18,9 @@ SizeDecorateNode::~SizeDecorateNode()
 {
 }
 
-void SizeDecorateNode::ParseParameter(const core::string &p)
+void SizeDecorateNode::ParseParameter(const core::UTFString &p)
 {
-	m_Size=core::StringConverter::toFloat(p);
+	m_Size=core::StringConverter::toFloat(p.GetAsString());
 }
 
 void SizeDecorateNode::OnEnter(TextContextAttributes*context)

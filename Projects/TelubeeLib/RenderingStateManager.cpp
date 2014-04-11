@@ -181,7 +181,7 @@ void RenderingStateManager::OnDraw(const math::rectf& rc,video::IRenderTarget* r
 	math::vector2d r=rc.getSize();
 	if(rt)
 	{
-		Engine::getInstance().getDevice()->setRenderTarget(rt,true,true,video::SColor(1,1,1,1));
+		Engine::getInstance().getDevice()->setRenderTarget(rt,true,true,video::SColor(0,0,0,1));
 		r=rt->getSize();
 	}
 	if(m_oldState && m_oldState->GetLastFrame(eye))
@@ -241,6 +241,20 @@ void RenderingStateManager::LoadSettingsXML(xml::XMLElement* e)
 			xml::XMLElement* se = e->getSubElement(s->getName());
 			if (se)
 				s->GetState()->LoadFromXML(se);
+		}
+	}
+}
+void RenderingStateManager::WriteSettingsXML(xml::XMLElement* e)
+{
+
+	const std::vector<IState*>& states = m_stateMachine->getStates();
+
+	for (int i = 0; i < states.size(); ++i)
+	{
+		BaseRenderState* s = dynamic_cast<BaseRenderState*>(states[i]);
+		if (s)
+		{
+			s->GetState()->WriteToXML(e);
 		}
 	}
 }

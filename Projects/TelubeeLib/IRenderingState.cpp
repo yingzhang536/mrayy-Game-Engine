@@ -16,6 +16,12 @@ namespace TBee
 		if(a)
 			m_name=a->value;
 	}
+	xml::XMLElement* IRenderingState::WriteToXML(xml::XMLElement* e)
+	{
+		xml::XMLElement* elem = new xml::XMLElement(m_name);
+		e->addSubElement(elem);
+		return elem;
+	}
 
 	void IRenderingState::InitState()
 	{

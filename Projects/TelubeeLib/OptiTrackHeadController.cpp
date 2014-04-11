@@ -27,7 +27,7 @@ math::quaternion OptiTrackHeadController::GetHeadOrientation()
 	math::vector3d a;
 	q->toEulerAngles(a);
 	
-	return math::quaternion(-a.z,a.y,-a.x);
+	return math::quaternion(-a.x,a.y,-a.z);
 }
 math::vector3d OptiTrackHeadController::GetHeadPosition()
 {

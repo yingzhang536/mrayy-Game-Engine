@@ -58,6 +58,7 @@ public:
 	virtual void Update(float dt){};
 
 	virtual void LoadFromXML(xml::XMLElement* e);
+	virtual xml::XMLElement* WriteToXML(xml::XMLElement* e);
 
 	virtual void ForceExit(){m_exitCode=STATE_EXIT_CODE;}
 	

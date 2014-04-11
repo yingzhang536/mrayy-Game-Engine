@@ -61,7 +61,7 @@ public:
 	//typedef std::list<IParticle* > ParticleList;
 	typedef std::list<IParticle*> ParticleList;/*,PoolMemoryAllocator<IParticle*>*/
 	typedef std::list<IParticleAffector*> ParticleAffectorList;
-private:
+protected:
 	ParticleList m_particles;
 	ParticleList m_deadParticles;
 	ParticleAffectorList m_particleAffectors;
@@ -106,6 +106,9 @@ private:
 
 	ICustomParticleEmitter* m_emitter;
 
+	virtual void _ApplyAffectors(float dt);
+	virtual void _SpawnParticles(float dt);
+
 public:
 
 	ParticleEmitter();
@@ -148,7 +151,7 @@ public:
 	bool isStopEmitting();
 
 	void addDeadParticle(IParticle* part);
-	void reSpawn(IParticle* part);
+	virtual void reSpawn(IParticle* part);
 
 	void reset();
 

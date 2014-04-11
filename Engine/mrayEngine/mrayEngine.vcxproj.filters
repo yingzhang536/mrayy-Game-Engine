@@ -2273,6 +2273,33 @@
     <ClInclude Include="include\IMonitorFileInformation.h">
       <Filter>Source Files\OS</Filter>
     </ClInclude>
+    <ClInclude Include="include\CommonValueProviders.h">
+      <Filter>Source Files\Base\Values</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ValueControllerManager.cpp">
+      <Filter>Source Files\Base\Values</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ValueControllerManager.h">
+      <Filter>Source Files\Base\Values</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BitmapFontData.h">
+      <Filter>Source Files\GUI\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DynamicFontGenerator.h">
+      <Filter>Source Files\GUI\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BinPacker.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BatchRenderer.h">
+      <Filter>Source Files\scene\renderSort</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InternetCacheManager.h">
+      <Filter>Source Files\network\Internet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StringUtil.hpp">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">
@@ -3442,9 +3469,6 @@
     <ClCompile Include="src\cfps.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\mString.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\PoolMemoryAllocator.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
@@ -3452,9 +3476,6 @@
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="src\StringEncoding.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StringUtil.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="src\UnicodeEncoding.cpp">
@@ -3561,6 +3582,27 @@
     </ClCompile>
     <ClCompile Include="ICameraVideoGrabber.cpp">
       <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommonValueProviders.cpp">
+      <Filter>Source Files\Base\Values</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BitmapFontData.cpp">
+      <Filter>Source Files\GUI\Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DynamicFontGenerator.cpp">
+      <Filter>Source Files\GUI\Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinPacker.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IListItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InternetCacheManager.cpp">
+      <Filter>Source Files\network\Internet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mString.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

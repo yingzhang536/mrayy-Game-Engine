@@ -10,76 +10,21 @@
 
 #include "GUIBatchRenderer.h"
 #include "GUIMultiQuadRenderOperation.h"
+#include "TextDecorator.h"
+
 
 namespace mray{
 namespace GUI{
 
 
-void BaseFont::CharacterRange::LoadFromXml(xml::XMLElement* elem)
-{
-	xml::XMLAttribute* attr;
-	attr=elem->getAttribute(mT("Min"));
-	if(attr)
-		m_min=core::StringConverter::toInt(attr->value);
-	attr=elem->getAttribute(mT("Max"));
-	if(attr)
-		m_max=core::StringConverter::toInt(attr->value);
-	SetMinMax(m_min,m_max);
-	xml::xmlSubElementsMapIT it=elem->getElementsBegin();
-	xml::xmlSubElementsMapIT end=elem->getElementsEnd();
-	float maxH=0;
-	for (;it!=end;++it)
-	{
-		if((*it)->GetType()!=xml::ENT_Element)continue;
-		xml::XMLElement*e=dynamic_cast<xml::XMLElement*>(*it);
-		if(e->getName().equals_ignore_case(mT("Char")))
-		{
-			attr=e->getAttribute(mT("C"));
-			if(!attr)continue;
-			ushort cCode=core::StringConverter::toUInt(attr->value);
-			SCharAttr* c=GetCharacterInfo(cCode);
-			if(!c)continue;
-			c->c=cCode;
-			attr=e->getAttribute(mT("U"));
-			if(attr)
-				c->texcoords.ULPoint.x=core::StringConverter::toFloat(attr->value);
-			attr=e->getAttribute(mT("V"));
-			if(attr)
-				c->texcoords.ULPoint.y=core::StringConverter::toFloat(attr->value);
-			attr=e->getAttribute(mT("dU"));
-			if(attr)
-				c->texcoords.BRPoint.x=c->texcoords.ULPoint.x+core::StringConverter::toFloat(attr->value);
-			float h=0;
-			attr=e->getAttribute(mT("dV"));
-			if(attr)
-				h=core::StringConverter::toFloat(attr->value);
-
-
-			attr=e->getAttribute(mT("Tex"));
-			if(attr)
-				c->texID=(uchar)core::StringConverter::toInt(attr->value);
-			else
-				c->texID=0;
-
-			c->texcoords.BRPoint.y=c->texcoords.ULPoint.y+h;
-			maxH=math::Max(maxH,h);
-		}
-	}
-	if(maxH>0){
-		float imax=1.0f/maxH;
-		for (int i=0;i<m_characters.size();++i)
-		{
-			SCharAttr* c=&m_characters[i];
-			c->rectSize=c->texcoords.getSize()*imax;
-		}
-	}
-}
 
 //////////////////////////////////////////////////////////////////////////
 
 BaseFont::BaseFont(const core::string&name):IFont(name)
 {
 //	m_renderOperation=new GUIMultiQuadRenderOperation();
+
+	m_decorator = new TextDecorator();
 }
 BaseFont::~BaseFont()
 {
@@ -90,16 +35,18 @@ BaseFont::~BaseFont()
 		delete m_charsAttr[i];
 	}
 	m_charsAttr.clear();
+
+	delete m_decorator;
 }
 
 uint BaseFont::calcSizeInternal(){
-	return m_charsAttr.size()*sizeof(SCharAttr);
+	return m_charsAttr.size()*sizeof(FontCharAttr);
 }
-BaseFont::SCharAttr* BaseFont::GetCharacterInfo(uint c)
+FontCharAttr* BaseFont::GetCharacterInfo(uint c)
 {
 	for (int i=0;i<m_charsAttr.size();++i)
 	{
-		SCharAttr* ret=m_charsAttr[i]->GetCharacterInfo(c);
+		FontCharAttr* ret=m_charsAttr[i]->GetCharacterInfo(c);
 		if(ret)return ret;
 	}
 	return 0;
@@ -121,7 +68,7 @@ math::vector2d BaseFont::getTextDimension(const  core::UTFString& txt,FontAttrib
 	//core::string processed=m_specifications->ProcessText(txt);
 	for(const  uint *p=txt.c_str();*p;++p)
 	{
-		SCharAttr* attr=GetCharacterInfo(*p);
+		FontCharAttr* attr=GetCharacterInfo(*p);
 		if(!attr)continue;
 		dim.x+=attr->rectSize.x;
 		dim.y=math::Max(dim.y,attr->rectSize.y * sz);
@@ -168,7 +115,7 @@ math::vector2d BaseFont::getTextDimension(const  core::UTFString& txt,FontAttrib
 // 	float h=0;
 // 	int n=0;
 // 	math::vector2d dim;
-// 	SCharAttr fa;
+// 	FontCharAttr fa;
 // 	for(const char *p=txt;*p;p++){
 // 		fa.c=getUnicodeChar(*p);;
 // 		int i=m_charsAttr.binary_search(fa);
@@ -185,7 +132,7 @@ math::vector2d BaseFont::getTextDimension(const  core::UTFString& txt,FontAttrib
 
 math::vector2d BaseFont::getCharDimension( uint c,int size){
 
-	SCharAttr* attr= GetCharacterInfo(c);
+	FontCharAttr* attr= GetCharacterInfo(c);
 	if(!attr)
 		return math::vector2d::Zero;
 	return attr->rectSize*(float)size;
@@ -247,7 +194,7 @@ math::vector2d BaseFont::getCharPos(int len,FontAttributes*attributs,const math:
 	//core::string processed=m_specifications->ProcessText(txt);
 	for(uint i=0;i<len;++i)
 	{
-		SCharAttr* attr=GetCharacterInfo(txt[i]);
+		FontCharAttr* attr=GetCharacterInfo(txt[i]);
 		if(!attr)continue;
 		sz.x+=attr->rectSize.x;
 	//	sz.y=math::Max<float>(sz.y,attr->rectSize.y * fsz);
@@ -380,8 +327,9 @@ void BaseFont::print(const math::rectf&  rc,FontAttributes*attributes,const math
 			m_printBuffer.resize(0);
 			if(!attributes->wrap)
 				break;
-			pos.ULPoint.y+=dim.y;
-			if(pos.getHeight()<=0)break;
+			pos.ULPoint.y += dim.y + attributes->lineSpacing;
+			if(pos.getHeight()<=0)
+				break;
 			dim=0;
 		}
 		if(a==' ' || a=='\n' || a=='\t')
@@ -408,38 +356,6 @@ void BaseFont::print(const math::rectf&  rc,FontAttributes*attributes,const math
 
 void BaseFont::print(const math::rectf& pos,FontAttributes*attributes,const  uint* text,IGUIRenderer*renderer)
 {
-/*
-	math::vector2d dim=getDimension(text.c_str(),attributes->fontSize,attributes->spacing);
-
-	//TODO, fix using CharSZ and use fontWidth
-	if(dim.x>pos.BRPoint.x-pos.ULPoint.x)
-	{
-		float sz=0;
-		int p=0;
-		float w=pos.BRPoint.x-pos.ULPoint.x;
-		while(sz<w && p<len){
-			dim.x=sz;
-			sz+=getDimension(text[p++],attributes->fontSize).x;
-		}
-		//int chrSz=width/len;
-		//int p=(pos.BRPoint.x-pos.ULPoint.x)/chrSz;
-		text[p]='\0';
-		len=p;
-	}
-	math::vector2d finalPos=pos.ULPoint;
-	// 	if(attributes->fontAligment==EFA_MiddleCenter){
-	// 		finalPos.x+=(pos.getWidth()-dim.x)*0.5f;
-	// 	}
-	m_tmpIndices.resize(len);
-	for(int i=0;i<len;++i){
-		m_tmpIndices[i]=text[i];
-	}
-	printText(finalPos,attributes,m_tmpIndices);*/
-
-/*	m_renderOperation->Reset();
-	m_renderOperation->Texture=m_texture;
-	m_renderOperation->Pos.resize(len);
-	m_renderOperation->TexCoords.resize(len);*/
 	math::rectf rc;
 	math::vector2d dim;
 	math::vector2d offset=0;
@@ -449,7 +365,7 @@ void BaseFont::print(const math::rectf& pos,FontAttributes*attributes,const  uin
 	rc.ULPoint=pos.ULPoint+offset;
 	for(int i=0;*text;++text,++i)
 	{
-		SCharAttr* attr= GetCharacterInfo(*text);
+		FontCharAttr* attr= GetCharacterInfo(*text);
 		if(!attr)continue;
 		video::TextureUnit*tex=getTexture(attr->texID);
 		dim=attr->rectSize*attributes->fontSize;
@@ -468,35 +384,6 @@ void BaseFont::print(const math::rectf& pos,FontAttributes*attributes,const  uin
 		rc.ULPoint.x=rc.BRPoint.x+attributes->spacing;
 	}
 
-	/*
-	if(attributes->hasShadow){
-		m_renderOperation->Color=attributes->shadowColor;
-		offset=attributes->shadowOffset;
-	}else
-		m_renderOperation->Color=attributes->fontColor;
-
-	rc.ULPoint=pos.ULPoint+offset;
-	const mchar* txtPtr=text.c_str();
-	for(int i=0;*txtPtr;++txtPtr,++i)
-	{
-		SCharAttr* attr= GetCharacterInfo(*txtPtr);
-		if(!attr)continue;
-		dim=attr->rectSize*attributes->fontSize;
-		rc.BRPoint=rc.ULPoint+dim;
-		m_renderOperation->Pos[i]=rc;
-		m_renderOperation->TexCoords[i]=attr->texcoords;
-
-		rc.ULPoint.x=rc.BRPoint.x+attributes->spacing;
-	}
-	renderer->AddRenderOperation(m_renderOperation,true);
-	if(attributes->hasShadow){
-		for(int i=0;i<len;++i)
-		{
-			m_renderOperation->Pos[i]-=offset;
-		}
-		m_renderOperation->Color=attributes->fontColor;
-		renderer->AddRenderOperation(m_renderOperation,true);
-	}*/
 }
 
 

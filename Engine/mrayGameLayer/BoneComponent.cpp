@@ -115,6 +115,8 @@ scene::IMovable* BoneComponent::GetMovableObject()
 
 void BoneComponent::DebugRender(scene::IDebugDrawManager* renderer)
 {
+
+	return;
 	if (!m_attachedBone)
 		return;
 	const scene::BonesList& lst=m_attachedBone->getSubBones();

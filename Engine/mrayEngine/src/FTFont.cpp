@@ -220,7 +220,7 @@ void FTFont::loadFont(OS::IStream* font ){
 
 			float charW=( m_fontFace->glyph->advance.x >> 6 );
 
-			SCharAttr *attr=m_charsAttr[j]->GetCharacterInfo(i);
+			FontCharAttr *attr=m_charsAttr[j]->GetCharacterInfo(i);
 			if(!attr)continue;
 
 			attr->c=i;
@@ -289,7 +289,7 @@ void FTFont::loadFont(OS::IStream* font ){
 		{
 			for(ulong i=m_charsAttr[j]->GetMin();i<m_charsAttr[j]->GetMax();++i)
 			{
-				SCharAttr*a= m_charsAttr[j]->GetCharacterInfo(i);
+				FontCharAttr*a= m_charsAttr[j]->GetCharacterInfo(i);
 				a->rectSize=a->texcoords.getSize()*imax;
 				a->rectSize.x*=texAspect;
 			}
@@ -344,7 +344,7 @@ void FTFont::loadFont(xml::XMLElement* attrs )
 	xml::XMLElement* e=attrs->getSubElement(mT("CharacterRange"));
 	while(e)
 	{
-		CharacterRange* range=new CharacterRange();
+		FontCharacterRange* range = new FontCharacterRange();
 		range->LoadFromXml(e);
 		m_charsAttr.push_back(range);
 		e=e->nextSiblingElement(mT("CharacterRange"));

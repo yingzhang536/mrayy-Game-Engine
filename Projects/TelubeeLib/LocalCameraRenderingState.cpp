@@ -74,7 +74,7 @@ void LocalCameraRenderingState::SetCameraInfo(ETargetEye eye,int id)
 {
 	m_cameraSource->SetCameraID(GetEyeIndex(eye), id);
 
-	_UpdateCameraParams();
+	//_UpdateCameraParams();
 }
 
 

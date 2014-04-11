@@ -57,6 +57,7 @@ public:
 	ITransitionBlender* GetBlender(){return m_blender;}
 
 	void LoadSettingsXML(xml::XMLElement* e);
+	void WriteSettingsXML(xml::XMLElement* e);
 
 
 };

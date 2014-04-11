@@ -24,14 +24,17 @@ namespace GUI
 {
 class ImageDecorateNode:public ITextDecorateNode
 {
+public:
+	static const core::string Type;
 private:
 protected:
 	GCPtr<video::TextureUnit> m_image;
 public:
 	ImageDecorateNode();
 	virtual ~ImageDecorateNode();
+	virtual const core::string& GetType() { return Type; }
 
-	virtual void ParseParameter(const core::string &p);//parameter should be like: "imageName,width,height" or "imageName,size"
+	virtual void ParseParameter(const core::UTFString &p);//parameter should be like: "imageName,width,height" or "imageName,size"
 
 	virtual void Draw(TextContextAttributes*context,const math::rectf*clip);
 
@@ -41,9 +44,10 @@ public:
 class ImageDecorateNodeCreator:public ITextDecorateCreator
 {
 public:
-	ImageDecorateNodeCreator():ITextDecorateCreator(mT("Image"))
+	ImageDecorateNodeCreator()
 	{
 	}
+	virtual const core::string& GetType() { return ImageDecorateNode::Type; }
 	virtual ITextDecorateNode* CreateNode()
 	{
 		return new ImageDecorateNode();

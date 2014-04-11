@@ -139,6 +139,7 @@ void GUIManager::SetDevice(video::IVideoDevice* dev)
 void GUIManager::SetActiveTheme(IGUITheme* theme)
 {
 	m_Skin=theme;
+	FIRE_LISTENR_METHOD(OnChangeGUITheme, (this, theme));
 }
 IGUITheme*	GUIManager::GetActiveTheme()
 {
@@ -259,6 +260,7 @@ void GUIManager::DrawAll(const math::rectf*vp)
 	{
 		(*it)->Draw();
 	}*/
+	FIRE_LISTENR_METHOD(OnGUIDrawBegin, (this));
 
 	if(m_rootElement)
 		m_rootElement->Draw(vp);
@@ -269,7 +271,8 @@ void GUIManager::DrawAll(const math::rectf*vp)
 	for(;it!=end;++it)
 		(*it)->PostDraw(vp);
 	m_postDrawElements.clear();
-	
+	FIRE_LISTENR_METHOD(OnGUIDrawDone, (this));
+
 	m_renderQueue->Flush();
 	//m_renderQueue->Clear();
 }
@@ -288,7 +291,10 @@ void GUIManager::Update(float dt)
 
 IGUIElement* GUIManager::CreateElement(const GUID& type)
 {
-	return GUIElementFactory::getInstance().CreateElement(type.GetString(),this);
+	IGUIElement* e= GUIElementFactory::getInstance().CreateElement(type.GetString(),this);
+	FIRE_LISTENR_METHOD(OnAddGUIElement, (this,e));
+	return e;
+
 }
 
 

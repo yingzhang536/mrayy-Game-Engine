@@ -39,7 +39,7 @@ void GUIPropEditBoxGridItem::SetProperty(IProperty* prop,CPropertieSet* object)
 	m_component->enabled= m_property->getFlag(EPF_Write) || 
 		m_property->getAccessMode()==EPA_RW || m_property->getAccessMode()==EPA_WRITE;
 }
-void GUIPropEditBoxGridItem::OnTextChange(GUIEditBoxComponent*caller)
+void GUIPropEditBoxGridItem::OnTextChangeCallback(GUIEditBoxComponent*caller)
 {
 	m_property->parse(m_object,caller->text.GetAsString());
 }

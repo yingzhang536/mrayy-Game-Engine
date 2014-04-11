@@ -41,20 +41,20 @@ namespace GUI
 	class GUIElementRegion;
 
 
-	enum EHorizontalAlignment
+	enum  EHorizontalAlignment
 	{
 		EHA_Left,
 		EHA_Center,
 		EHA_Right
 	};
-	enum EVerticalAlignment
+	enum  EVerticalAlignment
 	{
 		EVA_Top,
 		EVA_Center,
 		EVA_Bottom
 	};
 
-	enum EElementDock
+	enum  EElementDock
 	{
 		EED_None,
 		EED_Fill,
@@ -62,6 +62,15 @@ namespace GUI
 		EED_Right,
 		EED_Top,
 		EED_Bottom
+	};
+
+	enum  EElementAnchor
+	{
+		EEA_Top,
+		EEA_Bottom,
+		EEA_Left,
+		EEA_Right,
+		EEA_Count
 	};
 
 	class GUIElementEvent
@@ -96,6 +105,8 @@ protected:
 
 	EElementDock			m_docking;		// Docking settings for the element
 
+	bool					m_anchor[EElementAnchor::EEA_Count];
+
 	bool					m_visible;	// Visibility flag for the element
 	bool					m_enabled;	// enable flag
 
@@ -109,6 +120,7 @@ protected:
 	math::vector2d			m_size;			//size of the element
 
 	math::vector2d			m_derivedPosition;	// derived position (which is in the screen space)
+	math::vector2d			m_derivedSize;	// derived size (which is in the screen space)
 
 	core::UTFString			m_text;			// text of this element
 
@@ -120,12 +132,14 @@ protected:
 	bool m_unclippedRectDirt;
 	bool m_clippedRectDirt;
 	bool m_derivedPosDirt;
+	bool m_derivedSizeDirt;
 	bool m_locked;
 
 	virtual void fillProperties();
 
 	void _UpdateDocking(const math::rectf*vp);
 	void _UpdateAlignment(const math::rectf*vp);
+	void _UpdateAnchor(const math::rectf*vp);
 
 public:
 
@@ -220,6 +234,7 @@ public:
 
 	virtual bool SetSize(const math::vector2d& sz);
 	virtual const math::vector2d& GetSize()const;
+	virtual const math::vector2d& GetDerivedSize();
 
 	//virtual const math::rectf& GetUnclippedRect();
 	//virtual const math::rectf& GetClippedRect();
@@ -229,6 +244,9 @@ public:
 
 	virtual void AttachToRegion(GUIElementRegion* p);
 	IGUIPanelElement* GetParent()const;
+
+	virtual void SetAnchor(EElementAnchor anchor, bool set);
+	virtual bool GetAnchor(EElementAnchor anchor)const ;
 
 	virtual bool SetVerticalAlignment(EVerticalAlignment e);
 	const EVerticalAlignment& GetVerticalAlignment()const;

@@ -54,12 +54,12 @@ public:
 	MeshGenerator();
 	virtual~MeshGenerator();
 
-	void generateBox(const math::vector3d&  extent,IMeshBuffer*mesh);
-	void generateSphere(float radius,int uSlices,int vSlices,IMeshBuffer*mesh);
-	void generateCapsule(float radius,float height,int segments,IMeshBuffer*mesh);
-	void generateTorus(float radius1,float radius2,int segments,int sides,IMeshBuffer*mesh);
-	void generateCylinder(float radius,float height,int segments,IMeshBuffer*mesh);
-	void generatePlane(int widthSegment,int lengthSegment,IMeshBuffer*mesh);
+	void generateBox(const math::vector3d&  extent, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generateSphere(float radius, int uSlices, int vSlices, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generateCapsule(float radius, float height, int segments, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generateTorus(float radius1, float radius2, int segments, int sides, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generateCylinder(float radius, float height, int segments, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generatePlane(int widthSegment, int lengthSegment, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
 
 	void generateSkyDome(video::ITexture*tex,int uSegments,int vSegments,
 		double texPer,double spherePer,float radius,SMesh*mesh);
@@ -69,10 +69,10 @@ public:
 
 	void generateTerrain(video::ITexture*heightMap,int patchSize,SMesh*mesh);
 
-	void generateBillboard(IViewNode*cam,const math::vector3d& pos,const math::vector2d& size,float angle,bool rotHor,bool rotVer,math::vector3d*verts);
-	void generateBillboard(IViewNode*cam,const math::vector3d& pos,const math::vector2d& size,float angle,bool rotHor,bool rotVer,IMeshBuffer*mesh);
-	void generateBillboardBeam(IViewNode*cam,float width,const math::vector3d&  start,const math::vector3d&  end,IMeshBuffer*mesh,const math::matrix4x4* worldMat);
-
+	void generateBillboard(IViewNode*cam, const math::vector3d& pos, const math::vector2d& size, float angle, bool rotHor, bool rotVer, math::vector3d*verts, int startIndex = 0, int startVertex = 0);
+	void generateBillboard(IViewNode*cam, const math::vector3d& pos, const math::vector2d& size, float angle, bool rotHor, bool rotVer, IMeshBuffer*mesh, int startIndex = 0, int startVertex = 0);
+	void generateBillboardBeam(IViewNode*cam, float width, const math::vector3d&  start, const math::vector3d&  end, IMeshBuffer*mesh, const math::matrix4x4* worldMat, int startIndex = 0, int startVertex = 0);
+	void generateBillboardChain(IViewNode*cam, float startW, float endW, const math::vector3d* points, int count , IMeshBuffer*mesh, const math::matrix4x4* worldMat, int startIndex = 0, int startVertex = 0);
 };
 
 }

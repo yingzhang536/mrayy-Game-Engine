@@ -298,6 +298,9 @@ public:
 	//! set the global ambient color
 	void setAmbientColor(const video::SColor& color);
 
+	void SetSeparateSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor, EBlendFactor srcAlphaFactor, EBlendFactor dstAlphaFactor);
+	void SetSceneBlending(EBlendFactor srcFactor, EBlendFactor dstFactor);
+
 	//! add new material renderer
 
 

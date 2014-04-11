@@ -428,17 +428,18 @@ static gboolean read_data_tobuffer(gst_app_t *app, GstBuffer** b)
 		return false;
 	}
 	GstBuffer *buffer;
-	guint8 *ptr;
 	gint size;
 	uint len = BUFF_SIZE;
 	network::NetAddress address = app->address;
 	len = MAX_PACKET;
-	network::UDPClientError err = app->client->RecvFrom(TmpPacket[app->index], &len, &address);
-	if (err != network::UDP_SOCKET_ERROR_NONE || len == 0)
+	network::UDPClientError err = app->client->RecvFrom(TmpPacket[app->index], &len, &address, 0);
+	if (err != network::UDP_SOCKET_ERROR_NONE)
 	{
 		printf("Failed to read UDP packet!\n");
 		return false;
 	}
+	else if (len == 0)
+		return false;
 	app->recvBytes += len;
 	//	printf("UDP Packet received:%d\n", len);
 	//	ptr = (guint8*)g_malloc(len);
@@ -544,7 +545,6 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 {
 	GstElement * gstPipeline, *src, *mpg, *depay, *dec, *sink;
 	GstCaps* caps;
-	GstBus* bus;
 
 
 	close();
@@ -566,54 +566,6 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 
 
 	core::string capsStr = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)THEORA,sampling=(string)\"YCbCr-4:2:0\", delivery-method=(string)inline, payload=(int)96";// , width = (string)1280, height = (string)800, configuration = (string)\"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\\=\\=\" , ssrc = (uint)566098589, clock-base = (uint)363761639, seqnum-base = (uint)19709";
-
-	const char configuration[] =
-		"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\\=\\=";
 
 	//capsStr = "video/x-theora";												   
 	core::string gstString = "appsrc name=src !" + capsStr + "! .recv_rtp_sink  gstrtpsession name = session !rtptheoradepay name = depay " // "//+ capsStr+//" 
@@ -802,7 +754,6 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	gst_base_sink_set_max_lateness(GST_BASE_SINK(sink), -1);
 	*/
 	m_connectData.sink = sink;
-	m_connectData.dec = dec;
 	m_readData[0].src = src;
 	m_readData[0].sourceID = 0;
 
@@ -864,6 +815,111 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	videoUtils->startPipeline();
 	return true;
 }
+
+bool GstVideoPlayer::Open2Streams( int videoPort1, int videoPort2)
+{
+	GstElement * gstPipeline, *src1,*src2,  *sink;
+
+
+	close();
+
+	core::string message = "GstVideoPlayer - Open2Streams(): listining to \"" + core::StringConverter::toString(videoPort1) + "\" and \"" + core::StringConverter::toString(videoPort2) + "\"";
+	gLogManager.log(message, ELL_INFO, EVL_Heavy);
+
+	//GstUtils::startGstMainLoop();
+	bIsStream = true;
+	bRemote = true;
+	GError *err = 0;
+	//capsStr = "video/x-theora";												   
+	core::string gstString;
+#if GST_VERSION_MAJOR ==0
+	//gdpdepay !
+
+	gstString = "videomixer name=mix "
+		"sink_0::xpos=0   sink_0::ypos=0  sink_0::alpha=1  sink_0::zorder=0  "
+		"sink_1::xpos=0   sink_1::ypos=0  sink_1::zorder=1  "
+		"sink_2::xpos=" + core::StringConverter::toString(m_frameSize.x / 2) + " sink_2::ypos=0  sink_2::zorder=2 "
+		"!  ffmpegcolorspace ! appsink name=sink sync=false "
+		"  videotestsrc pattern=\"black\" ! video/x-raw-rgb,width=" + core::StringConverter::toString(m_frameSize.x) + ",height=" + core::StringConverter::toString(m_frameSize.y) + " ! ffmpegcolorspace ! mix.sink_0 ";
+		
+	gstString += " queue! udpsrc name=src1 port="+core::StringConverter::toString(videoPort1)+" ! application/x-rtp, payload=96 !queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! videoscale ! video/x-raw-rgb,width=" + core::StringConverter::toString(m_frameSize.x / 2) + ",height=" + core::StringConverter::toString(m_frameSize.y) + " ! videorate ! ffmpegcolorspace  ! mix.sink_1 ";
+	gstString += " queue! udpsrc name=src2 port=" + core::StringConverter::toString(videoPort2) +" !application/x-rtp, payload=96 !queue ! rtph264depay !ffdec_h264 !ffmpegcolorspace ! videoscale ! video/x-raw-rgb,width=" + core::StringConverter::toString(m_frameSize.x / 2) + ", height=" + core::StringConverter::toString(m_frameSize.y) + " ! videorate ! videoflip method=5 ! videoflip method=4 !ffmpegcolorspace  !mix.sink_2 ";
+
+	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+#else
+	gstString = "appsrc name=src ! application/x-rtp, media=video, clock-rate=90000, payload=96, encoding-name=H264 !  rtph264depay name=depay !"
+		" avdec_h264 name=dec max-threads=0 ! videoconvert   ! appsink name=sink sync=false ";//"appsink name=sink sync=false";
+	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+#endif
+
+	gstPipeline = gst_parse_launch(gstString.c_str(), &err);
+
+	src1 = gst_bin_get_by_name(GST_BIN(gstPipeline), "src1");
+	src2 = gst_bin_get_by_name(GST_BIN(gstPipeline), "src2");
+	sink = gst_bin_get_by_name(GST_BIN(gstPipeline), "sink");//( "autovideosink", "screen_sink" );
+	
+	g_signal_connect(gstPipeline, "deep-notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
+	/*
+	m_connectData.sink = sink;
+	m_readData[0].sourceID = 0;
+	m_readData[1].sourceID = 0;
+
+	m_readData[0].address = network::NetAddress( network::EAT_Any, videoPort1);
+	m_readData[0].client->Open(videoPort1);
+	m_readData[0].index = 0;
+	m_readData[0].data = &m_connectData;
+	m_readData[0].src = src1;
+
+	m_readData[0].client->SetNonBlocking(true);
+
+	m_readData[1].address = network::NetAddress(network::EAT_Any, videoPort2);
+	m_readData[1].client->Open(videoPort2);
+	m_readData[1].index = 1;
+	m_readData[1].data = &m_connectData;
+	m_readData[1].src = src2;
+	m_readData[1].client->SetNonBlocking(true);
+
+	// 	g_signal_connect(src, "need-data", G_CALLBACK(start_feed), &m_connectData);
+	// 	g_signal_connect(src, "enough-data", G_CALLBACK(stop_feed), &m_connectData);
+	// 	g_signal_connect(src, "pad-added", G_CALLBACK(on_pad_added), depay);
+
+	GstAppSrcCallbacks srcCB;
+	srcCB.need_data = &start_feed;
+	srcCB.enough_data = &stop_feed;
+	srcCB.seek_data = 0;
+	gst_app_src_set_callbacks(GST_APP_SRC(src1), &srcCB, &m_readData[0], NULL);
+	gst_app_src_set_callbacks(GST_APP_SRC(src2), &srcCB, &m_readData[1], NULL);
+	*/
+
+
+	if (threadAppSink){
+		GstElement * appQueue = gst_element_factory_make("queue", "appsink_queue");
+		g_object_set(G_OBJECT(appQueue), "leaky", 0, "silent", 1, (void*)NULL);
+		GstElement* appBin = gst_bin_new("app_bin");
+		gst_bin_add(GST_BIN(appBin), appQueue);
+		GstPad* appQueuePad = gst_element_get_static_pad(appQueue, "sink");
+		GstPad* ghostPad = gst_ghost_pad_new("app_bin_sink", appQueuePad);
+		gst_object_unref(appQueuePad);
+		gst_element_add_pad(appBin, ghostPad);
+
+		gst_bin_add_many(GST_BIN(appBin), sink, NULL);
+		gst_element_link_many(appQueue, sink, NULL);
+
+		g_object_set(G_OBJECT(gstPipeline), "video-sink", appBin, (void*)NULL);
+	}
+	else{
+		g_object_set(G_OBJECT(gstPipeline), "video-sink", sink, (void*)NULL);
+	}
+
+
+	//gst_element_set_state(gstPipeline, GST_STATE_PLAYING);
+	bIsStream = true;
+	videoUtils->setPipelineWithSink(gstPipeline, sink, bIsStream);
+	videoUtils->startPipeline();
+	return true;
+
+}
+
 #endif
 void GstVideoPlayer::setThreadAppSink(bool threaded){
 	threadAppSink = threaded;

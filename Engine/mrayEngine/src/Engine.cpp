@@ -73,6 +73,8 @@
 #include "GUIElementFactory.h"
 #include "TextureSourceFactory.h"
 
+#include "InternetCacheManager.h"
+
 
 namespace mray
 {
@@ -188,10 +190,13 @@ Engine::Engine(GCPtr<OS::IOSystem> system)
 	new GUI::TextDecorateNodeFactory();
 
 
+	new network::InternetCacheManager();
+
 }
 Engine::~Engine(){
 	traceFunction(Engine);
 
+	delete network::InternetCacheManager::getInstancePtr();
 
 	delete m_pluginManager;
 

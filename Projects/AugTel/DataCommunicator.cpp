@@ -76,7 +76,7 @@ int DataCommunicator::_Process()
 	char buffer[MAX_BUFFER];
 	network::NetAddress src;
 	uint len = MAX_BUFFER;
-	if (m_client->RecvFrom(buffer, &len, &src) != network::UDP_SOCKET_ERROR_NONE)
+	if (m_client->RecvFrom(buffer, &len, &src,0) != network::UDP_SOCKET_ERROR_NONE)
 		return 0;//failed to receive the packet
 	OS::CMemoryStream stream("", (uchar*)buffer, len, false);
 	int msg = 0;

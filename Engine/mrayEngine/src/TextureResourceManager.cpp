@@ -204,7 +204,7 @@ video::ITexturePtr  TextureResourceManager::loadTexture1D(const core::string&nam
 	video::ITexturePtr  tex=createEmptyTexture1D(name,false);
 	if(!tex)
 		return 0;
-	tex->AddLoadStream(gFileSystem.openFile(name));
+	tex->AddLoadStream(gFileResourceManager.getFile(name));
 //	tex->loadSurfaces(lst,1);
 //	tex->load();
 
@@ -235,7 +235,7 @@ video::ITexturePtr  TextureResourceManager::loadTexture2D(const core::string&nam
 	video::ITexturePtr  tex=createEmptyTexture2D(name,false);
 	if(!tex)
 		return 0;
-	tex->AddLoadStream(gFileSystem.openFile(name));
+	tex->AddLoadStream(gFileResourceManager.getFile(name));
 	/*video::ImageInfo* lst[1];
 	lst[0]=info.pointer();
 	tex->loadSurfaces(lst,1);*/
@@ -268,7 +268,7 @@ video::ITexturePtr  TextureResourceManager::loadTexture3D(const core::string&nam
 	video::ITexturePtr  tex=createEmptyTexture3D(name,false);
 	if(!tex)
 		return 0;
-	tex->AddLoadStream(gFileSystem.openFile(name));
+	tex->AddLoadStream(gFileResourceManager.getFile(name));
 	/*video::ImageInfo* lst[1];
 	lst[0]=info.pointer();
 	tex->loadSurfaces(lst,1);*/
@@ -305,7 +305,7 @@ video::ITexturePtr  TextureResourceManager::loadTextureCube(const core::string&n
 	if(!tex)
 		return 0;
 	for(int i=0;i<6;++i)
-		tex->AddLoadStream(gFileSystem.openFile(files[i]));
+		tex->AddLoadStream(gFileResourceManager.getFile(files[i]));
 	/*video::ImageInfo* lst[1];
 	lst[0]=info.pointer();
 	tex->loadSurfaces(lst,1); //take to consideration faces of the cube (should be 6 surfaces)
@@ -446,7 +446,7 @@ void TextureResourceManager::writeResourceToDist(const IResourcePtr& resource,co
 			resource->getResourceName()+mT("\""),ELL_ERROR);
 		return;
 	}
-	OS::IStreamPtr file=gFileSystem.openFile(fileName,OS::BIN_WRITE);
+	OS::IStreamPtr file=gFileResourceManager.getFile(fileName,OS::BIN_WRITE);
 	if(!file){
 		gLogManager.log(mT("Couldn't open file for writing:\"")+
 			fileName+mT("\""),ELL_ERROR);

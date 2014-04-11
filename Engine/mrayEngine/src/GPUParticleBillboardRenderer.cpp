@@ -117,7 +117,7 @@ void GPUParticleBillboardRenderer::addParticle(const math::vector3d&pos,float an
 	m_tc3Ptr+=4;
 }
 void GPUParticleBillboardRenderer::done(){
-	if(!m_locked)
+	if(m_locked)
 		return;
 
 	m_indecies->indexCount=0;

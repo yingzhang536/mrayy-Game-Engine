@@ -23,17 +23,19 @@ namespace mray
 {
 namespace TBee
 {
-	class GstSingleNetVideoSource;
+	class GStreamVideoProvider;
 
 class GstStereoStreamVideoSource :public ICameraVideoSource
 {
 protected:
-	GstSingleNetVideoSource* m_sources[2];
+	GStreamVideoProvider* m_providers;
+	video::ITexturePtr m_remoteTex;
+	int m_port1;
+	int m_port2;
 public:
-	GstStereoStreamVideoSource(const core::string& ip1 = "127.0.0.1", int port1 = 5000, const core::string& ip2 = "127.0.0.1", int port2 = 5001);
+	GstStereoStreamVideoSource( int port1 = 5000, int port2 = 5001);
 	virtual~GstStereoStreamVideoSource();
 
-	void SetIPs(const core::string& ip1, const core::string& ip2);
 	void SetPorts(int port1, int port2);
 
 	void Init();
@@ -44,7 +46,7 @@ public:
 	virtual math::vector2d GetEyeScalingFactor(int i){ return math::vector2d(1, 1); }
 	virtual math::vector2d GetEyeResolution(int i);
 	virtual video::ITexturePtr GetEyeTexture(int i);
-	virtual math::rectf GetEyeTexCoords(int i) { return math::rectf(0, 0, 1, 1); }
+	virtual math::rectf GetEyeTexCoords(int i) { return math::rectf(0.5*i, 0, 0.5+0.5*i, 1); }
 };
 
 }

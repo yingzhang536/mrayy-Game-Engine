@@ -35,7 +35,7 @@ public:
 	class IListener
 	{
 	public:
-		virtual void OnTextChange(GUIEditBoxComponent*caller)=0;
+		virtual void OnTextChangeCallback(GUIEditBoxComponent*caller)=0;
 	};
 private:
 protected:

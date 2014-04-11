@@ -39,9 +39,13 @@ protected:
 	void _Clear();
 public:
 	UTFString();
-	UTFString(const core::string&str):m_data(0),m_length(0),m_capacity(0)
+	UTFString(const core::stringc&str):m_data(0),m_length(0),m_capacity(0)
 	{
-		Set(str);
+		SetA(str);
+	}
+	UTFString(const core::stringw&str) :m_data(0), m_length(0), m_capacity(0)
+	{
+		SetW(str);
 	}
 	UTFString(const UTFString&o):m_data(0),m_length(0),m_capacity(0)
 	{
@@ -62,7 +66,11 @@ public:
 	void Set(const utf32*buf);
 
 	void Set(const core::string& str);
+	void SetA(const core::stringc& str);
+	void SetW(const core::stringw& str);
 	core::string GetAsString()const;
+	core::stringc GetAsStringA()const;
+	core::stringw GetAsStringW()const;
 
 	utf32 operator [](const uint index) const
 	{
@@ -75,7 +83,10 @@ public:
 	UTFString& operator=(const UTFString&o);
 	UTFString& operator=(const utf8*buf);
 	UTFString& operator=(const utf32*buf);
+	UTFString& operator+=(utf32 c);
+	UTFString& operator+=(const UTFString& buf);
 	bool operator==(const UTFString& o)const;
+	bool operator!=(const UTFString& o)const;
 	bool operator <(const UTFString& other) const;
 
 
@@ -102,6 +113,9 @@ public:
 
 	static uint UTF8Length(const utf8*buf);
 	static uint UTF32Length(const utf32*buf);
+
+	
+	static const UTFString Empty;
 };
 
 }

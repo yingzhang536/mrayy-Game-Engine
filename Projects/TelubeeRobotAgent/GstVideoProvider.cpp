@@ -586,6 +586,18 @@ public:
  			"  ! rtpmp4vpay send-config=true"// mtu=" + core::StringConverter::toString(mu) + 
 // 			" ! rtpmp4vdepay ! ffdec_mpeg4 ! autovideosink";
 			" ! mysink name=sink sync=false ";/**/
+
+
+		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace !    "
+			"x264enc  name=enc"
+			" pass=" + pass +
+			"  quantizer=" + core::StringConverter::toString(quanizer) +
+			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			" tune=zerolatency"
+			//" rc-lookahead=1"
+			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+			" !gdppay" 
+			" ! mysink name=sink sync=false ";
 #else
 
 		gstString = "appsrc name=src ! "

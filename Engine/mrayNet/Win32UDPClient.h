@@ -76,13 +76,15 @@ namespace network
 		UDPClientError SetMulticastInterface(unsigned long interfaceAddress);
 
 		UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len);
-		UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src);
+		UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src,int flags);
 		UDPClientError GetAvailableBytes(unsigned int* len);
 		// Status
 		bool IsOpen() {return (bool)(handle != INVALID_SOCKET);}        
 		bool IsConnected() {return connected;}
 		unsigned short Port() {return port;}
 		SocketHandle Handle() {return handle;}
+
+		void SetNonBlocking(bool b);
 
 		void OnReceive();
 #ifdef HAVE_IPV6

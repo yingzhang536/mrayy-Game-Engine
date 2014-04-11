@@ -83,6 +83,8 @@ protected:
 	bool m_streamAudio;
 	bool m_depthSend;
 
+	int m_videoPort;
+
 	core::string m_ip;
 
 	struct CameraInfo

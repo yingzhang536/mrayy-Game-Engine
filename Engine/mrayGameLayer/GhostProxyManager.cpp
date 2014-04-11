@@ -108,7 +108,7 @@ class GhostProxyManagerImpl;
 		{
 			uint len=UDPBufferSize;
 			network::NetAddress addr;
-			if(client->RecvFrom((char*)rcv_buffer,&len,&addr)!=network::UDP_SOCKET_ERROR_NONE)
+			if(client->RecvFrom((char*)rcv_buffer,&len,&addr,0)!=network::UDP_SOCKET_ERROR_NONE)
 			{
 				OS::CMemoryStream stream("",rcv_buffer,UDPBufferSize,false,OS::BIN_READ);
 				OS::StreamReader rdr(&stream);
@@ -422,7 +422,7 @@ class GhostProxyManagerImpl;
 				continue;
 			}
 			len=UDPBufferSize;
-			if(m_owner->GetClient()->RecvFrom(buffer,&len,&addr)==network::UDP_SOCKET_ERROR_NONE)
+			if (m_owner->GetClient()->RecvFrom(buffer, &len, &addr, 0) == network::UDP_SOCKET_ERROR_NONE)
 			{
 				int packet=core::BitConverter::ToInt32((byte*)buffer);
 				switch(packet)

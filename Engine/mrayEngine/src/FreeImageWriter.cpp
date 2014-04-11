@@ -125,7 +125,7 @@ bool FreeImageWriter::write(video::ImageInfo*tex,OS::IStream* stream,video::ETex
 	if(true)
 	{
 
-		dib=FreeImage_ConvertFromRawBits(pSrc,tex->Size.x,tex->Size.y,srcPitch,bpp,0x0000FF, 0x00FF00,0xFF0000,false);
+		dib = FreeImage_ConvertFromRawBits(pSrc, tex->Size.x, tex->Size.y, srcPitch, bpp, 0xFF0000, 0x00FF00, 0x0000FF, false);
 	}else
 	{
 		dib=FreeImage_AllocateT(imageType,tex->Size.x,tex->Size.y,bpp);

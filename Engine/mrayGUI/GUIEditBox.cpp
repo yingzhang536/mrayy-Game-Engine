@@ -31,6 +31,8 @@ GUIEditBox::GUIEditBox(IGUIManager*mngr):IGUIEditBox(mngr)
 
 	m_FontAttributes.fontAligment=EFA_MiddleLeft;
 
+	m_component->listener = this;
+
 	fillProperties();
 }
 
@@ -89,6 +91,13 @@ void GUIEditBox::Update(float dt)
 
 }
 
+void GUIEditBox::OnTextChangeCallback(GUIEditBoxComponent*caller)
+{
+	OnTextChange(this, &m_component->text);
+}
+
+
+
 bool GUIEditBox::SetText(const core::UTFString& cap)
 {
 	if(!m_component->SetText(cap))
@@ -120,6 +129,7 @@ IGUIElement* GUIEditBox::Duplicate()
 
 	return dup;
 }
+
 
 FontAttributes* GUIEditBox::GetFontAttributes()
 {

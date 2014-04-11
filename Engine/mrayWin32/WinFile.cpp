@@ -127,7 +127,9 @@ int WinFile::write(const void*data,size_t size){
 // 		cnt=printText(m_fp,(const wchar_t*)data);
 // 	}else
 	{
-		return fwrite(data,1,size,m_fp);
+		int cnt= fwrite(data,1,size,m_fp);
+		m_length += cnt;
+		return cnt;
 	}
 	//WriteFile(m_fp,data,size,&cnt,0);
 	//return cnt;//fwrite(data,1,size,m_fp);

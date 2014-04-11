@@ -68,6 +68,7 @@ protected:
 	bool m_viewDepth;
 
 	float m_depthTime;
+	bool m_showScene;
 
 	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();

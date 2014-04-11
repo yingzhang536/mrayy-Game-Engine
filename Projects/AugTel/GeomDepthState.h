@@ -24,6 +24,7 @@ namespace mray
 	namespace TBee
 	{
 		class OpenNIHandler;
+		class DepthVisualizer;
 	}
 namespace AugTel
 {
@@ -31,6 +32,7 @@ class GeomDepthState :public TBee::IRenderingState
 {
 protected:
 	TBee::OpenNIHandler* m_openNiHandler;
+	TBee::DepthVisualizer* m_visualizer;
 
 	bool m_mouseDown;
 	math::vector2d m_mousePos;

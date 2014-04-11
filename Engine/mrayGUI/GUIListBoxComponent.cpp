@@ -396,15 +396,15 @@ void GUIListBoxComponent::LBDraw(const math::rectf& rc)
 	}
 	for(int i=m_startItem;i<lastItem;++i)
 	{
-		math::rectf itmRc(innerRect.ULPoint.x,itemPos,innerRect.BRPoint.x,itemPos+cDim);
+		math::rectf itmRc(innerRect.ULPoint.x,itemPos,innerRect.BRPoint.x,itemPos);
+		itmRc.BRPoint.y += items[i]->GetHeight(owner);
 		video::SColor clr;
 		if(i%2==0)
 			clr=video::SColor(0.7,0.7,0.7,0.2);
 		else
 			clr=video::SColor(1,1,1,0.2);
 		creator->GetRenderQueue()->AddQuad(0,itmRc,math::rectf(0,0,1,1),clr);
-		font->print(itmRc,owner->GetFontAttributes(),0,items[i]->toString(),creator->GetRenderQueue());
-
+		items[i]->Draw(itmRc,owner, font, creator->GetRenderQueue());
 		if(m_selectedItem==i)
 		{
 			creator->GetRenderQueue()->AddQuad(0,itmRc,math::rectf(0,0,1,1),video::SColor(0.3,0.3,0.6,0.5));
@@ -413,7 +413,7 @@ void GUIListBoxComponent::LBDraw(const math::rectf& rc)
 			creator->GetRenderQueue()->AddQuad(0,itmRc,math::rectf(0,0,1,1),video::SColor(0.5,0.5,0.5,0.5));
 		}
 
-		itemPos+=cDim;
+		itemPos += itmRc.getHeight();
 	}
 
 	if(displayScrollBar)

@@ -4,6 +4,11 @@
 #include "DepthFrame.h"
 
 
+//references :
+// http://www.azerdev.com/wp-content/uploads/2013/02/IGS_Report.pdf
+// http://www.codeproject.com/Articles/317974/KinectDepthSmoothing
+// http://en.wikipedia.org/wiki/Bilateral_filter
+
 
 namespace mray
 {
@@ -12,7 +17,7 @@ namespace TBee
 #define NORM_DEVISION 1000.0f
 class DepthFrameImpl
 {
-protected:
+public:
 
 
 
@@ -23,8 +28,13 @@ protected:
 
 	float m_amplitude;
 
-
+	bool m_thresholdEnable;
 	bool m_smoothing;
+
+	float m_minThreshold;
+	float m_maxThreshold;
+
+	bool m_gapFill;
 	int m_innerBandThreshold;//1->8
 	int m_outerBandThreshold;//1->16
 
@@ -37,8 +47,6 @@ protected:
 	DepthFrame::FrameData<float> m_normalizedDepth;
 	DepthFrame::FrameData<float> m_bilteralTmp;
 
-	float m_minThreshold;
-	float m_maxThreshold;
 	std::vector<double> m_gaussKernel;
 	float *m_gaussSim;
 
@@ -52,6 +60,8 @@ public:
 		m_normalDirty = 0;
 		m_amplitude = 1;
 
+		m_thresholdEnable = true;
+		m_gapFill = true;
 		m_smoothing = true;
 		m_innerBandThreshold = 3;
 		m_outerBandThreshold = 6;
@@ -60,7 +70,7 @@ public:
 		m_maxThreshold = 10;
 
 		int kernelSize = 7;
-		float sigmaD = 6;
+		float sigmaD = 2;
 		m_gaussKernel.resize(kernelSize);
 		int center = (kernelSize - 1) / 2;
 		float w = 0;
@@ -137,8 +147,7 @@ public:
 		return m_normals.Data();
 	}
 
-	//http://www.codeproject.com/Articles/317974/KinectDepthSmoothing
-	void _smoothDepthMap()
+	void _gapFillDepthMap()
 	{
 		m_smoothedDepthData.createData(m_size.x, m_size.y);
 		ushort filterCollection[24][2];
@@ -149,7 +158,7 @@ public:
 			for (int row = 0; row < m_size.y; ++row)
 			{
 				int depthIndex = row*m_size.x + col;
-				if (dptr[depthIndex] == 0 && false)
+				if (dptr[depthIndex] == 0 )
 				{
 					int x = col;// index%m_width;
 					int y = row;// (index - x) / m_width;
@@ -262,7 +271,6 @@ public:
 		return m_gaussSim[dist];
 	}
 
-	//http://en.wikipedia.org/wiki/Bilateral_filter
 	void _bilteralFilter(float* f, float*ret)
 	{
 		//usefull generator: http://www.embege.com/gauss/
@@ -341,13 +349,15 @@ public:
 		m_depthDirty = false;
 		DepthFrame::FrameData<ushort>* depthPtr = &m_depthData;
 
-		if (m_smoothing)
+		if (m_gapFill)
 		{
-			_smoothDepthMap();
+			_gapFillDepthMap();
 			depthPtr = &m_smoothedDepthData;
 		}
 
 		float* nptr = m_preNormDepth.Data();
+		if (!m_smoothing)
+			nptr = m_normalizedDepth.Data();
 		ushort*dptr = depthPtr->Data();
 		for (int y = 0; y < m_size.y; ++y)
 		{
@@ -356,14 +366,17 @@ public:
 			{
 				int index = (m_size.y - y - 1)*m_size.x + x;
 				*nptr = ((float)dptr[index] / NORM_DEVISION);
-				if (*nptr < m_minThreshold || *nptr>m_maxThreshold)
-				{
-					*nptr = 99;
+				if (m_thresholdEnable){
+					if (*nptr < m_minThreshold || *nptr>m_maxThreshold)
+					{
+						*nptr = 99;
+					}
 				}
 				++nptr;
 			}
 		}
-		_bilteralFilter(m_preNormDepth.Data(), m_normalizedDepth.Data());
+		if (m_smoothing)
+			_bilteralFilter(m_preNormDepth.Data(), m_normalizedDepth.Data());
 	}
 
 	void CalculateNormals()
@@ -522,6 +535,14 @@ DepthFrame::~DepthFrame()
 	delete m_impl;
 }
 
+void DepthFrame::EnableThreshold(bool e)
+{
+	m_impl->m_thresholdEnable = e;
+}
+bool DepthFrame::IsThresholdEnabled()
+{
+	return m_impl->m_thresholdEnable;
+}
 void DepthFrame::SetThresholds(float min, float max)
 {
 	m_impl->SetThresholds(min, max);
@@ -540,6 +561,37 @@ void DepthFrame::Clean()
 	m_impl->Clean();
 }
 
+
+void DepthFrame::EnableSmoothing(bool e)
+{
+	m_impl->m_smoothing = e;
+}
+bool DepthFrame::IsSmoothingEnabled()
+{
+	return m_impl->m_smoothing;
+}
+
+void DepthFrame::EnableGapFill(bool e)
+{
+	m_impl->m_gapFill = e;
+}
+bool DepthFrame::IsGapFillEnabled()
+{
+	return m_impl->m_gapFill;
+}
+void DepthFrame::SetBandThreshold(int inner, int outer)
+{
+	m_impl->m_innerBandThreshold = inner;
+	m_impl->m_outerBandThreshold = outer;
+}
+int DepthFrame::GetInnerBandThreshold()
+{
+	return m_impl->m_innerBandThreshold;
+}
+int DepthFrame::GetOuterBandThreshold()
+{
+	return m_impl->m_outerBandThreshold;
+}
 
 const math::vector2di& DepthFrame::GetSize()
 {

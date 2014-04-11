@@ -373,11 +373,15 @@ namespace network
 	}  // end Win32UDPClient::SendTo()
 
 
+	void Win32UDPClient::SetNonBlocking(bool b)
+	{
+		Win32Network::setSocketOption(handle, network::ESocketOption::ESO_NONBLOCK, true);
+	}
 	UDPClientError Win32UDPClient::RecvFrom(char*            buffer, 
 		unsigned int*    buflen, 
-		NetAddress*  sourceAddr)
+		NetAddress*  sourceAddr, int flags)
 	{
-		int result=Win32Network::inner_receivefrom(handle,buffer,(int)*buflen,sourceAddr);
+		int result=Win32Network::inner_receivefrom(handle,buffer,(int)*buflen,sourceAddr,flags);
 		if (result < 0)
 		{
 			*buflen=0;

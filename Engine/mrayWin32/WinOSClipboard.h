@@ -16,6 +16,8 @@ namespace OS{
 class MRAY_Win32_DLL WinOSClipboard:public IOSClipboard
 {
 public:
+	WinOSClipboard();
+	virtual ~WinOSClipboard();
 	//! copy text to clipboard
 	virtual void copyToClipboard(const  mchar*data);
 	//! get clipboard text

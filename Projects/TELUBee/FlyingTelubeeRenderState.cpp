@@ -11,8 +11,9 @@
 #include "GStreamVideoProvider.h"
 
 #include "TextureResourceManager.h"
-#include "GstSingleNetVideoSource.h"
+#include "GstStereoStreamVideoSource.h"
 #include "FlyingTelubeeRobotCommunicator.h"
+#include "RemoteRobotCommunicator.h"
 
 namespace mray
 {
@@ -26,13 +27,16 @@ FlyingTelubeeRenderState::FlyingTelubeeRenderState()
 	m_fps = 0;
 	m_timeAcc = 0;
 	IEyesRenderingBaseState::InitState();
-	m_robotConnector->SetCommunicator(new FlyingTelubeeRobotCommunicator());
+	m_robotConnector->SetCommunicator(new  FlyingTelubeeRobotCommunicator());
 
-	m_cameraSource = new GstSingleNetVideoSource();
+	m_cameraSource = new GstStereoStreamVideoSource();
 	// 	m_eyes[0].flip90 = true;
 	// 	m_eyes[1].flip90 = true;
 	m_eyes[0].cw = true;
 	m_eyes[1].cw = false;
+
+	m_port1 = 5000;
+	m_port2 = 5001;
 
 	SetVideoSource(m_cameraSource);
 
@@ -47,6 +51,7 @@ FlyingTelubeeRenderState::~FlyingTelubeeRenderState()
 
 void FlyingTelubeeRenderState::InitState()
 {
+	IEyesRenderingBaseState::InitState();
 	m_cameraSource->Init();
 
 }
@@ -92,7 +97,8 @@ void FlyingTelubeeRenderState::OnEnter(IRenderingState*prev)
 
 	if (ifo)
 	{
-		m_cameraSource->SetIP(ifo->IP);
+		m_cameraSource->SetPorts(m_port1, m_port2);
+		//m_cameraSource->SetPort(m_port1);
 		m_cameraSource->Open();
 		m_robotConnector->ConnectRobotIP(ifo->IP, 5000, 5002, 5003);
 	}
@@ -180,15 +186,13 @@ void FlyingTelubeeRenderState::LoadFromXML(xml::XMLElement* e)
 	xml::XMLAttribute* attr;
 
 
-	attr = e->getAttribute("Host");
+	attr = e->getAttribute("VideoPort1");
 	if (attr)
-		m_hostIp = attr->value;
-	attr = e->getAttribute("HostPort");
+		m_port1 = core::StringConverter::toInt(attr->value);
+	attr = e->getAttribute("VideoPort2");
 	if (attr)
-		m_hostPort = core::StringConverter::toInt(attr->value);
-	attr = e->getAttribute("LocalPort");
-	if (attr)
-		m_localPort = core::StringConverter::toInt(attr->value);
+		m_port2 = core::StringConverter::toInt(attr->value);
+
 }
 
 

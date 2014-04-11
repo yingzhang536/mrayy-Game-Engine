@@ -53,7 +53,8 @@ void MeshGenerator::setMeshName(SMesh*mesh,EGenTypes type){
 }
 
 
-void MeshGenerator::generateBox(const math::vector3d&  extent,IMeshBuffer*buf){
+void MeshGenerator::generateBox(const math::vector3d&  extent, IMeshBuffer*buf, int startIndex, int startVertex)
+{
 
 	if(!buf)
 		return;
@@ -224,7 +225,7 @@ void MeshGenerator::generateBox(const math::vector3d&  extent,IMeshBuffer*buf){
 
 	//setMeshName(mesh,EGT_Box);
 }
-void MeshGenerator::generateSphere(float radius,int uSlices,int vSlices,IMeshBuffer*buf){
+void MeshGenerator::generateSphere(float radius, int uSlices, int vSlices, IMeshBuffer*buf, int startIndex, int startVertex){
 
 	if(!buf)
 		return;
@@ -363,7 +364,7 @@ void MeshGenerator::generateSphere(float radius,int uSlices,int vSlices,IMeshBuf
 		radius,radius,radius));
 	setMeshName(mesh,EGT_Sphere);*/
 }
-void MeshGenerator::generateCapsule(float radius,float height,int segments,IMeshBuffer*buf){
+void MeshGenerator::generateCapsule(float radius, float height, int segments, IMeshBuffer*buf, int startIndex, int startVertex){
 
 	if(!buf)
 		return;
@@ -602,7 +603,8 @@ void MeshGenerator::generateCapsule(float radius,float height,int segments,IMesh
 
 	setMeshName(mesh,EGT_Capsule);*/
 }
-void MeshGenerator::generateTorus(float radius1,float radius2,int segments,int sides,IMeshBuffer*buf){
+void MeshGenerator::generateTorus(float radius1, float radius2, int segments, int sides, IMeshBuffer*buf, int startIndex, int startVertex)
+{
 
 	if(!buf)
 		return;
@@ -737,7 +739,8 @@ void MeshGenerator::generateTorus(float radius1,float radius2,int segments,int s
 
 	setMeshName(mesh,EGT_Torus);*/
 }
-void MeshGenerator::generateCylinder(float radius,float height,int segments,IMeshBuffer*buf){
+void MeshGenerator::generateCylinder(float radius, float height, int segments, IMeshBuffer*buf, int startIndex, int startVertex)
+{
 
 	if(!buf)
 		return;
@@ -873,7 +876,8 @@ void MeshGenerator::generateCylinder(float radius,float height,int segments,IMes
 
 	setMeshName(mesh,EGT_Cylinder);*/
 }
-void MeshGenerator::generatePlane(int widthSegment,int lengthSegment,IMeshBuffer*buf){
+void MeshGenerator::generatePlane(int widthSegment, int lengthSegment, IMeshBuffer*buf, int startIndex, int startVertex)
+{
 
 	if(!buf)
 		return;
@@ -1476,7 +1480,7 @@ void MeshGenerator::generateTerrain(video::ITexture*heightMap,int patchSize,SMes
 	setMeshName(terrMesh,EGT_Terrain);
 }
 
-void MeshGenerator::generateBillboard(IViewNode*cam,const math::vector3d&  pos,const math::vector2d&  size,float angle,bool rotHor,bool rotVer,math::vector3d*vert)
+void MeshGenerator::generateBillboard(IViewNode*cam, const math::vector3d&  pos, const math::vector2d&  size, float angle, bool rotHor, bool rotVer, math::vector3d*vert, int startIndex, int startVertex)
 {
 
 	math::vector3d hor(1,0,0);
@@ -1514,7 +1518,7 @@ void MeshGenerator::generateBillboard(IViewNode*cam,const math::vector3d&  pos,c
 	vert[3]=pos+X-Y;
 }
 void MeshGenerator::generateBillboard(IViewNode*cam,const math::vector3d&  pos,const math::vector2d&  size,float angle,
-									  bool rotHor,bool rotVer,IMeshBuffer*buffer)
+	bool rotHor, bool rotVer, IMeshBuffer*buffer, int startIndex, int startVertex)
 {
 
 	if(!buffer)
@@ -1549,7 +1553,7 @@ void MeshGenerator::generateBillboard(IViewNode*cam,const math::vector3d&  pos,c
 //	setMeshName(mesh,EGT_Billboard);
 }
 void MeshGenerator::generateBillboardBeam(IViewNode*cam,float width,const math::vector3d&  start,
-										  const math::vector3d&  end,IMeshBuffer*mesh,const math::matrix4x4* worldMat)
+	const math::vector3d&  end, IMeshBuffer*mesh, const math::matrix4x4* worldMat, int startIndex , int startVertex )
 {
 
 
@@ -1672,6 +1676,170 @@ void MeshGenerator::generateBillboardBeam(IViewNode*cam,float width,const math::
 	setMeshName(bill,EGT_BillboardBeam);*/
 }
 
+
+void MeshGenerator::generateBillboardChain(IViewNode*cam, float startW, float endW, const math::vector3d* points, int count,  IMeshBuffer*mesh, const math::matrix4x4* worldMat, int startIndex, int startVertex)
+{
+
+	if (!mesh || count<2)
+		return;
+
+	int vCount = count*2;
+
+
+	video::IHardwareStreamBuffer* vStream = mesh->getStream(0, video::EMST_Position);
+	if (!vStream)
+		vStream = mesh->createStream(0, video::EMST_Position, video::ESDT_Point3f, vCount, video::IHardwareStreamBuffer::EUT_StaticWriteOnly, true);
+	else{
+		vStream->setElementType(video::ESDT_Point3f);
+		vStream->resize(vCount*vStream->getElementSize());
+	}
+
+	video::IHardwareStreamBuffer* tcStream = mesh->getStream(0, video::EMST_Texcoord);
+	if (!tcStream)
+		tcStream = mesh->createStream(0, video::EMST_Position, video::ESDT_Point2f, vCount, video::IHardwareStreamBuffer::EUT_StaticWriteOnly, true);
+	else{
+		tcStream->setElementType(video::ESDT_Point2f);
+		tcStream->resize(vCount*tcStream->getElementSize());
+	}
+	video::IHardwareStreamBuffer* nStream = mesh->getStream(0, video::EMST_Normal);
+	if (!nStream)
+		nStream = mesh->createStream(0, video::EMST_Normal, video::ESDT_Point3f, vCount, video::IHardwareStreamBuffer::EUT_StaticWriteOnly, true);
+	else{
+		nStream->setElementType(video::ESDT_Point3f);
+		nStream->resize(vCount*vStream->getElementSize());
+	}
+	math::vector3d*vert = (math::vector3d*)vStream->lock(0, 0, video::IHardwareStreamBuffer::ELO_Discard);
+	math::vector2d*tc = (math::vector2d*)tcStream->lock(0, 0, video::IHardwareStreamBuffer::ELO_Discard);
+	math::vector3d*norm = (math::vector3d*)nStream->lock(0, 0, video::IHardwareStreamBuffer::ELO_Discard);
+
+	const math::matrix4x4 &mat = cam->getViewMatrix();
+	//Bf=Cf
+	//(mat(0,0), mat(0,1), mat(0,2));
+	//math::vector3d camPos=cam->getAbsolutePosition();
+	//math::vector3d frontVec=cam->target()-camPos;
+	//int cnt = m_currIndex - m_startIndex + 1;
+	int indexCount = 2 * count - 2;
+	// 	if(cnt>0)
+	// 		m_vPoses[0]=getAbsolutePosition();
+	int n = 0;
+
+	float deltaV = 1.0f / (float)count;
+
+	math::vector3d eye = mat.getAxisVector(2);
+	float currV = 0;
+	for (int i = 0; i<count-1; i += 2){
+		//eye vector to beam
+		//E=Cp-Bs
+		int a = (i + 0);
+		int b = (a + 1);
+
+		math::vector3d vStartPoint = points[i];
+		math::vector3d vEndPoint = points[i+1];
+
+		//beam vector defined by endPoints
+		//B = Be - Bs
+		math::vector3d beam = vStartPoint - vEndPoint;
+		beam.Normalize();
+		// 
+		// 		//Cross Produt of beam and eye
+		// 		//P=B x E
+		// 		math::vector3d pBeam = eye.crossProduct(beam);
+		// 
+		// 		//find up and right vectors
+		// 		//Bu=(Bf x P) / |Bf x P|
+		// 		//Br=Bf x Bu
+		// 		math::vector3d upVec=frontVec.crossProduct(pBeam);
+		// 		upVec.Normalize();
+		// 
+		//		math::vector3d rightVec=frontVec.crossProduct(upVec);
+		//Cross Produt of beam and eye
+		//P=B x E
+		math::vector3d upVec = eye.crossProduct(beam);
+		//upVec.set(0,1,0);
+		math::vector3d rightVec = upVec.crossProduct(beam);
+
+		//find up and right vectors
+		//Bu=(Bf x P) / |Bf x P|
+		//Br=Bf x Bu
+		//		math::vector3d rightVec=eye.crossProduct(upVec);
+		//		upVec.Normalize();
+
+		//		math::vector3d rightVec=frontVec.crossProduct(upVec);
+		/*
+		//calc matrix
+		matrix4x4 mBeam;
+
+		mBeam(0,0)=rightVec.x;
+		mBeam(0,1)=rightVec.y;
+		mBeam(0,2)=rightVec.z;
+
+		mBeam(1,0)=upVec.x;
+		mBeam(1,1)=upVec.y;
+		mBeam(1,2)=upVec.z;
+
+		mBeam(2,0)=frontVec.x;
+		mBeam(2,1)=frontVec.y;
+		mBeam(2,2)=frontVec.z;
+
+		//create a matrix for each end point
+
+		matrix4x4 mSPoint=mBeam;
+
+		mSPoint(3,0)=vStartPoint.x;
+		mSPoint(3,1)=vStartPoint.y;
+		mSPoint(3,2)=vStartPoint.z;
+
+		matrix4x4 mEPoint=mBeam;
+
+		mEPoint(3,0)=vEndPoint.x;
+		mEPoint(3,1)=vEndPoint.y;
+		mEPoint(3,2)=vEndPoint.z;
+		//mSPoint.transformVect(math::vector3d(-w,0,0),mesh->currFrame[i*2].Pos);
+		//mSPoint.transformVect(math::vector3d( w,0,0),mesh->currFrame[i*2+2].Pos);
+
+		//mEPoint.transformVect(math::vector3d(-w,0,0),mesh->currFrame[i*2+3].Pos);
+		//mEPoint.transformVect(math::vector3d( w,0,0),mesh->currFrame[i*2+1].Pos);
+		*/
+
+		float t = 1 - (float)i / (float)count;
+
+		tc[n + 0] = math::vector2d(currV, 0);
+		tc[n + 1] = math::vector2d(currV, 1);
+		tc[n + 2] = math::vector2d(currV + deltaV, 0);
+		tc[n + 3] = math::vector2d(currV + deltaV, 1);
+
+		currV += deltaV;
+
+		float w = startW*(1 - t) + endW*t;
+		vert[n + 0] = vStartPoint - upVec*w;
+		vert[n + 1] = vStartPoint + upVec*w;
+		vert[n + 2] = vEndPoint - upVec*w;
+		vert[n + 3] = vEndPoint + upVec*w;
+
+		norm[n + 0] = rightVec;
+		norm[n + 1] = rightVec;
+		norm[n + 2] = rightVec;
+		norm[n + 3] = rightVec;
+/*
+
+		binorm[n + 0] = upVec;
+		binorm[n + 1] = upVec;
+		binorm[n + 2] = upVec;
+		binorm[n + 3] = upVec;
+
+		tangent[n + 0] = beam;
+		tangent[n + 1] = beam;
+		tangent[n + 2] = beam;
+		tangent[n + 3] = beam;*/
+
+		n += 4;
+	}
+	vStream->unlock();
+	nStream->unlock();
+// 	bStream->unlock();
+// 	tStream->unlock();
+	tcStream->unlock();
+}
 
 }
 }

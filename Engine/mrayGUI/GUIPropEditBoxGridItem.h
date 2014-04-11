@@ -33,7 +33,7 @@ public:
 	GUIPropEditBoxGridItem(IGUIPropertyGrid* grid);
 	virtual~GUIPropEditBoxGridItem();
 
-	virtual void OnTextChange(GUIEditBoxComponent*caller);
+	virtual void OnTextChangeCallback(GUIEditBoxComponent*caller);
 	virtual void SetProperty(IProperty* prop,CPropertieSet* object);
 
 	virtual math::rectf Draw(const math::rectf& rc);

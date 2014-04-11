@@ -189,6 +189,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 
 		m_streamAudio = extraOptions.GetOptionByName("Audio")->getValue() == "Yes";
 		m_isLocal = extraOptions.GetOptionByName("Network")->getValue() == "Local";
+		m_videoPort = core::StringConverter::toInt(extraOptions.GetOptionByName("VideoPort")->getValue() );
 	}
 	_InitResources();
 
@@ -261,7 +262,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_videoProvider->SetNetworkType(m_isLocal);
 	m_videoProvider->EnableAudio(m_streamAudio);
 	m_videoProvider->SetDataSource(m_videoGrabber);
-	m_videoProvider->StreamDataTo(network::NetAddress(m_ip, VIDEO_PORT), VIDEO_PORT,AUDIO_PORT);
+	m_videoProvider->StreamDataTo(network::NetAddress(m_ip, m_videoPort), m_videoPort, AUDIO_PORT);
 //	m_videoProvider->Start();
 
 	m_robotCommunicator = new RobotCommunicator();

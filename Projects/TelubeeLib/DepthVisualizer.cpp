@@ -19,9 +19,13 @@ namespace TBee
 	void DepthVisualizer::Init()
 	{
 
-		m_tex= Engine::getInstance().getDevice()->createEmptyTexture2D(false);
-		m_tex->setMipmapsFilter(false);
-		m_viewDepth = false;
+		m_texDepth = Engine::getInstance().getDevice()->createEmptyTexture2D(false);
+		m_texNormals = Engine::getInstance().getDevice()->createEmptyTexture2D(false);
+		m_texDepth->setMipmapsFilter(false);
+		m_texNormals->setMipmapsFilter(false);
+		m_viewNormals = false;
+		m_depthData.createData(math::vector3d(1, 1, 1), video::EPixel_R8G8B8);
+		m_normalData.createData(math::vector3d(1, 1, 1), video::EPixel_R8G8B8);
 	}
 
 
@@ -33,13 +37,19 @@ namespace TBee
 			|| m_depthData.Size.y != m_frame->GetSize().y)
 		{
 			m_depthData.createData(math::vector3d(m_frame->GetSize().x, m_frame->GetSize().y, 1), video::EPixel_R8G8B8);
-			m_tex->createTexture(math::vector3di(m_frame->GetSize().x, m_frame->GetSize().y, 1), video::EPixel_R8G8B8);
+			m_texDepth->createTexture(math::vector3di(m_frame->GetSize().x, m_frame->GetSize().y, 1), video::EPixel_R8G8B8);
+			if (m_viewNormals)
+			{
+				m_normalData.createData(math::vector3d(m_frame->GetSize().x, m_frame->GetSize().y, 1), video::EPixel_R8G8B8);
+				m_texNormals->createTexture(math::vector3di(m_frame->GetSize().x, m_frame->GetSize().y, 1), video::EPixel_R8G8B8);
+			}
 		}
 
 
 		math::vector3d* normals = m_frame->GetNormals();
 		float *depth = m_frame->GetDepth();
 		uchar* ptr = (uchar*)m_depthData.imageData;
+		uchar* nptr = (uchar*)m_normalData.imageData;
 
 		if (!depth)
 			return;
@@ -48,14 +58,14 @@ namespace TBee
 		{
 			for (int x = 0; x < m_depthData.Size.x; ++x)
 			{
-				if (!m_viewDepth && normals)
+				if (m_viewNormals && normals)
 				{
-					(*ptr++) = (uchar)(math::Max<float>(0, (*normals).x*0.5f + 0.5f) * 255);
-					(*ptr++) = (uchar)(math::Max<float>(0, (*normals).y*0.5f + 0.5f) * 255);
-					(*ptr++) = (uchar)(math::Max<float>(0, (*normals).z*0.5f + 0.5f) * 255);
+					(*nptr++) = (uchar)(math::Max<float>(0, (*normals).x*0.5f + 0.5f) * 255);
+					(*nptr++) = (uchar)(math::Max<float>(0, (*normals).y*0.5f + 0.5f) * 255);
+					(*nptr++) = (uchar)(math::Max<float>(0, (*normals).z*0.5f + 0.5f) * 255);
 					++normals;
 				}
-				else
+				
 				{
 					float v = *depth;
 					v -= m_frame->GetMinThreshold();
@@ -79,8 +89,14 @@ namespace TBee
 		bb.rowPitch = m_depthData.Size.x;
 		bb.slicePitch = m_depthData.Size.x*m_depthData.Size.y;
 
-		video::IHardwarePixelBuffer* buff = m_tex->getSurface(0);
+		video::IHardwarePixelBuffer* buff = m_texDepth->getSurface(0);
 		buff->blitFromMemory(bb);
+		if (m_viewNormals)
+		{
+			bb.data = m_normalData.imageData;
+			buff = m_texNormals->getSurface(0);
+			buff->blitFromMemory(bb);
+		}
 	}
 
 

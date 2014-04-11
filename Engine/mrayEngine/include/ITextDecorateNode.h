@@ -55,7 +55,6 @@ public:
 class ITextDecorateNode
 {
 protected:
-	core::string m_type;//tag type
 	typedef std::list<ITextDecorateNode*> NodeList;
 	NodeList m_childs;
 
@@ -63,13 +62,13 @@ protected:
 public:
 
 
-	ITextDecorateNode(const core::string &type);
+	ITextDecorateNode();
 	virtual~ITextDecorateNode();
-	virtual void ParseParameter(const core::string &p){};
+	virtual void ParseParameter(const core::UTFString &p){};
 
 	void AddChild(ITextDecorateNode*node){m_childs.push_back(node);}
 
-	const core::string& GetType(){return m_type;}
+	virtual const core::string& GetType() = 0;
 	virtual void OnEnter(TextContextAttributes*context);
 	virtual void Draw(TextContextAttributes*context,IGUIRenderer*renderer,const math::rectf*clip=0);
 	virtual void OnExit(TextContextAttributes*context);
@@ -83,24 +82,24 @@ public:
 
 class TextDecorateDummyNode:public ITextDecorateNode
 {
+	 core::string m_type;
 public:
-	TextDecorateDummyNode(const core::string &type):ITextDecorateNode(type)
+	TextDecorateDummyNode(const core::string& type) :m_type(type)
 	{}
 	virtual~TextDecorateDummyNode(){}
+	virtual const core::string& GetType() { return m_type; }
 };
 
 class ITextDecorateCreator
 {
 protected:
-	core::string m_type;//tag type
 public:
-	ITextDecorateCreator(const core::string &type)
+	ITextDecorateCreator()
 	{
-		m_type=type;
 	}
 	virtual~ITextDecorateCreator(){}
 
-	const core::string& GetType(){return m_type;}
+	virtual const core::string& GetType() = 0;
 
 	virtual ITextDecorateNode* CreateNode()=0;
 

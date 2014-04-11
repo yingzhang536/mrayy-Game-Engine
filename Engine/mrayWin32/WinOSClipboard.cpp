@@ -8,6 +8,14 @@
 namespace mray{
 namespace OS{
 
+	WinOSClipboard::WinOSClipboard()
+	{
+
+	}
+	WinOSClipboard:: ~WinOSClipboard()
+	{
+
+	}
 void WinOSClipboard::copyToClipboard(const  mchar*data)
 {
 	if(!data || !OpenClipboard(0))return;

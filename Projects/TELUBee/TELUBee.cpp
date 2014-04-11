@@ -32,8 +32,6 @@ EntryPoint
 	resFileName=mT("pluginsU.stg");
 #endif
 
-	printf("%d\n",sizeof(std::string));
-
 
 	gLogManager.setVerbosLevel(EVL_Heavy);
 

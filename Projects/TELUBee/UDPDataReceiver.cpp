@@ -147,7 +147,7 @@ public:
 		char buff[4];
 		uint buffLen=4;
 		network::UDPClientError err;
-		err=m_client->RecvFrom(buff,&buffLen,0);
+		err = m_client->RecvFrom(buff, &buffLen, 0, 0);
 		if(err!=network::UDPClientError::UDP_SOCKET_ERROR_NONE || buffLen==0)
 			return false;
 		uint length=core::BitConverter::ToUInt32((byte*)buff);
@@ -158,7 +158,7 @@ public:
 		do 
 		{
 			buffLen=length- recieved;
-			err=m_client->RecvFrom(ptr,&buffLen,0);
+			err = m_client->RecvFrom(ptr, &buffLen, 0, 0);
 			if(err!=network::UDPClientError::UDP_SOCKET_ERROR_NONE)
 				return false;
 			ptr+=buffLen;

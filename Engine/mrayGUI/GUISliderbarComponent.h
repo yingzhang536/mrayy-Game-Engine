@@ -44,6 +44,7 @@ private:
 protected:
 	static const int g_scrollSize;
 	float m_lastMousePos;
+	bool m_drawScroll;
 	bool m_scrollOn;
 	int m_upButState;
 	int m_botButState;
@@ -63,9 +64,15 @@ public:
 	float itemsCount;
 	float pageSize;
 
+	void DrawScroll(bool d){ m_drawScroll = d; }
+	bool IsDrawScroll(){ return m_drawScroll ; }
+
 	void SetValue(float v);
 	void SetMinValue(float v);
 	void SetMaxValue(float v);
+
+	float GetMaxValue(){ return m_maxVal; }
+	float GetMinValue(){ return m_minVal; }
 
 	void SetPercentValue(float v){m_value=v*(m_maxVal-m_minVal)+m_minVal;}
 	float GetPercentValue(){return (m_value-m_minVal)/(m_maxVal-m_minVal);}

@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TwitterVisualizer</RootNamespace>
+    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccLocalPath>..\..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\..\Bin\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\..\Bin\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;C:\Development\SQLAPI\include;C:\Development\cppdb-0.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);C:\Development\SQLAPI\vs2012\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;LeapD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;C:\Development\SQLAPI\include;C:\Development\cppdb-0.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);C:\Development\SQLAPI\vs2012\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="BackgroundEmitter.h" />
+    <ClInclude Include="ConnectionLineRenderer.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="DBHandler.h" />
+    <ClInclude Include="GUITweetItem.h" />
+    <ClInclude Include="GUIUserProfile.h" />
+    <ClInclude Include="IBaseParticle.h" />
+    <ClInclude Include="LeapDevice.h" />
+    <ClInclude Include="PAVelocityOverTimeInterpolater.h" />
+    <ClInclude Include="RTFTextParser.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TrailParticle.h" />
+    <ClInclude Include="TweetDB.h" />
+    <ClInclude Include="TweetParticle.h" />
+    <ClInclude Include="TweetsEmitter.h" />
+    <ClInclude Include="TwitterProfileListItem.h" />
+    <ClInclude Include="UserDB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BackgroundEmitter.cpp" />
+    <ClCompile Include="ConnectionLineRenderer.cpp" />
+    <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="DBHandler.cpp" />
+    <ClCompile Include="GUITweetItem.cpp" />
+    <ClCompile Include="GUIUserProfile.cpp" />
+    <ClCompile Include="LeapDevice.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TrailParticle.cpp" />
+    <ClCompile Include="TweetDB.cpp" />
+    <ClCompile Include="TweetParticle.cpp" />
+    <ClCompile Include="TweetsEmitter.cpp" />
+    <ClCompile Include="TwitterProfileListItem.cpp" />
+    <ClCompile Include="TwitterVisualizer.cpp" />
+    <ClCompile Include="UserDB.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

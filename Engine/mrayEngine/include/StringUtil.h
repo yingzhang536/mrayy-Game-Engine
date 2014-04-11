@@ -22,24 +22,25 @@ namespace mray
 namespace core
 {
 
-class MRAY_DLL StringUtil
+	template<typename T>
+class  StringUtilT
 {
 private:
 protected:
 public:
 
-	static void SplitPathFileName(const core::string&str,core::string&path,core::string&file);
-	static void SplitPathExt(const core::string&str,core::string&path,core::string&ext);
+	static void SplitPathFileName(const core::tstring<T>&str,core::tstring<T>&path,core::tstring<T>&file);
+	static void SplitPathExt(const core::tstring<T>&str,core::tstring<T>&path,core::tstring<T>&ext);
 
 
 
 	//! Makes the tstring lower case.
-	static core::string ToLower(const core::string& o);
+	static core::tstring<T> ToLower(const core::tstring<T>& o);
 
 	//! Makes the tstring upper case.
-	static core::string ToUpper(const core::string& o);
+	static core::tstring<T> ToUpper(const core::tstring<T>& o);
 
-
+	static bool BeginsWith(const core::tstring<T>& a, const core::tstring<T>& b,bool caseSensitive=false);
 
 
 
@@ -47,17 +48,26 @@ public:
 	//example:	root=c:\game\bin
 	//			path=c:\game\data
 	//result:	..\data
-	static core::string MakePathRelative(const core::string&path,const core::string&root);
+	static core::tstring<T> MakePathRelative(const core::tstring<T>&path,const core::tstring<T>&root);
 
 	//convert '/' chars into '\\'
 	static void NormalizePathSlashes(mchar*str);
 
-	static core::string Trim(const core::string& str,const core::string& chars=mT(" \t"));
+	static core::tstring<T> Trim(const core::tstring<T>& str,const core::tstring<T>& chars=mT(" \t"));
 
-	static std::vector<core::string> Split(const core::string& str,const core::string& delimStr,uint maxSplits=0);
+	static std::vector<core::tstring<T>> Split(const core::tstring<T>& str,const core::tstring<T>& delimStr,uint maxSplits=0);
 };
 
+
+typedef StringUtilT<char> StringUtilA;
+typedef StringUtilT<wchar_t> StringUtilW;
+typedef StringUtilT<mchar> StringUtil;
+
+
+
 }
 }
+
+#include "StringUtil.hpp"
 
 #endif // StringUtil_h__

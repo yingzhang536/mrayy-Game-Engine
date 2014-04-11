@@ -126,6 +126,7 @@ bool FingerTipComponent::_calculateForce(float dt)
 		m_ggDriver->SetChannelValue(m_channel * 3 + 1, 0);				//always zero
 		m_ggDriver->SetChannelValue(m_channel * 3 + 2, m_force.z);//pressure force
 	}
+	return true;
 }
 
 void FingerTipComponent::Update(float dt)

@@ -26,11 +26,15 @@ IGUIElement::IGUIElement(const GUID& type,IGUIManager* creator)
 	m_type(&type),m_creator(creator),m_eventReciver(0),
 	m_visible(true),m_enabled(true),m_docking(EED_None),m_horizontalAlign(EHA_Left),m_verticalAlign(EVA_Top),m_id(0),m_attachedRegion(0),
 	m_derivedPosDirt(false),
+	m_derivedSizeDirt(false),
 	m_clippedRectDirt(false),
 	m_unclippedRectDirt(false),
 	m_locked(false),m_text(mT(""))
 {
 	m_defaultRegion=new GUIElementRegion(this);
+
+	m_anchor[EEA_Top] = true;
+	m_anchor[EEA_Left] = true;
 	fillProperties();
 }
 IGUIElement::~IGUIElement()
@@ -166,6 +170,44 @@ void IGUIElement::_UpdateAlignment(const math::rectf*vp)
 	}
 	m_defaultRegion->SetRect(m_unclippedRect);
 }
+
+void IGUIElement::_UpdateAnchor(const math::rectf*vp)
+{
+	/*
+	const math::vector2d& pos = GetDerivedPosition();
+	const math::vector2d& size = GetSize();
+
+	math::rectf m_unclippedRect;//=m_defaultRegion->GetRect();
+	math::rectf parentRC;
+	bool parentExist = m_attachedRegion != 0 || vp != 0;
+	if (parentExist)
+	{
+		if (m_attachedRegion)
+			parentRC = m_attachedRegion->GetClippedRect();
+		else parentRC.BRPoint = vp->getSize();
+	}
+	else
+		return;
+
+	if (m_anchor[EEA_Left])
+	{
+		m_unclippedRect.ULPoint.x = pos.x;
+	}
+	if (m_anchor[EEA_Right])
+	{
+		m_unclippedRect.BRPoint.x = pos.x;
+	}
+	if (m_anchor[EEA_Top])
+	{
+		m_unclippedRect.ULPoint.y = pos.y;
+	}
+	if (m_anchor[EEA_Bottom])
+	{
+		m_unclippedRect.ULPoint.x = parentRC.BRPoint.x - pos.x;
+		m_unclippedRect.BRPoint.x = m_unclippedRect.ULPoint.x + size.x;
+	}*/
+}
+
 void IGUIElement::SetCreator(IGUIManager* mngr)
 {
 	m_creator=mngr;
@@ -357,6 +399,18 @@ const math::vector2d& IGUIElement::GetSize()const
 {
 	return m_size;
 }
+const math::vector2d& IGUIElement::GetDerivedSize()
+{
+
+	if (m_derivedSizeDirt)
+	{
+		m_derivedSize = GetSize();
+		if (m_attachedRegion)
+			m_derivedSize += m_attachedRegion->GetRect().getSize();
+		m_derivedSizeDirt = false;
+	}
+	return m_derivedSize;
+}
 /*
 const math::rectf& IGUIElement::GetUnclippedRect()
 {
@@ -441,6 +495,16 @@ IGUIPanelElement* IGUIElement::GetParent()const
 	if(m_attachedRegion)
 		return (IGUIPanelElement*)m_attachedRegion->GetOwner();
 	return 0;
+}
+
+
+void IGUIElement::SetAnchor(EElementAnchor anchor, bool set)
+{
+	m_anchor[anchor] = set;
+}
+bool IGUIElement::GetAnchor(EElementAnchor anchor)const
+{
+	return m_anchor[anchor];
 }
 
 bool IGUIElement::SetVerticalAlignment(EVerticalAlignment e)

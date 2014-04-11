@@ -561,7 +561,7 @@ void copyFontToClipBoard(HWND hWnd, int lastChar)
 	FILE* fp=_wfopen(str,L"wb");
 	if(!fp)
 	{
-		MessageBox(hWnd,L"ÎØÃ: áã íÊã ÃäÔÇÁ Çáãáİ",L"ÎØÃ",0);
+		MessageBox(hWnd,L"ÎØÃ: áã úæEÃäÔÇÁ Çáãáİ",L"ÎØÃ",0);
 	}
 	else
 	{
@@ -574,7 +574,7 @@ void copyFontToClipBoard(HWND hWnd, int lastChar)
 	if(!texWriter->write(tex,str))
 	{
 		
-		MessageBox(hWnd,L"ÎØÃ: áã íÊã ÃäÔÇÁ Çáãáİ",L"ÎØÃ",0);
+		MessageBox(hWnd,L"ÎØÃ: áã úæEÃäÔÇÁ Çáãáİ",L"ÎØÃ",0);
 	}*/
 	//export chars attributes
 	float invW=1.0f/(float)surfaceWidth;
@@ -652,7 +652,7 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				updateFontPreview(hwndDlg);
 				return TRUE;
 			case IDC_BUTTON2:
-				MessageBox(hwndDlg, L"Êã ÊÚÏíá åĞå ÇáÇÏÇÉ ãä ÇÌá ÊæáíÏ ãáİÇÊ äŞØíÉ áíÊã ÇÓÊÎÏÇãåÇ İí\n "\
+				MessageBox(hwndDlg, L"ÊEÊÚÏû@ åĞEÇáÇÏÇÉ ãä ÇÌEÊæáúë ãáİÇÊ äŞØúå áíÊEÇÓÊÎÏÇãåÇ İúxn "\
 					L"M-RAY Engine\n"\
 					L"Email: mrayyamen@gmail.com",
 					L"About FontTool", MB_OK | MB_ICONINFORMATION);

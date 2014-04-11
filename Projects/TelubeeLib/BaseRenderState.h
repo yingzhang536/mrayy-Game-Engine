@@ -29,7 +29,7 @@ class BaseRenderState:public IState
 protected:
 	IRenderingState* m_state;
 public:
-	BaseRenderState(const core::string&name,IRenderingState*s):IState(name),m_state(s){}
+	BaseRenderState(const core::string&name, IRenderingState*s);
 	virtual~BaseRenderState();
 
 	IRenderingState* GetState(){return m_state;}

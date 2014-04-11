@@ -15,9 +15,10 @@ namespace network
 Win32WebRequest::Win32WebRequest():
 m_hConnect(NULL),m_hRequest(NULL),m_method(mT("GET")),m_eof(false),m_timeOut(15000)
 {
-	m_hSession=InternetOpen(mT("MRAYAgent"),INTERNET_OPEN_TYPE_PRECONFIG,0,0,0);
+	m_hSession=InternetOpen(mT("MRAYAgent_1.0"),INTERNET_OPEN_TYPE_PRECONFIG,0,0,0);
 	m_stream=new Win32WebStream(this);
 	m_dataValiable=0;
+	m_length = 0;
 }
 Win32WebRequest::~Win32WebRequest()
 {
@@ -46,12 +47,10 @@ bool Win32WebRequest::SetURL(const core::string& url)
 	urlComponents.dwUrlPathLength = 1;
 	if(!::InternetCrackUrlA(url.c_str(),url.length(),0,&urlComponents))
 		return false;
-	m_url.hostName.resize(urlComponents.dwHostNameLength+1);
+	m_url.hostName.resize(urlComponents.dwHostNameLength);
 	memcpy(&m_url.hostName[0],urlComponents.lpszHostName,urlComponents.dwHostNameLength);
-	m_url.hostName[urlComponents.dwHostNameLength]=0;
-	m_url.urlPath.resize(urlComponents.dwUrlPathLength+1);
+	m_url.urlPath.resize(urlComponents.dwUrlPathLength);
 	memcpy(&m_url.urlPath[0],urlComponents.lpszUrlPath,urlComponents.dwUrlPathLength);
-	m_url.urlPath[urlComponents.dwUrlPathLength]=0;
 	m_url.port=urlComponents.nPort;
 	switch(urlComponents.nScheme)
 	{
@@ -62,8 +61,12 @@ bool Win32WebRequest::SetURL(const core::string& url)
 		return false;
 	}
 
-	m_url.password=urlComponents.lpszPassword;
-	m_url.userName=urlComponents.lpszUserName;
+	if (urlComponents.lpszPassword!=0)
+		m_url.password=urlComponents.lpszPassword;
+	else m_url.password = "";
+	if (urlComponents.lpszUserName!=0)
+		m_url.userName=urlComponents.lpszUserName;
+	else m_url.userName = "";
 	return true;
 }
 void Win32WebRequest::SetURL(const WebURL& url)
@@ -125,17 +128,20 @@ bool Win32WebRequest::Connect()
 		gLogManager.log(mT("InternetConnect Failed : ErrorCode[")+core::StringConverter::toString(GetLastError())+mT("]"),ELL_WARNING);
 		return false;
 	}
-
+	bool bRet = 0;
 
 	if(m_url.protocol=="http" || m_url.protocol=="https")
 	{
 		DWORD flags=INTERNET_FLAG_NO_CACHE_WRITE |
 			INTERNET_FLAG_NO_COOKIES |
 			INTERNET_FLAG_RELOAD |
+			INTERNET_FLAG_DONT_CACHE |
 			INTERNET_FLAG_KEEP_CONNECTION |
 			INTERNET_FLAG_IGNORE_CERT_CN_INVALID |
 			INTERNET_FLAG_IGNORE_CERT_DATE_INVALID |
 			INTERNET_FLAG_PRAGMA_NOCACHE;
+
+		flags = INTERNET_FLAG_NO_CACHE_WRITE;
 
 		if(m_url.protocol=="https")
 			flags |=INTERNET_FLAG_SECURE;
@@ -143,7 +149,7 @@ bool Win32WebRequest::Connect()
 		LPTSTR accessTypes[]={mT("*/*"),0};
 
 		InternetSetOption(m_hSession,INTERNET_OPTION_CONNECT_TIMEOUT,&m_timeOut,sizeof(m_timeOut));
-		m_hRequest=HttpOpenRequest(m_hConnect,m_method.c_str(),m_url.urlPath.c_str(),0,0,(LPCTSTR*)accessTypes,flags,0);
+		m_hRequest=HttpOpenRequest(m_hConnect,m_method.c_str(),m_url.urlPath.c_str(),HTTP_VERSION,0,(LPCTSTR*)accessTypes,flags,0);
 		if(!m_hRequest)
 		{
 			gLogManager.log(mT("HttpOpenRequest Failed : ErrorCode[")+core::StringConverter::toString(GetLastError())+mT("]"),ELL_WARNING);
@@ -151,18 +157,66 @@ bool Win32WebRequest::Connect()
 			m_hConnect=0;
 			return false;
 		}
-		static core::string hdrs =
-			_T("Content-Type: application/x-www-form-urlencoded");
 
-		if(!HttpSendRequest(m_hRequest,hdrs.c_str(),hdrs.length(),(void*)m_postData.c_str(),m_postData.length()))
+
+		DWORD dwInternetFlags = SECURITY_FLAG_IGNORE_UNKNOWN_CA
+			| SECURITY_FLAG_IGNORE_REVOCATION
+			| SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTP
+			| SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTPS
+			| SECURITY_FLAG_IGNORE_CERT_DATE_INVALID
+			| SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+		//bRet = InternetSetOption(m_hRequest, INTERNET_OPTION_SECURITY_FLAGS, &dwInternetFlags, sizeof(dwInternetFlags));
+
+		char szHeader[1024] = { 0, };
+		int nPostDataLen =  0;
+
+
+		sprintf_s(szHeader, _countof(szHeader),
+			//"Accept: text/*\r\n"
+			"Accept: text/*, image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*"
+			//"Accept-Language: en-us"
+			//"Accept-Encoding: gzip, deflate"
+			"User-Agent: Mozilla/4.0 (compatible; MSIE 5.0;* Windows NT)\r\n"
+			"Content-type: application/x-www-form-urlencoded\r\n");
+#define __HTTP_ACCEPT "Accept: */*\r\n"
+		bRet = HttpAddRequestHeaders(m_hRequest, __HTTP_ACCEPT, strlen(__HTTP_ACCEPT), HTTP_ADDREQ_FLAG_REPLACE);
+
+		static core::string hdrs =
+			_T("Content-Type: application/x-www-form-urlencoded\r\n");
+
+		if (m_postData != "")
 		{
-			gLogManager.log(mT("HttpSendRequest Failed : ErrorCode[")+core::StringConverter::toString(GetLastError())+mT("]"),ELL_WARNING);
+			bRet = HttpSendRequest(m_hRequest, hdrs.c_str(), hdrs.length(), (void*)m_postData.c_str(), m_postData.length());
+			
+		}
+		else
+		{
+			bRet= HttpSendRequest(m_hRequest, 0,0,0,0);
+		}
+		if (!bRet)
+		{
+			gLogManager.log(mT("HttpSendRequest Failed : ErrorCode[") + core::StringConverter::toString(GetLastError()) + mT("]"), ELL_WARNING);
 			InternetCloseHandle(m_hRequest);
 			InternetCloseHandle(m_hConnect);
-			m_hRequest=0;
-			m_hConnect=0;
+			m_hRequest = 0;
+			m_hConnect = 0;
 			return false;
 		}
+
+		m_length = 0;
+		DWORD len = sizeof(m_length);
+		if (!HttpQueryInfo(m_hRequest, HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER, &m_length, &len, 0))
+		{
+			gLogManager.log(mT("HttpOpenRequest  : Failed to get content length, ErrorCode[") + core::StringConverter::toString(GetLastError()) + mT("]"), ELL_WARNING);
+		}
+
+		char contentType[512];
+		len = 512;
+		if (!HttpQueryInfo(m_hRequest, HTTP_QUERY_CONTENT_TYPE, contentType, &len, 0))
+		{
+
+		}
+
 	}else
 	{
 		m_hRequest=FtpOpenFile(m_hConnect,m_url.urlPath.c_str(),GENERIC_READ,FTP_TRANSFER_TYPE_BINARY,0);
@@ -175,7 +229,7 @@ bool Win32WebRequest::Connect()
 	}
 
 	m_stream->SetURL(m_url.protocol+"://"+m_url.hostName+m_url.urlPath);
-
+	m_stream->Refresh();
 	::InternetQueryDataAvailable(m_hRequest,&m_dataValiable,0,0);
 	m_eof=false;
 	return true;

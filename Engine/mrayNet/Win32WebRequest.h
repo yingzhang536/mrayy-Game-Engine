@@ -46,6 +46,7 @@ protected:
 	Win32WebStream* m_stream;
 
 	core::string m_method;
+	DWORD m_length;
 public:
 	Win32WebRequest();
 	~Win32WebRequest();
@@ -75,6 +76,7 @@ public:
 	int Read(void*data,int len);
 	int Write(const void*data,int len);
 	bool EoF();
+	int Length(){ return m_length; }
 };
 
 }

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{5adc97b9-e0b8-432d-9c5b-1cddbaefd98f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\states">
+      <UniqueIdentifier>{4368f6fb-d25c-407f-ab8a-fa3693419209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Control">
+      <UniqueIdentifier>{f3c274e0-9e55-4269-8b7d-9079622428d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -24,11 +33,17 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NissanApplication.h">
+    <ClInclude Include="Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CameraRenderingState.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="NCAppGlobals.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotCameraState.h">
+      <Filter>Source Files\states</Filter>
+    </ClInclude>
+    <ClInclude Include="CalibHeadController.h">
+      <Filter>Source Files\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -38,11 +53,14 @@
     <ClCompile Include="NissanCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NissanApplication.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CameraRenderingState.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RobotCameraState.cpp">
+      <Filter>Source Files\states</Filter>
+    </ClCompile>
+    <ClCompile Include="CalibHeadController.cpp">
+      <Filter>Source Files\Control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

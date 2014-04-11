@@ -84,18 +84,23 @@ void GUIStackPanel::_RecalcPositions()
 	for (;it!=elems.end();++it)
 	{
 		IGUIElement* elem=*it;
+		if (!elem->IsVisible())
+			continue;
 		bool locked=elem->IsLocked();
 		elem->SetLocked(false);
-		elem->SetPosition(pos-start);
 		elem->SetDocking(EED_None);
 		elem->SetLocked(locked);
 		if(m_direction==EHorizontal)
 		{
-			maxSz=math::Max(maxSz,elem->GetSize().y);
+			float y = elem->GetPosition().y;
+			elem->SetPosition(math::vector2d((pos - start).x,y));
+			maxSz = math::Max(maxSz, elem->GetSize().y);
 			pos.x+=elem->GetSize().x+m_offset;
 			elem->SetHorizontalAlignment(EHA_Left);
 		}else
 		{
+			float x = elem->GetPosition().x;
+			elem->SetPosition(math::vector2d(x,(pos - start).y));
 			maxSz=math::Max(maxSz,elem->GetSize().x);
 			pos.y+=elem->GetSize().y+m_offset;
 			elem->SetVerticalAlignment(EVA_Top);
@@ -150,6 +155,15 @@ void GUIStackPanel::Draw(const math::rectf*vp)
 	}
 }
 
+bool GUIStackPanel::SetUseScroll(bool scroll)
+{
+	m_sliderComp->DrawScroll(scroll);
+	return true;
+}
+bool GUIStackPanel::GetUseScroll()const
+{
+	return m_sliderComp->IsDrawScroll();
+}
 
 IGUIElement* GUIStackPanel::Duplicate()
 {

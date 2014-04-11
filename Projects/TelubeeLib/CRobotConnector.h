@@ -52,7 +52,7 @@ public:
 	IHeadController* GetHeadController(){ return m_headController; }
 
 	void SetRobotController(IInputController* c){ m_robotController = c; }
-	IInputController* SetRobotController(){ return m_robotController; }
+	IInputController* GetRobotController(){ return m_robotController; }
 
 	void SetCommunicator(IRobotCommunicator* comm){ m_communicator = comm; }
 

@@ -28,10 +28,12 @@ class DepthVisualizer
 protected:
 	DepthFrame* m_frame;
 
-	video::ITexturePtr m_tex;
+	video::ITexturePtr m_texDepth;
+	video::ITexturePtr m_texNormals;
 	video::ImageInfo m_depthData;
+	video::ImageInfo m_normalData;
 
-	bool m_viewDepth ;
+	bool m_viewNormals ;
 public:
 	DepthVisualizer();
 	virtual~DepthVisualizer();
@@ -41,14 +43,19 @@ public:
 	void SetDepthFrame(DepthFrame* f){ m_frame = f; }
 	DepthFrame* GetDepthFrame(){ return m_frame; }
 
-	void SetViewDepth(bool v){ m_viewDepth = v; }
-	bool IsViewDepth(){ return m_viewDepth; }
+	void SetViewNormals(bool v){ m_viewNormals = v; }
+	bool IsViewNormals(){ return m_viewNormals; }
 
 	void Update();
 
-	video::ITexturePtr GetTexture()
+	video::ITexturePtr GetDepthTexture()
 	{
-		return m_tex;
+		return m_texDepth;
+	}
+
+	video::ITexturePtr GetNormalsTexture()
+	{
+		return m_texNormals;
 	}
 };
 

@@ -58,6 +58,12 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
+		op.name = "VideoPort";
+		op.value = "5000";
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
 		op.name = "DepthStream";
 		op.value = "No";
 		op.valueSet.insert("Yes");

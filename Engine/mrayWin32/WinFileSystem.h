@@ -58,7 +58,7 @@ public:
 	std::vector<core::string>*getPathes();
 	void getCorrectFilePath(const core::string& name,core::string &fileName);
 
-	void createDirs(core::string&dirPath);
+	void createDirs(const core::string&dirPath);
 
 	IStreamPtr createBinaryFileReader(const core::string& fname);
 	IStreamPtr createBinaryFileWriter(const core::string& fname);
@@ -70,6 +70,8 @@ public:
 	IStreamPtr createTextBufferReader(const core::string& fname,byte*data,int size,bool releaseAtEnd);
 	IStreamPtr createTextBufferWriter(const core::string& fname,byte*data,int size,bool releaseAtEnd);
 	IStreamPtr createMemoryBufferStream(IStreamPtr stream);
+
+	bool deleteFile(const core::string& path) ;
 
 	void getPathFromXML(xml::XMLElement*elem);
 };

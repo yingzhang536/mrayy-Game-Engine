@@ -8,10 +8,9 @@ namespace mray
 namespace GUI
 {
 
-
-TextDecorateNode::TextDecorateNode(const core::string&text):ITextDecorateNode(mT("Text"))
+	const core::string TextDecorateNode::Type="Text";
+TextDecorateNode::TextDecorateNode(const core::string&text)
 {
-	m_text=text;
 	m_renderText.Set(text);
 }
 

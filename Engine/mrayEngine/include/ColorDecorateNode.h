@@ -24,6 +24,8 @@ namespace GUI
 
 class ColorDecorateNode:public ITextDecorateNode
 {
+public:
+	static const core::string Type;
 private:
 protected:
 	video::SColor m_Color;
@@ -32,7 +34,8 @@ public:
 	ColorDecorateNode();
 	virtual ~ColorDecorateNode();
 
-	virtual void ParseParameter(const core::string &p);
+	virtual void ParseParameter(const core::UTFString &p);
+	virtual const core::string& GetType() { return Type; }
 
 	virtual void OnEnter(TextContextAttributes*context);
 	virtual void OnExit(TextContextAttributes*context);
@@ -41,9 +44,10 @@ public:
 class ColorDecorateNodeCreator:public ITextDecorateCreator
 {
 public:
-	ColorDecorateNodeCreator():ITextDecorateCreator(mT("Color"))
+	ColorDecorateNodeCreator()
 	{
 	}
+	virtual const core::string& GetType() { return ColorDecorateNode::Type; }
 	virtual ITextDecorateNode* CreateNode()
 	{
 		return new ColorDecorateNode();

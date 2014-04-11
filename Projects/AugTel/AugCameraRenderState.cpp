@@ -55,6 +55,8 @@
 #define VIDEO_PORT 5000
 #define AUDIO_PORT 5002
 #define COMMUNICATION_PORT 5003
+
+#define DEPTH_LOCAL
 namespace mray
 {
 namespace AugTel
@@ -212,9 +214,15 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 
 				ok = true;
 			}
-			else if (evt->key == KEY_D)
+			else if (evt->key == KEY_D)//show/hide depth
 			{
 				m_viewDepth = !m_viewDepth;
+				ok = true;
+			}
+			else
+			if (evt->key == KEY_A)//Show/Hide arms
+			{
+				m_showScene = !m_showScene;
 				ok = true;
 			}
 			else if (evt->key == KEY_SPACE )
@@ -298,6 +306,8 @@ void AugCameraRenderState::InitState()
 		m_gameManager->SetPhysicsManager(m_phManager);
 		m_gameManager->SetSceneManager(m_sceneManager);
 
+		m_showScene = true;
+
 		ATAppGlobal::Instance()->guiManager = m_guiManager;
 	}
 	{
@@ -313,39 +323,19 @@ void AugCameraRenderState::InitState()
 		std::vector<game::GameEntity*> entLst;
 		m_gameManager->loadFromFile(m_model, &entLst);
 
-		math::vector2d dir[3];
-		for (int i = 0; i < 3; ++i)
-		{
-			float a = i*math::PI32*2.0f / 3.0f;
-			dir[i].set(sinf(a), cosf(a));
-		}
-
 		HeadMount* hm = new HeadMount(m_sceneManager, 1);
 		scene::CameraNode* cam[2];
+		video::EPixelFormat pf = video::EPixel_Float16_RGBA;//video::EPixel_R8G8B8A8;//
 
-		float power = 3;// powf(10.0f, 1);
+
 		for (int i = 0; i < 2; ++i)
 		{
-			video::ParsedShaderPP* pp = new video::ParsedShaderPP(Engine::getInstance().getDevice());
-			pp->LoadXML(gFileSystem.openFile("AugTel.peff"));
-
-			video::ParsedShaderPP::MappedParams* radiusP = pp->GetParam("LensBlur.Radius");
-			video::ParsedShaderPP::MappedParams* powerP = pp->GetParam("LensBlur.Power");
-			video::ParsedShaderPP::MappedParams* delta0P = pp->GetParam("LensBlur.Delta0");
-			video::ParsedShaderPP::MappedParams* delta1P = pp->GetParam("LensBlur.Delta1");
-			video::ParsedShaderPP::MappedParams* delta2P = pp->GetParam("LensBlur.Delta2");
-
-			if (radiusP)radiusP->SetValue(5);
-			if (powerP)powerP->SetValue(power);
-			if (delta0P)delta0P->SetValue(dir[0]);
-			if (delta1P)delta1P->SetValue(dir[1]);
-			if (delta2P)delta2P->SetValue(dir[2]);
 
 			cam[i] = m_sceneManager->createCamera();
 			m_viewport[i] = new scene::ViewPort("", cam[i], 0, 0, math::rectf(0, 0, 1, 1), 0);
-			m_viewport[i]->SetClearColor(video::SColor(1,1,1,0));
+			m_viewport[i]->SetClearColor(video::SColor(0,0,0,0));
 
-			video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), video::EPixel_R8G8B8A8, true);
+			video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), pf, true);
 			renderTargetTex->setBilinearFilter(false);
 			renderTargetTex->setTrilinearFilter(false);
 			renderTargetTex->setMipmapsFilter(false);
@@ -357,7 +347,26 @@ void AugCameraRenderState::InitState()
 			m_viewport[i]->enablePostProcessing(true);
 			m_viewport[i]->AddListener(this);
 
-			m_viewport[i]->setPostProcessing(pp);
+			if (false)
+			{
+				renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(1, pf, true);
+				renderTargetTex->setBilinearFilter(false);
+				renderTargetTex->setTrilinearFilter(false);
+				renderTargetTex->setMipmapsFilter(false);
+				rt->attachRenderTarget(renderTargetTex, 1);
+				if (false)
+				{
+					renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(1, pf, true);
+					renderTargetTex->setBilinearFilter(false);
+					renderTargetTex->setTrilinearFilter(false);
+					renderTargetTex->setMipmapsFilter(false);
+					rt->attachRenderTarget(renderTargetTex, 2);
+				}
+
+				video::ParsedShaderPP* pp = new video::ParsedShaderPP(Engine::getInstance().getDevice());
+				pp->LoadXML(gFileSystem.openFile("AugTel.peff"));
+				m_viewport[i]->setPostProcessing(pp);
+			}
 
 			hm->addChild(cam[i]);
 			cam[i]->setZNear(0.001);
@@ -391,11 +400,16 @@ void AugCameraRenderState::InitState()
 	}
 
 	{
-	//	m_openNiHandler->Init();
+#ifdef DEPTH_LOCAL
+		m_openNiHandler->Init();
+#else
 		m_openNiHandler->CreateDepthFrame(320, 240);
+#endif
+		m_openNiHandler->GetNormalCalculator().SetCalculateNormals(true);
 		math::vector2di sz = m_openNiHandler->GetSize();
 
 		m_depthVisualizer->Init();
+		m_depthVisualizer->SetViewNormals(true);
 		m_depthVisualizer->SetDepthFrame(m_openNiHandler->GetNormalCalculator().GetDepthFrame());
 
 		video::RenderMaterial* mtrl = new video::RenderMaterial();
@@ -433,7 +447,9 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 {
 	Parent::OnEnter(prev);
 	ATAppGlobal::Instance()->optiDataSource->Connect(m_optiProvider);
-//	m_openNiHandler->Start(320, 240);
+#ifdef DEPTH_LOCAL
+	m_openNiHandler->Start(320, 240);
+#endif
 	ATAppGlobal::Instance()->headObject = m_data->headMount;
 	ATAppGlobal::Instance()->depthProvider = m_openNiHandler;
 
@@ -468,13 +484,13 @@ void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 	{
 		eye = Eye_Right;
 	}
-
+	/*
 	Engine::getInstance().getDevice()->set2DMode();
 	video::TextureUnit tu;
 	tu.SetTexture(gTextureResourceManager.loadTexture2D("00353_full.jpg"));
 	Engine::getInstance().getDevice()->useTexture(0, &tu);
 	Engine::getInstance().getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1);
-
+	*/
 
 	Engine::getInstance().getDevice()->set3DMode();
 
@@ -526,6 +542,7 @@ void AugCameraRenderState::_CalculateDepthGeom()
 	pos->unlock();
 	norm->unlock();
 }
+#define DRAW_GRID false
 
 video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETargetEye eye)
 {
@@ -543,21 +560,26 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 	int index = GetEyeIndex(eye);
 	m_camVideoSrc->Blit();
 
-	if (AppData::Instance()->IsDebugging)
+	if (AppData::Instance()->IsDebugging )
 	{
 		m_gameManager->DebugRender(m_debugRenderer);
-		int n = 20;
-		for (int i = 0; i < n; ++i)
+		if (DRAW_GRID)
 		{
-			m_debugRenderer->AddLine(math::vector3d(-10, 0, 0.5f*(i - n / 2)), math::vector3d(10, 0, 0.5f*(i - n / 2)), video::DefaultColors::Gray);
-			m_debugRenderer->AddLine(math::vector3d(0.5f*(i - n / 2), 0, -10), math::vector3d(0.5f*(i - n / 2), 0, 10), video::DefaultColors::Gray);
+			int n = 20;
+			for (int i = 0; i < n; ++i)
+			{
+				m_debugRenderer->AddLine(math::vector3d(-10, 0, 0.5f*(i - n / 2)), math::vector3d(10, 0, 0.5f*(i - n / 2)), video::DefaultColors::Gray);
+				m_debugRenderer->AddLine(math::vector3d(0.5f*(i - n / 2), 0, -10), math::vector3d(0.5f*(i - n / 2), 0, 10), video::DefaultColors::Gray);
+			}
 		}
 	}
 
-	m_debugRenderer->StartDraw(m_viewport[index]->getCamera());
-	m_viewport[index]->setAbsViewPort(rc);
-	m_viewport[index]->draw();
-
+	if (m_showScene)
+	{
+		m_debugRenderer->StartDraw(m_viewport[index]->getCamera());
+		m_viewport[index]->setAbsViewPort(rc);
+		m_viewport[index]->draw();
+	}
 
 
 	math::rectf vprect = rc;
@@ -567,7 +589,7 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 
 	if (/*m_openNiHandler->IsStarted() &&*/ m_viewDepth)
 	{
-		tex.SetTexture(m_depthVisualizer->GetTexture());
+		tex.SetTexture(m_depthVisualizer->GetNormalsTexture());
 		device->useTexture(0, &tex);
 		math::rectf r(m_openNiHandler->GetCenter() - m_openNiHandler->GetScale()*0.5, m_openNiHandler->GetCenter() + m_openNiHandler->GetScale()*0.5);
 		r.ULPoint *= rc.getSize();
@@ -579,12 +601,13 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 	if (AppData::Instance()->IsDebugging && false)
 		m_gameManager->GUIRender(Parent::m_guiRenderer, vprect);
 
-
-	tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
-	device->useTexture(0, &tex);
-	math::rectf tc = math::rectf(0, 0, 1, 1);
-	device->draw2DImage(vprect, 1,0,&tc);
-
+	if (m_showScene)
+	{
+		tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
+		device->useTexture(0, &tex);
+		math::rectf tc = math::rectf(0, 0, 1, 1);
+		device->draw2DImage(vprect, 1, 0, &tc);
+	}
 	math::rectf vp(0, m_renderTarget[index]->getSize());
 	m_guiManager->DrawAll(&vp);
 	return m_renderTarget[index];
@@ -606,8 +629,14 @@ void AugCameraRenderState::Update(float dt)
 	controllers::IKeyboardController* kb= ATAppGlobal::Instance()->inputMngr->getKeyboard();
 
 	math::vector2d s = m_openNiHandler->GetScale();
-	s += (kb->getKeyState(KEY_P) - kb->getKeyState(KEY_O))*dt;
+	s.x += (kb->getKeyState(KEY_K) - kb->getKeyState(KEY_J))*dt*0.5f;
+	s.y += (kb->getKeyState(KEY_I) - kb->getKeyState(KEY_M))*dt*0.5f;
+
+	math::vector2d c = m_openNiHandler->GetCenter();
+	c.x += (kb->getKeyState(KEY_RIGHT) - kb->getKeyState(KEY_LEFT))*dt*0.5f;
+	c.y -= (kb->getKeyState(KEY_UP) - kb->getKeyState(KEY_DOWN))*dt*0.5f;
 	m_openNiHandler->SetScale(s);
+	m_openNiHandler->SetCenter(c);
 
 	TelesarCommunicationHandler::Instance()->Update(dt);
 

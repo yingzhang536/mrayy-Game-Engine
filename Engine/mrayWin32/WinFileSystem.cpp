@@ -278,7 +278,8 @@ void WinFileSystem::getCorrectFilePath(const  core::string&name,core::string &fi
 	}
 }
 
-void WinFileSystem::createDirs(string&dirPath){
+void WinFileSystem::createDirs(const core::string&path){
+	core::string dirPath = path;
 	if(dirPath==mT(""))return;
 	for(int i=0;i<dirPath.length();++i){
 		if(dirPath[i]=='\\'){
@@ -328,6 +329,11 @@ IStreamPtr WinFileSystem::createMemoryBufferStream(IStreamPtr stream){
 	buff->setDeleteAtEnd(true);
 	return buff;
 
+}
+
+bool WinFileSystem::deleteFile(const core::string& path)
+{
+	return DeleteFile(path.c_str());
 }
 
 

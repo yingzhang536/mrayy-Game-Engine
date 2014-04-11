@@ -306,6 +306,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\BatchRenderer.h" />
+    <ClInclude Include="include\BinPacker.h" />
+    <ClInclude Include="include\BitmapFontData.h" />
+    <ClInclude Include="include\CommonValueProviders.h" />
+    <ClInclude Include="include\DynamicFontGenerator.h" />
     <ClInclude Include="include\FileTextureSource.h" />
     <ClInclude Include="include\GUIElement3D.h" />
     <ClInclude Include="include\GUIElementFactory.h" />
@@ -319,6 +324,7 @@
     <ClInclude Include="include\IGUIElementCreator.h" />
     <ClInclude Include="include\IGUIElementRT.h" />
     <ClInclude Include="include\IGUITreeBox.h" />
+    <ClInclude Include="include\InternetCacheManager.h" />
     <ClInclude Include="include\ISerialPort.h" />
     <ClInclude Include="include\ISQLConnection.h" />
     <ClInclude Include="include\ISQLManager.h" />
@@ -371,9 +377,11 @@
     <ClInclude Include="include\StereoRenderer.h" />
     <ClInclude Include="include\StreamReaderEx.h" />
     <ClInclude Include="include\StreamWriterEx.h" />
+    <ClInclude Include="include\StringUtil.hpp" />
     <ClInclude Include="include\TangentCalculater.h" />
     <ClInclude Include="include\ITextureSource.h" />
     <ClInclude Include="include\TextureSourceFactory.h" />
+    <ClInclude Include="include\ValueControllerManager.h" />
     <ClInclude Include="include\VideoResourceManager.h" />
     <ClInclude Include="include\VideoTextureSource.h" />
     <ClInclude Include="include\ViewPort.h" />
@@ -405,12 +413,17 @@
     <ClInclude Include="include\SSkyPlaneNode.h" />
     <ClInclude Include="include\STerrain.h" />
     <ClCompile Include="ICameraVideoGrabber.cpp" />
+    <ClCompile Include="src\BinPacker.cpp" />
+    <ClCompile Include="src\BitmapFontData.cpp" />
+    <ClCompile Include="src\CommonValueProviders.cpp" />
+    <ClCompile Include="src\DynamicFontGenerator.cpp" />
     <ClCompile Include="src\FileTextureSource.cpp" />
     <ClCompile Include="src\GUIElement3D.cpp" />
     <ClCompile Include="src\GUIElementFactory.cpp" />
     <ClCompile Include="src\GUIElementRT_Manager.cpp">
       <FileType>CppHeader</FileType>
     </ClCompile>
+    <ClInclude Include="src\ValueControllerManager.cpp" />
     <CustomBuildStep Include="include\STextNode.h" />
     <ClInclude Include="include\CConvexQuickHull.h" />
     <ClInclude Include="include\IConvexHull.h" />
@@ -995,6 +1008,8 @@
     <ClCompile Include="src\GUITreeNode.cpp" />
     <ClCompile Include="src\IGUIElementRT.cpp" />
     <ClCompile Include="src\IGUITreeBox.cpp" />
+    <ClCompile Include="src\IListItem.cpp" />
+    <ClCompile Include="src\InternetCacheManager.cpp" />
     <ClCompile Include="src\ISerialPort.cpp" />
     <ClCompile Include="src\MouseEvent.cpp" />
     <ClCompile Include="src\RTTI_OBJECTS.cpp" />
@@ -1756,7 +1771,6 @@
     <ClCompile Include="src\PoolMemoryAllocator.cpp" />
     <ClCompile Include="src\StringConverter.cpp" />
     <ClCompile Include="src\StringEncoding.cpp" />
-    <ClCompile Include="src\StringUtil.cpp" />
     <ClCompile Include="src\UnicodeEncoding.cpp" />
     <ClCompile Include="src\UTFString.cpp" />
     <ClCompile Include="src\GZipCompress.cpp">

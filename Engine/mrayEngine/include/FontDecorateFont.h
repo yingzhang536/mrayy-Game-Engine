@@ -23,6 +23,8 @@ namespace GUI
 {
 class FontDecorateFont:public ITextDecorateNode
 {
+public:
+	static const core::string Type;
 private:
 protected:
 	IFont* m_Font;
@@ -31,7 +33,8 @@ public:
 	FontDecorateFont();
 	virtual ~FontDecorateFont();
 
-	virtual void ParseParameter(const core::string &p);
+	virtual void ParseParameter(const core::UTFString &p);
+	virtual const core::string& GetType() { return Type; }
 
 	virtual void OnEnter(TextContextAttributes*context);
 	virtual void OnExit(TextContextAttributes*context);
@@ -40,9 +43,10 @@ public:
 class FontDecorateFontCreator:public ITextDecorateCreator
 {
 public:
-	FontDecorateFontCreator():ITextDecorateCreator(mT("Font"))
+	FontDecorateFontCreator()
 	{
 	}
+	virtual const core::string& GetType() { return FontDecorateFont::Type; }
 	virtual ITextDecorateNode* CreateNode()
 	{
 		return new FontDecorateFont();

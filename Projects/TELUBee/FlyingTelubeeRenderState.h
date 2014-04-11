@@ -22,19 +22,18 @@ namespace mray
 {
 namespace TBee
 {
-	class GstSingleNetVideoSource;
+	class GstStereoStreamVideoSource;
 
 class FlyingTelubeeRenderState :public IEyesRenderingBaseState
 {
 protected:
-	GstSingleNetVideoSource *m_cameraSource;
-	std::string m_hostIp;
-	int m_hostPort;
-	int m_localPort;
+	GstStereoStreamVideoSource *m_cameraSource;
 
 	int m_frameCounter;
 	int m_fps;
 	float m_timeAcc;
+
+	int m_port1, m_port2;
 
 	virtual void _RenderUI(const math::rectf& rc);
 public:

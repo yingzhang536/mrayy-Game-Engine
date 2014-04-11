@@ -9,7 +9,10 @@ namespace mray
 {
 namespace TBee
 {
-
+	BaseRenderState::BaseRenderState(const core::string&name, IRenderingState*s) :IState(name), m_state(s)
+	{
+		m_state->SetName(name);
+	}
 BaseRenderState::~BaseRenderState()
 {
 	delete m_state;

@@ -10,8 +10,9 @@ namespace mray
 {
 namespace GUI
 {
+	const core::string FontDecorateFont::Type = "Font";
 
-FontDecorateFont::FontDecorateFont():ITextDecorateNode(mT("Font"))
+FontDecorateFont::FontDecorateFont()
 {
 	m_Font=0;
 	m_SavedFont=0;
@@ -20,9 +21,9 @@ FontDecorateFont::~FontDecorateFont()
 {
 }
 
-void FontDecorateFont::ParseParameter(const core::string &p)
+void FontDecorateFont::ParseParameter(const core::UTFString &p)
 {
-	m_Font=gFontResourceManager.getFontByName(p);
+	m_Font=gFontResourceManager.getFontByName(p.GetAsString());
 }
 
 void FontDecorateFont::OnEnter(TextContextAttributes*context)

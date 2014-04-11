@@ -77,6 +77,8 @@ public:
 
 	void Clean();
 
+	void EnableThreshold(bool e);
+	bool IsThresholdEnabled();
 	void SetThresholds(float min, float max);
 
 	float GetMinThreshold();
@@ -84,6 +86,16 @@ public:
 
 	void SetNormalAmplitude(float amp);
 	float GetNormalAmplitude();
+
+	void EnableSmoothing(bool e);
+	bool IsSmoothingEnabled();
+
+	void EnableGapFill(bool e);
+	bool IsGapFillEnabled();
+	void SetBandThreshold(int inner, int outer);
+	int GetInnerBandThreshold();
+	int GetOuterBandThreshold();
+
 
 	const math::vector2di& GetSize();
 	float* GetDepth();

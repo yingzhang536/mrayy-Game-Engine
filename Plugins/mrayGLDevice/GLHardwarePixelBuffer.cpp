@@ -62,6 +62,7 @@ LockedPixelBox GLHardwarePixelBuffer::inner_lock(const math::box3d&lockBox,ELock
 	if(options != ELO_Discard && (m_usage & EUT_WriteOnly)==0){
 		download(m_buffer);
 	}
+	m_buffer.format = m_format;
 	m_currentLO=options;
 	return m_buffer.getSubBox(lockBox);
 }
