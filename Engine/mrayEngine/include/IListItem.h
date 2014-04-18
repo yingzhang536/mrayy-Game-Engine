@@ -40,7 +40,7 @@ public:
 
 	virtual void Draw(const math::rectf& rc, IGUIElement* lstBox, IFont* font, IGUIRenderer* renderer) = 0;
 
-	virtual float GetHeight(IGUIElement* lstBox) = 0;
+	//virtual float GetHeight(IGUIElement* lstBox) = 0;
 };
 
 class MRAY_DLL StringListItem:public IListItem
@@ -57,7 +57,7 @@ public:
 		return m_text;
 	}
 	virtual void Draw(const math::rectf& rc, IGUIElement* lstBox, IFont* font, IGUIRenderer* renderer);
-	virtual float GetHeight(IGUIElement* lstBox);
+	//virtual float GetHeight(IGUIElement* lstBox);
 };
 
 typedef std::vector<IListItem*> ItemList;

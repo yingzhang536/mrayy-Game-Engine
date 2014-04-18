@@ -43,8 +43,8 @@ void StringUtilT<T>::SplitPathExt(const core::tstring<T>&str, core::tstring<T>&p
 }
 
 template <typename T>
-void StringUtilT<T>::NormalizePathSlashes(mchar*str){
-	for(mchar*p=str;*p;p++){
+void StringUtilT<T>::NormalizePathSlashes(T*str){
+	for(T*p=str;*p;p++){
 		if(*p=='/')
 			*p='\\';
 	}
@@ -71,11 +71,11 @@ bool StringUtilT<T>::BeginsWith(const core::tstring<T>& a, const core::tstring<T
 template <typename T>
 core::tstring<T> StringUtilT<T>::ToLower(const core::tstring<T>& o)
 {
-	static const mchar diff = 'a' - 'A';
+	static const T diff = 'a' - 'A';
 	core::tstring<T> ret;
 	if(o.length()==0)
 		return ret;
-	const mchar* ptr=o.c_str();
+	const T* ptr=o.c_str();
 	ret.resize(o.length());//+1);
 	for (int i=0; i<o.length(); ++i)
 	{
@@ -94,11 +94,11 @@ core::tstring<T> StringUtilT<T>::ToLower(const core::tstring<T>& o)
 template <typename T>
 core::tstring<T> StringUtilT<T>::ToUpper(const core::tstring<T>& o)
 {
-	static const mchar diff = 'A' - 'a';
+	static const T diff = 'A' - 'a';
 	core::tstring<T> ret;
 	if(o.length()==0)
 		return ret;
-	const mchar* ptr=o.c_str();
+	const T* ptr=o.c_str();
 	ret.resize(o.length());//+1);
 	for (int i=0; i<o.length(); ++i)
 	{
@@ -179,7 +179,7 @@ std::vector<core::tstring<T>> StringUtilT<T>::Split(const core::tstring<T>& str,
 	ret.reserve(maxSplits ? maxSplits:10);
 
 	core::tstring<T> temp;
-	const mchar*p=str.c_str();
+	const T*p=str.c_str();
 	int cnt=0;
 	for(;*p!=0;p++){
 		if(delimStr.find(*p)!=-1 ){

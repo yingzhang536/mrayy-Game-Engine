@@ -5,6 +5,7 @@
 #include "DBHandler.h"
 #include "SQLAPI.h"
 #include "UserDB.h"
+#include "StringUtil.h"
 
 namespace mray
 {
@@ -35,13 +36,30 @@ TweetDB* TweetDB::GetTweetByID(ulong id)
 
 }
 
-void TweetDB::LoadTweet(SACommand& cmd)
+TweetDB* TweetDB::LoadTweet(SACommand& cmd)
+{
+	/*
+	SAString t;
+	t = cmd.Field("Text").asString();
+	core::stringw text = core::ConvertToStringW(t.GetMultiByteChars(), t.GetMultiByteCharsLength());
+
+	text=core::StringUtilW::ToLower(text);
+	if (text.find(L"tedxtokyo")==-1)
+	{
+		return 0;
+	}*/
+
+	TweetDB* ret = new TweetDB();
+	ret->_innerLoad(cmd);
+	return ret;
+}
+void TweetDB::_innerLoad(SACommand& cmd)
 {
 	SAString t;
+	t = cmd.Field("Text").asString();
 	SADateTime d;
 	ID = cmd.Field("ID").asULong();
 	ulong userid = cmd.Field("UserID").asULong();
-	t = cmd.Field("Text").asString();
 	d = cmd.Field("Date");
 	text = core::ConvertToStringW(t.GetMultiByteChars(), t.GetMultiByteCharsLength());
 	date.year=d.GetYear();

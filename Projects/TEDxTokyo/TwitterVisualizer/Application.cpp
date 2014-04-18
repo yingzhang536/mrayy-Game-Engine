@@ -9,6 +9,7 @@
 #include "ICustomParticleEmitter.h"
 
 #include "PAVelocityInterpolater.h"
+#include "PAVelocityOverTimeInterpolater.h"
 #include "SphereParticleEmitter.h"
 
 
@@ -22,7 +23,6 @@
 #include "BackgroundEmitter.h"
 #include "ViewPort.h"
 #include "ParsedShaderPP.h"
-#include "PAVelocityInterpolater.h"
 #include "TextDecorator.h"
 
 #include "TweetDB.h"
@@ -45,6 +45,10 @@
 #include "GUITweetItem.h"
 #include "IGUIStackPanel.h"
 #include "LeapDevice.h"
+#include "GUIScreenLayoutImpl.h"
+#include "GUIOverlayManager.h"
+#include "GUIElementFactory.h"
+#include "GUIOverlay.h"
 #include <SQLAPI.h> // main SQLAPI++ header
 // #include <cppdb/frontend.h>
 
@@ -106,7 +110,7 @@ namespace scene
 		}
 		void InsertParticle(IParticle* p)
 		{
-			math::vector3di cell= (p->position+m_size/2)/m_resolution;
+			math::vector3di cell = (p->position + m_size / 2) / m_size;
 			if (cell.x >= m_resolution.x || cell.y >= m_resolution.y || cell.z >= m_resolution.z
 				|| cell.x < 0 || cell.y < 0 || cell.z < 0)
 			{
@@ -131,7 +135,11 @@ namespace scene
 	{
 	public:
 
-		PACenterForce(){}
+		float maxRadius;
+
+		PACenterForce() :maxRadius(50)
+		{
+		}
 		virtual~PACenterForce(){}
 
 		virtual bool affectsTransformations(){ return true; }
@@ -140,29 +148,50 @@ namespace scene
 		{
 			math::vector3d dir = p->position;
 			float len = dir.Normalize();
-			float dist = 5;
-			if (len > dist)
-				len = dist;
-			float norm = len / dist;
-			p->color.A = 1 - len / dist;
-			p->scale = 0.1f;
-			if (len > 0.5)
-				p->velocity = -dir;
-			else
-				p->velocity = 0;
+			if (len > maxRadius)
+			{
+				p->velocity += -dir*dt;
+			}
 
 		}
 
 	};
 
-	class ParticleLineRenderer :public ConnectionLineRenderer
+	class CenterParticleLineRenderer :public ConnectionLineRenderer
+	{
+		scene::ParticleEmitter* m_emitter;
+	public:
+		CenterParticleLineRenderer()
+		{
+
+		}
+
+		void SetEmitter(scene::ParticleEmitter* emitter){ m_emitter = emitter; }
+
+
+		virtual void update(float dt)
+		{
+			if (!m_emitter)
+				return;
+			const scene::ParticleEmitter::ParticleList& particles = m_emitter->getParticles();
+			math::vector3d pos = m_emitter->GetSystem()->getOwner()->getAbsolutePosition();
+			Reset();
+			scene::ParticleEmitter::ParticleList::const_iterator it = particles.begin();
+			for (ushort i = 0; it != particles.end(); ++it, i += 2)
+			{
+				AddConnection(pos, (*it)->position, (*it)->color, video::SColor(1,1,1,0));
+			}
+			ConnectionLineRenderer::update(dt);
+		}
+	};
+	class DistanceParticleLineRenderer :public ConnectionLineRenderer
 	{
 		scene::ParticleEmitter* m_emitter;
 		ParticleGrid m_grid;
 	public:
-		ParticleLineRenderer() 
+		DistanceParticleLineRenderer()
 		{
-			m_grid.SetSize(math::vector3d(20));
+			m_grid.SetSize(math::vector3d(40));
 			m_grid.SetResolution(10);
 
 		}
@@ -175,15 +204,56 @@ namespace scene
 			if (!m_emitter)
 				return;
 			const scene::ParticleEmitter::ParticleList& particles= m_emitter->getParticles();
+			math::vector3d pos = m_emitter->GetSystem()->getOwner()->getAbsolutePosition();
 
 			m_grid.Reset();
+			//m_grid.SetSize(m_emitter->GetBoundingBox().getExtent() * 2);
 
 			Reset();
 			scene::ParticleEmitter::ParticleList::const_iterator it = particles.begin();
 			for (ushort i = 0; it != particles.end(); ++it,i+=2)
 			{
-				AddConnection(0, (*it)->position, (*it)->color, (*it)->color);
 				m_grid.InsertParticle(*it);
+			}
+			int c = m_grid.GetCellsCount();
+			for (int i = 0; i < c; ++i)
+			{
+				const std::list<IParticle*> &r = m_grid.GetCells()[i].GetParticles();
+				std::list<IParticle*>::const_iterator it = r.begin();
+				for (int j = 0; j < ((int)r.size()) - 1 /*&& j<40*/; j += 2)
+				{
+					IParticle* a = dynamic_cast<IParticle*>(*it);
+					IParticle* b = 0;
+					std::list<IParticle*>::const_iterator itBest;
+					std::list<IParticle*>::const_iterator it2 = it;
+					float bestDist = 9999999;
+					++it2;
+					for (int j2 = 0; it2 != r.end() /*&& j2 < 20*/; ++it2,++j2)
+					{
+						float d = a->position.getDistSQ((*it2)->position);
+						if (d < bestDist)
+						{
+							itBest = it2;
+							bestDist = d;
+							b = dynamic_cast<IParticle*>(*it2);
+						}
+					}
+					if (!b)
+						break;
+					++it;
+
+  					if (bestDist>4)
+  						continue;
+
+					bestDist = sqrtf(bestDist);
+				//	if (a->GetLevelID() == b->GetLevelID())
+					{
+						video::SColor clr(1);
+						clr.A = bestDist/5.0f;
+						clr.A =  0.5f+math::clamp<float>(clr.A, 0, 1)*0.5f;
+						AddConnection(a->position, b->position, clr,clr);
+					}
+				}
 			}
 
 			ConnectionLineRenderer::update(dt);
@@ -215,6 +285,7 @@ Application::Application()
 {
 	m_limitFps = true;
 	m_limitFpsCount = 30;
+	m_debugging = false;
 }
 Application::~Application()
 {
@@ -242,7 +313,7 @@ void Application::_OnSelectUserChange(IObject* sender, PVOID param)
 		m_loadedParticles[i]->color = 1;
 	}
 	m_loadedParticles.clear();
-	m_userProfile->SetUser(u);
+	m_screenLayout->UserProfile->SetUser(u);
 	for (int i = 0; i < u->tweets.size(); ++i)
 	{
 		scene::TweetParticle* p= m_tweetEmitter->GetTweetParticle(u->tweets[i]->ID);
@@ -266,14 +337,14 @@ void Application::_OnSelectUserChange(IObject* sender, PVOID param)
 		else
 		{
 			item = new GUI::GUITweetItem(getGUIManager());
-			m_tweetsStack->AddElement(item);
+			m_screenLayout->TweetsList->AddElement(item);
 			item->SetSize(math::vector2d(500, 150));
 			m_tweetItems.push_back(item);
 		}
 		item->SetTweet(u->tweets[i]);
 
 	}
-	m_tweetsStack->SetScrollOffset(0);
+	m_screenLayout->TweetsList->SetScrollOffset(0);
 	printf("Tweets count: %d\n",item->GetUser()->tweets.size());
 }
 
@@ -288,10 +359,13 @@ void Application::_OnUserNameChange(IObject* sender, PVOID param)
 	if (!sender)
 		return;
 	core::stringw str = dynamic_cast<GUI::IGUIEditBox*>(sender)->GetText().GetAsStringW();
-	m_usersList->ClearItems();
+	m_screenLayout->UsersList ->ClearItems();
 	printf("cleared\n");
 	if (str == L"")
 	{
+		m_screenLayout->UserProfile->SetUser(0);
+		for (int i = 0; i < m_tweetItems.size(); ++i)
+			m_tweetItems[i]->SetVisible(false);
 		gTextureResourceManager.unloadAll(true);
 		return;
 	}
@@ -314,21 +388,25 @@ void Application::_OnUserNameChange(IObject* sender, PVOID param)
 	{
 		if (!firstUser)
 			firstUser = users[i];
-		m_usersList->AddItem(new GUI::TwitterProfileListItem(users[i]));
+		m_screenLayout->UsersList->AddItem(new GUI::TwitterProfileListItem(users[i]));
 	}
 
 	if (firstUser)
 	{
 	}
-	m_usersList->SetSelectedItem(0);
-	printf("items added : %d\n", m_usersList->GetItemsCount());
+	m_screenLayout->UsersList->SetSelectedItem(0);
+	printf("items added : %d\n", m_screenLayout->UsersList->GetItemsCount());
 
 }
 
 void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
-	
+
+	{
+		m_debugging = extraOptions.GetOptionValue("Debugging")=="Yes";
+
+	}
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
 	network::createWin32Network();
@@ -348,7 +426,7 @@ void Application::init(const OptionContainer &extraOptions)
 	m_fontGen->Init();
 	
 	m_fontGen->SetTextureSize(2048);
-	m_fontGen->SetFontName(L"Terminal");
+	m_fontGen->SetFontName(L"Arial");
 	m_fontGen->SetFontResolution(24);
 
 	m_camera = getSceneManager()->createCamera();
@@ -370,7 +448,7 @@ void Application::init(const OptionContainer &extraOptions)
 
 	scene::ISceneNode* psNode = getSceneManager()->createSceneNode("Particle System");
 	 
-	for (int i = 0; i < 4;++i)
+	for (int i = 0; i < 2;++i)
 	{
 		scene::BackgroundEmitter* be = new scene::BackgroundEmitter();
 		m_particleSystem->AddEmitter(be);
@@ -378,9 +456,18 @@ void Application::init(const OptionContainer &extraOptions)
 		be->SetRenderer(new scene::CPUParticleBillboardRenderer(1000));
 		be->setMaterial(gMaterialResourceManager.getMaterial("CPUParticlesMaterial"));
 
-		scene::PAVelocityInterpolater* vel = new scene::PAVelocityInterpolater();
+		scene::PAVelocityOverTimeInterpolater* vel = new scene::PAVelocityOverTimeInterpolater();
 		be->addAffector(vel);
-		vel->addKey(0, -0.1, 0.1);
+		//vel->addKey(0, -0.1, 0.1);
+		vel->SetMinMaxVel(-1, 1);
+
+		scene::PACenterForce* centerForce = new scene::PACenterForce();
+		be->addAffector(centerForce);
+
+		scene::DistanceParticleLineRenderer* lrend = new scene::DistanceParticleLineRenderer();
+		lrend->SetEmitter(be);
+		lrend->setMaterial(gMaterialResourceManager.getMaterial("ParticleLinesMaterial"), 0);
+		psNode->AttachNode(lrend);
 	}
 	{
 		scene::TweetsEmitter* e = new scene::TweetsEmitter();
@@ -388,11 +475,11 @@ void Application::init(const OptionContainer &extraOptions)
 
 		m_particleSystem->AddEmitter(e);
 
-		e->SetRenderer(new scene::CPUParticleBillboardRenderer(1000));
+		e->SetRenderer(new scene::CPUParticleBillboardRenderer(10000));
 		e->setMaterial(gMaterialResourceManager.getMaterial("CPUParticlesMaterial"));
 
 
-		scene::ParticleLineRenderer* lrend = new scene::ParticleLineRenderer();
+		scene::CenterParticleLineRenderer* lrend = new scene::CenterParticleLineRenderer();
 		lrend->SetEmitter(e);
 		lrend->setMaterial(gMaterialResourceManager.getMaterial("ParticleLinesMaterial"), 0);
 
@@ -415,54 +502,19 @@ void Application::init(const OptionContainer &extraOptions)
 	getGUIManager()->SetRootElement(m_guiroot);
 
 	{
-		GUI::IGUIStackPanel* elementsPanel = getGUIManager()->CreateElement<GUI::IGUIStackPanel>();
+		REGISTER_GUIElement_FACTORY(GUITweetItem);
+		REGISTER_GUIElement_FACTORY(GUIUserProfile);
+		GUI::GUIOverlay* screenOverlay= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout.gui");
+		m_screenLayout = new GUI::GUIScreenLayoutImpl();
+		screenOverlay->CreateElements(getGUIManager(), m_guiroot, 0, m_screenLayout);
 
-		m_guiroot->AddElement(elementsPanel);
-		elementsPanel->SetHorizontalAlignment(GUI::EHA_Right);
-		elementsPanel->SetSize(math::vector2d(500, 50));
-		elementsPanel->SetDocking(GUI::EED_Right);
-		elementsPanel->SetStackDirection(GUI::IGUIStackPanel::EVertical);
-		elementsPanel->SetOffset(10);
-		elementsPanel->SetUseScroll(false);
-
-		GUI::IGUIEditBox* editBox = getGUIManager()->CreateElement<GUI::IGUIEditBox>();
-		m_userNameTxt = editBox;
-		elementsPanel->AddElement(editBox);
-		editBox->SetPosition(math::vector2d(100, 0));
-		editBox->SetSize(math::vector2d(400, 50));
-		editBox->GetFontAttributes()->hasShadow = false;
-		editBox->GetFontAttributes()->fontColor.Set(1, 1, 1, 1);
-		editBox->OnTextChange += CreateObjectDelegate(Application, this, _OnUserNameChange);
-		editBox->SetHorizontalAlignment(GUI::EHA_Left);
-		editBox->SetColor(video::SColor(0.5, 0.5, 0.6, 1));
-		//m_userNameTxt->SetVisible(false);
-		getGUIManager()->SetFocus(m_userNameTxt);
-		g_editboxFocuslistener.editbox = m_userNameTxt;
-
+		g_editboxFocuslistener.editbox = m_screenLayout->UserTxt;
 		getGUIManager()->AddListener(&g_editboxFocuslistener);
 
-		GUI::IGUIListBox* listBox = getGUIManager()->CreateElement<GUI::IGUIListBox>();
-		m_usersList = listBox;
-		elementsPanel->AddElement(listBox);
-		listBox->SetPosition(math::vector2d(100, 0));
-		listBox->SetSize(math::vector2d(400, 200));
-		listBox->GetFontAttributes()->hasShadow = false;
-		listBox->GetFontAttributes()->fontSize = 24;
-		listBox->GetFontAttributes()->fontColor.Set(0, 0, 0, 1);
-		listBox->OnSelectChange += CreateObjectDelegate(Application, this, _OnSelectUserChange);
-		listBox->SetHorizontalAlignment(GUI::EHA_Left);
-
-
-		m_userProfile = new GUI::GUIUserProfile(getGUIManager());
-		elementsPanel->AddElement(m_userProfile);
-		m_userProfile->SetPosition(math::vector2d(0, 200));
-		m_userProfile->SetSize(math::vector2d(500, 100));
-
-		m_tweetsStack = getGUIManager()->CreateElement<GUI::IGUIStackPanel>();
-		elementsPanel->AddElement(m_tweetsStack);
-		m_tweetsStack->SetStackDirection(GUI::IGUIStackPanel::EVertical);
-		m_tweetsStack->SetPosition(math::vector2d(0, 300));
-		m_tweetsStack->SetSize(math::vector2d(500, 1000));
+		getGUIManager()->SetFocus(m_screenLayout->UserTxt);
+		m_screenLayout->UserTxt ->OnTextChange += CreateObjectDelegate(Application, this, _OnUserNameChange);
+		m_screenLayout->UsersList->OnSelectChange += CreateObjectDelegate(Application, this, _OnSelectUserChange);
+		m_screenLayout->RootStack->SetUseScroll(false);
 	}
 
 	// 	m_userProfile->GetFontAttributes()->hasShadow = false;
@@ -500,7 +552,7 @@ void Application::init(const OptionContainer &extraOptions)
 		if (true)
 		{
 			int bytesCount = 0;
-			for (int i = 0; i < 50; ++i)
+			for (int i = 0; i < ted::TweetDB::TweetDBList.size(); ++i)
 			{
 				ted::TweetDB* t = ted::TweetDB::TweetDBList[i];
  				core::UTFString str = t->user->displayName;
@@ -536,9 +588,6 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 	getDevice()->set2DMode();
 
-	tex.SetTexture(m_fontGen->GetTexture());
-	getDevice()->useTexture(0, &tex);
-	getDevice()->draw2DImage(math::rectf(0, 0, 300, 300), 1);
 	for (int i = 0; i < m_images.size(); ++i)
 	{
 		tex.SetTexture(m_images[i]);
@@ -554,42 +603,45 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 	float yoffset = 50;
 
 
-	GUI::FontAttributes attr;
-	attr.fontColor.Set(0.05, 1, 0.5, 1);
-	attr.fontAligment = GUI::EFA_MiddleLeft;
-	attr.fontSize = 24;
-	attr.hasShadow = true;
-	attr.shadowColor.Set(0, 0, 0, 1);
-	attr.shadowOffset = math::vector2d(2);
-	attr.spacing = 2;
-	attr.wrap = 0;
-	attr.RightToLeft = 0;
-	core::UTFString msg;
-	msg = L"FPS: "+core::string_to_wchar(core::StringConverter::toString(gFPS.getFPS()));
-	m_fontGen->print(math::rectf(0, 0, 200, 100), &attr, &math::rectf(0, 0, 200, 100), msg, &m_guiRender);
-	msg = Text;// core::stringw(L"※ご登録アドレスが、PCメール拒否、ドメイン指定等の設定がされている可能性");
+	if (m_debugging)
+	{
+		GUI::FontAttributes attr;
+		attr.fontColor.Set(0.05, 1, 0.5, 1);
+		attr.fontAligment = GUI::EFA_MiddleLeft;
+		attr.fontSize = 24;
+		attr.hasShadow = true;
+		attr.shadowColor.Set(0, 0, 0, 1);
+		attr.shadowOffset = math::vector2d(2);
+		attr.spacing = 2;
+		attr.wrap = 0;
+		attr.RightToLeft = 0;
+		core::UTFString msg;
+		msg = L"FPS: " + core::string_to_wchar(core::StringConverter::toString(gFPS.getFPS()));
+		m_fontGen->print(math::rectf(0, 0, 200, 100), &attr, &math::rectf(0, 0, 200, 100), msg, &m_guiRender);
+		msg = Text;// core::stringw(L"※ご登録アドレスが、PCメール拒否、ドメイン指定等の設定がされている可能性");
 
-	GUI::TextContextAttributes context;
-	context.font = m_fontGen;
-	context.device = getDevice();
-	context.fontAttributes = attr;
-	context.pos.set(0, 50);
-	//TextD->CalculateSize(&context);
-	//TextD->Draw(&context, &m_guiRender,&math::rectf(0,wnd->GetSize()));
-	attr.wrap = true;
-	//m_fontGen->print(math::rectf(24, 0, 500, 500), &attr, &math::rectf(0, 0, 500, 500), msg, &m_guiRender);
+		GUI::TextContextAttributes context;
+		context.font = m_fontGen;
+		context.device = getDevice();
+		context.fontAttributes = attr;
+		context.pos.set(0, 50);
+		//TextD->CalculateSize(&context);
+		//TextD->Draw(&context, &m_guiRender,&math::rectf(0,wnd->GetSize()));
+		attr.wrap = true;
+		//m_fontGen->print(math::rectf(24, 0, 500, 500), &attr, &math::rectf(0, 0, 500, 500), msg, &m_guiRender);
 
-	int count=m_particleSystem->GetEmitter(0)->getParticles().size();
-	msg = "Particles Count=" + core::StringConverter::toString(count);
-	m_fontGen->print(math::rectf(50, 0, 150, 200), &attr, 0, msg, &m_guiRender);
+		int count = m_particleSystem->GetEmitter(0)->getParticles().size();
+		msg = "Particles Count=" + core::StringConverter::toString(count);
+		m_fontGen->print(math::rectf(50, 0, 150, 200), &attr, 0, msg, &m_guiRender);
 
-	msg = "Draw Calls=" + core::StringConverter::toString(getDevice()->getBatchDrawnCount());
-	m_fontGen->print(math::rectf(50, 100, 150, 200), &attr, 0, msg, &m_guiRender);
+		msg = "Draw Calls=" + core::StringConverter::toString(getDevice()->getBatchDrawnCount());
+		m_fontGen->print(math::rectf(50, 30, 150, 200), &attr, 0, msg, &m_guiRender);
 
-	msg = "Speed=" + core::StringConverter::toString(m_speedVec);
-	msg += " / " + core::StringConverter::toString(m_leapVec);
-	m_fontGen->print(math::rectf(50, 130, 150, 200), &attr, 0, msg, &m_guiRender);
-	m_guiRender.Flush();/**/
+		msg = "Draw Primitives=" + core::StringConverter::toString(getDevice()->getPrimitiveDrawnCount());
+		m_fontGen->print(math::rectf(50, 60, 150, 200), &attr, 0, msg, &m_guiRender);
+
+		m_guiRender.Flush();/**/
+	}
 }
 void Application::update(float dt)
 {
@@ -607,6 +659,9 @@ void Application::update(float dt)
 	m_speedVec += m_leapVec*dt;
 	m_speedVec -= m_speedVec*dt;
 	
+	float offset = m_screenLayout->TweetsList->GetScrollOffset();
+	offset += m_speedVec.z*dt*2;
+	m_screenLayout->TweetsList->SetScrollOffset(offset);
 
 	m_cameraRadius = math::clamp<float>(m_cameraRadius, 40, 80);
 

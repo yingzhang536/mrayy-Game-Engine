@@ -124,6 +124,18 @@ const video::SColor& GUIListBox::GetSelectionColor()const
 {
 	return m_component->GetSelectionColor();
 }
+
+
+bool GUIListBox::SetItemHeight(float h)
+{
+	m_component->SetItemHeight(h);
+	return true;
+}
+float GUIListBox::GetItemHeight()const
+{
+	return m_component->GetItemHeight();
+}
+
 void GUIListBox::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())

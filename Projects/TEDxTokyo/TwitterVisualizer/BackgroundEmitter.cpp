@@ -14,7 +14,7 @@ namespace scene
 
 BackgroundEmitter::BackgroundEmitter()
 {
-	m_particleCount = 500;
+	m_particleCount = 1000;
 	m_radius = 80;
 	m_maxConnections = 2;
 	m_inited = false;

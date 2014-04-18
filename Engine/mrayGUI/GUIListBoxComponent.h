@@ -49,6 +49,8 @@ protected:
 	int m_botBotState;
 	int m_hoveredItem;
 
+	float m_itemHeight;
+
 	int m_currentPageSize;
 
 	int _GetItemsCount(const math::rectf& rc,float& cDim);
@@ -76,6 +78,9 @@ public:
 
 	GUIListBoxComponent(IGUIElement* owner);
 	virtual~GUIListBoxComponent();
+
+	void SetItemHeight(float h){ m_itemHeight = h; };
+	float GetItemHeight(){ return m_itemHeight; }
 
 	void OnValueChanged(GUISliderbarComponent*caller);
 

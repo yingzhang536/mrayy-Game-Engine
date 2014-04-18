@@ -17,6 +17,7 @@
 
 
 #include "IGUIElement.h"
+#include "GUIElementFactoryDef.h"
 
 namespace mray
 {
@@ -29,6 +30,7 @@ namespace GUI
 
 class GUITweetItem:public IGUIElement
 {
+	DECLARE_RTTI;
 public: 
 	static const core::string ElementType;
 protected:
@@ -45,6 +47,8 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(const math::rectf*vp);
 };
+
+DECLARE_ELEMENT_FACTORY(GUITweetItem);
 
 }
 }

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Emitters">
-      <UniqueIdentifier>{b70d26cb-53ec-4efa-89e1-69e1c7ffaf9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Twitter">
       <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
     </Filter>
@@ -28,9 +25,6 @@
     <Filter Include="Source Files\Renderers">
       <UniqueIdentifier>{47d0fdd0-6de8-4254-a3e6-7fe2e7c24bf9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Particle Effects">
-      <UniqueIdentifier>{b1b060c8-a5a1-4aa3-9e97-075d7fdeef29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\RTF">
       <UniqueIdentifier>{852548e9-e17a-442a-8200-bcc42d58d0ff}</UniqueIdentifier>
     </Filter>
@@ -39,6 +33,12 @@
     </Filter>
     <Filter Include="Source Files\Leap">
       <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles\Particle Effects">
+      <UniqueIdentifier>{b1b060c8-a5a1-4aa3-9e97-075d7fdeef29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles\Emitters">
+      <UniqueIdentifier>{b70d26cb-53ec-4efa-89e1-69e1c7ffaf9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,13 +55,13 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TweetsEmitter.h">
-      <Filter>Source Files\Emitters</Filter>
+      <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
     <ClInclude Include="TweetDB.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
     <ClInclude Include="BackgroundEmitter.h">
-      <Filter>Source Files\Emitters</Filter>
+      <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
     <ClInclude Include="IBaseParticle.h">
       <Filter>Source Files\Particles</Filter>
@@ -70,7 +70,7 @@
       <Filter>Source Files\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="PAVelocityOverTimeInterpolater.h">
-      <Filter>Source Files\Particle Effects</Filter>
+      <Filter>Source Files\Particles\Particle Effects</Filter>
     </ClInclude>
     <ClInclude Include="RTFTextParser.h">
       <Filter>Source Files\RTF</Filter>
@@ -102,6 +102,12 @@
     <ClInclude Include="LeapDevice.h">
       <Filter>Source Files\Leap</Filter>
     </ClInclude>
+    <ClInclude Include="GUIScreenLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -117,7 +123,7 @@
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundEmitter.cpp">
-      <Filter>Source Files\Emitters</Filter>
+      <Filter>Source Files\Particles\Emitters</Filter>
     </ClCompile>
     <ClCompile Include="TweetDB.cpp">
       <Filter>Source Files\Twitter</Filter>
@@ -129,7 +135,7 @@
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
     <ClCompile Include="TweetsEmitter.cpp">
-      <Filter>Source Files\Emitters</Filter>
+      <Filter>Source Files\Particles\Emitters</Filter>
     </ClCompile>
     <ClCompile Include="DBHandler.cpp">
       <Filter>Source Files\Twitter</Filter>
@@ -152,5 +158,13 @@
     <ClCompile Include="LeapDevice.cpp">
       <Filter>Source Files\Leap</Filter>
     </ClCompile>
+    <ClCompile Include="PAVelocityOverTimeInterpolater.cpp">
+      <Filter>Source Files\Particles\Particle Effects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
   </ItemGroup>
 </Project>

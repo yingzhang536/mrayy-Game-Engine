@@ -23,7 +23,7 @@ class MRAYGUI_API GUIListBox:public IGUIListBox
 {
 	DECLARE_RTTI
 protected:
-	ItemList m_itemList;
+	//ItemList m_itemList;
 	GUIListBoxComponent* m_component;
 	FontAttributes m_FontAttributes;
 
@@ -55,6 +55,9 @@ public:
 	const video::SColor& GetSelectionColor()const;
 
 	virtual void Draw(const math::rectf*vp);
+
+	virtual bool SetItemHeight(float h) ;
+	virtual float GetItemHeight()const ;
 
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();

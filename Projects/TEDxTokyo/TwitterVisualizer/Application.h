@@ -37,6 +37,8 @@ namespace mray
 		class IGUIEditBox;
 		class GUITweetItem;
 		class IGUIStackPanel;
+
+		class GUIScreenLayoutImpl;
 	}
 class Application :public CMRayApplication,public nui::ILeapListener
 {
@@ -56,14 +58,17 @@ protected:
 	std::vector < video::ITexturePtr> m_images;
 
 	GUI::IGUIPanelElement* m_guiroot;
+	/*
 	GUI::IGUIEditBox* m_userNameTxt;
 	GUI::IGUIListBox* m_usersList;
-	scene::TweetsEmitter* m_tweetEmitter;
 	GUI::GUIUserProfile* m_userProfile;
-
 	GUI::IGUIStackPanel* m_tweetsStack;
+	*/
+	GUI::GUIScreenLayoutImpl* m_screenLayout;
+
 	std::vector<GUI::GUITweetItem*> m_tweetItems;
 
+	scene::TweetsEmitter* m_tweetEmitter;
 	std::vector<scene::TweetParticle*> m_loadedParticles;
 
 	GCPtr<nui::LeapDevice> m_leap;
@@ -71,6 +76,8 @@ protected:
 	math::vector3d m_speedVec;
 	math::vector3d m_leapVec;
 	float m_cameraRadius;
+
+	bool m_debugging;
 
 	void _OnUserNameChange(IObject* sender, PVOID param);
 	void _OnSelectUserChange(IObject* sender, PVOID param);

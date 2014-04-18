@@ -55,7 +55,7 @@ void GUIPanel::Draw(const math::rectf*vp)
 		creator->GetDevice()->setScissorRect(clipRect);
 		if(skin)
 		{
-			skin->drawSizableBox(creator->GetRenderQueue(),clipRect,0,mT("Frame"));
+			skin->drawSizableBox(creator->GetRenderQueue(), clipRect, 0, mT("Frame"), GetColor());
 			creator->GetRenderQueue()->Flush();
 		}else
 		{

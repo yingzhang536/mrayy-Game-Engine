@@ -41,7 +41,6 @@ public:
 	virtual core::UTFString toString()const;
 
 	virtual void Draw(const math::rectf& rc, IGUIElement* lstBox, IFont* font, IGUIRenderer* renderer) ;
-	virtual float GetHeight(IGUIElement* lstBox) { return 30; }
 
 };
 

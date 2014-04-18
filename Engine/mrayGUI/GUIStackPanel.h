@@ -41,7 +41,7 @@ public:
 	virtual~GUIStackPanel();
 
 	virtual bool SetStackDirection(EStackDirection dir);
-	virtual void SetScrollOffset(float offset) { m_startPos = offset; }
+	virtual void SetScrollOffset(float offset);
 	virtual float GetScrollOffset() { return m_startPos; }
 
 	virtual bool SetUseScroll(bool scroll) ;

@@ -20,3 +20,6 @@
 #include <algorithm>
 #include <mrayEngine.h>
 #include <IGameComponent.h>
+
+//#define SA_UNICODE
+#include <SQLAPI.h>

@@ -52,6 +52,13 @@ const math::rectf& GUIStackPanel::GetUnclippedRect()
 	return m_unclippedRect;
 }*/
 
+void GUIStackPanel::SetScrollOffset(float offset)
+{ 
+	m_startPos = offset;
+	m_startPos = math::clamp<float>(m_startPos, 0, (m_sliderComp->itemsCount - m_sliderComp->pageSize));
+	if ((m_sliderComp->itemsCount - m_sliderComp->pageSize) > 0)
+		m_sliderComp->SetPercentValue(m_startPos / (m_sliderComp->itemsCount - m_sliderComp->pageSize));
+}
 bool GUIStackPanel::_OnMouseEvent(MouseEvent* e)
 {
 	if(GetDefaultRegion()->GetClippedRect().IsPointInside(e->pos))

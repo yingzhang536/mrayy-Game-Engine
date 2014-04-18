@@ -34,6 +34,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\Engine\BuildRules\overlay.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -59,13 +60,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;C:\Development\SQLAPI\include;C:\Development\cppdb-0.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);C:\Development\SQLAPI\vs2012\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;LeapD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);..\..\..\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -77,14 +78,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;C:\Development\SQLAPI\include;C:\Development\cppdb-0.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);C:\Development\SQLAPI\vs2012\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);..\..\..\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -97,6 +98,8 @@
     <ClInclude Include="ConnectionLineRenderer.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DBHandler.h" />
+    <ClInclude Include="GUIScreenLayout.h" />
+    <ClInclude Include="GUIScreenLayoutImpl.h" />
     <ClInclude Include="GUITweetItem.h" />
     <ClInclude Include="GUIUserProfile.h" />
     <ClInclude Include="IBaseParticle.h" />
@@ -121,6 +124,7 @@
     <ClCompile Include="GUITweetItem.cpp" />
     <ClCompile Include="GUIUserProfile.cpp" />
     <ClCompile Include="LeapDevice.cpp" />
+    <ClCompile Include="PAVelocityOverTimeInterpolater.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -133,7 +137,13 @@
     <ClCompile Include="TwitterVisualizer.cpp" />
     <ClCompile Include="UserDB.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\Engine\BuildRules\overlay.targets" />
   </ImportGroup>
 </Project>

@@ -34,14 +34,21 @@ class TweetParticle:public IBaseParticle
 protected:
 	ted::TweetDB* m_tweet;
 	float m_targetRadius;
+
+	int m_levelID;
+
+	math::vector3d m_randomAxis;
 public:
 	TweetParticle(TweetsEmitter* e,ted::TweetDB* tweet);
 	virtual~TweetParticle();
 
 	ted::TweetDB* GetTweet(){ return m_tweet; }
 
+	int GetLevelID(){ return m_levelID; }
+
 	void SetTargetRadius(float r)
 	{
+		m_levelID = r;
 		m_targetRadius = r;
 	}
 

@@ -15,7 +15,6 @@
 #ifndef __DBHandler__
 #define __DBHandler__
 
-#include "SQLAPI.h"
 
 
 namespace mray

@@ -51,7 +51,7 @@ public:
 	static core::tstring<T> MakePathRelative(const core::tstring<T>&path,const core::tstring<T>&root);
 
 	//convert '/' chars into '\\'
-	static void NormalizePathSlashes(mchar*str);
+	static void NormalizePathSlashes(T*str);
 
 	static core::tstring<T> Trim(const core::tstring<T>& str,const core::tstring<T>& chars=mT(" \t"));
 

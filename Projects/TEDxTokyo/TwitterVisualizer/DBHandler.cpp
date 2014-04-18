@@ -47,14 +47,16 @@ void DBHandler::_LoadTweetDB()
 		cmd.setConnection(&m_connection);
 		cmd.setCommandText("select * from dbo.TweetsDB");
 		cmd.Execute();
-
-
+		
+		int rows = 0;
 		while (cmd.FetchNext())
 		{
-			ted::TweetDB *t = new ted::TweetDB();;
-			t->LoadTweet(cmd);
-			TweetDB::AddTweetDB(t);
+			++rows;
+			ted::TweetDB *t = ted::TweetDB::LoadTweet(cmd);;
+			if (t)
+				TweetDB::AddTweetDB(t);
 		}
+		printf("Tweet Rows:%d/%d\n", TweetDB::TweetDBList.size(), rows);
 	}
 	catch (SAException& e)
 	{
@@ -73,12 +75,12 @@ bool DBHandler::_connect()
 	try
 	{
 		m_connection.setClient(SA_SQLServer_Client);
-		m_connection.Connect(".\\SQLEXPRESS@TwitterDB", "TweetU", "TweetP", SA_SQLServer_Client);
+		m_connection.Connect(".\\SQLEXPRESS@TwitterDB", "TweetU2", "TweetP", SA_SQLServer_Client);
 		return m_connection.isConnected();
 	}
 	catch (SAException& e)
 	{
-
+		printf("Failed to connect to DB:%s\n", e.ErrText().GetMultiByteChars());
 	}
 	return false;
 }
@@ -127,6 +129,7 @@ TweetDB* DBHandler::RequestTweet(ulong id)
 	{
 
 	}
+	return 0;
 }
 UserDB* DBHandler::RequestUser(ulong id)
 {
@@ -152,6 +155,7 @@ UserDB* DBHandler::RequestUser(ulong id)
 	{
 
 	}
+	return 0;
 }
 
 DBHandler* DBHandler::Instance()

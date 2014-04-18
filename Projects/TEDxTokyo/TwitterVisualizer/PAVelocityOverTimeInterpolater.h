@@ -17,6 +17,7 @@
 #define __PAVelocityOverTimeInterpolater__
 
 
+#include "IParticleAffector.h"
 
 
 namespace mray
@@ -24,12 +25,25 @@ namespace mray
 namespace scene
 {
 
-class PAVelocityOverTimeInterpolater
+class PAVelocityOverTimeInterpolater :public IParticleAffector
 {
 protected:
+	math::vector3d m_minVel;
+	math::vector3d m_maxVel;
 public:
-	PAVelocityOverTimeInterpolater(){}
-	virtual~PAVelocityOverTimeInterpolater(){}
+	PAVelocityOverTimeInterpolater();
+	virtual~PAVelocityOverTimeInterpolater();
+
+
+	virtual bool affectsTransformations(){ return true; }
+
+	virtual void applyOnParticle(IParticle*p, float dt);
+
+	void SetMinMaxVel(const math::vector3d &minV, const math::vector3d &maxV)
+	{
+		m_minVel = minV;
+		m_maxVel = maxV;
+	}
 };
 
 }

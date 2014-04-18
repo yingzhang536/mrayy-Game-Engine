@@ -17,6 +17,7 @@
 
 
 #include "IGUIElement.h"
+#include "GUIElementFactoryDef.h"
 
 namespace mray
 {
@@ -29,6 +30,7 @@ namespace GUI
 
 class GUIUserProfile:public IGUIElement
 {
+	DECLARE_RTTI;
 public:
 	static const core::string ElementType;
 protected:
@@ -37,6 +39,8 @@ protected:
 	video::IGPUShaderProgramPtr m_maskingShader;
 
 	GUI::FontAttributes m_fontAttrs;
+
+	float m_openAnimation;
 public:
 	GUIUserProfile(GUI::IGUIManager* creator);
 	virtual~GUIUserProfile();
@@ -48,6 +52,9 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(const math::rectf*vp);
 };
+
+
+DECLARE_ELEMENT_FACTORY(GUIUserProfile);
 
 }
 }

@@ -18,12 +18,13 @@ namespace GUI
 		font->print(rc,lstBox->GetFontAttributes(), &rc, toString(), renderer);
 
 	}
+	/*
 	float StringListItem::GetHeight(IGUIElement* lstBox)
 	{
 		if (!lstBox->GetFontAttributes())
 			return 20;
 		return lstBox->GetFontAttributes()->fontSize;
-	}
+	}*/
 
 }
 }

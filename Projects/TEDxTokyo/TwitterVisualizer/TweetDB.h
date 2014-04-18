@@ -33,6 +33,8 @@ public:
 	static std::vector<TweetDB*> TweetDBList;
 	static void AddTweetDB(TweetDB* t);
 	static TweetDB* GetTweetByID(ulong id);
+
+	void _innerLoad(SACommand& cmd);
 public:
 	TweetDB() :ID(0), user(0), retweets(0)
 	{}
@@ -44,7 +46,7 @@ public:
 	core::DateTime date;
 	int retweets;
 
-	void LoadTweet(SACommand& cmd);
+	static TweetDB* LoadTweet(SACommand& cmd);
 };
 
 }

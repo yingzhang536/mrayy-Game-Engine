@@ -19,6 +19,8 @@ namespace scene
 TweetParticle::TweetParticle(TweetsEmitter* e, ted::TweetDB* tweet)
 :IBaseParticle(e), m_tweet(tweet)
 {
+	m_levelID = 0;
+	m_randomAxis = math::quaternion(math::Randomizer::rand01() * 360, math::Randomizer::rand01() * 360, math::Randomizer::rand01() * 360)*math::vector3d::ZAxis;
 }
 TweetParticle::~TweetParticle()
 {
@@ -27,20 +29,26 @@ TweetParticle::~TweetParticle()
 
 void TweetParticle::update(float dt)
 {
-	math::vector3d parent= m_emitter->GetSystem()->getOwner()->getAbsolutePosition();
+	IBaseParticle::update(dt);
+	math::vector3d parent = m_emitter->GetSystem()->getOwner()->getAbsolutePosition();
 	math::vector3d dir = position - parent;
 	float len = dir.Normalize();
 	float diff = len-m_targetRadius;
+
+	color.A = 1 - math::clamp<float>(diff / 10,0,1);
+	scale = color.A*0.3f;
+
 	if (diff <= 0)
 	{
-		position = parent+dir*m_targetRadius;
+		//position = parent+dir*m_targetRadius;
 		velocity = 0;
 	}
 	else
 	{
 		velocity = -dir*10;
 	}
-	IBaseParticle::update(dt);
+
+	velocity += dir.crossProduct(m_randomAxis);
 }
 
 }

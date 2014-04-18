@@ -17,7 +17,7 @@ namespace GUI
 
 GUIListBoxComponent::GUIListBoxComponent(IGUIElement* owner):
 	m_selectedItem(-1),m_startItem(0),m_upBotState(0),m_botBotState(0),
-		m_scrollOn(false),m_currentPageSize(0),listener(0)
+	m_scrollOn(false), m_currentPageSize(0), listener(0), m_itemHeight(18)
 {
 	this->owner=owner;
 	m_sliderBar=new GUISliderbarComponent();
@@ -49,9 +49,9 @@ int GUIListBoxComponent::_GetItemsCount(const math::rectf& rc,float& cDim)
 }
 float GUIListBoxComponent::GetLineHeight()
 {
-	GUI::IFont* font=gFontResourceManager.getFontByName(owner->GetFontAttributes()->fontName);
-	float cDim=font->getCharDimension('A',owner->GetFontAttributes()->fontSize).y;
-	return cDim+cDim /10;
+// 	GUI::IFont* font=gFontResourceManager.getFontByName(owner->GetFontAttributes()->fontName);
+// 	float cDim=font->getCharDimension('A',owner->GetFontAttributes()->fontSize).y;
+	return m_itemHeight;
 
 }
 void GUIListBoxComponent::GetScrollBarRects(const math::rectf& innerRect,int itemsCount,int PageSize,
@@ -116,7 +116,7 @@ int GUIListBoxComponent::_GetItemFromPos(const math::vector2d& pt,const math::re
 		math::rectf itmRc(innerRect.ULPoint.x,itemPos,innerRect.BRPoint.x,itemPos+cDim);
 		if(itmRc.IsPointInside(pt))
 			return i;
-		itemPos+=cDim;
+		itemPos += m_itemHeight;
 	}
 	return -1;
 }
@@ -208,7 +208,7 @@ GUIListBoxComponent::EResultEvent GUIListBoxComponent::LBOnMouseEvent(MouseEvent
 	}
 	EResultEvent res=EReceived;
 	IGUITheme* skin=owner->GetCreator()->GetActiveTheme();
-	GUI::IFont* font=gFontResourceManager.getFontByName(owner->GetFontAttributes()->fontName);
+//	GUI::IFont* font=gFontResourceManager.getFontByName(owner->GetFontAttributes()->fontName);
 
 //	m_sliderBar->itemsCount=
 	math::rectf innerRect;
@@ -397,7 +397,7 @@ void GUIListBoxComponent::LBDraw(const math::rectf& rc)
 	for(int i=m_startItem;i<lastItem;++i)
 	{
 		math::rectf itmRc(innerRect.ULPoint.x,itemPos,innerRect.BRPoint.x,itemPos);
-		itmRc.BRPoint.y += items[i]->GetHeight(owner);
+		itmRc.BRPoint.y += GetItemHeight();
 		video::SColor clr;
 		if(i%2==0)
 			clr=video::SColor(0.7,0.7,0.7,0.2);

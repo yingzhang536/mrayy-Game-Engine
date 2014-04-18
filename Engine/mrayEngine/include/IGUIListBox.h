@@ -27,6 +27,7 @@ namespace GUI
 
 class MRAY_DLL IGUIListBox:public IGUIElement
 {
+	DECLARE_RTTI;
 private:
 protected:
 public:
@@ -34,6 +35,8 @@ public:
 
 	ObjectEvent OnKeyDown;//args=KeyboardEvent
 	ObjectEvent OnSelectChange;//args=Index
+
+	DECLARE_PROPERTY_TYPE(ItemHeight, float, MRAY_DLL);
 public:
 	IGUIListBox(IGUIManager* manager);
 	virtual~IGUIListBox();
@@ -52,6 +55,9 @@ public:
 	virtual void SetSelectedItem(int i)=0;
 
 	virtual int GetItemFromPos(const math::vector2d& y)=0;
+
+	virtual bool SetItemHeight(float h) = 0;
+	virtual float GetItemHeight()const = 0;
 };
 
 }
