@@ -34,6 +34,9 @@
     <Filter Include="Source Files\GameComponents">
       <UniqueIdentifier>{4c43cddc-f6c2-4cd7-b866-154aff95dc66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameComponents\Visualize">
+      <UniqueIdentifier>{93e83a2e-964d-4e82-b2fb-8b93e1f83dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -114,6 +117,24 @@
     <ClInclude Include="RobotSpaceComponent.h">
       <Filter>Source Files\GameComponents</Filter>
     </ClInclude>
+    <ClInclude Include="VisItemDescComponent.h">
+      <Filter>Source Files\GameComponents\Visualize</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRegisterer.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIConnectingScreenImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIConnectingScreen.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectingState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITypingTextBox.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -179,9 +200,27 @@
     <ClCompile Include="RobotSpaceComponent.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="VisItemDescComponent.cpp">
+      <Filter>Source Files\GameComponents\Visualize</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRegisterer.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIConnectingScreenImpl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectingState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITypingTextBox.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIConnectingScreen.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
   </ItemGroup>

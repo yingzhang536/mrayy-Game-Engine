@@ -21,11 +21,14 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{465E73E4-03B2-4967-B7AB-166C2955A947}</ProjectGuid>
     <RootNamespace>mrayFuzzy</RootNamespace>
-    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
+    <SccProjectName>
+    </SccProjectName>
     <SccAuxPath>
     </SccAuxPath>
-    <SccLocalPath>..\..</SccLocalPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

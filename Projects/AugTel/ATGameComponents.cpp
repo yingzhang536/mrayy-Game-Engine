@@ -13,6 +13,8 @@
 
 #include "GameComponentCreator.h"
 
+#include "VisItemDescComponent.h"
+
 namespace mray
 {
 	using namespace  game;
@@ -49,6 +51,7 @@ void ATGameComponents::RegisterComponents()
 	REGISTER_COMPONENT_FACTORY(ArmExtenderComponent);
 	REGISTER_COMPONENT_FACTORY(RobotSpaceComponent);
 	REGISTER_COMPONENT_FACTORY(TriggerObjectComponent);
+	REGISTER_COMPONENT_FACTORY(VisItemDescComponent);
 	game::GameComponentCreator::getInstance().AddAlias("KinematicJointDOF6Component", "PhysicalJointComponent");
 	game::GameComponentCreator::getInstance().AddAlias("NullPhysicsComponent", "RigidBodyComponent");
 

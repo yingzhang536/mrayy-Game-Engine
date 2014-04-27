@@ -14,9 +14,12 @@
     <ProjectGuid>{665FDF8F-AFF3-4C10-92EE-608B75C4DD3C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NissanCamera</RootNamespace>
-    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
-    <SccLocalPath>..\..\..</SccLocalPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

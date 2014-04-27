@@ -23,7 +23,6 @@
 #include "CommunicationManager.h"
 #include "OptiTrackDataSource.h"
 
-#include "ATGameComponents.h"
 #include "HeadCameraComponent.h"
 #include "CameraComponent.h"
 #include "HeadMount.h"
@@ -50,6 +49,8 @@
 #include "ATAppGlobal.h"
 #include "RenderWindow.h"
 #include "Application.h"
+
+#include "LocalRobotCommunicator.h"
 
 #define VT_USING_SHAREDMEM
 #define VIDEO_PORT 5000
@@ -163,6 +164,7 @@ AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src)
 	m_depthTime = 0;
 
 	m_depthVisualizer = new DepthVisualizer();
+	m_robotConnector->SetCommunicator(new TBee::LocalRobotCommunicator());
 
 	m_viewDepth = false;
 
@@ -233,7 +235,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 					m_robotConnector->StartUpdate();
 				ok = true;
 			}
-			else if (evt->key == KEY_ESCAPE && evt->lshift)
+			else if (evt->key == KEY_ESCAPE)// && evt->lshift)
 			{
 				m_exitCode = STATE_EXIT_CODE;
 				ok = true;
@@ -290,8 +292,6 @@ void AugCameraRenderState::InitState()
 		TelesarCommunicationHandler::Ref();
 	}
 	{
-		ATGameComponents::RegisterComponents();
-
 		_CreatePhysicsSystem();
 		m_gameManager = new game::GameEntityManager();
 		m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
@@ -466,6 +466,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 
 void AugCameraRenderState::OnExit()
 {
+	Parent::OnExit();
 	ATAppGlobal::Instance()->optiDataSource->Disconnect();
 	m_camVideoSrc->Close();
 

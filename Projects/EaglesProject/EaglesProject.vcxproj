@@ -21,9 +21,12 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7E34C86B-63BD-4CE5-A89C-1E73077F47BC}</ProjectGuid>
     <RootNamespace>EaglesProject</RootNamespace>
-    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
-    <SccLocalPath>..\..</SccLocalPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

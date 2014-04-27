@@ -14,9 +14,12 @@
     <ProjectGuid>{2006268A-30C8-4E05-85AA-767EA1228F19}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AugTel</RootNamespace>
-    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
-    <SccLocalPath>..\..</SccLocalPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -38,9 +41,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="C:\gstreamer-sdk\0.10\x86\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="C:\gstreamer-sdk\0.10\x86\share\vs\2010\libs\gstreamer-0.10.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -106,11 +111,16 @@
     <ClInclude Include="FingerTipComponent.h" />
     <ClInclude Include="GeomDepthState.h" />
     <ClInclude Include="GloveController5.h" />
+    <ClInclude Include="GUIConnectingScreen.h" />
+    <ClInclude Include="GUIConnectingScreenImpl.h" />
     <ClInclude Include="GUILoadingElement.h" />
     <ClInclude Include="GUILoginMenu.h" />
+    <ClInclude Include="GUIRegisterer.h" />
+    <ClInclude Include="GUITypingTextBox.h" />
     <ClInclude Include="HeadCameraComponent.h" />
     <ClInclude Include="HeadMount.h" />
     <ClInclude Include="IFingerDataProvider.h" />
+    <ClInclude Include="ConnectingState.h" />
     <ClInclude Include="LoginScreenState.h" />
     <ClInclude Include="PenComponent.h" />
     <ClInclude Include="RobotSpaceComponent.h" />
@@ -118,6 +128,7 @@
     <ClInclude Include="SurfaceWrapper.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TriggerObjectComponent.h" />
+    <ClInclude Include="VisItemDescComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -133,8 +144,12 @@
     <ClCompile Include="FingerTipComponent.cpp" />
     <ClCompile Include="GeomDepthState.cpp" />
     <ClCompile Include="GloveController5.cpp" />
+    <ClCompile Include="GUIConnectingScreenImpl.cpp" />
     <ClCompile Include="GUILoadingElement.cpp" />
+    <ClCompile Include="GUIRegisterer.cpp" />
+    <ClCompile Include="GUITypingTextBox.cpp" />
     <ClCompile Include="HeadCameraComponent.cpp" />
+    <ClCompile Include="ConnectingState.cpp" />
     <ClCompile Include="LoginScreenState.cpp" />
     <ClCompile Include="PenComponent.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
@@ -146,8 +161,12 @@
     </ClCompile>
     <ClCompile Include="SurfaceWrapper.cpp" />
     <ClCompile Include="TriggerObjectComponent.cpp" />
+    <ClCompile Include="VisItemDescComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIConnectingScreen.gui">
+      <SubType>Designer</SubType>
+    </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
       <FileType>Document</FileType>
       <SubType>Designer</SubType>

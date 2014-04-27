@@ -18,27 +18,39 @@ namespace OS{
 
 WinDirOS::WinDirOS(){
 
-	tempPath.resize(MAX_PATH);
+	//tempPath.resize(MAX_PATH);
 
 	refreshFiles();
 }
 WinDirOS::~WinDirOS(){
-	cfiles.clear();
+//	m_files.clear();
 }
 
 void WinDirOS::refreshFiles()
 {
-	
-	cfiles.clear();
-	cpath=gFileSystem.getCurrPath();
-
-	cdriveLetter=gFileSystem.getCurrDrive()+'A'-1;
-
-	cdriveVolume=gFileSystem.getCurrDriveName();
-
+	m_driveLetter=gFileSystem.getCurrDrive()+'A'-1;
+	m_driveVolume = gFileSystem.getCurrDriveName();
+	m_files.clear();
 	WIN32_FIND_DATA fd;
 	HANDLE hFile;
 	SFileData fData;
+	if ((hFile = FindFirstFile((m_directory+"*").c_str(), &fd)) != 0)
+	{
+		do{
+			//	char_to_wchar(fname,fd.name);
+			fData.name = fd.cFileName;
+			fData.size = (int)fd.nFileSizeLow;
+			fData.isDir = (_A_SUBDIR & fd.dwFileAttributes) != 0;
+			m_files.push_back(fData);
+
+		} while (FindNextFile(hFile, &fd));
+		FindClose(hFile);
+	}
+	/*
+	cpath=gFileSystem.getCurrPath();
+
+
+
 	
 	if( (hFile = FindFirstFile( mT("*"), &fd )) != 0 )
 	{
@@ -47,55 +59,56 @@ void WinDirOS::refreshFiles()
 			fData.name=fd.cFileName;
 			fData.size=(int)fd.nFileSizeLow;
 			fData.isDir=(_A_SUBDIR & fd.dwFileAttributes)!=0;
-			cfiles.push_back(fData);
+			m_files.push_back(fData);
 
 		}
 		while(FindNextFile(hFile,&fd));
 		FindClose(hFile);
-	}
+	}*/
 
 }
 	
 const  core::string& WinDirOS::getCurrPath(){
-	return cpath;
+	return m_directory;
 }
 
 const std::vector<SFileData> & WinDirOS::getFiles(){
-	return cfiles;
+	return m_files;
 }
 
 
 const  core::string& WinDirOS::getShortFileName(int index){
-	if(index<0 || index>cfiles.size())return core::string::Empty;
-	return cfiles[index].name;
+	if (index<0 || index>m_files.size())return core::string::Empty;
+	return m_files[index].name;
 }
 
-const  core::string& WinDirOS::getFullFileName(int index){
-	if(index<0 || index>cfiles.size())return core::string::Empty;
+  core::string WinDirOS::getFullFileName(int index){
+	if (index<0 || index>m_files.size())
+		return core::string::Empty;
 	
-	//wsprintf(&tempPath[0],mT("%s\\%s"),cpath.c_str(),cfiles[index].name.c_str());
+	//wsprintf(&tempPath[0],mT("%s\\%s"),cpath.c_str(),m_files[index].name.c_str());
 
-	tempPath=cpath+mT("\\")+cfiles[index].name;
+	//tempPath=cpath+mT("\\")+m_files[index].name;
 
-	return tempPath;
+	return m_directory+m_files[index].name;
 }
 
 int WinDirOS::getFileSize(int index)
 {
-	if(index<0 || index>cfiles.size())return 0;
-	return cfiles[index].size;
+	if (index<0 || index>m_files.size())return 0;
+	return m_files[index].size;
 }
 
 bool WinDirOS::isFileDirectory(int index)
 {
-	if(index<0 || index>cfiles.size())return 0;
-	return cfiles[index].isDir;
+	if (index<0 || index>m_files.size())return 0;
+	return m_files[index].isDir;
 }
 
 bool WinDirOS::changeDir(int index)
 {
-	if(index<0 || index>cfiles.size())return 0;
-	if(ChangeDir(cfiles[index].name.c_str())==-1)return 0;
+	if (index<0 || index>m_files.size())return 0;
+	if(ChangeDir((m_directory+m_files[index].name).c_str())==-1)return 0;
 	refreshFiles();
 	return 1;
 }
@@ -109,6 +122,7 @@ bool WinDirOS::changeDir()
 }
 bool WinDirOS::changeDir(const  core::string& path)
 {
+	m_directory = path;
 	if(ChangeDir(path.c_str())==-1)return 0;
 	refreshFiles();
 	return 1;
@@ -116,27 +130,27 @@ bool WinDirOS::changeDir(const  core::string& path)
 
 int WinDirOS::getFilesCount()
 {
-	return cfiles.size();
+	return m_files.size();
 }
 	
 
 
 
 int WinDirOS::getFileIndex(const  core::string& fName){
-	for(int i=0;i<cfiles.size();++i)
+	for(int i=0;i<m_files.size();++i)
 	{
-		if(cfiles[i].name.equals_ignore_case(fName))
+		if(m_files[i].name.equals_ignore_case(fName))
 			return i;
 	}
 	return -1;
 }
 
 char WinDirOS::getCurrDriveLetter(){
-	return cdriveLetter;
+	return m_driveLetter;
 }
 
 core::string  WinDirOS::getCurrDriveVolume(){
-	return cdriveVolume;
+	return m_driveVolume;
 }
 
 
@@ -150,10 +164,10 @@ bool WinDirOS::createDirectory(const  core::string& dirName){
 
 //! return file extension
 core::string WinDirOS::getFileType(int index){
-	if(index<0 || index>cfiles.size())return core::string::Empty;
-	int p=cfiles[index].name.findlast('.');
+	if(index<0 || index>m_files.size())return core::string::Empty;
+	int p=m_files[index].name.findlast('.');
 	if(p==-1)return core::string::Empty;
-	return cfiles[index].name.substr(p+1,cfiles[index].name.length()-p-1);
+	return m_files[index].name.substr(p+1,m_files[index].name.length()-p-1);
 }
 
 

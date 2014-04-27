@@ -37,7 +37,7 @@ public:
 	virtual const std::vector<SFileData>&getFiles()=0;
 
 	virtual const  core::string& getShortFileName(int index)=0;
-	virtual const  core::string& getFullFileName(int index)=0;
+	virtual core::string getFullFileName(int index)=0;
 	virtual int getFileSize(int index)=0;
 	virtual bool isFileDirectory(int index)=0;
 

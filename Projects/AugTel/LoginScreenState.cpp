@@ -1,4 +1,4 @@
-
+	
 
 #include "stdafx.h"
 
@@ -98,7 +98,7 @@ bool LoginScreenState::OnEvent(Event* e,const math::rectf& rc)
 
 void LoginScreenState::OnEnter(IRenderingState*prev)
 {
-
+	m_status = EStatus::EIdle;
 }
 void LoginScreenState::OnExit()
 {

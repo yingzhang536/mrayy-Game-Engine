@@ -13,7 +13,7 @@ namespace core
 {
 // ---------------------------------------------------------------------------
 
-void BinPacker::Pack(
+bool BinPacker::Pack(
 	const std::vector<math::vector2df>&          rects,
 	std::vector< BinPackerOutRect >& packs,
 	const math::vector2d & packSize,
@@ -34,8 +34,9 @@ void BinPacker::Pack(
 
 		if (rects[i].x > m_packSize.x || rects[i].y > m_packSize.y) {
 
-			assert(!"All rect dimensions must be <= the pack size");
+			//assert(!"All rect dimensions must be <= the pack size");
 
+			return false;
 		}
 
 		m_rects.push_back(Rect(rects[i], i));
@@ -71,9 +72,39 @@ void BinPacker::Pack(
 
 	for (size_t i = 0; i < m_rects.size(); ++i) {
 		if (!m_rects[i].packed) {
-			assert(!"Not all rects were packed");
+			//assert(!"Not all rects were packed");
+			return false;
 		}
 	}
+	return true;
+}
+
+bool BinPacker::AddToPack(const math::vector2df& rect, BinPackerOutRect& pack, bool allowRotation)
+{
+
+	if (rect.x > m_packSize.x || rect.y > m_packSize.y) {
+
+		//assert(!"All rect dimensions must be <= the pack size");
+
+		return false;
+	}
+	int i = m_rects.size();
+
+	//add the rect
+	m_rects.push_back(Rect(rect, i));
+	//find empty pack
+
+	for (int p = 0; p < m_packs.size(); ++p)
+	{
+		if (!m_packs[p].packed && Fits(m_rects[i], m_packs[p], allowRotation))
+		{
+			Split(p, i);
+			pack = m_packs[p].rectInfo;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -96,16 +127,18 @@ void BinPacker::Clear()
 
 // ---------------------------------------------------------------------------
 
-void BinPacker::Fill(int pack, bool allowRotation)
+int BinPacker::Fill(int pack, bool allowRotation)
 
 {
 
-	assert(PackIsValid(pack));
+	if (!PackIsValid(pack))
+		return 0;
 
 
 
 	int i = pack;
 
+	int ret = 0;
 
 
 	// For each rect
@@ -125,19 +158,19 @@ void BinPacker::Fill(int pack, bool allowRotation)
 				++m_numPacked;
 
 				Split(i, j);
+				ret = 1;
+				ret += Fill(m_packs[i].children[1], allowRotation);
 
-				Fill(m_packs[i].children[1], allowRotation);
+				ret += Fill(m_packs[i].children[0], allowRotation);
 
-				Fill(m_packs[i].children[0], allowRotation);
-
-				return;
+				return ret;
 
 			}
 
 		}
 
 	}
-
+	return ret;
 }
 
 // ---------------------------------------------------------------------------
@@ -270,7 +303,7 @@ void BinPacker::Split(int pack, int rect)
 
 	m_packs[i].children[1] = m_packs.size() - 1;
 
-
+	m_packs[i].packed = true;
 
 	// Done with the rect
 
@@ -316,7 +349,8 @@ void BinPacker::AddPackToArray(int pack, std::vector<BinPackerOutRect>& array) c
 
 {
 
-	assert(PackIsValid(pack));
+	if (!PackIsValid(pack))
+		return;
 
 
 

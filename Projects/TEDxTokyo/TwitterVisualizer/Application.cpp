@@ -49,6 +49,8 @@
 #include "GUIOverlayManager.h"
 #include "GUIElementFactory.h"
 #include "GUIOverlay.h"
+#include "RenderTechnique.h"
+#include "RenderPass.h"
 #include <SQLAPI.h> // main SQLAPI++ header
 // #include <cppdb/frontend.h>
 
@@ -448,13 +450,15 @@ void Application::init(const OptionContainer &extraOptions)
 
 	scene::ISceneNode* psNode = getSceneManager()->createSceneNode("Particle System");
 	 
+	video::RenderMaterialPtr partMaterial = gMaterialResourceManager.getMaterial("CPUParticlesMaterial")->Duplicate();
+	partMaterial->GetTechniqueAt(0)->GetPassAt(0)->setTexture(gTextureResourceManager.loadTexture2D("LightParticle.png"), 0);
 	for (int i = 0; i < 2;++i)
 	{
 		scene::BackgroundEmitter* be = new scene::BackgroundEmitter();
 		m_particleSystem->AddEmitter(be);
 
 		be->SetRenderer(new scene::CPUParticleBillboardRenderer(1000));
-		be->setMaterial(gMaterialResourceManager.getMaterial("CPUParticlesMaterial"));
+		be->setMaterial(partMaterial);
 
 		scene::PAVelocityOverTimeInterpolater* vel = new scene::PAVelocityOverTimeInterpolater();
 		be->addAffector(vel);

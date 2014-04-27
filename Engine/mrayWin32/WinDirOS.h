@@ -11,14 +11,20 @@ namespace OS{
 class MRAY_Win32_DLL WinDirOS:public IDirOS
 {
 protected:
-	std::vector<SFileData> cfiles;
-	char cdriveLetter;
-	core::string cdriveVolume;
+
+	core::string m_directory;
+	std::vector<SFileData> m_files;
+	char m_driveLetter;
+	core::string m_driveVolume;
+
+	/*
 	core::string cpath;
 
-	void refreshFiles();
 
-	core::string tempPath;
+	core::string tempPath;*/
+
+
+	void refreshFiles();
 public:
 	WinDirOS();
 	virtual ~WinDirOS();
@@ -28,7 +34,7 @@ public:
 	const  std::vector<SFileData>&getFiles();
 
 	const  core::string& getShortFileName(int index);
-	const  core::string& getFullFileName(int index);
+	core::string getFullFileName(int index);
 	int getFileSize(int index);
 	bool isFileDirectory(int index);
 

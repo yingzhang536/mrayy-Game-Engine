@@ -35,6 +35,7 @@ public:
 	GUIListBox(IGUIManager* manager);
 	virtual~GUIListBox();
 
+	GUIListBoxComponent* GetComponent(){ return m_component; }
 
 	int GetItemsCount()const;
 	IListItem* GetItem(int index)const;

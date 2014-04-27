@@ -69,14 +69,14 @@ public:
 
 
 
-	void Pack(
+	bool Pack(
 		const std::vector<math::vector2df>&          rects,
 		std::vector< BinPackerOutRect >& packs,
 		const math::vector2d&                              packSize,
 		bool                             allowRotation = true
 		);
 
-
+	bool AddToPack(const math::vector2df& rect, BinPackerOutRect& pack, bool allowRotation);
 
 private:
 
@@ -137,7 +137,7 @@ private:
 
 	void Clear();
 
-	void Fill(int pack, bool allowRotation);
+	int Fill(int pack, bool allowRotation);
 
 	void Split(int pack, int rect);
 

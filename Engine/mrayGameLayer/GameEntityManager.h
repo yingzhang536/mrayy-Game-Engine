@@ -19,6 +19,7 @@
 
 #include "ISingleton.h"
 #include "IDGenerator.h"
+#include "ListenerContainer.h"
 #include <list>
 
 namespace mray
@@ -40,7 +41,21 @@ namespace game
 
 	typedef std::list<GameEntity*> EntityList;
 
-class MRAY_GAME_DLL GameEntityManager
+
+	class GameEntityManager;
+
+	class IGameEntityManagerListener
+	{
+	public:
+		virtual void OnAddGameEntity(GameEntityManager*m, GameEntity*e){}
+		virtual void OnRemoveGameEntity(GameEntityManager*m, GameEntity*e){}
+		virtual void OnGamePreUpdate(GameEntityManager*m){}
+		virtual void OnGameUpdate(GameEntityManager*m,float dt){}
+		virtual void OnGameDebugRender(GameEntityManager*m, scene::IDebugDrawManager* renderer){}
+		virtual void OnGameGUIRender(GameEntityManager*m, GUI::IGUIRenderer* renderer, const math::rectf& vp){}
+	};
+
+class MRAY_GAME_DLL GameEntityManager:public ListenerContainer<IGameEntityManagerListener*>
 {
 private:
 protected:
@@ -59,6 +74,13 @@ protected:
 	physics::VehicleManager* m_vehManager;
 
 	void _PerformDelete();
+
+	DECLARE_FIRE_METHOD(OnAddGameEntity, (GameEntityManager*m, GameEntity*e), (m, e))
+	DECLARE_FIRE_METHOD(OnRemoveGameEntity, (GameEntityManager*m, GameEntity*e), (m, e))
+	DECLARE_FIRE_METHOD(OnGamePreUpdate, (GameEntityManager*m), (m))
+	DECLARE_FIRE_METHOD(OnGameUpdate, (GameEntityManager*m, float dt), (m, dt))
+	DECLARE_FIRE_METHOD(OnGameDebugRender, (GameEntityManager*m, scene::IDebugDrawManager* renderer), (m, renderer))
+	DECLARE_FIRE_METHOD(OnGameGUIRender, (GameEntityManager*m, GUI::IGUIRenderer* renderer, const math::rectf& vp), (m, renderer,vp))
 public:
 	GameEntityManager();
 	virtual ~GameEntityManager();

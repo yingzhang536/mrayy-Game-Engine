@@ -7,13 +7,30 @@
 #include "GLDev.h"
 #include "SGLCGShaderProgram.h"
 #include "IStream.h"
+#include <VideoLoggerSystem.h>
 
 namespace mray{
 namespace video{
 	const core::string s_shaderType=mT("cg");
 
+	void _CG_ErrorHandler(CGcontext c, CGerror e, void * d)
+	{
+		const char *str = cgGetErrorString(e);
+		core::string errorMsg;
+		errorMsg = mT("[ CG error] :");
+		errorMsg += core::StringConverter::toString(str);
+		if (c)
+		{
+			const char* msg = cgGetLastListing(c);
+			if (msg)
+				errorMsg += "- Context: " + core::StringConverter::toString(msg
+				);
+		}
+		gVideoLoggerSystem.log(errorMsg, ELL_WARNING);
+	}
 SGLCGShaderFactory::SGLCGShaderFactory(){
 	m_context=cgCreateContext();
+	cgSetErrorHandler(_CG_ErrorHandler, m_context);
 }
 SGLCGShaderFactory::~SGLCGShaderFactory(){
 //	cgDestroyContext(m_context);

@@ -65,7 +65,6 @@ protected:
 	void loadUniforms();
 	void setUniformVal(CGparameter param,EUniformType type,const float*vals,int count);
 
-	static void _CG_ErrorHandler(CGcontext, CGerror, void *);
 public:
 
 	SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const core::string&program,

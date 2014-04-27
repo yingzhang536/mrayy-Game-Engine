@@ -412,6 +412,7 @@ void VTelesarRenderingState::_Reload(const core::string& scene)
 		}
 
 	}
+	if (true)
 	{
 		scene::LightNode* light= m_sceneManager->createLightNode();
 		light->setPosition(math::vector3d(0,3,2));
@@ -420,7 +421,7 @@ void VTelesarRenderingState::_Reload(const core::string& scene)
 
 		GCPtr<video::ITexture> tex=Engine::getInstance().getDevice()->createEmptyTexture2D(false);
 		tex->setMipmapsFilter(false);
-		tex->createTexture(math::vector3d(1024,1024,1),video::EPixel_Float16_R);
+		tex->createTexture(math::vector3d(1024,1024,1),video::EPixel_Alpha8);//EPixel_Float16_R);
 		video::IRenderTargetPtr rt=Engine::getInstance().getDevice()->createRenderTarget("",tex,0,0,0);
 		light->setShadowMap(rt);
 		light->setCastShadows(rt);
@@ -572,7 +573,7 @@ void VTelesarRenderingState::InitState(Application* app)
 		VT::VTAppGlobals::oculusDevice = m_oculusDevice;
 	}
 
-	m_modelName="test.xml";
+	m_modelName="telesarV.xml";
 
 	g_udpListener.Prepare();
 	//VT::UDPCommunicationLayer* udpComm=new VT::UDPCommunicationLayer(1234);
@@ -647,7 +648,7 @@ void VTelesarRenderingState::InitState(Application* app)
 
 	int c=app->IsStereo()?2:1;
 
-	video::EPixelFormat pf=video::EPixel_Float16_RGBA;//video::EPixel_R8G8B8A8;//
+	video::EPixelFormat pf=video::EPixel_R8G8B8A8;//video::EPixel_Float16_RGBA;//
 
 	int pf_I=core::StringConverter::toEnum("EPixelFormat",VTAppGlobals::GetValue("VTelesarRenderingState","RenderPixelFormat"));
 	core::string postScreenEffect=VTAppGlobals::GetValue("VTelesarRenderingState","PostScreenEffect");

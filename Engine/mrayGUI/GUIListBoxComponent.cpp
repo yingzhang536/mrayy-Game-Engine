@@ -16,7 +16,7 @@ namespace GUI
 	const int GUIListBoxComponent::g_scrollSize=20;
 
 GUIListBoxComponent::GUIListBoxComponent(IGUIElement* owner):
-	m_selectedItem(-1),m_startItem(0),m_upBotState(0),m_botBotState(0),
+m_selectedItem(-1), m_startItem(0), m_upBotState(0), m_botBotState(0), m_drawBackground(true),
 	m_scrollOn(false), m_currentPageSize(0), listener(0), m_itemHeight(18)
 {
 	this->owner=owner;
@@ -390,7 +390,7 @@ void GUIListBoxComponent::LBDraw(const math::rectf& rc)
 
 
 
-	if(skin)
+	if (skin && m_drawBackground)
 	{
 		skin->drawSizableBox(creator->GetRenderQueue(),rc,0,mT("Frame"));
 	}

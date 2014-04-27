@@ -386,6 +386,9 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	
 	tc.ULPoint.y = 1 - tc.ULPoint.y;
 	tc.BRPoint.y = 1 - tc.BRPoint.y;
+
+// 	tc.ULPoint.y = 1 - tc.ULPoint.y;
+// 	tc.BRPoint.y = 1 - tc.BRPoint.y;
 	//tc = math::rectf(0, 0, 1, 1);
 	if (m_enablePanning)
 	{

@@ -1,6 +1,8 @@
 #include "IGUISchemeBase.h"
-#include "GUISliderBar.h"
-#include "GUIStaticText.h"
+#include "Panel.h"
+#include "SliderBar.h"
+#include "StackPanel.h"
+#include "StaticText.h"
 namespace mray{
 
 using namespace GUI;
@@ -8,9 +10,9 @@ class JointValue:public GUI::IGUISchemeBase
 {
 
 public:
-	GUIStaticText* MinTxt;
-	GUISliderBar* ValueBar;
-	GUIStaticText* MaxTxt;
+	StaticText* MinTxt;
+	SliderBar* ValueBar;
+	StaticText* MaxTxt;
 
 public:
 

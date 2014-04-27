@@ -49,6 +49,8 @@ protected:
 	int m_botBotState;
 	int m_hoveredItem;
 
+	bool m_drawBackground;
+
 	float m_itemHeight;
 
 	int m_currentPageSize;
@@ -87,6 +89,8 @@ public:
 	void SetStartItem(int i){m_startItem=i;}
 	int GetSelectedItem();
 	void SetSelectedItem(int itm,int itemsCount);
+
+	void SetBackground(bool b){ m_drawBackground = b; }
 
 	void SetSelectionColor(const video::SColor& clr);
 	const video::SColor& GetSelectionColor()const;

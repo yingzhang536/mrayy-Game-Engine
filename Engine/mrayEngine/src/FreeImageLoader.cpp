@@ -266,14 +266,15 @@ bool FreeImageLoader::canLoad(OS::IStream* file){
 		return false;
 	if(file->isStream())
 		return false;
-	byte* data=new byte[file->length()];
-	file->read(data,file->length());
+	FIMEMORY* fiMem = FreeImage_OpenMemory((BYTE*)0, static_cast<DWORD>(file->length()));
+	file->read(fiMem->data, file->length());
 
+	FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(fiMem, (int)file->length());
+	FreeImage_CloseMemory(fiMem);
 	//image format
-	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+//	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 	//check the file signature and deduce its format
-	fif = FreeImage_GetFileTypeFromMemory((FIMEMORY*)data,file->length());
-	delete[] data;
+//	fif = FreeImage_GetFileTypeFromMemory((FIMEMORY*)data,file->length());
 	if(fif == FIF_UNKNOWN)
 		return false;
 	return fif==m_FTType;

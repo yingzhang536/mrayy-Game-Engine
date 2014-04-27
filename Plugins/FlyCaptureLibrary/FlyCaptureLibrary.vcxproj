@@ -22,9 +22,12 @@
     <ProjectGuid>{7286D75E-0E49-4BA1-B2E0-FD0E28D09B41}</ProjectGuid>
     <RootNamespace>FlyCaptureLibrary</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <SccProjectName>"$/mrayEngine", OTNAAAAA</SccProjectName>
-    <SccLocalPath>..\..</SccLocalPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">

@@ -33,21 +33,6 @@ std::vector<float> SGLCGShaderProgram::m_matrixArray;
 
 static const core::string s_SGLCGShaderProgram_type=mT("cg");
 
-void SGLCGShaderProgram::_CG_ErrorHandler(CGcontext c, CGerror e, void * d)
-{
-	const char *str = cgGetErrorString(e);
-	core::string errorMsg;
-	errorMsg=mT("[ CG error] :"); 
-	errorMsg+=core::StringConverter::toString(str);
-	if (c)
-	{
-		const char* msg = cgGetLastListing(c);
-		if (msg)
-			errorMsg += "- Context: " + core::StringConverter::toString(msg
-			);
-	}
-	gVideoLoggerSystem.log(errorMsg,ELL_WARNING);
-}
 
 SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const core::string&program,CGcontext context,
 									   EShaderProgramType type,const char* entryPoint)
@@ -59,7 +44,7 @@ SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const c
 	m_loaded=false;
 	if(!cgInitialized){
 		cgInitialized=true;
-		
+
 		if(checkForError(mT("creating m_context"))){
 			return;
 		}
@@ -81,7 +66,6 @@ SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const c
 			//return;
 		}
 
-		cgSetErrorHandler(_CG_ErrorHandler,m_context);
 
 #ifdef _DEBUG
 		cgGLSetDebugMode(true);
@@ -97,7 +81,7 @@ SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const c
 
 	const char** pargs= cgGLGetOptimalOptions(m_CgProfile);
 
-	const char* compilerArguments[] = {"-po", "ATI_draw_buffers",0}; //,"-profileopts""dcls","-DTEST_ARG2=1"
+	const char* compilerArguments[] = { 0 };// {"-po", "ATI_draw_buffers", 0}; //,"-profileopts""dcls","-DTEST_ARG2=1"
 	textures.resize(device->getCapabilities()->getMaxTextureUnits());
 
 	if(m_type==EShader_VertexProgram)

@@ -34,6 +34,7 @@
 #include "OculusCameraComponent.h"
 #include "ParsedShaderPP.h"
 #include "NullRenderState.h"
+#include "ConnectingState.h"
 #include "AugCameraRenderState.h"
 #include "LoginScreenState.h"
 #include "LocalCameraRenderingState.h"
@@ -50,6 +51,13 @@
 
 #include "VTLib.h"
 
+#include "ATGameComponents.h"
+#include "GUIRegisterer.h"
+
+
+#include "AtlasPacker.h"
+
+#include "IDirOS.h"
 
 namespace mray
 {
@@ -185,11 +193,14 @@ void Application::onEvent(Event* event)
 
 void Application::_initStates()
 {
-	IRenderingState *nullState, *login, *camera, *depth, *streamerTest;
+	IRenderingState *nullState, *intro, *login, *camera, *depth, *streamerTest;
 	nullState = new NullRenderState();
 	nullState->InitState();
 	m_renderingState->AddState(nullState, "Null");
 
+	intro = new ConnectingState();
+	m_renderingState->AddState(intro, "Intro");
+	 
 
 	login = new LoginScreenState();
 	m_renderingState->AddState(login, "Login");
@@ -199,8 +210,8 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
-	m_renderingState->AddState(streamerTest, "CameraRemote");
+// 	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
+// 	m_renderingState->AddState(streamerTest, "CameraRemote");
 
  	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
  	m_renderingState->AddState(camera, "AugCam");
@@ -209,8 +220,9 @@ void Application::_initStates()
 	m_renderingState->AddState(depth, "Depth");
 
 	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
+	//m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
 	m_renderingState->AddTransition("Login", "AugCam", ToLocalCamera_CODE);
+	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("Login", "Depth", ToDepthView_CODE);
 	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("AugCam", "Login", STATE_EXIT_CODE);
@@ -260,6 +272,10 @@ void Application::init(const OptionContainer &extraOptions)
 	}
 	_InitResources();
 
+
+
+	GUI::GUIRegisterer::RegisterElements();
+
 	LoadSettingsXML("TBeeSettings.xml");
 
 	VT::RefVTLib();
@@ -270,6 +286,7 @@ void Application::init(const OptionContainer &extraOptions)
 	int cnt=m_wiiManager->ConnectWithAllMotes().size();
 	printf("Wiimote found: %d\n", cnt);
 
+	ATGameComponents::RegisterComponents();
 
 	ATAppGlobal::Instance()->sqlManager = new db::mySqlManager();
 
@@ -315,6 +332,23 @@ void Application::init(const OptionContainer &extraOptions)
 	_initStates();
 	LoadSettingsXML("States.xml");
 
+	{
+		video::AtlasPacker packer;
+		std::vector < video::ITexture*> textures;
+		OS::IDirOS* dir= OS::IOSystem::getInstance().createDirSystem();
+		dir->changeDir("E:\\Development\\mrayEngine\\Bin\\Debug\\Cache\\");
+		std::vector<OS::SFileData> files= dir->getFiles();
+		for (int i = 0; i < files.size() && i<50; i++)
+		{
+			video::ITexture* tex=gTextureResourceManager.loadTexture2D(files[i].name);
+			tex->setMipmapsFilter(false);
+			tex->load(false);
+			textures.push_back(dynamic_cast<video::ITexture*>(tex));
+		}
+		packer.SetMaxSize(4096);
+		packer.PackTextures(&textures[0], 5);
+		packer.AddTexture(textures[0]);
+	}
 	m_renderingState->InitStates();
 
 	gLogManager.log("Starting Application", ELL_INFO);

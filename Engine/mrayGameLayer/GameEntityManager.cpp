@@ -35,6 +35,7 @@ void GameEntityManager::AddGameEntity(GameEntity* ent)
 	ent->SetID(id);
 	ent->_SetCreator(this);
 	m_entities.push_back(ent);
+	FIRE_LISTENR_METHOD(OnAddGameEntity, (this, ent));
 }
 
 GameEntity* GameEntityManager::CreateGameEntity(const core::string&name)
@@ -126,6 +127,7 @@ void GameEntityManager::RemoveGameEntity(uint id)
 		{
 // 			if((*it)->GetShape())
 // 				RemoveSceneNodeID((*it)->GetShape()->getID());
+			FIRE_LISTENR_METHOD(OnRemoveGameEntity, (this, *it));
 			delete *it;
 			m_entities.erase(it);
 			return;
@@ -155,6 +157,7 @@ void GameEntityManager::PreUpdate()
 	{
 		(*it)->PreUpdate();
 	}
+	FIRE_LISTENR_METHOD(OnGamePreUpdate, (this))
 }
 void GameEntityManager::Update(float dt)
 {
@@ -168,6 +171,7 @@ void GameEntityManager::Update(float dt)
 	{
 		(*it)->LateUpdate(dt);
 	}
+	FIRE_LISTENR_METHOD(OnGameUpdate, (this,dt))
 	_PerformDelete();
 }
 void GameEntityManager::DebugRender(scene::IDebugDrawManager* renderer)
@@ -177,6 +181,7 @@ void GameEntityManager::DebugRender(scene::IDebugDrawManager* renderer)
 	{
 		(*it)->DebugRender(renderer);
 	}
+	FIRE_LISTENR_METHOD(OnGameDebugRender, (this, renderer))
 }
 void GameEntityManager::GUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp)
 {
@@ -185,6 +190,7 @@ void GameEntityManager::GUIRender(GUI::IGUIRenderer* renderer, const math::rectf
 	{
 		(*it)->OnGUIRender(renderer,vp);
 	}
+	FIRE_LISTENR_METHOD(OnGameGUIRender, (this, renderer, vp))
 
 }
 
