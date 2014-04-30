@@ -103,6 +103,7 @@
     <ClInclude Include="DBHandler.h" />
     <ClInclude Include="GUIScreenLayout.h" />
     <ClInclude Include="GUIScreenLayoutImpl.h" />
+    <ClInclude Include="GUISessionSidePanel.h" />
     <ClInclude Include="GUITweetItem.h" />
     <ClInclude Include="GUIUserProfile.h" />
     <ClInclude Include="IBaseParticle.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
     <ClCompile Include="DBHandler.cpp" />
+    <ClCompile Include="GUISessionSidePanel.cpp" />
     <ClCompile Include="GUITweetItem.cpp" />
     <ClCompile Include="GUIUserProfile.cpp" />
     <ClCompile Include="LeapDevice.cpp" />
