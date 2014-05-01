@@ -6,6 +6,10 @@
 
 namespace mray
 {
+namespace ted
+{
+	class SessionContainer;
+}
 namespace GUI
 {
 
@@ -26,9 +30,14 @@ protected:
 	float m_maxWidth;
 	float m_minWidth;
 
+	ted::SessionContainer* m_sessions;
+
 public:
 	GUISessionSidePanel(IGUIManager* m);
 	virtual~GUISessionSidePanel();
+
+
+	void SetSessionContainer(ted::SessionContainer* s);
 
 	virtual bool OnEvent(Event* e);
 

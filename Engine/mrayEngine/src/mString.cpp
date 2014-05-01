@@ -36,7 +36,7 @@ int  wchar_to_char(char*a,const  wchar_t *b){
 int  wchar_to_char(const  wchar_t *in,stringc&str){
 
 	int len=wcslen(in);
-	str.resize(len+1);
+	str.resize(len);
 	return wcstombs(&str[0],in,len);
 	//return WideCharToMultiByte(CP_ACP, 0,in,-1,&str[0],len*sizeof(wchar_t)+1,0,0);
 
@@ -60,7 +60,7 @@ int char_to_wchar( wchar_t*a,const char*b){
 int char_to_wchar(const char *in,stringw&str){
 
 	int len=strlen(in);
-	str.resize(len+1);
+	str.resize(len);
 	return mbstowcs(&str[0],in,len);
 	//return MultiByteToWideChar(CP_ACP, 0,in,-1,&str[0],len+1);
 

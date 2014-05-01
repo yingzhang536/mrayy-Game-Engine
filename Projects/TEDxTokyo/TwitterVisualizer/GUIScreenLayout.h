@@ -2,6 +2,7 @@
 #include "GUIEditBox.h"
 #include "GUIListBox.h"
 #include "GUIPanel.h"
+#include "GUISessionDetailsTopPanel.h"
 #include "GUISessionSidePanel.h"
 #include "GUIStackPanel.h"
 #include "GUIStaticImage.h"

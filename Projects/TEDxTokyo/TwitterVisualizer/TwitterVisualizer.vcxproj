@@ -103,13 +103,17 @@
     <ClInclude Include="DBHandler.h" />
     <ClInclude Include="GUIScreenLayout.h" />
     <ClInclude Include="GUIScreenLayoutImpl.h" />
+    <ClInclude Include="GUISessionDetailsTopPanel.h" />
     <ClInclude Include="GUISessionSidePanel.h" />
+    <ClInclude Include="GUISessionDetailsPanelLayout.h" />
     <ClInclude Include="GUITweetItem.h" />
     <ClInclude Include="GUIUserProfile.h" />
     <ClInclude Include="IBaseParticle.h" />
     <ClInclude Include="LeapDevice.h" />
     <ClInclude Include="PAVelocityOverTimeInterpolater.h" />
     <ClInclude Include="RTFTextParser.h" />
+    <ClInclude Include="SessionContainer.h" />
+    <ClInclude Include="SessionDetails.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TrailParticle.h" />
@@ -125,11 +129,13 @@
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
     <ClCompile Include="DBHandler.cpp" />
+    <ClCompile Include="GUISessionDetailsTopPanel.cpp" />
     <ClCompile Include="GUISessionSidePanel.cpp" />
     <ClCompile Include="GUITweetItem.cpp" />
     <ClCompile Include="GUIUserProfile.cpp" />
     <ClCompile Include="LeapDevice.cpp" />
     <ClCompile Include="PAVelocityOverTimeInterpolater.cpp" />
+    <ClCompile Include="SessionContainer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -146,6 +152,7 @@
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
       <FileType>Document</FileType>
     </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

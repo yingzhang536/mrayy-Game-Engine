@@ -1,6 +1,6 @@
 #include "IGUISchemeBase.h"
-#include "Button.h"
-#include "Panel.h"
+#include "GUIButton.h"
+#include "GUIPanel.h"
 namespace mray{
 
 using namespace GUI;
@@ -8,9 +8,9 @@ class GUIMainMenu:public GUI::IGUISchemeBase
 {
 
 public:
-	Button* StartBtn;
-	Button* OptionsBtn;
-	Button* ExitBtn;
+	GUIButton* StartBtn;
+	GUIButton* OptionsBtn;
+	GUIButton* ExitBtn;
 
 public:
 

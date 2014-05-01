@@ -53,6 +53,7 @@
 #include "RenderPass.h"
 
 #include "GUISessionSidePanel.h"
+#include "GUISessionDetailsTopPanel.h"
 #include <SQLAPI.h> // main SQLAPI++ header
 // #include <cppdb/frontend.h>
 
@@ -423,7 +424,7 @@ void Application::init(const OptionContainer &extraOptions)
 	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 	GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
-
+	gFontResourceManager.loadFontsFromDir(gFileSystem.getAppPath()+ "..\\Data\\Fonts\\");
 	m_leap = new nui::LeapDevice;
 	m_leap->AddListener(this);
 
@@ -514,6 +515,7 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUITweetItem);
 		REGISTER_GUIElement_FACTORY(GUIUserProfile);
 		REGISTER_GUIElement_FACTORY(GUISessionSidePanel);
+		REGISTER_GUIElement_FACTORY(GUISessionDetailsTopPanel);
 		GUI::GUIOverlay* screenOverlay= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout.gui");
 		m_screenLayout = new GUI::GUIScreenLayoutImpl();
 		screenOverlay->CreateElements(getGUIManager(), m_guiroot, 0, m_screenLayout);
@@ -529,63 +531,66 @@ void Application::init(const OptionContainer &extraOptions)
 
 	// 	m_userProfile->GetFontAttributes()->hasShadow = false;
 //	m_userProfile->GetFontAttributes()->fontColor.Set(0, 0, 0, 1);
-	try
+	if (false)
 	{
-		
-		ted::DBHandler::Instance()->LoadDB();
-		int i = 0;
-		core::UTFString str;
-
-		if (false)
+		try
 		{
-			for (int i = 0; i < ted::UserDB::UserDBList.size(); ++i)
+
+			ted::DBHandler::Instance()->LoadDB();
+			int i = 0;
+			core::UTFString str;
+
+			if (false)
 			{
-				ted::UserDB* u = ted::UserDB::UserDBList[i];
-				OS::IStream* image =  network::InternetCacheManager::getInstance().GetOrCreateItem(u->imageUrl);
-				printf("[%d]- %s ", i, u->imageUrl.c_str());
-
-				if (image)
+				for (int i = 0; i < ted::UserDB::UserDBList.size(); ++i)
 				{
-					printf("was loaded\n");
-				//	video::ITexturePtr t = gTextureResourceManager.loadTexture2D(u->imageUrl, image);
-				//	t->setMipmapsFilter(false);
-				//	m_images.push_back(t);
-				}
-				else
-				{
-					printf("faile to load\n");
+					ted::UserDB* u = ted::UserDB::UserDBList[i];
+					OS::IStream* image = network::InternetCacheManager::getInstance().GetOrCreateItem(u->imageUrl);
+					printf("[%d]- %s ", i, u->imageUrl.c_str());
+
+					if (image)
+					{
+						printf("was loaded\n");
+						//	video::ITexturePtr t = gTextureResourceManager.loadTexture2D(u->imageUrl, image);
+						//	t->setMipmapsFilter(false);
+						//	m_images.push_back(t);
+					}
+					else
+					{
+						printf("faile to load\n");
+
+					}
 
 				}
-
 			}
+			if (true)
+			{
+				int bytesCount = 0;
+				for (int i = 0; i < ted::TweetDB::TweetDBList.size(); ++i)
+				{
+					ted::TweetDB* t = ted::TweetDB::TweetDBList[i];
+					core::UTFString str = t->user->displayName;
+					str += core::string(":");
+					str += t->text;
+
+					bytesCount += str.Length()*sizeof(utf32)+sizeof(GUI::StringListItem);;
+					//GUI::StringListItem *item = new GUI::StringListItem(str);
+					//	listBox->AddItem(item) ;
+				}
+				printf("%d\n", bytesCount);
+				network::InternetCacheManager::getInstance().SaveCache();
+			}
+			Text = str;
+
+			GUI::TextDecorator decorator;
+			//TextD = decorator.ParseText(Text);
+
+
 		}
-		if (true)
+		catch (SAException& e)
 		{
-			int bytesCount = 0;
-			for (int i = 0; i < ted::TweetDB::TweetDBList.size(); ++i)
-			{
-				ted::TweetDB* t = ted::TweetDB::TweetDBList[i];
- 				core::UTFString str = t->user->displayName;
- 				str += core::string(":");
- 				str += t->text;
-
-				bytesCount += str.Length()*sizeof(utf32)+sizeof(GUI::StringListItem);;
-				//GUI::StringListItem *item = new GUI::StringListItem(str);
-				//	listBox->AddItem(item) ;
-			}
-			printf("%d\n", bytesCount);
-			network::InternetCacheManager::getInstance().SaveCache();
+			printf("%s\n", e.ErrText());
 		}
-		Text = str;
-
-		GUI::TextDecorator decorator;
-		//TextD = decorator.ParseText(Text);
-
-
-	}
-	catch (SAException& e)
-	{
-		printf("%s\n",e.ErrText());
 	}
 }
 

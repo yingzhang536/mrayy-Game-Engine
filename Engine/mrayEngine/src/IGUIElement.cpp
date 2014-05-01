@@ -450,25 +450,26 @@ bool IGUIElement::_UpdateRegion(const math::rectf*vp)
 	}
 	if(m_unclippedRectDirt || m_docking!=EED_None)
 	{
-		if(m_docking==EED_None){
-			_UpdateAlignment(vp);
-		}else
-		{
-			if(m_unclippedRectDirt || m_attachedRegion && m_clippedRectDirt)
-			{
-				_UpdateDocking(vp);
-			}
-		}
 
-		m_unclippedRectDirt=false;
+	
 		m_clippedRectDirt=true;
 		res=true;
 	}
 	if(m_clippedRectDirt)
 	{
+		if (m_docking == EED_None){
+			_UpdateAlignment(vp);
+		}
+		else
+		{
+			if (m_unclippedRectDirt || m_attachedRegion && m_clippedRectDirt)
+			{
+				_UpdateDocking(vp);
+			}
+		}
 		if(m_attachedRegion )
 			m_defaultRegion->SetClipRect(m_attachedRegion->GetClippedRect());
-
+		m_unclippedRectDirt = false;
 		m_clippedRectDirt=false;
 		res=true;
 	}

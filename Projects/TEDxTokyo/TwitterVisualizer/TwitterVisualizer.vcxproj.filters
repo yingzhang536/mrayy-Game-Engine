@@ -46,6 +46,9 @@
     <Filter Include="Source Files\GUI\interface v1.0\Leap">
       <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{506e9574-830f-4924-bed7-62c5d5f342a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -117,6 +120,18 @@
     <ClInclude Include="GUISessionSidePanel.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
+    <ClInclude Include="GUISessionDetailsTopPanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionDetails.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionContainer.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionDetailsPanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -173,10 +188,19 @@
     <ClCompile Include="GUISessionSidePanel.cpp">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClCompile>
+    <ClCompile Include="SessionContainer.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISessionDetailsTopPanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
       <Filter>Source Files\GUI\interface v1.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>
 </Project>

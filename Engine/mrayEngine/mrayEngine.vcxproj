@@ -314,6 +314,7 @@
     <ClInclude Include="include\BinPacker.h" />
     <ClInclude Include="include\BitmapFontData.h" />
     <ClInclude Include="include\CommonValueProviders.h" />
+    <ClInclude Include="include\DateTime.h" />
     <ClInclude Include="include\DynamicFontGenerator.h" />
     <ClInclude Include="include\FileTextureSource.h" />
     <ClInclude Include="include\GUIElement3D.h" />
@@ -421,6 +422,7 @@
     <ClCompile Include="src\BinPacker.cpp" />
     <ClCompile Include="src\BitmapFontData.cpp" />
     <ClCompile Include="src\CommonValueProviders.cpp" />
+    <ClCompile Include="src\DateTime.cpp" />
     <ClCompile Include="src\DynamicFontGenerator.cpp" />
     <ClCompile Include="src\FileTextureSource.cpp" />
     <ClCompile Include="src\GUIElement3D.cpp" />

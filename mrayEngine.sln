@@ -412,6 +412,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TEDxTokyo14", "TEDxTokyo14", "{8C95185C-2F61-4BDF-B15F-5BA6EE767F38}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TwitterVisualizer", "Projects\TEDxTokyo\TwitterVisualizer\TwitterVisualizer.vcxproj", "{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10E4644B-DC44-4C76-848C-260B72C60FD2} = {10E4644B-DC44-4C76-848C-260B72C60FD2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
