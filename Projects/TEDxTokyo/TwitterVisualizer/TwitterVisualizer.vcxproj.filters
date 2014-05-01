@@ -31,14 +31,20 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{f0919b28-25f0-4151-b8cc-167aed02d036}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Leap">
-      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Particles\Particle Effects">
       <UniqueIdentifier>{b1b060c8-a5a1-4aa3-9e97-075d7fdeef29}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Particles\Emitters">
       <UniqueIdentifier>{b70d26cb-53ec-4efa-89e1-69e1c7ffaf9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Interface v2.0">
+      <UniqueIdentifier>{9f73c75c-7cf0-4cdb-8235-2c3349e1b251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\interface v1.0">
+      <UniqueIdentifier>{4636de2e-aca5-451e-bf64-5bb070ad177c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\interface v1.0\Leap">
+      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,23 +96,26 @@
     <ClInclude Include="TweetParticle.h">
       <Filter>Source Files\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="TwitterProfileListItem.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIUserProfile.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUITweetItem.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="LeapDevice.h">
-      <Filter>Source Files\Leap</Filter>
+      <Filter>Source Files\GUI\interface v1.0\Leap</Filter>
     </ClInclude>
     <ClInclude Include="GUIScreenLayout.h">
-      <Filter>Source Files\GUI</Filter>
+      <Filter>Source Files\GUI\interface v1.0</Filter>
     </ClInclude>
     <ClInclude Include="GUIScreenLayoutImpl.h">
-      <Filter>Source Files\GUI</Filter>
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITweetItem.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIUserProfile.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProfileListItem.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionSidePanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,25 +155,28 @@
     <ClCompile Include="TweetParticle.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="TwitterProfileListItem.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUIUserProfile.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUITweetItem.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="LeapDevice.cpp">
-      <Filter>Source Files\Leap</Filter>
+      <Filter>Source Files\GUI\interface v1.0\Leap</Filter>
     </ClCompile>
     <ClCompile Include="PAVelocityOverTimeInterpolater.cpp">
       <Filter>Source Files\Particles\Particle Effects</Filter>
     </ClCompile>
+    <ClCompile Include="GUITweetItem.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIUserProfile.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProfileListItem.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISessionSidePanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
-      <Filter>Source Files\GUI</Filter>
+      <Filter>Source Files\GUI\interface v1.0</Filter>
     </Overlay>
   </ItemGroup>
 </Project>

@@ -51,6 +51,8 @@
 #include "GUIOverlay.h"
 #include "RenderTechnique.h"
 #include "RenderPass.h"
+
+#include "GUISessionSidePanel.h"
 #include <SQLAPI.h> // main SQLAPI++ header
 // #include <cppdb/frontend.h>
 
@@ -452,26 +454,29 @@ void Application::init(const OptionContainer &extraOptions)
 	 
 	video::RenderMaterialPtr partMaterial = gMaterialResourceManager.getMaterial("CPUParticlesMaterial")->Duplicate();
 	partMaterial->GetTechniqueAt(0)->GetPassAt(0)->setTexture(gTextureResourceManager.loadTexture2D("LightParticle.png"), 0);
-	for (int i = 0; i < 2;++i)
+	if (false)
 	{
-		scene::BackgroundEmitter* be = new scene::BackgroundEmitter();
-		m_particleSystem->AddEmitter(be);
+		for (int i = 0; i < 2; ++i)
+		{
+			scene::BackgroundEmitter* be = new scene::BackgroundEmitter();
+			m_particleSystem->AddEmitter(be);
 
-		be->SetRenderer(new scene::CPUParticleBillboardRenderer(1000));
-		be->setMaterial(partMaterial);
+			be->SetRenderer(new scene::CPUParticleBillboardRenderer(1000));
+			be->setMaterial(partMaterial);
 
-		scene::PAVelocityOverTimeInterpolater* vel = new scene::PAVelocityOverTimeInterpolater();
-		be->addAffector(vel);
-		//vel->addKey(0, -0.1, 0.1);
-		vel->SetMinMaxVel(-1, 1);
+			scene::PAVelocityOverTimeInterpolater* vel = new scene::PAVelocityOverTimeInterpolater();
+			be->addAffector(vel);
+			//vel->addKey(0, -0.1, 0.1);
+			vel->SetMinMaxVel(-1, 1);
 
-		scene::PACenterForce* centerForce = new scene::PACenterForce();
-		be->addAffector(centerForce);
+			scene::PACenterForce* centerForce = new scene::PACenterForce();
+			be->addAffector(centerForce);
 
-		scene::DistanceParticleLineRenderer* lrend = new scene::DistanceParticleLineRenderer();
-		lrend->SetEmitter(be);
-		lrend->setMaterial(gMaterialResourceManager.getMaterial("ParticleLinesMaterial"), 0);
-		psNode->AttachNode(lrend);
+			scene::DistanceParticleLineRenderer* lrend = new scene::DistanceParticleLineRenderer();
+			lrend->SetEmitter(be);
+			lrend->setMaterial(gMaterialResourceManager.getMaterial("ParticleLinesMaterial"), 0);
+			psNode->AttachNode(lrend);
+		}
 	}
 	{
 		scene::TweetsEmitter* e = new scene::TweetsEmitter();
@@ -508,6 +513,7 @@ void Application::init(const OptionContainer &extraOptions)
 	{
 		REGISTER_GUIElement_FACTORY(GUITweetItem);
 		REGISTER_GUIElement_FACTORY(GUIUserProfile);
+		REGISTER_GUIElement_FACTORY(GUISessionSidePanel);
 		GUI::GUIOverlay* screenOverlay= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout.gui");
 		m_screenLayout = new GUI::GUIScreenLayoutImpl();
 		screenOverlay->CreateElements(getGUIManager(), m_guiroot, 0, m_screenLayout);

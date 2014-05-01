@@ -332,6 +332,7 @@ void Application::init(const OptionContainer &extraOptions)
 	_initStates();
 	LoadSettingsXML("States.xml");
 
+	if (false)
 	{
 		video::AtlasPacker packer;
 		std::vector < video::ITexture*> textures;
