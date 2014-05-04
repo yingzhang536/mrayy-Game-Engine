@@ -16,6 +16,7 @@
 #define __GUIScreenLayoutImpl__
 
 #include "GUIScreenLayout.h"
+#include "AppData.h"
 
 
 namespace mray
@@ -29,6 +30,13 @@ protected:
 public:
 	GUIScreenLayoutImpl(){}
 	virtual~GUIScreenLayoutImpl(){}
+
+	virtual void DoneLoadingElements()
+	{
+		SessionDetails->SetSidePanel(SessionsBar);
+		TweetDetails->SetSidePanel(SessionsBar);
+		SessionsBar->SetSessionContainer(gAppData.sessions);
+	}
 };
 
 }

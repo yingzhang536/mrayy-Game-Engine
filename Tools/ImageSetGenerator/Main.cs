@@ -302,10 +302,10 @@ namespace ImageSetGenerator
                 string fi = files[i];
                 int idx=fi.LastIndexOf('\\');
                 if (idx != -1)
-                    fi = fi.substr(idx + 1);
+                    fi = fi.Substring(idx + 1);
                 idx = fi.LastIndexOf('.');
                 if (idx != -1)
-                    fi = fi.substr(0,idx);
+                    fi = fi.Substring(0, idx);
 
                 m_images[i] = new ImageInfo(Image.FromFile(files[i]), fi);
             }

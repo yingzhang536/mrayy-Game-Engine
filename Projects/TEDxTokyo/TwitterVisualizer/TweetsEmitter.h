@@ -22,7 +22,7 @@ namespace mray
 {
 	namespace ted
 	{
-		class TweetDB;
+		class TwitterTweet;
 	}
 namespace scene
 {
@@ -43,7 +43,7 @@ public:
 	TweetsEmitter();
 	virtual~TweetsEmitter();
 	virtual void reSpawn(IParticle* part);
-	void AddTweet(ted::TweetDB* t);
+	void AddTweet(ted::TwitterTweet* t);
 
 	TweetParticle* GetTweetParticle(ulong id);
 };

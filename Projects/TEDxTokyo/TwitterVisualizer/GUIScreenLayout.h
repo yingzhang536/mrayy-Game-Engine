@@ -7,6 +7,7 @@
 #include "GUIStackPanel.h"
 #include "GUIStaticImage.h"
 #include "GUIStaticText.h"
+#include "GUITweetDetailsPanel.h"
 #include "GUIUserProfile.h"
 namespace mray{
 
@@ -16,6 +17,9 @@ class GUIScreenLayout:public GUI::IGUISchemeBase
 
 public:
 	GUIPanel* Root;
+	GUISessionSidePanel* SessionsBar;
+	GUISessionDetailsTopPanel* SessionDetails;
+	GUITweetDetailsPanel* TweetDetails;
 	GUIStaticImage* TEDxTokyo_Logo;
 	GUIStackPanel* RootStack;
 	GUIEditBox* UserTxt;
@@ -25,9 +29,12 @@ public:
 
 public:
 
-	GUIScreenLayout():Root(0),TEDxTokyo_Logo(0),RootStack(0),UserTxt(0),UsersList(0),UserProfile(0),TweetsList(0)
+	GUIScreenLayout():Root(0),SessionsBar(0),SessionDetails(0),TweetDetails(0),TEDxTokyo_Logo(0),RootStack(0),UserTxt(0),UsersList(0),UserProfile(0),TweetsList(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
+		m_elementsMap["SessionsBar"]=(IGUIElement**)&SessionsBar;
+		m_elementsMap["SessionDetails"]=(IGUIElement**)&SessionDetails;
+		m_elementsMap["TweetDetails"]=(IGUIElement**)&TweetDetails;
 		m_elementsMap["TEDxTokyo_Logo"]=(IGUIElement**)&TEDxTokyo_Logo;
 		m_elementsMap["RootStack"]=(IGUIElement**)&RootStack;
 		m_elementsMap["UserTxt"]=(IGUIElement**)&UserTxt;

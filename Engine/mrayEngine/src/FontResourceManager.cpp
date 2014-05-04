@@ -186,7 +186,7 @@ const GUI::IFontPtr& FontResourceManager::getDefaultFont(){
 }
 void FontResourceManager::setDefaultFont(const GUI::IFontPtr& f){
 	m_defaultFont=f;
-	m_fontList[mT("Default")]=f;
+	//m_fontList[mT("Default")]=f;
 }
 int FontResourceManager::loadFontsFromDir(const core::string& dir)
 {

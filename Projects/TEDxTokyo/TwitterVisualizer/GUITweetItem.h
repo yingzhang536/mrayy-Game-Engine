@@ -23,7 +23,7 @@ namespace mray
 {
 	namespace ted
 	{
-		class TweetDB;
+		class TwitterTweet;
 	}
 namespace GUI
 {
@@ -34,14 +34,14 @@ class GUITweetItem:public IGUIElement
 public: 
 	static const core::string ElementType;
 protected:
-	ted::TweetDB* m_tweet;
+	ted::TwitterTweet* m_tweet;
 	GUI::FontAttributes m_fontAttrs;
 public:
 	GUITweetItem(IGUIManager* m);
 	virtual~GUITweetItem();
 
-	void SetTweet(ted::TweetDB* t);
-	ted::TweetDB* GetTweet(){ return m_tweet; }
+	void SetTweet(ted::TwitterTweet* t);
+	ted::TwitterTweet* GetTweet(){ return m_tweet; }
 
 
 	virtual void Update(float dt);

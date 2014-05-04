@@ -116,7 +116,8 @@ protected:
 	//m_unclippedRect;	//Unclipped rect of the element
 	//math::rectf				m_clippedRect;		//Clipped by parent rect of the element
 
-	math::vector2d			m_position;		//position of the element
+	math::vector2d			m_position;		//position of the element from top left
+	math::vector2d			m_anchorPosition;		//position of the anchor at the bottom right
 	math::vector2d			m_size;			//size of the element
 
 	math::vector2d			m_derivedPosition;	// derived position (which is in the screen space)
@@ -159,7 +160,8 @@ public:
 	DECLARE_PROPERTY_TYPE(ID,uint,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(Visible,bool,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(Enabled,bool,MRAY_DLL);
-	DECLARE_PROPERTY_TYPE(Position,math::vector2d,MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(Position, math::vector2d, MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(AnchorPosition, math::vector2d, MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(Size,math::vector2d,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(HorizontalAlignment,EHorizontalAlignment,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(VerticalAlignment,EVerticalAlignment,MRAY_DLL);
@@ -168,6 +170,10 @@ public:
 	DECLARE_PROPERTY_TYPE(Color,video::SColor,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(Alpha,float,MRAY_DLL);
 	DECLARE_PROPERTY_TYPE(DeriveAlpha,bool,MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(AnchorLeft, bool, MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(AnchorRight, bool, MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(AnchorTop, bool, MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(AnchorBottom, bool, MRAY_DLL);
 
 	virtual bool _UpdateRegion(const math::rectf*vp);
 	virtual void _UpdateDerivedAlpha();
@@ -232,6 +238,10 @@ public:
 	virtual const math::vector2d& GetPosition()const;
 	virtual const math::vector2d& GetDerivedPosition();
 
+
+	virtual bool SetAnchorPosition(const math::vector2d& pos);
+	virtual const math::vector2d& GetAnchorPosition()const;
+
 	virtual bool SetSize(const math::vector2d& sz);
 	virtual const math::vector2d& GetSize()const;
 	virtual const math::vector2d& GetDerivedSize();
@@ -245,8 +255,17 @@ public:
 	virtual void AttachToRegion(GUIElementRegion* p);
 	IGUIPanelElement* GetParent()const;
 
-	virtual void SetAnchor(EElementAnchor anchor, bool set);
+	virtual bool SetAnchor(EElementAnchor anchor, bool set);
 	virtual bool GetAnchor(EElementAnchor anchor)const ;
+
+	bool SetAnchorLeft(bool s){ return SetAnchor(EEA_Left, s); }
+	bool GetAnchorLeft()const{ return GetAnchor(EEA_Left); }
+	bool SetAnchorRight(bool s){ return SetAnchor(EEA_Right, s); }
+	bool GetAnchorRight()const{ return GetAnchor(EEA_Right); }
+	bool SetAnchorTop(bool s){ return SetAnchor(EEA_Top, s); }
+	bool GetAnchorTop()const{ return GetAnchor(EEA_Top); }
+	bool SetAnchorBottom(bool s){ return SetAnchor(EEA_Bottom, s); }
+	bool GetAnchorBottom()const{ return GetAnchor(EEA_Bottom); }
 
 	virtual bool SetVerticalAlignment(EVerticalAlignment e);
 	const EVerticalAlignment& GetVerticalAlignment()const;

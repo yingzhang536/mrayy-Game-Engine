@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "TwitterProfileListItem.h"
-#include "UserDB.h"
+#include "TwitterUserProfile.h"
 #include "IGUIListBox.h"
 #include "IGUIRenderer.h"
 #include "IFOnt.h"
@@ -15,7 +15,7 @@ namespace GUI
 {
 
 
-TwitterProfileListItem::TwitterProfileListItem(ted::UserDB* user)
+TwitterProfileListItem::TwitterProfileListItem(ted::TwitterUserProfile* user)
 {
 	m_user = user;
 	m_profilePic= gTextureResourceManager.loadTexture2D("url=" + user->imageUrl);

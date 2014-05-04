@@ -10,6 +10,7 @@
 #include "DateTime.h"
 #include "GUIOverlay.h"
 #include "GUIOverlayManager.h"
+#include "GUISessionSidePanel.h"
 
 namespace mray
 {
@@ -17,7 +18,6 @@ namespace GUI
 {
 
 
-IMPLEMENT_RTTI(GUISessionDetailsTopPanel, IGUIPanelElement);
 
 const core::string GUISessionDetailsTopPanel::ElementType = "GUISessionDetailsTopPanel";
 
@@ -26,9 +26,8 @@ float GUISessionDetailsTopPanel_ShrinkSpeed = 150;
 GUISessionDetailsTopPanel::GUISessionDetailsTopPanel(IGUIManager* m) :
 IGUIPanelElement(ElementType, m)
 {
-	m_minWidth = 59;
-	m_maxWidth = 150;
-	m_state = Shrink;
+	m_active = false;
+	m_sidePanel = 0;
 
 	GUI::GUIOverlay* o= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUISessionDetailsPanelLayout.GUI");
 	if (o)
@@ -48,10 +47,10 @@ bool GUISessionDetailsTopPanel::OnEvent(Event* e)
 		const GUIElementRegion* r = GetDefaultRegion();
 		if (r->GetClippedRect().IsPointInside(evt->pos))
 		{
-			m_state = Expand;
+			m_active = true;
 		}
 		else
-			m_state = Shrink;
+			m_active = false;
 	}
 	return false;
 }
@@ -63,21 +62,14 @@ void GUISessionDetailsTopPanel::Update(float dt)
 #define DECREASE(x,l,v) if(x>(l)){ x-=(v);} if(x<(l)){x=(l);}
 #define INCREASE(x,l,v) if(x<(l)){ x+=(v);} if(x>(l)){x=(l);}
 
-	math::vector2d sz = this->GetSize();
 	float a = GetAlpha();
-	if (m_state == Shrink)
+	if (!m_active)
 	{
-		DECREASE(sz.y, m_minWidth, GUISessionDetailsTopPanel_ShrinkSpeed*dt);
-		//DECREASE(a, 0.2, dt);
-	}
-
-	if (m_state == Expand)
+		DECREASE(a, 0.2, dt);
+	}else
 	{
-		//INCREASE(a, 1, dt);
-		INCREASE(sz.y, m_maxWidth, GUISessionDetailsTopPanel_ShrinkSpeed*dt);
+		INCREASE(a, 1, dt);
 	}
-	a = 0.2 + 0.8*((sz.y - m_minWidth) / (m_maxWidth - m_minWidth));
-	SetSize(sz);
 	SetAlpha(a);
 }
 void GUISessionDetailsTopPanel::Draw(const math::rectf*vp)
@@ -92,9 +84,17 @@ void GUISessionDetailsTopPanel::Draw(const math::rectf*vp)
 	core::DateTime dt = core::DateTime::Now();
 	SessionTime->SetText(core::DateTime::ToString(dt));
 
+	if (m_sidePanel)
+	{
+		const math::rectf& rc= m_sidePanel->GetDefaultRegion()->GetClippedRect();
+		math::vector2d pos = GetPosition();
+		pos.x = rc.BRPoint.x;
+		this->SetPosition(pos);
+	}
 	IGUIPanelElement::Draw(vp);
 }
 
+IMPLEMENT_RTTI(GUISessionDetailsTopPanel, IGUIPanelElement);
 IMPLEMENT_ELEMENT_FACTORY(GUISessionDetailsTopPanel);
 
 }

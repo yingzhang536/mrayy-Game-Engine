@@ -22,6 +22,7 @@ FontAttributes::FontAttributes(){
 	RightToLeft=false;
 	fontAligment=EFA_MiddleCenter;
 	spacing=0;
+	lineSpacing = 0;
 }
 FontAttributes::~FontAttributes(){
 }
@@ -35,7 +36,7 @@ void FontAttributes::loadXMLSettings(xml::XMLElement* elem){
 		if(a.name.equals_ignore_case(mT("Font"))){
 			fontName=a.value;
 		}else if(a.name.equals_ignore_case(mT("Alignment"))){
-			fontAligment=(EFontAligment)core::StringConverter::toEnum(a.value,mT("EFontAligment"));
+			fontAligment = (EFontAligment)core::StringConverter::toEnum(mT("EFontAligment"), a.value);
 		}else if(a.name.equals_ignore_case(mT("size"))){
 			fontSize=core::StringConverter::toFloat(a.value);
 		}else if(a.name.equals_ignore_case(mT("color"))){
@@ -53,6 +54,9 @@ void FontAttributes::loadXMLSettings(xml::XMLElement* elem){
 		}else if(a.name.equals_ignore_case(mT("RTL"))){
 			RightToLeft=core::StringConverter::toBool(a.value);
 		}
+		else if (a.name.equals_ignore_case(mT("lineSpacing"))){
+			lineSpacing = core::StringConverter::toInt(a.value);
+		}
 	}
 }
 xml::XMLElement*  FontAttributes::exportXMLSettings(xml::XMLElement* elem){
@@ -66,8 +70,9 @@ xml::XMLElement*  FontAttributes::exportXMLSettings(xml::XMLElement* elem){
 	e->addAttribute(mT("shadowOffset"),core::StringConverter::toString(shadowOffset));
 	e->addAttribute(mT("wrap"),core::StringConverter::toString(wrap));
 	e->addAttribute(mT("RTL"),core::StringConverter::toString(RightToLeft));
-	e->addAttribute(mT("fontAligment"),core::StringConverter::toString((int)fontAligment,core::string(mT("EFontAligment"))));
+	e->addAttribute(mT("Alignment"),core::StringConverter::toString((int)fontAligment,core::string(mT("EFontAligment"))));
 	e->addAttribute(mT("spacing"),core::StringConverter::toString(spacing));
+	e->addAttribute(mT("lineSpacing"), core::StringConverter::toString(lineSpacing));
 	elem->addSubElement(e);
 	return e;
 }

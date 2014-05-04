@@ -9,6 +9,7 @@ namespace mray
 namespace ted
 {
 	class SessionContainer;
+	class CSpeaker;
 }
 namespace GUI
 {
@@ -25,10 +26,25 @@ protected:
 		Shrink
 	};
 
+	struct SpeakerImageIfo
+	{
+		SpeakerImageIfo() :t(0), speaker(0)
+		{}
+		ted::CSpeaker* speaker;
+		video::ITexturePtr texture;
+		float t;
+	};
+
+	std::vector<SpeakerImageIfo> m_speakers;
+
 	EState m_state;
 
 	float m_maxWidth;
 	float m_minWidth;
+
+	float m_szT;
+
+	int m_currentSpeaker;
 
 	ted::SessionContainer* m_sessions;
 

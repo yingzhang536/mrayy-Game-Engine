@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Twitter">
-      <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cppdb">
       <UniqueIdentifier>{bea5e4e9-1803-4364-9cb7-23b32a86ecdd}</UniqueIdentifier>
     </Filter>
@@ -49,6 +46,21 @@
     <Filter Include="Source Files\Data">
       <UniqueIdentifier>{506e9574-830f-4924-bed7-62c5d5f342a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{f21c0b34-5fc1-42d0-a6d5-f11f85ebd59b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{c86a5d99-2bd4-4fcf-affa-852cf9ef632d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data\Twitter">
+      <UniqueIdentifier>{c5e79e68-d0f0-4240-b187-e2b0f8f2e0e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{d16fc0bc-e228-4082-b1e0-21f16d02fd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DB">
+      <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -66,9 +78,6 @@
     <ClInclude Include="TweetsEmitter.h">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
-    <ClInclude Include="TweetDB.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
     <ClInclude Include="BackgroundEmitter.h">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
@@ -84,14 +93,8 @@
     <ClInclude Include="RTFTextParser.h">
       <Filter>Source Files\RTF</Filter>
     </ClInclude>
-    <ClInclude Include="DBHandler.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
     <ClInclude Include="DataTypes.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
-    <ClInclude Include="UserDB.h">
-      <Filter>Source Files\Twitter</Filter>
+      <Filter>Source Files\DB</Filter>
     </ClInclude>
     <ClInclude Include="TrailParticle.h">
       <Filter>Source Files\Particles</Filter>
@@ -132,6 +135,51 @@
     <ClInclude Include="GUISessionDetailsPanelLayout.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
+    <ClInclude Include="SpeakerNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TweetNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpeaker.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AppData.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterUserProfile.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterTweet.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProvider.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="TweetsVisualizeScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITweetDetailsPanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITweetDetailsPanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -149,23 +197,14 @@
     <ClCompile Include="BackgroundEmitter.cpp">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClCompile>
-    <ClCompile Include="TweetDB.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
     <ClCompile Include="DataTypes.cpp">
-      <Filter>Source Files\Twitter</Filter>
+      <Filter>Source Files\DB</Filter>
     </ClCompile>
     <ClCompile Include="TrailParticle.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
     <ClCompile Include="TweetsEmitter.cpp">
       <Filter>Source Files\Particles\Emitters</Filter>
-    </ClCompile>
-    <ClCompile Include="DBHandler.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
-    <ClCompile Include="UserDB.cpp">
-      <Filter>Source Files\Twitter</Filter>
     </ClCompile>
     <ClCompile Include="TweetParticle.cpp">
       <Filter>Source Files\Particles</Filter>
@@ -194,12 +233,45 @@
     <ClCompile Include="GUISessionDetailsTopPanel.cpp">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClCompile>
+    <ClCompile Include="SQLDBHandler.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterUserProfile.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterTweet.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProvider.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AppData.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLDBHandler.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderingScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TweetsVisualizeScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITweetDetailsPanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
       <Filter>Source Files\GUI\interface v1.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>

@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "GUITweetItem.h"
-#include "TweetDB.h"
+#include "TwitterTweet.h"
 
 #include "IGUIManager.h"
 #include "GUIElementRegion.h"
@@ -29,7 +29,7 @@ namespace GUI
 
 	}
 
-	void GUITweetItem::SetTweet(ted::TweetDB* t)
+	void GUITweetItem::SetTweet(ted::TwitterTweet* t)
 	{
 		m_tweet = t;
 	}

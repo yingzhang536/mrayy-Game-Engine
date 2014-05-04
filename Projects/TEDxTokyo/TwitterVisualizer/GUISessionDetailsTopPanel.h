@@ -33,6 +33,7 @@ namespace ted
 namespace GUI
 {
 
+	class GUISessionSidePanel;
 
 class GUISessionDetailsTopPanel :public IGUIPanelElement,public GUISessionDetailsPanelLayout
 {
@@ -40,16 +41,9 @@ class GUISessionDetailsTopPanel :public IGUIPanelElement,public GUISessionDetail
 public:
 	static const core::string ElementType;
 protected:
-	enum EState
-	{
-		Expand,
-		Shrink
-	};
+	bool m_active;
 
-	EState m_state;
-
-	float m_maxWidth;
-	float m_minWidth;
+	GUI::GUISessionSidePanel* m_sidePanel;
 
 	ted::SessionDetails* m_details;
 public:
@@ -57,6 +51,8 @@ public:
 	virtual ~GUISessionDetailsTopPanel();
 
 	void SetSessionDetails(ted::SessionDetails* d);
+
+	void SetSidePanel(GUISessionSidePanel* p){ m_sidePanel = p; }
 
 	virtual bool OnEvent(Event* e);
 

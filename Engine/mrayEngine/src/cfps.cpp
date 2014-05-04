@@ -53,11 +53,12 @@ void CFPS::regFrame(float time)
 	}
 	m_allFps++;
 	m_frames++;
-	float dtime=time-m_startTime;
+	float dtime = time - m_startTime;
+	/*
 	if(time>m_lastTime)
 		m_frameTime=(time-m_lastTime)*0.001f;
 	else
-		m_frameTime=0;
+		m_frameTime=0;*/
 	m_allFrames+=m_frameTime;
 
 	m_lastTime=time;
@@ -66,6 +67,7 @@ void CFPS::regFrame(float time)
 	{ 
 		float f=(float)(m_frames*1000)/((float)dtime);
 		m_fps=math::lerp<float>(m_lastFps,f,0.8);
+		m_frameTime = 1.0f / m_fps;
 		if(m_fps>m_bestFPS)
 			m_bestFPS=m_fps;
 		if(m_fps<m_worstFPS)

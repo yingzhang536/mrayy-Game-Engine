@@ -2,6 +2,7 @@
 
 #include "StringUtil.h"
 #include <string>
+#include <utf8/utf8.h>
 
 namespace mray
 {
@@ -201,5 +202,18 @@ std::vector<core::tstring<T>> StringUtilT<T>::Split(const core::tstring<T>& str,
 	return ret;
 }
 
+template <typename T>
+void StringUtilT<T>::Utf8ToUtf16(const core::string& _utf8, core::stringw& utf16)
+{
+	utf16 = L"";
+	utf8::utf8to16(_utf8.begin(), _utf8.end(), std::back_inserter(utf16));
+}
+template <typename T>
+void StringUtilT<T>::Utf16ToUtf8(const core::stringw& utf16, core::string& _utf8)
+{
+	_utf8 = "";
+	utf8::utf16to8(utf16.begin(), utf16.end(), std::back_inserter(_utf8));
+
+}
 }
 }

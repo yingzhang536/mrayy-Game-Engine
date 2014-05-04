@@ -79,11 +79,31 @@ bool AtlasPacker::PackTextures(video::ITexture** textures, int count)
 
 	std::vector<core::BinPackerOutRect> packs;
 	bool ret= m_impl->packer.Pack(rects, packs, m_impl->maxSize);
-	if (!ret)
-		return false;
+	
 
-//	m_impl->texture->getSurface(0)->lock()
+	video::LockedPixelBox box= m_impl->texture->getSurface(0)->lock(math::box3d(0, math::vector3d(m_impl->maxSize.x, m_impl->maxSize.y,1 )),video::IHardwareBuffer::ELO_Normal);
 
+	for (int i = 0; i < packs.size(); ++i)
+	{
+		video::ITexture* tex = textures[packs[i].ID];
+		const math::vector3d& sz = tex->getSize();
+		video::LockedPixelBox src = tex->getSurface(0)->lock(math::box3d(0, sz), video::IHardwareBuffer::ELO_ReadOnly);
+
+		uchar* dptr = (uchar*)box.data;
+		uchar* sptr = (uchar*)src.data;
+
+		dptr += (int)(packs[i].pos.x + box.box.getWidth()*packs[i].pos.y) * 4;
+		for (int y = 0; y < sz.y; ++y)
+		{
+			memcpy(dptr,sptr,(int)src.box.getWidth()*4);
+			sptr += (int)src.box.getWidth() * 4;
+			dptr += (int)(box.box.getWidth()*packs[i].pos.y) * 4;
+		}
+
+		tex->getSurface(0)->unlock();
+	}
+
+	m_impl->texture->getSurface(0)->unlock();
 	return true;
 }
 

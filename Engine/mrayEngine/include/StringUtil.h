@@ -56,6 +56,9 @@ public:
 	static core::tstring<T> Trim(const core::tstring<T>& str,const core::tstring<T>& chars=mT(" \t"));
 
 	static std::vector<core::tstring<T>> Split(const core::tstring<T>& str,const core::tstring<T>& delimStr,uint maxSplits=0);
+
+	static void Utf8ToUtf16(const core::string& utf8, core::stringw& utf16);
+	static void Utf16ToUtf8(const core::stringw& utf16, core::string& utf8);
 };
 
 

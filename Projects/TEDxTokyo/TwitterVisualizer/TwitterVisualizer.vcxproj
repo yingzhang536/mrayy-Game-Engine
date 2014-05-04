@@ -61,15 +61,17 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;..\..\..\Plugins\mrayTweetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);..\..\..\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;mrayTweetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,26 +83,34 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;..\..\..\Plugins\mrayTweetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);..\..\..\Dependencies\lib\$(Configuration);..\..\..\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;mrayTweetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppData.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="BackgroundEmitter.h" />
     <ClInclude Include="ConnectionLineRenderer.h" />
+    <ClInclude Include="CSpeaker.h" />
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="DBHandler.h" />
+    <ClInclude Include="GUITweetDetailsPanel.h" />
+    <ClInclude Include="GUITweetDetailsPanelLayout.h" />
+    <ClInclude Include="IRenderingScene.h" />
+    <ClInclude Include="SessionScene.h" />
+    <ClInclude Include="TweetsVisualizeScene.h" />
+    <ClInclude Include="TwitterProvider.h" />
+    <ClInclude Include="SQLDBHandler.h" />
     <ClInclude Include="GUIScreenLayout.h" />
     <ClInclude Include="GUIScreenLayoutImpl.h" />
     <ClInclude Include="GUISessionDetailsTopPanel.h" />
@@ -109,27 +119,41 @@
     <ClInclude Include="GUITweetItem.h" />
     <ClInclude Include="GUIUserProfile.h" />
     <ClInclude Include="IBaseParticle.h" />
+    <ClInclude Include="IDBHandler.h" />
     <ClInclude Include="LeapDevice.h" />
     <ClInclude Include="PAVelocityOverTimeInterpolater.h" />
     <ClInclude Include="RTFTextParser.h" />
     <ClInclude Include="SessionContainer.h" />
     <ClInclude Include="SessionDetails.h" />
+    <ClInclude Include="SpeakerNode.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TrailParticle.h" />
-    <ClInclude Include="TweetDB.h" />
+    <ClInclude Include="TwitterTweet.h" />
+    <ClInclude Include="TweetNode.h" />
     <ClInclude Include="TweetParticle.h" />
     <ClInclude Include="TweetsEmitter.h" />
     <ClInclude Include="TwitterProfileListItem.h" />
-    <ClInclude Include="UserDB.h" />
+    <ClInclude Include="TwitterUserProfile.h" />
+    <ClInclude Include="XMLDBHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AppData.cpp">
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="BackgroundEmitter.cpp" />
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
-    <ClCompile Include="DBHandler.cpp" />
-    <ClCompile Include="GUISessionDetailsTopPanel.cpp" />
+    <ClCompile Include="GUITweetDetailsPanel.cpp" />
+    <ClCompile Include="IRenderingScene.cpp" />
+    <ClCompile Include="SessionScene.cpp" />
+    <ClCompile Include="TweetsVisualizeScene.cpp" />
+    <ClCompile Include="TwitterProvider.cpp" />
+    <ClCompile Include="SQLDBHandler.cpp" />
+    <ClCompile Include="GUISessionDetailsTopPanel.cpp">
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExceptionHandling>
+    </ClCompile>
     <ClCompile Include="GUISessionSidePanel.cpp" />
     <ClCompile Include="GUITweetItem.cpp" />
     <ClCompile Include="GUIUserProfile.cpp" />
@@ -141,18 +165,20 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TrailParticle.cpp" />
-    <ClCompile Include="TweetDB.cpp" />
+    <ClCompile Include="TwitterTweet.cpp" />
     <ClCompile Include="TweetParticle.cpp" />
     <ClCompile Include="TweetsEmitter.cpp" />
     <ClCompile Include="TwitterProfileListItem.cpp" />
     <ClCompile Include="TwitterVisualizer.cpp" />
-    <ClCompile Include="UserDB.cpp" />
+    <ClCompile Include="TwitterUserProfile.cpp" />
+    <ClCompile Include="XMLDBHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
       <FileType>Document</FileType>
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui" />
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

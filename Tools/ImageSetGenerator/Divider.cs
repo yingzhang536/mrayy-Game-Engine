@@ -28,15 +28,15 @@ namespace ImageSetGenerator
             int i=m_basePath.LastIndexOf('\\');
             if (i != -1)
             {
-                dir = m_basePath.substr(0, i+1);
+                dir = m_basePath.Substring(0, i+1);
                 dir += "Splits\\";
-                m_basePath = dir+m_basePath.substr(i+1);
+                m_basePath = dir + m_basePath.Substring(i + 1);
             }
 
             i = m_basePath.LastIndexOf('.'); ;
             if (i != -1)
             {
-                m_basePath = m_basePath.substr(0, i);
+                m_basePath = m_basePath.Substring(0, i);
             }
             pictureBox1.Image = Image.FromFile(files[0]);
         }

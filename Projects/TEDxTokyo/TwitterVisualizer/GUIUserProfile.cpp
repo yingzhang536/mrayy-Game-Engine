@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "GUIUserProfile.h"
-#include "UserDB.h"
+#include "TwitterUserProfile.h"
 #include "TextureResourceManager.h"
 #include "Engine.h"
 #include "IVideoDevice.h"
@@ -52,7 +52,7 @@ GUIUserProfile::~GUIUserProfile()
 
 }
 
-void GUIUserProfile::SetUser(ted::UserDB* u)
+void GUIUserProfile::SetUser(ted::TwitterUserProfile* u)
 {
 	m_user = u;
 	if (m_user == 0)
@@ -65,7 +65,7 @@ void GUIUserProfile::SetUser(ted::UserDB* u)
 		m_profilePic->setMipmapsFilter(false);
 	}
 }
-ted::UserDB* GUIUserProfile::GetUser()
+ted::TwitterUserProfile* GUIUserProfile::GetUser()
 {
 	return m_user;
 }
