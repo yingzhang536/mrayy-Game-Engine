@@ -22,15 +22,19 @@ void TwitterTweet::AddTwitterTweet(TwitterTweet* t)
 	TwitterTweetList.push_back(t);
 	TweetIDMap[t->ID] = TwitterTweetList.size() - 1;
 }
-TwitterTweet* TwitterTweet::GetTweetByID(IDType id)
+TwitterTweet* TwitterTweet::GetTweetByID(IDType id, bool localOnly)
 {
 	std::map<IDType, uint>::iterator it = TweetIDMap.find(id);
 	if (it == TweetIDMap.end())
 	{
-		TwitterTweet* u = IDBHandler::getInstance().RequestTweet(id);
-		if (u)
-			AddTwitterTweet(u);
-		return u;
+		if (!localOnly)
+		{
+			TwitterTweet* u = IDBHandler::getInstance().RequestTweet(id);
+			if (u)
+				AddTwitterTweet(u);
+			return u;
+		}else
+			return 0;
 	}
 	return TwitterTweetList[it->second];
 

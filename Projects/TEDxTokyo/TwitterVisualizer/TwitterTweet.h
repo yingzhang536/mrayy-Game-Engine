@@ -33,10 +33,10 @@ public:
 	static std::map<IDType, uint> TweetIDMap;
 	static std::vector<TwitterTweet*> TwitterTweetList;
 	static void AddTwitterTweet(TwitterTweet* t);
-	static TwitterTweet* GetTweetByID(IDType id);
+	static TwitterTweet* GetTweetByID(IDType id,bool localOnly);
 
 public:
-	TwitterTweet() :ID(0), user(0), retweets(0)
+	TwitterTweet() :ID(0), user(0), retweets(0), replyToTweet(0), replyToUser(0)
 	{}
 	virtual~TwitterTweet(){}
 
@@ -45,6 +45,9 @@ public:
 	core::stringw text;
 	core::CDate date;
 	int retweets;
+
+	TwitterTweet* replyToTweet;
+	TwitterUserProfile* replyToUser;
 
 	struct Entities
 	{

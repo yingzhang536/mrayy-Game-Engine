@@ -33,7 +33,7 @@ public:
 		if (!service->AuthenticateWith(AppData::getInstance().GetValue("Twitter", "Token"),
 			AppData::getInstance().GetValue("Twitter", "TokenSecret")))
 		{
-			gLogManager.log("Twitter Authentication failed!", ELL_ERROR);
+			gLogManager.log("Twitter Authentication failed!", ELL_WARNING);
 		}else
 			authorized=true;
 	}
@@ -87,6 +87,14 @@ public:
 
 		}
 	}
+	void ResolveID(const Twitter::Tweet& in, TwitterTweet& out)
+	{
+
+		if (in.in_reply_to_user_id != 0)
+			out.replyToUser = TwitterUserProfile::GetUserByID(in.in_reply_to_user_id, false);
+		if (in.in_reply_to_status_id != 0)
+			out.replyToTweet = TwitterTweet::GetTweetByID(in.in_reply_to_status_id, false);
+	}
 
 };
 
@@ -136,9 +144,14 @@ void TwitterProvider::GetTweets(const core::stringw& keyword, uint since, uint c
 	{
 		TwitterTweet* t = new TwitterTweet();
 		m_impl->Parse(res.tweets[i], *t);
+		TwitterTweet::AddTwitterTweet(t);
 		tweets.push_back(t);
 	}
-
+	//resolve IDs
+	for (int i = 0; i < res.tweets.size(); ++i)
+	{
+		m_impl->ResolveID(res.tweets[i], *tweets[i]);
+	}
 }
 
 }

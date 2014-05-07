@@ -29,7 +29,7 @@ namespace GUI
 			return float4(tex2D(texA,texCoord).rgb+clr.rgb,clr.a);\
 		}";
 
-	const core::string GUIUserProfile::ElementType("UserProfile");
+	const GUID GUIUserProfile::ElementType("UserProfile");
 
 GUIUserProfile::GUIUserProfile(GUI::IGUIManager* creator):
 	IGUIElement(ElementType,creator)

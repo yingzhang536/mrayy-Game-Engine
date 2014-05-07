@@ -32,7 +32,7 @@ class GUIUserProfile:public IGUIElement
 {
 	DECLARE_RTTI;
 public:
-	static const core::string ElementType;
+	static const GUID ElementType;
 protected:
 	ted::TwitterUserProfile* m_user;
 	video::ITexturePtr m_profilePic;

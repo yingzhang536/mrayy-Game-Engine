@@ -19,7 +19,7 @@ namespace GUI
 
 
 
-const core::string GUITweetDetailsPanel::ElementType = "GUITweetDetailsPanel";
+	const GUID GUITweetDetailsPanel::ElementType = "GUITweetDetailsPanel";
 
 float GUITweetDetailsPanel_ShrinkSpeed = 150;
 

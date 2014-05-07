@@ -166,6 +166,60 @@ bool TwitterService::AuthenticateWith(const core::string& token, const core::str
 
 
 
+static void
+printValueTree(Json::Value &value, const std::string &path = ".")
+{
+	switch (value.type())
+	{
+	case Json::nullValue:
+		printf("%s=null\n", path.c_str());
+		break;
+	case Json::intValue:
+		printf("%s=%d\n", path.c_str(), value.asInt());
+		break;
+	case Json::uintValue:
+		printf("%s=%u\n", path.c_str(), value.asUInt());
+		break;
+	case Json::realValue:
+		printf("%s=%.16g\n", path.c_str(), value.asDouble());
+		break;
+	case Json::stringValue:
+		printf("%s=\"%s\"\n", path.c_str(), value.asString().c_str());
+		break;
+	case Json::booleanValue:
+		printf("%s=%s\n", path.c_str(), value.asBool() ? "true" : "false");
+		break;
+	case Json::arrayValue:
+	{
+							 printf("%s=[]\n", path.c_str());
+							 int size = value.size();
+							 for (int index = 0; index < size; ++index)
+							 {
+								 static char buffer[16];
+								 sprintf_s(buffer, "[%d]", index);
+								 printValueTree(value[index], path + buffer);
+							 }
+	}
+		break;
+	case Json::objectValue:
+	{
+							  printf("%s={}\n", path.c_str());
+							  Json::Value::Members members(value.getMemberNames());
+							  std::sort(members.begin(), members.end());
+							  std::string suffix = *(path.end() - 1) == '.' ? "" : ".";
+							  for (Json::Value::Members::iterator it = members.begin();
+								  it != members.end();
+								  ++it)
+							  {
+								  const std::string &name = *it;
+								  printValueTree(value[name], path + suffix + name);
+							  }
+	}
+		break;
+	default:
+		break;
+	}
+}
 static bool parseUser(Json::Value &value, User& u)
 {
 	u.id = value["id"].asDouble();
@@ -270,60 +324,6 @@ parseTweets(Json::Value &value, std::vector<Tweet>& tweets)
 }
 
 
-static void
-printValueTree(Json::Value &value, const std::string &path = ".")
-{
-	switch (value.type())
-	{
-	case Json::nullValue:
-		printf("%s=null\n", path.c_str());
-		break;
-	case Json::intValue:
-		printf("%s=%d\n", path.c_str(), value.asInt());
-		break;
-	case Json::uintValue:
-		printf("%s=%u\n", path.c_str(), value.asUInt());
-		break;
-	case Json::realValue:
-		printf("%s=%.16g\n", path.c_str(), value.asDouble());
-		break;
-	case Json::stringValue:
-		printf("%s=\"%s\"\n", path.c_str(), value.asString().c_str());
-		break;
-	case Json::booleanValue:
-		printf("%s=%s\n", path.c_str(), value.asBool() ? "true" : "false");
-		break;
-	case Json::arrayValue:
-	{
-							 printf("%s=[]\n", path.c_str());
-							 int size = value.size();
-							 for (int index = 0; index < size; ++index)
-							 {
-								 static char buffer[16];
-								 sprintf_s(buffer, "[%d]", index);
-								 printValueTree(value[index], path + buffer);
-							 }
-	}
-		break;
-	case Json::objectValue:
-	{
-							  printf("%s={}\n", path.c_str());
-							  Json::Value::Members members(value.getMemberNames());
-							  std::sort(members.begin(), members.end());
-							  std::string suffix = *(path.end() - 1) == '.' ? "" : ".";
-							  for (Json::Value::Members::iterator it = members.begin();
-								  it != members.end();
-								  ++it)
-							  {
-								  const std::string &name = *it;
-								  printValueTree(value[name], path + suffix + name);
-							  }
-	}
-		break;
-	default:
-		break;
-	}
-}
 
 bool TwitterService::Search(const TwitterSearchOptions& op, TweetSearchResult& tweets)
 {

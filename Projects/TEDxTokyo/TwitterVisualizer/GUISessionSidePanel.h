@@ -18,7 +18,8 @@ class GUISessionSidePanel:public IGUIElement
 {
 	DECLARE_RTTI;
 public:
-	static const core::string ElementType;
+	static const GUID ElementType;
+	static const core::string ProfileRedneringShader;
 protected:
 	enum EState
 	{
@@ -44,15 +45,21 @@ protected:
 
 	float m_szT;
 
+	float m_speakerTransition;
 	int m_currentSpeaker;
 
 	ted::SessionContainer* m_sessions;
 
+	void _SetCurrentSpeaker(int s);
 public:
 	GUISessionSidePanel(IGUIManager* m);
 	virtual~GUISessionSidePanel();
 
+	ObjectEvent OnSpeakerChange;
 
+	ted::CSpeaker* GetActiveSpeaker(){
+		return m_speakers[m_currentSpeaker].speaker;
+	}
 	void SetSessionContainer(ted::SessionContainer* s);
 
 	virtual bool OnEvent(Event* e);

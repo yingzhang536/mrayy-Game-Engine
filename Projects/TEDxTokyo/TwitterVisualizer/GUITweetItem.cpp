@@ -18,7 +18,7 @@ namespace GUI
 	IMPLEMENT_RTTI(GUITweetItem,IGUIElement);
 	IMPLEMENT_ELEMENT_FACTORY(GUITweetItem);
 
-	const core::string GUITweetItem::ElementType("TweetItem");
+	const GUID GUITweetItem::ElementType("TweetItem");
 
 	GUITweetItem::GUITweetItem(IGUIManager* m) :IGUIElement(ElementType, m)
 	{

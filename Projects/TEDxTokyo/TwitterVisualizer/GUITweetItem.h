@@ -32,7 +32,7 @@ class GUITweetItem:public IGUIElement
 {
 	DECLARE_RTTI;
 public: 
-	static const core::string ElementType;
+	static const GUID ElementType;
 protected:
 	ted::TwitterTweet* m_tweet;
 	GUI::FontAttributes m_fontAttrs;

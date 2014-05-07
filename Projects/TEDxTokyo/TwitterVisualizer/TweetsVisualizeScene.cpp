@@ -278,7 +278,7 @@ public:
 			return;
 		if (e == editbox)
 			return;
-		m->SetFocus(editbox);
+	//	m->SetFocus(editbox);
 	}
 	virtual void onEvent(Event* e)
 	{}

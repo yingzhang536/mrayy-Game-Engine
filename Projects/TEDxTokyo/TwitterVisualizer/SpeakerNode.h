@@ -5,12 +5,17 @@
 
 namespace mray
 {
+	namespace ted
+	{
+		class CSpeaker;
+	}
 namespace scene
 {
 
 class SpeakerNode
 {
 protected:
+	ted::CSpeaker* m_speaker;
 public:
 	SpeakerNode();
 	virtual~SpeakerNode();

@@ -104,6 +104,7 @@
     <ClInclude Include="ConnectionLineRenderer.h" />
     <ClInclude Include="CSpeaker.h" />
     <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="GUIProfilePicture.h" />
     <ClInclude Include="GUITweetDetailsPanel.h" />
     <ClInclude Include="GUITweetDetailsPanelLayout.h" />
     <ClInclude Include="IRenderingScene.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="BackgroundEmitter.cpp" />
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="GUIProfilePicture.cpp" />
     <ClCompile Include="GUITweetDetailsPanel.cpp" />
     <ClCompile Include="IRenderingScene.cpp" />
     <ClCompile Include="SessionScene.cpp" />

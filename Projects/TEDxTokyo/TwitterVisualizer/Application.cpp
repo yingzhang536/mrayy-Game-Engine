@@ -23,6 +23,7 @@
 #include "GUISessionSidePanel.h"
 #include "GUISessionDetailsTopPanel.h"
 #include "GUITweetDetailsPanel.h"
+#include "GUIProfilePicture.h"
 
 #include "TwitterService.h"
 
@@ -65,6 +66,7 @@ void Application::init(const OptionContainer &extraOptions)
 		new ted::AppData;
 		gAppData.Load("tedSettings.cfg");
 		gAppData.tweetProvider = new ted::TwitterProvider();
+		new ted::XMLDBHandler(gAppData.GetValue("DB", "Users"), gAppData.GetValue("DB", "Tweets"));
 
 	}
 
@@ -74,7 +76,7 @@ void Application::init(const OptionContainer &extraOptions)
 		gAppData.sessions->LoadFromXML("Sessions.xml");
 	}
 
-	if (false)
+	if (true)
 	{
 		if (gAppData.tweetProvider->IsAuthorized())
 		{
@@ -129,6 +131,7 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUISessionSidePanel);
 		REGISTER_GUIElement_FACTORY(GUISessionDetailsTopPanel);
 		REGISTER_GUIElement_FACTORY(GUITweetDetailsPanel);
+		REGISTER_GUIElement_FACTORY(GUIProfilePicture);
 	}
 
 	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
@@ -140,7 +143,6 @@ void Application::init(const OptionContainer &extraOptions)
 	{
 		try
 		{
-			new ted::XMLDBHandler(gAppData.GetValue("DB", "Users"), gAppData.GetValue("DB", "Tweets"));
 			ted::IDBHandler::getInstance().LoadDB();
 
 		}

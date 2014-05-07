@@ -39,7 +39,7 @@ class GUITweetDetailsPanel :public IGUIPanelElement, public GUITweetDetailsPanel
 {
 	DECLARE_RTTI;
 public:
-	static const core::string ElementType;
+	static const GUID ElementType;
 protected:
 	bool m_active;
 

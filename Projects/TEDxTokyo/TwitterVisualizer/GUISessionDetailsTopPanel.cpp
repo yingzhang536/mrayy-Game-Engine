@@ -12,6 +12,9 @@
 #include "GUIOverlayManager.h"
 #include "GUISessionSidePanel.h"
 
+#include "CSpeaker.h"
+#include "SessionDetails.h"
+
 namespace mray
 {
 namespace GUI
@@ -19,7 +22,7 @@ namespace GUI
 
 
 
-const core::string GUISessionDetailsTopPanel::ElementType = "GUISessionDetailsTopPanel";
+const GUID GUISessionDetailsTopPanel::ElementType = "GUISessionDetailsTopPanel";
 
 float GUISessionDetailsTopPanel_ShrinkSpeed = 150;
 
@@ -39,6 +42,11 @@ GUISessionDetailsTopPanel::~GUISessionDetailsTopPanel()
 {
 }
 
+void GUISessionDetailsTopPanel::SetSidePanel(GUISessionSidePanel* p)
+{
+	m_sidePanel = p;
+	m_sidePanel->OnSpeakerChange += CreateObjectDelegate(GUISessionDetailsTopPanel, this, _OnSpeakerChange);
+}
 bool GUISessionDetailsTopPanel::OnEvent(Event* e)
 {
 	if (e->getType() == ET_Mouse)
@@ -53,6 +61,14 @@ bool GUISessionDetailsTopPanel::OnEvent(Event* e)
 			m_active = false;
 	}
 	return false;
+}
+void GUISessionDetailsTopPanel::_OnSpeakerChange(IObject* sender, PVOID param)
+{
+	ted::CSpeaker* speaker= m_sidePanel->GetActiveSpeaker();
+	ted::SessionDetails* session= speaker->GetSession();
+	SessionName->SetText(session->GetSessionName());
+	SpeakerName->SetText(speaker->GetTwitterID());
+	SpeakerImage->SetSourceImage(speaker->GetPicture());
 }
 
 void GUISessionDetailsTopPanel::Update(float dt)

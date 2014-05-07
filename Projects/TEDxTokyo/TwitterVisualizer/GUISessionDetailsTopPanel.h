@@ -39,20 +39,22 @@ class GUISessionDetailsTopPanel :public IGUIPanelElement,public GUISessionDetail
 {
 	DECLARE_RTTI;
 public:
-	static const core::string ElementType;
+	static const GUID ElementType;
 protected:
 	bool m_active;
 
 	GUI::GUISessionSidePanel* m_sidePanel;
 
 	ted::SessionDetails* m_details;
+
+	void _OnSpeakerChange(IObject* sender, PVOID param);
 public:
 	GUISessionDetailsTopPanel(IGUIManager* m);
 	virtual ~GUISessionDetailsTopPanel();
 
 	void SetSessionDetails(ted::SessionDetails* d);
 
-	void SetSidePanel(GUISessionSidePanel* p){ m_sidePanel = p; }
+	void SetSidePanel(GUISessionSidePanel* p);
 
 	virtual bool OnEvent(Event* e);
 

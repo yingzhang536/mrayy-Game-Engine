@@ -31,6 +31,7 @@ public:
 	RTTI(const char*name,RTTI* parent):m_parent(parent)
 	{
 		m_name=core::StringConverter::toString(name);
+
 		m_guid=m_name;
 	};
 
