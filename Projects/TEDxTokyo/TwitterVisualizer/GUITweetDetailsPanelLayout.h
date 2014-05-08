@@ -13,17 +13,17 @@ public:
 	GUIProfilePicture* TwitterImage;
 	GUIStaticText* TwitterID;
 	GUIStaticText* Details;
-	GUIStaticText* SessionTime;
+	GUIStaticText* TweetTime;
 
 public:
 
-	GUITweetDetailsPanelLayout():Root(0),TwitterImage(0),TwitterID(0),Details(0),SessionTime(0)
+	GUITweetDetailsPanelLayout():Root(0),TwitterImage(0),TwitterID(0),Details(0),TweetTime(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
 		m_elementsMap["TwitterImage"]=(IGUIElement**)&TwitterImage;
 		m_elementsMap["TwitterID"]=(IGUIElement**)&TwitterID;
 		m_elementsMap["Details"]=(IGUIElement**)&Details;
-		m_elementsMap["SessionTime"]=(IGUIElement**)&SessionTime;
+		m_elementsMap["TweetTime"]=(IGUIElement**)&TweetTime;
 
 	}
 

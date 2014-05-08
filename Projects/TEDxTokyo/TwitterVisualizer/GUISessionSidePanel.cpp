@@ -217,7 +217,7 @@ void GUISessionSidePanel::Draw(const math::rectf*vp)
 
 			rc.ULPoint.x = x - sz*0.5*t;
 			rc.BRPoint.x = x + sz*0.5*t;
-			y += step;
+			y += rc.getHeight();
 			float a = m_szT* t;
 			float g = 1-powf(1 - dst,10);// (dst != 0);
 			shader->setConstant(alphaU, &a, 1);

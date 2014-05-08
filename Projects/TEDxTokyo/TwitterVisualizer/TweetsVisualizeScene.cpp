@@ -23,7 +23,7 @@
 #include "GUIManager.h"
 
 #include "TwitterProfileListItem.h"
-#include "GUIScreenLayoutImpl.h"
+#include "GUIScreenLayoutImplV1.h"
 
 #include "GUIUserProfile.h"
 #include "GUITweetItem.h"
@@ -297,7 +297,7 @@ public:
 	math::vector3d m_orbitAngles;
 
 	GUI::IGUIPanelElement* m_guiroot;
-	GUI::GUIScreenLayoutImpl* m_screenLayout;
+	GUI::GUIScreenLayoutImplV1* m_screenLayout;
 
 	std::vector<GUI::GUITweetItem*> m_tweetItems;
 
@@ -428,8 +428,8 @@ void TweetsVisualizeSceneImpl::Init()
 	m_guiMngr->SetRootElement(m_guiroot);
 
 	{
-		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout.gui");
-		m_screenLayout = new GUI::GUIScreenLayoutImpl();
+		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout_V1.gui");
+		m_screenLayout = new GUI::GUIScreenLayoutImplV1();
 		screenOverlay->CreateElements(m_guiMngr, m_guiroot, 0, m_screenLayout);
 
 		g_editboxFocuslistener.editbox = m_screenLayout->UserTxt;

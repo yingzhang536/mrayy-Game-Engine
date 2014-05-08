@@ -3,6 +3,8 @@
 #ifndef SpeakerNode_h__
 #define SpeakerNode_h__
 
+#include "ITedNode.h"
+
 namespace mray
 {
 	namespace ted
@@ -12,14 +14,19 @@ namespace mray
 namespace scene
 {
 
-class SpeakerNode
+class SpeakerNode :public ITedNode
 {
 protected:
 	ted::CSpeaker* m_speaker;
+
+	msa::physics::Particle2D* m_phNode;
 public:
-	SpeakerNode();
+	SpeakerNode(ted::CSpeaker* s);
 	virtual~SpeakerNode();
 
+	void SetPhysics(msa::physics::Particle2D* n){ m_phNode = n; }
+
+	void Draw();
 };
 
 }

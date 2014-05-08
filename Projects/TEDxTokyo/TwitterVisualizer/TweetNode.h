@@ -2,6 +2,8 @@
 #ifndef TweetNode_h__
 #define TweetNode_h__
 
+#include "ITedNode.h"
+
 namespace mray
 {
 	namespace ted
@@ -12,10 +14,12 @@ namespace mray
 namespace scene
 {
 
-class TweetNode
+class TweetNode:public ITedNode
 {
 protected:
+	ted::CSpeaker* m_targetSpeaker;
 	ted::TwitterTweet* m_tweet;
+	msa::physics::Particle2D* m_phNode;
 public:
 	TweetNode();
 	virtual~TweetNode();

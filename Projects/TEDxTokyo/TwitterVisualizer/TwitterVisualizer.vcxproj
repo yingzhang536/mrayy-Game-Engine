@@ -63,7 +63,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;..\..\..\Plugins\mrayTweetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\..\..\plugins\mySqlDBConnection;..\..\..\Engine\mrayOIS;..\..\..\Plugins\mrayParticles;..\..\..\Dependencies\SQLAPI\include;..\..\..\Plugins\mrayTweetLib;msaPhysics\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
@@ -105,15 +105,39 @@
     <ClInclude Include="CSpeaker.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="GUIProfilePicture.h" />
+    <ClInclude Include="GUIScreenLayoutImplV2.h" />
+    <ClInclude Include="GUIScreenLayout_V2.h" />
     <ClInclude Include="GUITweetDetailsPanel.h" />
     <ClInclude Include="GUITweetDetailsPanelLayout.h" />
     <ClInclude Include="IRenderingScene.h" />
+    <ClInclude Include="ITedNode.h" />
+    <ClInclude Include="msaPhysics\msacore-mray.h" />
+    <ClInclude Include="msaPhysics\MSACore.h" />
+    <ClInclude Include="msaPhysics\MSACoreCommon.h" />
+    <ClInclude Include="msaPhysics\MSACoreMath.h" />
+    <ClInclude Include="msaPhysics\MSAObjCPointer.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics2D.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics3D.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsAttraction.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsCallbacks.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsConstraint.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsDataRecorder.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParams.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticle.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleDrawer.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleUpdater.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsSector.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsSpring.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsWorld.h" />
+    <ClInclude Include="PhNode.h" />
+    <ClInclude Include="SessionRenderer.h" />
     <ClInclude Include="SessionScene.h" />
     <ClInclude Include="TweetsVisualizeScene.h" />
     <ClInclude Include="TwitterProvider.h" />
     <ClInclude Include="SQLDBHandler.h" />
-    <ClInclude Include="GUIScreenLayout.h" />
-    <ClInclude Include="GUIScreenLayoutImpl.h" />
+    <ClInclude Include="GUIScreenLayout_V1.h" />
+    <ClInclude Include="GUIScreenLayoutImplV1.h" />
     <ClInclude Include="GUISessionDetailsTopPanel.h" />
     <ClInclude Include="GUISessionSidePanel.h" />
     <ClInclude Include="GUISessionDetailsPanelLayout.h" />
@@ -149,7 +173,12 @@
     <ClCompile Include="GUIProfilePicture.cpp" />
     <ClCompile Include="GUITweetDetailsPanel.cpp" />
     <ClCompile Include="IRenderingScene.cpp" />
+    <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SessionRenderer.cpp" />
     <ClCompile Include="SessionScene.cpp" />
+    <ClCompile Include="SpeakerNode.cpp" />
     <ClCompile Include="TweetsVisualizeScene.cpp" />
     <ClCompile Include="TwitterProvider.cpp" />
     <ClCompile Include="SQLDBHandler.cpp" />
@@ -176,9 +205,10 @@
     <ClCompile Include="XMLDBHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout_V1.gui">
       <FileType>Document</FileType>
     </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui" />
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui" />
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui" />
   </ItemGroup>

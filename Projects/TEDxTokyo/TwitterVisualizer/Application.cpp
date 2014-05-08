@@ -24,6 +24,7 @@
 #include "GUISessionDetailsTopPanel.h"
 #include "GUITweetDetailsPanel.h"
 #include "GUIProfilePicture.h"
+#include "SessionScene.h"
 
 #include "TwitterService.h"
 
@@ -112,11 +113,12 @@ void Application::init(const OptionContainer &extraOptions)
 
 		gImageSetResourceManager.loadImageSet("TedxTokyo.imageset");
 
-		GUI::DynamicFontGenerator* font = new GUI::DynamicFontGenerator();
+		GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
 		font->SetFontName(L"Arial");
 		font->SetTextureSize(1024);
 		font->SetFontResolution(24);
 		font->Init();
+		gFontResourceManager.addResource(font, "Default");
 		gFontResourceManager.setDefaultFont(font);
 	}
 	
@@ -152,7 +154,7 @@ void Application::init(const OptionContainer &extraOptions)
 		}
 	}
 
-	m_scene = new ted::TweetsVisualizeScene();
+	m_scene = new ted::SessionScene();
 	m_scene->Init();
 
 	m_scene->OnEnter();

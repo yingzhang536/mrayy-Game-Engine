@@ -83,7 +83,7 @@ void GUITweetDetailsPanel::Draw(const math::rectf*vp)
 
 
 	core::DateTime dt = core::DateTime::Now();
-	SessionTime->SetText(core::DateTime::ToString(dt));
+	TweetTime->SetText(core::DateTime::ToString(dt));
 
 	if (m_sidePanel)
 	{

@@ -40,9 +40,6 @@
     <Filter Include="Source Files\GUI\interface v1.0">
       <UniqueIdentifier>{4636de2e-aca5-451e-bf64-5bb070ad177c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GUI\interface v1.0\Leap">
-      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Data">
       <UniqueIdentifier>{506e9574-830f-4924-bed7-62c5d5f342a8}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,15 @@
     </Filter>
     <Filter Include="Source Files\DB">
       <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{650f3a35-1fb6-4bd3-8646-283b12b3e047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics\MSA">
+      <UniqueIdentifier>{4587dea7-7e68-4470-9c6c-7f4b72af30bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Leap">
+      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,13 +109,7 @@
       <Filter>Source Files\Particles</Filter>
     </ClInclude>
     <ClInclude Include="LeapDevice.h">
-      <Filter>Source Files\GUI\interface v1.0\Leap</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIScreenLayout.h">
-      <Filter>Source Files\GUI\interface v1.0</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIScreenLayoutImpl.h">
-      <Filter>Source Files\GUI\interface v1.0</Filter>
+      <Filter>Source Files\Leap</Filter>
     </ClInclude>
     <ClInclude Include="GUITweetItem.h">
       <Filter>Source Files\GUI\interface v1.0</Filter>
@@ -183,6 +183,84 @@
     <ClInclude Include="GUIProfilePicture.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
+    <ClInclude Include="PhNode.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics2D.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics3D.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsAttraction.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsCallbacks.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsConstraint.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsDataRecorder.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParams.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticle.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleDrawer.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleUpdater.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSector.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSpring.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsWorld.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACore.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreCommon.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreMath.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\msacore-mray.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAObjCPointer.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV1.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayout_V1.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayout_V2.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV2.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionRenderer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ITedNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -213,7 +291,7 @@
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
     <ClCompile Include="LeapDevice.cpp">
-      <Filter>Source Files\GUI\interface v1.0\Leap</Filter>
+      <Filter>Source Files\Leap</Filter>
     </ClCompile>
     <ClCompile Include="PAVelocityOverTimeInterpolater.cpp">
       <Filter>Source Files\Particles\Particle Effects</Filter>
@@ -269,15 +347,27 @@
     <ClCompile Include="GUIProfilePicture.cpp">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClCompile>
+    <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeakerNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionRenderer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
-      <Filter>Source Files\GUI\interface v1.0</Filter>
-    </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout_V1.gui">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>
