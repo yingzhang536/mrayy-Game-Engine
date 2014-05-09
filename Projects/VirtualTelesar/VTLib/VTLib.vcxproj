@@ -213,9 +213,12 @@
     <ClInclude Include="GUIComponentTreeBox.h" />
     <ClInclude Include="GUISpringTouchElement.h" />
     <ClInclude Include="GUIMotorConnector.h" />
+    <ClInclude Include="IAudioProvider.h" />
+    <ClInclude Include="ICommunicationProvider.h" />
     <ClInclude Include="IForceFeedbackDriver.h" />
     <ClInclude Include="IRobotJointComponent.h" />
     <ClInclude Include="ISensorModulator.h" />
+    <ClInclude Include="IVisualProvider.h" />
     <ClInclude Include="IVTDebugInterface.h" />
     <ClInclude Include="KinBodyControlComponent.h" />
     <ClInclude Include="LinkDebugComponent.h" />

@@ -8,19 +8,36 @@
 #include "TwitterService.h"
 #include "AppData.h"
 
+#include "CMutexVar.h"
+#include "IThreadFunction.h"
+#include "IThread.h"
+#include "IThreadManager.h"
+
 namespace mray
 {
 namespace ted
 {
 
 
+	class GetTweetsAsyncedData
+	{
+	public:
+		core::stringw keyword;
+		uint since;
+		uint count;
+		ITwitterProviderListener* callback;
+	};
 
-class TwitterProviderImpl
+
+class TwitterProviderImpl:public OS::IThreadFunction
 {
 public:
 
 	Twitter::TwitterService* service;
 	bool authorized;
+	typedef std::list<GetTweetsAsyncedData> TweetsAsyncList;
+	OS::CMutexVar<TweetsAsyncList> tweetsReq;
+	OS::IThreadPtr asyncThread;
 
 	TwitterProviderImpl()
 	{
@@ -36,6 +53,38 @@ public:
 			gLogManager.log("Twitter Authentication failed!", ELL_WARNING);
 		}else
 			authorized=true;
+
+		asyncThread = OS::IThreadManager::getInstance().createThread(this);
+		asyncThread->start(0);
+		tweetsReq.setMutex(OS::IThreadManager::getInstance().createMutex());
+	}
+
+	~TwitterProviderImpl()
+	{
+		asyncThread->terminate();
+		OS::IThreadManager::getInstance().killThread(asyncThread);
+		asyncThread = 0;
+	}
+	virtual void execute(OS::IThread*caller, void*arg)
+	{
+		while (caller->isActive())
+		{
+			if (tweetsReq().size() == 0)
+			{
+				Sleep(50);
+				continue;;
+			}
+			GetTweetsAsyncedData d;
+			tweetsReq.lock();
+			d=*tweetsReq().begin();
+			tweetsReq().erase(tweetsReq().begin());
+			tweetsReq.unlock();
+
+			std::vector<TwitterTweet*> tweets;
+			this->GetTweetsSynced(d.keyword, d.since, d.count, tweets);
+			d.callback->OnTweetsLoaded(tweets);
+
+		}
 	}
 
 	void Parse(const Twitter::User& in, TwitterUserProfile& out)
@@ -96,6 +145,41 @@ public:
 			out.replyToTweet = TwitterTweet::GetTweetByID(in.in_reply_to_status_id, false);
 	}
 
+	void GetTweetsSynced(const core::stringw& keyword, uint since, uint count, std::vector<TwitterTweet*>& tweets)
+	{
+		Twitter::TweetSearchResult res;
+		Twitter::TwitterSearchOptions op;
+		op.Q = ConvertToUtf8(keyword);
+		op.count = count;
+		op.sinceID = since;
+		if (!service->Search(op, res))
+			return;
+
+		tweets.reserve(res.tweets.size());
+		for (int i = 0; i < res.tweets.size(); ++i)
+		{
+			TwitterTweet* t = new TwitterTweet();
+			Parse(res.tweets[i], *t);
+			TwitterTweet::AddTwitterTweet(t);
+			tweets.push_back(t);
+		}
+		//resolve IDs
+		for (int i = 0; i < res.tweets.size(); ++i)
+		{
+			ResolveID(res.tweets[i], *tweets[i]);
+		}
+	}
+	void GetTweetsAsynced(const core::stringw& keyword, uint since, uint count,ITwitterProviderListener* callback)
+	{
+		GetTweetsAsyncedData d;
+		d.keyword = keyword;
+		d.since = since;
+		d.count = count;
+		d.callback = callback;
+		tweetsReq.lock();
+		tweetsReq().push_back(d);
+		tweetsReq.unlock();
+	}
 };
 
 
@@ -129,29 +213,14 @@ bool TwitterProvider::IsAuthorized()
 	return m_impl->authorized;
 }
 
-void TwitterProvider::GetTweets(const core::stringw& keyword, uint since, uint count, std::vector<TwitterTweet*>& tweets)
+void TwitterProvider::GetTweetsSynced(const core::stringw& keyword, uint since, uint count, std::vector<TwitterTweet*>& tweets)
 {
-	Twitter::TweetSearchResult res;
-	Twitter::TwitterSearchOptions op;
-	op.Q = ConvertToUtf8(keyword);
-	op.count = count;
-	op.sinceID = since;
-	if (!m_impl->service->Search(op, res))
-		return;
+	m_impl->GetTweetsSynced(keyword, since, count, tweets);
+}
 
-	tweets.reserve(res.tweets.size());
-	for (int i = 0; i < res.tweets.size();++i)
-	{
-		TwitterTweet* t = new TwitterTweet();
-		m_impl->Parse(res.tweets[i], *t);
-		TwitterTweet::AddTwitterTweet(t);
-		tweets.push_back(t);
-	}
-	//resolve IDs
-	for (int i = 0; i < res.tweets.size(); ++i)
-	{
-		m_impl->ResolveID(res.tweets[i], *tweets[i]);
-	}
+void TwitterProvider::GetTweetsAsynced(const core::stringw& keyword, uint since, uint count, ITwitterProviderListener* callback)
+{
+	m_impl->GetTweetsAsynced(keyword, since, count, callback);
 }
 
 }

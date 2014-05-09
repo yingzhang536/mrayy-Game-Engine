@@ -261,6 +261,9 @@
     <ClInclude Include="ITedNode.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="GUISessionSidePanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -368,6 +371,9 @@
       <Filter>Source Files\GUI\interface v1.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUISessionSidePanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>

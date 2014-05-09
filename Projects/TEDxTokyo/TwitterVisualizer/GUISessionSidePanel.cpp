@@ -11,6 +11,8 @@
 #include "ShaderResourceManager.h"
 #include "ImageSetResourceManager.h"
 
+#include "GUIOverlayManager.h"
+#include "GUIOverlay.h"
 
 namespace mray
 {
@@ -18,7 +20,7 @@ namespace GUI
 {
 
 
-IMPLEMENT_RTTI(GUISessionSidePanel, IGUIElement);
+IMPLEMENT_RTTI(GUISessionSidePanel, IGUIPanelElement);
 
 const GUID GUISessionSidePanel::ElementType = "GUISessionSidePanel";
 
@@ -37,7 +39,7 @@ const core::string GUISessionSidePanel::ProfileRedneringShader =
 	return half4(clr.rgb,dst*alpha);\
 	}";
 GUISessionSidePanel::GUISessionSidePanel(IGUIManager* m):
-IGUIElement(ElementType,m)
+IGUIPanelElement(ElementType, m)
 {
 	m_minWidth = 40;
 	m_maxWidth = 100;
@@ -53,6 +55,12 @@ IGUIElement(ElementType,m)
 		shader = gShaderResourceManager.loadShader(ProfileRedneringShader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
 		shader->setResourceName("ProfileRendering");
 		gShaderResourceManager.addResource(shader, "ProfileRendering");
+	}
+
+	GUI::GUIOverlay* o = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUISessionSidePanelLayout.GUI");
+	if (o)
+	{
+		o->CreateElements(m, this, this, this);
 	}
 }
 GUISessionSidePanel::~GUISessionSidePanel()
@@ -119,7 +127,8 @@ void GUISessionSidePanel::_SetCurrentSpeaker(int s)
 }
 void GUISessionSidePanel::Update(float dt)
 {
-	IGUIElement::Update(dt);
+	IGUIPanelElement::Update(dt);
+
 
 #define DECREASE(x,l,v) if(x>(l)){ x-=(v);} if(x<(l)){x=(l);}
 #define INCREASE(x,l,v) if(x<(l)){ x+=(v);} if(x>(l)){x=(l);}
@@ -227,6 +236,8 @@ void GUISessionSidePanel::Draw(const math::rectf*vp)
 		if (shader)
 			dev->setFragmentShader(0);
 	}
+
+	IGUIPanelElement::Draw(vp);
 
 }
 

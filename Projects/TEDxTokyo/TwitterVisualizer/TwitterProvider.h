@@ -15,6 +15,12 @@ namespace ted
 
 	class TwitterProviderImpl;
 
+	class ITwitterProviderListener
+	{
+	public:
+		virtual void OnTweetsLoaded(const std::vector<TwitterTweet*>& tweets){}
+	};
+
 class TwitterProvider
 {
 protected:
@@ -26,8 +32,12 @@ public:
 	TwitterUserProfile* GetUserByName(const core::stringw& name);
 	TwitterUserProfile* GetUserByID(IDType id);
 	TwitterTweet* GetTweetByID(uint ID);
-	void GetTweets(const core::stringw& keyword, uint since,uint count,
+	void GetTweetsSynced(const core::stringw& keyword, uint since,uint count,
 		std::vector<TwitterTweet*>& tweets) ;
+
+	void GetTweetsAsynced(const core::stringw& keyword, uint since, uint count,
+		ITwitterProviderListener* callback);
+
 
 	bool IsAuthorized();
 

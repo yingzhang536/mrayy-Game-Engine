@@ -107,6 +107,7 @@
     <ClInclude Include="GUIProfilePicture.h" />
     <ClInclude Include="GUIScreenLayoutImplV2.h" />
     <ClInclude Include="GUIScreenLayout_V2.h" />
+    <ClInclude Include="GUISessionSidePanelLayout.h" />
     <ClInclude Include="GUITweetDetailsPanel.h" />
     <ClInclude Include="GUITweetDetailsPanelLayout.h" />
     <ClInclude Include="IRenderingScene.h" />
@@ -210,6 +211,7 @@
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui" />
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui" />
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUISessionSidePanelLayout.gui" />
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

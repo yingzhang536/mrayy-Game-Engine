@@ -59,7 +59,7 @@ void SessionScene::Init()
 	m_guiMngr->SetRootElement(m_guiroot);
 
 	{
-		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout_V1.gui");
+		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout_V2.gui");
 		m_screenLayout = new GUI::GUIScreenLayoutImplV2();
 		screenOverlay->CreateElements(m_guiMngr, m_guiroot, 0, m_screenLayout);
 	}

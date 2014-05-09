@@ -1,8 +1,10 @@
 #ifndef GUISessionSidePanel_h__
 #define GUISessionSidePanel_h__
 
-#include "IGUIElement.h"
+#include "IGUIPanelElement.h"
 #include "GUIElementFactoryDef.h"
+#include "GUISessionSidePanelLayout.h"
+
 
 namespace mray
 {
@@ -14,7 +16,7 @@ namespace ted
 namespace GUI
 {
 
-class GUISessionSidePanel:public IGUIElement
+class GUISessionSidePanel :public IGUIPanelElement, public GUISessionSidePanelLayout
 {
 	DECLARE_RTTI;
 public:
