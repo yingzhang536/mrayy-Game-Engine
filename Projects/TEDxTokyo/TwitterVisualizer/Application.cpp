@@ -61,18 +61,6 @@ void Application::onEvent(Event* event)
 		m_scene->OnEvent(event, rc);
 }
 
-class TwitterProviderListener:public ted::ITwitterProviderListener
-{
-public:
-	virtual void OnTweetsLoaded(const std::vector<ted::TwitterTweet*>& tweets)
-	{
-		printf("Tweets Loaded: %d\n", tweets.size());
-		for (int i = 0; i < tweets.size();++i)
-		{
-			wprintf(L"Tweet[%s]: %s\n", tweets[i]->user->displayName.c_str(), tweets[i]->text.c_str());
-		}
-	}
-}g_cb;
 void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
@@ -91,29 +79,6 @@ void Application::init(const OptionContainer &extraOptions)
 		gAppData.sessions->LoadFromXML("Sessions.xml");
 	}
 
-	if (true)
-	{
-		if (gAppData.tweetProvider->IsAuthorized())
-		{
-			std::vector<ted::TwitterTweet*> tweets;
-			gAppData.tweetProvider->GetTweetsAsynced(L"tedxtokyo", 0, 100, &g_cb);
-			/*
-			{
-				Twitter::UserSearchOptions op;
-				Twitter::UserSearchResult res;
-				op.screenName = "tedxtokyo";
-				service.SearchForUser(op, res);
-			}{
-				Twitter::TwitterSearchOptions op;
-				op.Q = "#Syria";
-				op.count = 50;
-				Twitter::TweetSearchResult res;
-				service.Search(op, res);
-			}*/
-		}
-
-
-	}
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
 	network::createWin32Network();

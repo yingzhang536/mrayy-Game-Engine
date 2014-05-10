@@ -180,6 +180,7 @@
     <ClCompile Include="SessionRenderer.cpp" />
     <ClCompile Include="SessionScene.cpp" />
     <ClCompile Include="SpeakerNode.cpp" />
+    <ClCompile Include="TweetNode.cpp" />
     <ClCompile Include="TweetsVisualizeScene.cpp" />
     <ClCompile Include="TwitterProvider.cpp" />
     <ClCompile Include="SQLDBHandler.cpp" />

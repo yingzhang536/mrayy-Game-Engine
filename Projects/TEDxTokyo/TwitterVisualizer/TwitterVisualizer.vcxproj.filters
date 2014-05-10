@@ -359,6 +359,9 @@
     <ClCompile Include="SessionRenderer.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="TweetNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui">

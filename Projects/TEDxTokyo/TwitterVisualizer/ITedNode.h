@@ -28,10 +28,13 @@ namespace scene
 class ITedNode
 {
 protected:
+	msa::physics::Particle2D* m_phNode;
 public:
-	ITedNode(){}
+	ITedNode() :m_phNode(0) {}
 	virtual ~ITedNode(){}
 
+	void SetPhysics(msa::physics::Particle2D* n){ m_phNode = n; }
+	msa::physics::Particle2D* GetPhysics(){ return m_phNode ; }
 	virtual void Update(float dt){}
 	virtual void Draw(){}
 };

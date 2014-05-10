@@ -13,7 +13,6 @@ namespace scene
 SpeakerNode::SpeakerNode(ted::CSpeaker* s)
 {
 	m_speaker = s;
-	m_phNode = 0;
 }
 SpeakerNode::~SpeakerNode()
 {

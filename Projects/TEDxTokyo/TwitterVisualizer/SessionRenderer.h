@@ -17,7 +17,7 @@
 #ifndef __SessionRenderer__
 #define __SessionRenderer__
 
-
+#include "IMutex.h"
 
 
 namespace mray
@@ -42,6 +42,7 @@ protected:
 	std::vector<SpeakerNode*> m_speakers;
 	std::vector<TweetNode*> m_tweets;
 	msa::physics::World2D* m_physics;
+	OS::IMutex* m_dataMutex;
 public:
 	SessionRenderer();
 	virtual ~SessionRenderer();
@@ -49,6 +50,8 @@ public:
 	void SetSessions(ted::SessionContainer*sessions);
 
 	void _OnSpeakerChanged(ted::CSpeaker*s);
+
+	void AddTweetsNodes(const std::vector<TweetNode*> &nodes);
 
 	void Draw();
 

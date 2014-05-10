@@ -16,6 +16,7 @@ IStream::IStream()
 IStream::IStream(const  core::string&name,FILE_MODE mode){
 	m_streamName=name;
 	m_mode=mode;
+	m_length = 0;
 }
 
 IStream::~IStream(){

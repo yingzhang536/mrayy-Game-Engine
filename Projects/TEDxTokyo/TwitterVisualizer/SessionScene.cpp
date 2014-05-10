@@ -14,7 +14,11 @@
 #include "SceneManager.h"
 
 #include "SessionRenderer.h"
+#include "AppData.h"
+#include "TwitterProvider.h"
+#include "TwitterTweet.h"
 
+#include "TweetNode.h"
 
 namespace mray
 {
@@ -22,6 +26,26 @@ namespace ted
 {
 
 
+	class TwitterProviderListener :public ted::ITwitterProviderListener
+	{
+	public:
+		scene::SessionRenderer* r;
+		virtual void OnTweetsLoaded(const std::vector<ted::TwitterTweet*>& tweets)
+		{
+			printf("Tweets Loaded: %d\n", tweets.size());
+			std::vector<scene::TweetNode*> nodes;
+			for (int i = 0; i < tweets.size(); ++i)
+			{
+				if (true||tweets[i]->text.find(L"#TEDxTokyo") != -1)
+				{
+					scene::TweetNode* n = new scene::TweetNode(0, tweets[i]);
+					nodes.push_back(n);
+				}else
+					delete tweets[i];
+			}
+			r->AddTweetsNodes(nodes);
+		}
+	}g_cb;
 
 SessionScene::SessionScene()
 {
@@ -67,6 +91,17 @@ void SessionScene::Init()
 		m_sessionRenderer = new scene::SessionRenderer();
 		m_sessionRenderer->SetSessions(gAppData.sessions);
 	}
+	if (true)
+	{
+		g_cb.r = m_sessionRenderer;
+		if (gAppData.tweetProvider->IsAuthorized())
+		{
+			std::vector<ted::TwitterTweet*> tweets;
+			gAppData.tweetProvider->GetTweetsAsynced(L"tedxtokyo", 0, 100, &g_cb);
+		}
+
+
+	}
 }
 
 void SessionScene::OnEnter()
@@ -89,6 +124,7 @@ void SessionScene::Update(float dt)
 {
 	m_sceneManager->update(dt);
 	m_guiMngr->Update(dt);
+	m_sessionRenderer->Update(dt);
 
 }
 

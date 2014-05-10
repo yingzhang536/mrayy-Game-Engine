@@ -17,7 +17,7 @@ namespace network
 
 InternetCacheManager::InternetCacheManager()
 {
-	SetCachePath(".\\Cache\\");
+	SetCachePath("Cache\\");
 }
 
 InternetCacheManager::~InternetCacheManager()
@@ -74,8 +74,9 @@ OS::IStreamPtr InternetCacheManager::AddCachedItem(OS::IStream* stream)
 		return OS::IStreamPtr::Null;
 	m_cachedItems[itemGUID.ID()] = item;
 
+	core::string pa= gFileSystem.getAppPath();
 
-	OS::IStreamPtr outS = gFileSystem.createBinaryFileWriter(item.path);
+	OS::IStreamPtr outS = gFileSystem.createBinaryFileWriter(pa+item.path);
 	stream->seek(0, OS::ESeek_Set);
 	byte buffer[1024];
 	while (!stream->eof())
@@ -110,6 +111,7 @@ OS::IStreamPtr InternetCacheManager::GetOrCreateItem(const core::string& url)
 			return OS::IStreamPtr::Null;
 		}
 		stream= AddCachedItem(req->GetStream());
+		stream->reopen(OS::BIN_READ);
 	}
 	return stream;
 }

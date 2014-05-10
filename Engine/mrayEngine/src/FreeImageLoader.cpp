@@ -82,12 +82,13 @@ bool FreeImageLoader::load(OS::IStream* file,video::ImageInfo* t2d,video::ETextu
 	//image width and height
 	unsigned int width(0), height(0);
 
-	byte* data;//=new byte[file->length()];
+	byte* data = new byte[file->length()];
 	//file->read(data,file->length());
-	int length=file->readToEnd((void**)&data);
+	DWORD sz=0;
 
-
-	FIMEMORY*mem=FreeImage_OpenMemory(data,length);
+	FIMEMORY* mem = FreeImage_OpenMemory((BYTE*)data, static_cast<DWORD>(file->length()));
+	//FreeImage_AcquireMemory(mem, &data, &sz);
+	file->read(data, file->length());
 
 	//check that the plugin has reading capabilities and load the file
 	if(FreeImage_FIFSupportsReading(m_FTType))
@@ -266,11 +267,13 @@ bool FreeImageLoader::canLoad(OS::IStream* file){
 		return false;
 	if(file->isStream())
 		return false;
-	FIMEMORY* fiMem = FreeImage_OpenMemory((BYTE*)0, static_cast<DWORD>(file->length()));
-	file->read(fiMem->data, file->length());
+	byte* data = new byte[file->length()];
+	FIMEMORY* fiMem = FreeImage_OpenMemory((BYTE*)data, static_cast<DWORD>(file->length()));
+	file->read(data, file->length());
 
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(fiMem, (int)file->length());
 	FreeImage_CloseMemory(fiMem);
+	delete[] data;
 	//image format
 //	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 	//check the file signature and deduce its format

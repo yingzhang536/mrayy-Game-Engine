@@ -9,6 +9,7 @@ namespace mray
 	namespace ted
 	{
 		class TwitterTweet;
+		class CSpeaker;
 	}
 
 namespace scene
@@ -19,10 +20,12 @@ class TweetNode:public ITedNode
 protected:
 	ted::CSpeaker* m_targetSpeaker;
 	ted::TwitterTweet* m_tweet;
-	msa::physics::Particle2D* m_phNode;
+	video::TextureUnit m_texture;
 public:
-	TweetNode();
+	TweetNode(ted::CSpeaker* s,ted::TwitterTweet* t);
 	virtual~TweetNode();
+
+	void Draw();
 };
 
 }
