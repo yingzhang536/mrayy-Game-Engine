@@ -20,8 +20,8 @@ namespace mray
 namespace ted
 {
 
-
-	class SessionScene :public IRenderingScene, public nui::ILeapListener
+class TwitterProviderListener;
+class SessionScene :public IRenderingScene, public nui::ILeapListener
 {
 protected:
 	GUI::IGUIPanelElement* m_guiroot;
@@ -34,6 +34,7 @@ protected:
 	scene::ViewPort* m_vp;
 
 	scene::SessionRenderer* m_sessionRenderer;
+	TwitterProviderListener* m_providerListener;
 
 public:
 	SessionScene();

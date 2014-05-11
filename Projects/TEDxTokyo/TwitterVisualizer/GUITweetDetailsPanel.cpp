@@ -11,6 +11,8 @@
 #include "GUIOverlay.h"
 #include "GUIOverlayManager.h"
 #include "GUISessionSidePanel.h"
+#include "TwitterTweet.h"
+#include "TwitterUserProfile.h"
 
 namespace mray
 {
@@ -28,7 +30,7 @@ GUITweetDetailsPanel::GUITweetDetailsPanel(IGUIManager* m) :
 {
 	m_active = false;
 	m_sidePanel = 0;
-
+	m_tweet = 0;
 	GUI::GUIOverlay* o = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUITweetDetailsPanelLayout.GUI");
 	if (o)
 	{
@@ -39,6 +41,15 @@ GUITweetDetailsPanel::~GUITweetDetailsPanel()
 {
 }
 
+void GUITweetDetailsPanel::SetTweet(ted::TwitterTweet* t)
+{
+	m_tweet = t;
+	if (m_tweet)
+	{
+		TwitterID->SetText(t->user->name);
+		Details->SetText(t->text);
+	}
+}
 bool GUITweetDetailsPanel::OnEvent(Event* e)
 {
 	if (e->getType() == ET_Mouse)
@@ -48,6 +59,7 @@ bool GUITweetDetailsPanel::OnEvent(Event* e)
 		if (r->GetClippedRect().IsPointInside(evt->pos))
 		{
 			m_active = true;
+			return true;
 		}
 		else
 			m_active = false;

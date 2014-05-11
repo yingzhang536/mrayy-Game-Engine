@@ -3,7 +3,9 @@
 #include "stdafx.h"
 #include "SpeakerNode.h"
 #include "CSpeaker.h"
+#include "ShaderResourceManager.h"
 
+#include "TweetNode.h"
 
 namespace mray
 {
@@ -28,11 +30,23 @@ void SpeakerNode::Draw()
 		pos=m_phNode->getPosition();
 
 	video::IVideoDevice* dev= Engine::getInstance().getDevice();
-	
+
+	video::IGPUShaderProgram *shader = (video::IGPUShaderProgram*)gShaderResourceManager.getResource("ProfileMasking").pointer();
+	if (shader)
+	{
+		dev->setFragmentShader(shader);
+		float a = 1;
+		shader->setConstant("Alpha", &a, 1);
+	}
 	video::TextureUnit tex;
 	tex.SetTexture(m_speaker->GetTexture());
 	dev->useTexture(0, &tex);
-	dev->draw2DImage(math::rectf(pos - 20, pos + 20), 1);
+	dev->draw2DImage(math::rectf(pos - m_sz*0.5f, pos + m_sz*0.5f), 1);
+
+	for (int i = 0; i < m_subTweets.size(); ++i)
+	{
+		m_subTweets[i]->Draw();
+	}
 }
 
 }

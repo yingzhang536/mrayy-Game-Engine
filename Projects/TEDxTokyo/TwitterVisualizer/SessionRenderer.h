@@ -53,6 +53,8 @@ public:
 
 	void AddTweetsNodes(const std::vector<TweetNode*> &nodes);
 
+	ITedNode* GetNodeFromPosition(const math::vector2d& pos);
+
 	void Draw();
 
 	void Update(float dt);

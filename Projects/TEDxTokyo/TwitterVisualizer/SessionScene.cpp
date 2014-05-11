@@ -19,6 +19,8 @@
 #include "TwitterTweet.h"
 
 #include "TweetNode.h"
+#include "IThreadFunction.h"
+#include "IThreadManager.h"
 
 namespace mray
 {
@@ -26,16 +28,47 @@ namespace ted
 {
 
 
-	class TwitterProviderListener :public ted::ITwitterProviderListener
+	class TwitterProviderListener :public ted::ITwitterProviderListener,public OS::IThreadFunction
 	{
+	protected:
+		float m_lastTime;
+		OS::IThreadPtr m_thread;
+		ted::IDType m_sinceID;
 	public:
 		scene::SessionRenderer* r;
+		float interval;
+	public:
+
+		TwitterProviderListener()
+		{
+			interval = 5000;
+			m_sinceID = 0;
+		}
+		~TwitterProviderListener()
+		{
+			Stop();
+		}
+
+		void Start()
+		{
+			m_thread = OS::IThreadManager::getInstance().createThread(this);
+			m_thread->start(0);
+			m_lastTime = 0;
+
+		}
+		void Stop()
+		{
+			OS::IThreadManager::getInstance().killThread(m_thread);
+			m_thread = 0;
+		}
 		virtual void OnTweetsLoaded(const std::vector<ted::TwitterTweet*>& tweets)
 		{
 			printf("Tweets Loaded: %d\n", tweets.size());
 			std::vector<scene::TweetNode*> nodes;
 			for (int i = 0; i < tweets.size(); ++i)
 			{
+				if (tweets[i]->ID>m_sinceID)
+					m_sinceID = tweets[i]->ID;
 				if (true||tweets[i]->text.find(L"#TEDxTokyo") != -1)
 				{
 					scene::TweetNode* n = new scene::TweetNode(0, tweets[i]);
@@ -45,14 +78,32 @@ namespace ted
 			}
 			r->AddTweetsNodes(nodes);
 		}
-	}g_cb;
+		virtual void execute(OS::IThread*caller, void*arg)
+		{
+			while (caller->isActive())
+			{
+				float t = gTimer.getActualTimeAccurate();
+				float dt = (t - m_lastTime);
+				if (dt > interval)
+				{
+					std::vector<ted::TwitterTweet*> tweets;
+					gAppData.tweetProvider->GetTweetsSynced(L"#syria ", m_sinceID, 100, tweets);
+					OnTweetsLoaded(tweets);
+					m_lastTime = gTimer.getActualTimeAccurate();
+				}
+			}
+		}
+
+	};
 
 SessionScene::SessionScene()
 {
+	m_providerListener = new TwitterProviderListener;
 }
 
 SessionScene::~SessionScene()
 {
+	delete m_providerListener;
 }
 
 
@@ -93,11 +144,11 @@ void SessionScene::Init()
 	}
 	if (true)
 	{
-		g_cb.r = m_sessionRenderer;
+		m_providerListener->r = m_sessionRenderer;
+		
 		if (gAppData.tweetProvider->IsAuthorized())
 		{
-			std::vector<ted::TwitterTweet*> tweets;
-			gAppData.tweetProvider->GetTweetsAsynced(L"tedxtokyo", 0, 100, &g_cb);
+			m_providerListener->Start();
 		}
 
 
@@ -117,7 +168,21 @@ void SessionScene::OnExit()
 
 bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 {
-	return m_guiMngr->OnEvent(e, &rc);
+	if (m_guiMngr->OnEvent(e, &rc))
+		return true;
+
+	if (e->getType() == ET_Mouse)
+	{
+		MouseEvent *evt = (MouseEvent *)e;
+		scene::ITedNode* node= m_sessionRenderer->GetNodeFromPosition(evt->pos);
+		if (dynamic_cast<scene::TweetNode*>( node))
+		{
+			ted::TwitterTweet* t= dynamic_cast<scene::TweetNode*>(node)->GetTweet();
+			m_screenLayout->TweetDetails->SetTweet(t);
+		}
+	}
+
+	return false;
 }
 
 void SessionScene::Update(float dt)

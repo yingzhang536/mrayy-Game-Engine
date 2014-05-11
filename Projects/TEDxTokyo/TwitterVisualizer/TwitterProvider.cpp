@@ -145,7 +145,7 @@ public:
 			out.replyToTweet = TwitterTweet::GetTweetByID(in.in_reply_to_status_id, false);
 	}
 
-	void GetTweetsSynced(const core::stringw& keyword, uint since, uint count, std::vector<TwitterTweet*>& tweets)
+	void GetTweetsSynced(const core::stringw& keyword, IDType since, uint count, std::vector<TwitterTweet*>& tweets)
 	{
 		Twitter::TweetSearchResult res;
 		Twitter::TwitterSearchOptions op;
@@ -169,7 +169,7 @@ public:
 			ResolveID(res.tweets[i], *tweets[i]);
 		}
 	}
-	void GetTweetsAsynced(const core::stringw& keyword, uint since, uint count,ITwitterProviderListener* callback)
+	void GetTweetsAsynced(const core::stringw& keyword, IDType since, uint count, ITwitterProviderListener* callback)
 	{
 		GetTweetsAsyncedData d;
 		d.keyword = keyword;
@@ -202,7 +202,7 @@ TwitterUserProfile* TwitterProvider::GetUserByID(IDType id)
 
 	return 0;
 }
-TwitterTweet* TwitterProvider::GetTweetByID(uint ID)
+TwitterTweet* TwitterProvider::GetTweetByID(IDType ID)
 {
 	return 0;
 
@@ -213,12 +213,12 @@ bool TwitterProvider::IsAuthorized()
 	return m_impl->authorized;
 }
 
-void TwitterProvider::GetTweetsSynced(const core::stringw& keyword, uint since, uint count, std::vector<TwitterTweet*>& tweets)
+void TwitterProvider::GetTweetsSynced(const core::stringw& keyword, IDType since, uint count, std::vector<TwitterTweet*>& tweets)
 {
 	m_impl->GetTweetsSynced(keyword, since, count, tweets);
 }
 
-void TwitterProvider::GetTweetsAsynced(const core::stringw& keyword, uint since, uint count, ITwitterProviderListener* callback)
+void TwitterProvider::GetTweetsAsynced(const core::stringw& keyword, IDType since, uint count, ITwitterProviderListener* callback)
 {
 	m_impl->GetTweetsAsynced(keyword, since, count, callback);
 }

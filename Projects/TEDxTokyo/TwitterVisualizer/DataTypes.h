@@ -23,7 +23,7 @@ namespace mray
 namespace ted
 {
 
-	typedef uint IDType;
+	typedef unsigned long long IDType;
 
 	core::stringw ConvertToStringW(const char* multibyte, int cnt);
 	core::stringw ConvertToUtf16(const core::string& utf8);

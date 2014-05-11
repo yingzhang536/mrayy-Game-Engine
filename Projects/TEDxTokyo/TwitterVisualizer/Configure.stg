@@ -1,6 +1,6 @@
 Settings{
 	Bits	"24"
-	Debugging	"Yes"
+	Debugging	"No"
 	Fullscreen	"False"
 	Monitor	"0"
 	Multisample	"0"

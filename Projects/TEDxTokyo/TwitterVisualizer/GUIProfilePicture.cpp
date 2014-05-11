@@ -20,12 +20,12 @@ namespace GUI
 
 	const core::string ProfileMaskingshader =
 		"float4 main_fp(float2 texCoord : TEXCOORD0, \
-		uniform sampler2D texA : register(s0)) : COLOR \
+		uniform sampler2D texA : register(s0),uniform float Alpha) : COLOR \
 		{\
 		vec4 clr=tex2D(texA,texCoord);\
 		float2 v=(texCoord-0.5);\
 		float dst=dot(v,v);\
-		dst=dst>0.25?0:1;\
+		dst=dst>0.25?0:Alpha;\
 		return float4(clr.rgb,dst);\
 		}";
 
@@ -57,7 +57,11 @@ void GUIProfilePicture::Draw(const math::rectf*vp)
 	video::IVideoDevice*device = creator->GetDevice();
 	video::IGPUShaderProgram *shader = (video::IGPUShaderProgram*)gShaderResourceManager.getResource("ProfileMasking").pointer();
 	if (shader)
+	{
 		device->setFragmentShader(shader);
+		float a = GetDerivedAlpha();
+		shader->setConstant("Alpha", &a,1);
+	}
 	creator->GetRenderQueue()->AddQuad(m_textureUnit, clip, m_texCoords, video::SColor(GetColor().R, GetColor().G, GetColor().B, GetDerivedAlpha()));
 	creator->GetRenderQueue()->Flush();
 	if (shader)

@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mrayTweetLib", "..\..\Plugi
 		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C} = {00175D8C-EA44-48AE-AC59-B3B7BE04E65C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSONCpp", "..\..\Dependencies\jsoncpp\JSONCpp.vcxproj", "{32045109-F1BD-4DF1-8196-30C4E1118493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Debug|Win32.Build.0 = Debug|Win32
 		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Release|Win32.ActiveCfg = Release|Win32
 		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Release|Win32.Build.0 = Release|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Debug|Win32.ActiveCfg = Debug|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Debug|Win32.Build.0 = Debug|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Release|Win32.ActiveCfg = Release|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

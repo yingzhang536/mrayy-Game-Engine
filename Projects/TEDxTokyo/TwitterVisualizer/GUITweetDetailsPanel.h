@@ -29,6 +29,7 @@ namespace mray
 namespace ted
 {
 class SessionDetails;
+class TwitterTweet;
 }
 namespace GUI
 {
@@ -44,11 +45,12 @@ protected:
 	bool m_active;
 
 	GUI::GUISessionSidePanel* m_sidePanel;
-
+	ted::TwitterTweet* m_tweet;
 public:
 	GUITweetDetailsPanel(IGUIManager* m);
 	virtual ~GUITweetDetailsPanel();
 
+	void SetTweet(ted::TwitterTweet* t);
 
 	void SetSidePanel(GUISessionSidePanel* p){ m_sidePanel = p; }
 

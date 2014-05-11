@@ -18,7 +18,7 @@ struct TwitterSearchOptions
 	}
 	core::string Q;
 	uint count;	//0 means ignore
-	unsigned long sinceID; // 0 means ignore
+	IDType sinceID; // 0 means ignore
 	bool include_entities;
 };
 

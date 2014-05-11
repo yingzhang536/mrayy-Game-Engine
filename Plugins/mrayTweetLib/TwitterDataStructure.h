@@ -12,7 +12,7 @@ namespace mray
 namespace Twitter
 {
 
-	typedef uint IDType;
+	typedef unsigned long long IDType;
 
 	class User
 	{

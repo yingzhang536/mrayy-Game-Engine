@@ -254,7 +254,7 @@ static bool parseUser(Json::Value &value, User& u)
 static bool parseUserMention(Json::Value& value, Tweet::UserMention& u)
 {
 
-	u.id = value["id"].asDouble();
+	u.id = value["id"].asUInt();
 // 	utf8_to_utf16(value["name"].asCString(), u.name);
 // 	utf8_to_utf16(value["screen_name"].asCString(), u.screen_name);
 
@@ -264,11 +264,11 @@ static bool parseUserMention(Json::Value& value, Tweet::UserMention& u)
 }
 static bool parseTweet(Json::Value &value, Tweet& tweet)
 {
-	tweet.id = value["id"].asDouble();
+	tweet.id = value["id"].asUInt();
 	//tweet.created_at = value["created_at"].as();
 	tweet.in_reply_to_screen_name = value["in_reply_to_screen_name"].asString();
-	tweet.in_reply_to_status_id = value["in_reply_to_status_id"].asDouble();
-	tweet.in_reply_to_user_id = value["in_reply_to_user_id"].asDouble();
+	tweet.in_reply_to_status_id = value["in_reply_to_status_id"].asUInt();
+	tweet.in_reply_to_user_id = value["in_reply_to_user_id"].asUInt();
 	//utf8_to_utf16(value["text"].asCString(), tweet.text);
 	tweet.text = value["text"].asCString();
 	parseUser(value["user"], tweet.user);
@@ -334,13 +334,6 @@ bool TwitterService::Search(const TwitterSearchOptions& op, TweetSearchResult& t
 
 	if (Q.length() == 0)
 		return false;
-	if (Q[0] == '#')
-	{
-		includeEnts = true;
-		Q = Q.substr(1, Q.length());
-		if (Q.length() == 0)
-			return false;
-	}
 	if (op.count != 0)
 		count = core::StringConverter::toString(op.count);
 	if (op.sinceID != 0)
@@ -361,7 +354,7 @@ bool TwitterService::Search(const TwitterSearchOptions& op, TweetSearchResult& t
 	m_impl->reader.parse(reply, root);
 	try
 	{
-		tweets.max_id = root["search_metadata"]["max_id"].asDouble();
+		tweets.max_id = root["search_metadata"]["max_id"].asUInt();
 		parseTweets(root["statuses"], tweets.tweets);
 	}
 	catch (std::exception& e)

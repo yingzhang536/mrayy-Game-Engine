@@ -6,6 +6,7 @@
 #include "TwitterUserProfile.h"
 #include "InternetCacheManager.h"
 #include "TextureResourceManager.h"
+#include "ShaderResourceManager.h"
 
 
 namespace mray
@@ -17,13 +18,18 @@ TweetNode::TweetNode(ted::CSpeaker* speaker, ted::TwitterTweet* t)
 {
 	m_targetSpeaker = speaker;
 	m_tweet = t;
-	OS::IStreamPtr s= network::InternetCacheManager::getInstance().GetOrCreateItem(m_tweet->user->imageUrl);
-	if (s)
+	video::ITexturePtr tex = gTextureResourceManager.getResource(m_tweet->user->imageUrl);
+	if (tex.isNull())
 	{
-		video::ITexturePtr tex = gTextureResourceManager.loadTexture2D(m_tweet->user->imageUrl, s);
-		tex->load(false);
-		m_texture.SetTexture(tex);
+		OS::IStreamPtr s = network::InternetCacheManager::getInstance().GetOrCreateItem(m_tweet->user->imageUrl);
+		if (s)
+		{
+			tex = gTextureResourceManager.loadTexture2D(m_tweet->user->imageUrl, s);
+			tex->load(false);
+		}
 	}
+	m_texture.SetTexture(tex);
+
 }
 TweetNode::~TweetNode()
 {
@@ -40,9 +46,21 @@ void TweetNode::Draw()
 
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 
+	video::IGPUShaderProgram *shader = (video::IGPUShaderProgram*)gShaderResourceManager.getResource("ProfileMasking").pointer();
+	if (shader)
+	{
+		dev->setFragmentShader(shader);
+		float a = 1;
+		shader->setConstant("Alpha", &a, 1);
+	}
 	
 	dev->useTexture(0, &m_texture);
-	dev->draw2DImage(math::rectf(pos - 20, pos + 20), 1);
+	dev->draw2DImage(math::rectf(pos - m_sz*0.5f, pos + m_sz*0.5f), 1);
+
+	for (int i = 0; i < m_subTweets.size(); ++i)
+	{
+		m_subTweets[i]->Draw();
+	}
 }
 
 }
