@@ -8,6 +8,15 @@ namespace msa {
 		
 		template <typename T>
 		struct ParamsT {
+			ParamsT()
+			{
+				isCollisionEnabled = true;
+				timeStep = 1.0f / 60.0f;
+				timeStep2 = 1.0f / 60.0f;
+				drag = 0.01;
+				numIterations = 10;
+				doGravity = true;
+			}
 			float		timeStep, timeStep2;
 			float		drag;
 			

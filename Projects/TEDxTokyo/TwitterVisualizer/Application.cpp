@@ -21,7 +21,7 @@
 #include "GUIUserProfile.h"
 #include "GUITweetItem.h"
 #include "GUISessionSidePanel.h"
-#include "GUISessionDetailsTopPanel.h"
+#include "GUISpeakerDetailsPanel.h"
 #include "GUITweetDetailsPanel.h"
 #include "GUIProfilePicture.h"
 #include "SessionScene.h"
@@ -110,7 +110,7 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUITweetItem);
 		REGISTER_GUIElement_FACTORY(GUIUserProfile);
 		REGISTER_GUIElement_FACTORY(GUISessionSidePanel);
-		REGISTER_GUIElement_FACTORY(GUISessionDetailsTopPanel);
+		REGISTER_GUIElement_FACTORY(GUISpeakerDetailsPanel);
 		REGISTER_GUIElement_FACTORY(GUITweetDetailsPanel);
 		REGISTER_GUIElement_FACTORY(GUIProfilePicture);
 	}
@@ -132,6 +132,7 @@ void Application::init(const OptionContainer &extraOptions)
 			printf("%s\n", e.ErrText());
 		}
 	}
+	m_device->setMultiSampling(true);
 
 	m_scene = new ted::SessionScene();
 	m_scene->Init();

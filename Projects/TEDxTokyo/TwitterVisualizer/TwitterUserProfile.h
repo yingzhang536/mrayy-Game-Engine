@@ -47,6 +47,7 @@ public:
 	core::stringw URL;
 
 	std::vector<TwitterTweet*> tweets;
+	std::vector<TwitterTweet*> replies;
 
 	TwitterUserProfile() :ID(0), followersCount(0){}
 	virtual~TwitterUserProfile(){}

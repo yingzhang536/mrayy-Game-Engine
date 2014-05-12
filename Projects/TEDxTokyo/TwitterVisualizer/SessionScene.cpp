@@ -19,6 +19,7 @@
 #include "TwitterTweet.h"
 
 #include "TweetNode.h"
+#include "SpeakerNode.h"
 #include "IThreadFunction.h"
 #include "IThreadManager.h"
 
@@ -82,14 +83,14 @@ namespace ted
 		{
 			while (caller->isActive())
 			{
-				float t = gTimer.getActualTimeAccurate();
+				float t = gTimer.getActualTime();
 				float dt = (t - m_lastTime);
 				if (dt > interval)
 				{
 					std::vector<ted::TwitterTweet*> tweets;
-					gAppData.tweetProvider->GetTweetsSynced(L"#syria ", m_sinceID, 100, tweets);
+					gAppData.tweetProvider->GetTweetsSynced(L"#hq_anime ", m_sinceID, 150, tweets);
 					OnTweetsLoaded(tweets);
-					m_lastTime = gTimer.getActualTimeAccurate();
+					m_lastTime = gTimer.getActualTime();
 				}
 			}
 		}
@@ -179,6 +180,12 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 		{
 			ted::TwitterTweet* t= dynamic_cast<scene::TweetNode*>(node)->GetTweet();
 			m_screenLayout->TweetDetails->SetTweet(t);
+			m_sessionRenderer->SetHoverdItem(node);
+		}
+		else if (dynamic_cast<scene::SpeakerNode*>(node))
+		{
+			//ted::CSpeaker* t = dynamic_cast<scene::SpeakerNode*>(node)->GetSpeaker();
+			//m_screenLayout->SessionDetails->SetTweet(t);
 		}
 	}
 

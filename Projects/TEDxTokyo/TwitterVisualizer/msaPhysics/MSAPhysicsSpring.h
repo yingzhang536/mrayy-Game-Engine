@@ -41,7 +41,7 @@ namespace msa {
 			float _forceCap;
 			
 			
-			void solve() {
+			void solve(float dt) {
 				T delta = this->_b->getPosition() - this->_a->getPosition();
 				float deltaLength2 = delta.LengthSQ();
 				float deltaLength = sqrt(deltaLength2);	// TODO: fast approximation of square root (1st order Taylor-expansion at a neighborhood of the rest length r (one Newton-Raphson iteration with initial guess r))
@@ -53,8 +53,8 @@ namespace msa {
 				if (_forceCap > 0)
 					deltaForce.limit(_forceCap);
 				
-				if (this->_a->isFree()) this->_a->moveBy(deltaForce * this->_a->getInvMass(), false);
-				if (this->_b->isFree()) this->_b->moveBy(deltaForce * -this->_b->getInvMass(), false);
+				if (this->_a->isFree()) this->_a->moveBy(deltaForce * this->_a->getInvMass()*dt, false);
+				if (this->_b->isFree()) this->_b->moveBy(deltaForce * -this->_b->getInvMass()*dt, false);
 			}
 			
 			

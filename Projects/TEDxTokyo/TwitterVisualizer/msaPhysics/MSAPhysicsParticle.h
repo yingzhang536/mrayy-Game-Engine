@@ -71,7 +71,7 @@ namespace msa {
 			T				getVelocity();
 			
 			// override these functions if you create your own particle type with custom behaviour and/or drawing
-			virtual void	update() {}		// called every frame in world::update();
+			virtual void	update(float dt) {}		// called every frame in world::update();
 			virtual void	draw() {}		// called every frame in world::draw();
 			virtual void	collidedWithParticle(ParticleT *other, T collisionForce) {}	// called when this particle collides with another particle (called for both particles)
 			virtual void	collidedWithEdgeOfWorld(T collisionForce) {}
@@ -104,7 +104,7 @@ namespace msa {
 			bool			_collisionEnabled;
             bool            _passiveCollision;
 			
-			void			doVerlet();
+			void			doVerlet(float dt);
 			void			checkWorldEdges();
 			
 			virtual void debugDraw();
@@ -383,15 +383,15 @@ namespace msa {
         
         //--------------------------------------------------------------
 		template <typename T>
-		void ParticleT<T>::doVerlet() {
+		void ParticleT<T>::doVerlet(float dt) {
 			if (!_isFixed) {
 				if(_params->doGravity) {
-					T gravityForce = _params->gravity;
+					T gravityForce = _params->gravity*dt;
 					addVelocity(gravityForce);
 				}
 				
 				T curPos = _pos;
-				T vel = _pos - _oldPos;
+				T vel = (_pos - _oldPos)*dt;
 				_pos += vel * _params->drag * _drag;// + _params->timeStep2;
 				//_pos += (_pos - _oldPos);// + _params->timeStep2;	// TODO
 				_oldPos = curPos;

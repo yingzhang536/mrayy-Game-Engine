@@ -1,7 +1,7 @@
 #include "IGUISchemeBase.h"
 #include "GUIPanel.h"
-#include "GUISessionDetailsTopPanel.h"
 #include "GUISessionSidePanel.h"
+#include "GUISpeakerDetailsPanel.h"
 #include "GUITweetDetailsPanel.h"
 namespace mray{
 
@@ -12,7 +12,7 @@ class GUIScreenLayout_V2:public GUI::IGUISchemeBase
 public:
 	GUIPanel* Root;
 	GUISessionSidePanel* SessionsBar;
-	GUISessionDetailsTopPanel* SessionDetails;
+	GUISpeakerDetailsPanel* SessionDetails;
 	GUITweetDetailsPanel* TweetDetails;
 
 public:

@@ -123,17 +123,11 @@
     <ClInclude Include="GUISessionSidePanel.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
-    <ClInclude Include="GUISessionDetailsTopPanel.h">
-      <Filter>Source Files\GUI\Interface v2.0</Filter>
-    </ClInclude>
     <ClInclude Include="SessionDetails.h">
       <Filter>Source Files\Data</Filter>
     </ClInclude>
     <ClInclude Include="SessionContainer.h">
       <Filter>Source Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="GUISessionDetailsPanelLayout.h">
-      <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
     <ClInclude Include="SpeakerNode.h">
       <Filter>Source Files\Scene</Filter>
@@ -161,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="TwitterTweet.h">
       <Filter>Source Files\Data\Twitter</Filter>
-    </ClInclude>
-    <ClInclude Include="TwitterProvider.h">
-      <Filter>Source Files\DB</Filter>
     </ClInclude>
     <ClInclude Include="IRenderingScene.h">
       <Filter>Source Files\States</Filter>
@@ -264,6 +255,18 @@
     <ClInclude Include="GUISessionSidePanelLayout.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeRenderer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProvider.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -314,9 +317,6 @@
     <ClCompile Include="SessionContainer.cpp">
       <Filter>Source Files\Data</Filter>
     </ClCompile>
-    <ClCompile Include="GUISessionDetailsTopPanel.cpp">
-      <Filter>Source Files\GUI\Interface v2.0</Filter>
-    </ClCompile>
     <ClCompile Include="SQLDBHandler.cpp">
       <Filter>Source Files\DB</Filter>
     </ClCompile>
@@ -325,9 +325,6 @@
     </ClCompile>
     <ClCompile Include="TwitterTweet.cpp">
       <Filter>Source Files\Data\Twitter</Filter>
-    </ClCompile>
-    <ClCompile Include="TwitterProvider.cpp">
-      <Filter>Source Files\DB</Filter>
     </ClCompile>
     <ClCompile Include="AppData.cpp">
       <Filter>Source Files\Shared</Filter>
@@ -362,11 +359,17 @@
     <ClCompile Include="TweetNode.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="GUISpeakerDetailsPanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeRenderer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProvider.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISessionDetailsPanelLayout.gui">
-      <Filter>Source Files\GUI\Interface v2.0</Filter>
-    </Overlay>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
@@ -377,6 +380,9 @@
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUISessionSidePanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISpeakerDetailsPanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>

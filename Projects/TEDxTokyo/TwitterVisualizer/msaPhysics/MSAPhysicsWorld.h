@@ -66,7 +66,7 @@ namespace msa {
 			
 			
 			void clear();
-			void update(int frameNum = -1);
+			void update(float dt,int frameNum = -1);
 			void draw();
 			void debugDraw();
 			
@@ -84,9 +84,9 @@ namespace msa {
 			
 			ParamsT<T>				params;
 			
-			void					updateParticles();
-			void					updateConstraints();
-			void					updateConstraintsByType(vector<ConstraintT<T>*> constraints);
+			void					updateParticles(float dt);
+			void					updateConstraints(float dt);
+			void					updateConstraintsByType(vector<ConstraintT<T>*> constraints, float dt);
 			//	void						updateWorldSize();
 			
 			
@@ -472,7 +472,7 @@ namespace msa {
 		
         //--------------------------------------------------------------
 		template <typename T>
-		void WorldT<T>::update(int frameNum) {
+		void WorldT<T>::update(float dt,int frameNu) {
 #ifdef MSAPHYSICS_USE_RECORDER
 			if(frameNum < 0) frameNum = _frameCounter;
 			if(_replayMode == OFX_MSA_DATA_LOAD) {
@@ -485,8 +485,8 @@ namespace msa {
 			}
 			_frameCounter++;
 #else
-			updateParticles();
-			updateConstraints();
+			updateParticles(dt);
+			updateConstraints(dt);
 			if(isCollisionEnabled()) checkAllCollisions();
 #endif
 		}
@@ -538,7 +538,7 @@ namespace msa {
 		
         //--------------------------------------------------------------
 		template <typename T>
-		void WorldT<T>::updateParticles() {
+		void WorldT<T>::updateParticles(float dt) {
 			int num = 0;
 			typename vector<ParticleT<T>*>::iterator it = _particles.begin();
 			while(it != _particles.end()) {
@@ -548,8 +548,8 @@ namespace msa {
 					particle->release();
 				} else {
 					num++;
-					particle->doVerlet();
-					particle->update();
+					particle->doVerlet(dt);
+					particle->update(dt);
 					this->applyUpdaters(particle);
 					if(params.doWorldEdges) {
 						//				if(particle->isFree()) 
@@ -593,12 +593,12 @@ namespace msa {
 		
         //--------------------------------------------------------------
 		template <typename T>
-		void WorldT<T>::updateConstraintsByType(vector<ConstraintT<T>*> constraints) {
+		void WorldT<T>::updateConstraintsByType(vector<ConstraintT<T>*> constraints,float dt) {
 		}
 		
         //--------------------------------------------------------------
 		template <typename T>
-		void WorldT<T>::updateConstraints() {
+		void WorldT<T>::updateConstraints(float dt) {
 			// iterate all constraints and update
 			for (int i = 0; i < params.numIterations; i++) {
 				for(int i=0; i<kConstraintTypeCount; i++) {
@@ -610,7 +610,7 @@ namespace msa {
 							it = _constraints[i].erase(it);
 							constraint->release();
 						} else {
-							if(constraint->shouldSolve()) constraint->solve();
+							if(constraint->shouldSolve()) constraint->solve(dt);
 							it++;
 						}
 					}

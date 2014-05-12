@@ -1,7 +1,7 @@
 
 
 #include "stdafx.h"
-#include "GUISessionDetailsTopPanel.h"
+#include "GUISpeakerDetailsPanel.h"
 
 #include "GUIElementRegion.h"
 #include "FontResourceManager.h"
@@ -22,32 +22,32 @@ namespace GUI
 
 
 
-const GUID GUISessionDetailsTopPanel::ElementType = "GUISessionDetailsTopPanel";
+const GUID GUISpeakerDetailsPanel::ElementType = "GUISpeakerDetailsPanel";
 
-float GUISessionDetailsTopPanel_ShrinkSpeed = 150;
+float GUISpeakerDetailsPanel_ShrinkSpeed = 150;
 
-GUISessionDetailsTopPanel::GUISessionDetailsTopPanel(IGUIManager* m) :
+GUISpeakerDetailsPanel::GUISpeakerDetailsPanel(IGUIManager* m) :
 IGUIPanelElement(ElementType, m)
 {
 	m_active = false;
 	m_sidePanel = 0;
 
-	GUI::GUIOverlay* o= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUISessionDetailsPanelLayout.GUI");
+	GUI::GUIOverlay* o= GUI::GUIOverlayManager::getInstance().LoadOverlay("GUISpeakerDetailsPanelLayout.GUI");
 	if (o)
 	{
 		o->CreateElements(m, this, this, this);
 	}
 }
-GUISessionDetailsTopPanel::~GUISessionDetailsTopPanel()
+GUISpeakerDetailsPanel::~GUISpeakerDetailsPanel()
 {
 }
 
-void GUISessionDetailsTopPanel::SetSidePanel(GUISessionSidePanel* p)
+void GUISpeakerDetailsPanel::SetSidePanel(GUISessionSidePanel* p)
 {
 	m_sidePanel = p;
-	m_sidePanel->OnSpeakerChange += CreateObjectDelegate(GUISessionDetailsTopPanel, this, _OnSpeakerChange);
+	m_sidePanel->OnSpeakerChange += CreateObjectDelegate(GUISpeakerDetailsPanel, this, _OnSpeakerChange);
 }
-bool GUISessionDetailsTopPanel::OnEvent(Event* e)
+bool GUISpeakerDetailsPanel::OnEvent(Event* e)
 {
 	if (e->getType() == ET_Mouse)
 	{
@@ -62,7 +62,7 @@ bool GUISessionDetailsTopPanel::OnEvent(Event* e)
 	}
 	return false;
 }
-void GUISessionDetailsTopPanel::_OnSpeakerChange(IObject* sender, PVOID param)
+void GUISpeakerDetailsPanel::_OnSpeakerChange(IObject* sender, PVOID param)
 {
 	ted::CSpeaker* speaker= m_sidePanel->GetActiveSpeaker();
 	ted::SessionDetails* session= speaker->GetSession();
@@ -71,7 +71,7 @@ void GUISessionDetailsTopPanel::_OnSpeakerChange(IObject* sender, PVOID param)
 	SpeakerImage->SetSourceImage(speaker->GetPicture());
 }
 
-void GUISessionDetailsTopPanel::Update(float dt)
+void GUISpeakerDetailsPanel::Update(float dt)
 {
 	IGUIPanelElement::Update(dt);
 
@@ -88,7 +88,7 @@ void GUISessionDetailsTopPanel::Update(float dt)
 	}
 	SetAlpha(a);
 }
-void GUISessionDetailsTopPanel::Draw(const math::rectf*vp)
+void GUISpeakerDetailsPanel::Draw(const math::rectf*vp)
 {
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 
@@ -110,8 +110,8 @@ void GUISessionDetailsTopPanel::Draw(const math::rectf*vp)
 	IGUIPanelElement::Draw(vp);
 }
 
-IMPLEMENT_RTTI(GUISessionDetailsTopPanel, IGUIPanelElement);
-IMPLEMENT_ELEMENT_FACTORY(GUISessionDetailsTopPanel);
+IMPLEMENT_RTTI(GUISpeakerDetailsPanel, IGUIPanelElement);
+IMPLEMENT_ELEMENT_FACTORY(GUISpeakerDetailsPanel);
 
 }
 }

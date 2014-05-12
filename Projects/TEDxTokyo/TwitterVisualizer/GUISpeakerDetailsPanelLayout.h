@@ -6,7 +6,7 @@
 namespace mray{
 
 using namespace GUI;
-class GUISessionDetailsPanelLayout:public GUI::IGUISchemeBase
+class GUISpeakerDetailsPanelLayout:public GUI::IGUISchemeBase
 {
 
 public:
@@ -22,7 +22,7 @@ public:
 
 public:
 
-	GUISessionDetailsPanelLayout():Root(0),Contents(0),SessionName(0),SpeakerID(0),SpeakerImage(0),SpeakerTitle(0),SpeakerName(0),TEDxLogo(0),SessionTime(0)
+	GUISpeakerDetailsPanelLayout():Root(0),Contents(0),SessionName(0),SpeakerID(0),SpeakerImage(0),SpeakerTitle(0),SpeakerName(0),TEDxLogo(0),SessionTime(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
 		m_elementsMap["Contents"]=(IGUIElement**)&Contents;

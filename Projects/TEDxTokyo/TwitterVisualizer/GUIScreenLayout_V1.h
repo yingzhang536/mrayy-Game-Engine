@@ -2,8 +2,8 @@
 #include "GUIEditBox.h"
 #include "GUIListBox.h"
 #include "GUIPanel.h"
-#include "GUISessionDetailsTopPanel.h"
 #include "GUISessionSidePanel.h"
+#include "GUISpeakerDetailsPanel.h"
 #include "GUIStackPanel.h"
 #include "GUIStaticImage.h"
 #include "GUIStaticText.h"
@@ -18,7 +18,7 @@ class GUIScreenLayout_V1:public GUI::IGUISchemeBase
 public:
 	GUIPanel* Root;
 	GUISessionSidePanel* SessionsBar;
-	GUISessionDetailsTopPanel* SessionDetails;
+	GUISpeakerDetailsPanel* SessionDetails;
 	GUITweetDetailsPanel* TweetDetails;
 	GUIStaticImage* TEDxTokyo_Logo;
 	GUIStackPanel* RootStack;

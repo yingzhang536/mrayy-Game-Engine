@@ -76,7 +76,7 @@ namespace msa {
 			// only worth solving the constraint if its on, and at least one end is free
 			bool shouldSolve();
 			
-			virtual void update() {}
+			virtual void update(float dt) {}
 			virtual void draw() {}
 			
 			
@@ -92,7 +92,7 @@ namespace msa {
 			
 			ParticleT<T>	*_a, *_b;
 			ParamsT<T>		*_params;
-			virtual void solve() = 0;
+			virtual void solve(float dt) = 0;
 			
 			virtual void debugDraw() {
 				//ofLine(_a->x, _a->y, _b->x, _b->y);

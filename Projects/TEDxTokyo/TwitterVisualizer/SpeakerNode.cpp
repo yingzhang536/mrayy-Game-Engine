@@ -6,6 +6,8 @@
 #include "ShaderResourceManager.h"
 
 #include "TweetNode.h"
+#include "NodeRenderer.h"
+#include "TwitterUserProfile.h"
 
 namespace mray
 {
@@ -20,35 +22,67 @@ SpeakerNode::~SpeakerNode()
 {
 
 }
-
-
-void SpeakerNode::Draw()
+ted::IDType SpeakerNode::GetUserID()
 {
-	math::vector2d pos;
-	
-	if (m_phNode)
-		pos=m_phNode->getPosition();
 
-	video::IVideoDevice* dev= Engine::getInstance().getDevice();
+	if (!m_speaker->GetUser())
+		return 0;
+	return m_speaker->GetUser()->ID;
+}
+core::string SpeakerNode::GetUserDisplyName()
+{
+	return m_speaker->GetTwitterID();
+}
 
-	video::IGPUShaderProgram *shader = (video::IGPUShaderProgram*)gShaderResourceManager.getResource("ProfileMasking").pointer();
-	if (shader)
+void SpeakerNode::AddTweet(TweetNode* t)
+{
+	m_subTweets.push_back(t);
+	t->SetParent(this);
+}
+void SpeakerNode::Draw(NodeRenderer *r)
+{
+	r->AddSpeaker(this);
+	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
-		dev->setFragmentShader(shader);
-		float a = 1;
-		shader->setConstant("Alpha", &a, 1);
+		r->AddSpeakerTweetNode(this, m_subTweets[i]);
 	}
-	video::TextureUnit tex;
-	tex.SetTexture(m_speaker->GetTexture());
-	dev->useTexture(0, &tex);
-	dev->draw2DImage(math::rectf(pos - m_sz*0.5f, pos + m_sz*0.5f), 1);
 
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
-		m_subTweets[i]->Draw();
+		m_subTweets[i]->Draw(r);
 	}
 }
+void SpeakerNode::Update(float dt)
+{
+	for (int i = 0; i < m_subTweets.size(); ++i)
+	{
+		m_subTweets[i]->Update(dt);
+	}
+}
+ITedNode* SpeakerNode::GetNodeFromPoint(const math::vector2d& pos)
+{
+	for (int i = 0; i < m_subTweets.size(); ++i)
+	{
+		ITedNode* n= m_subTweets[i]->GetNodeFromPoint(pos);
+		if (n)
+			return n;
+	}
+	return ITedNode::GetNodeFromPoint(pos);
+}
 
+math::rectf SpeakerNode::GetBoundingBox(bool includeChildren)
+{
+	math::rectf rc = ITedNode::GetBoundingBox(false);
+	if (!includeChildren)
+		return rc;
+	for (int i = 0; i < m_subTweets.size(); ++i)
+	{
+		math::rectf r = m_subTweets[i]->GetBoundingBox(true);
+		rc.addPoint(r.ULPoint);
+		rc.addPoint(r.BRPoint);
+	}
+	return rc;
+}
 }
 }
 

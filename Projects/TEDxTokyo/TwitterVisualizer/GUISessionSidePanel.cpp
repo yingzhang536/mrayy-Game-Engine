@@ -27,17 +27,17 @@ const GUID GUISessionSidePanel::ElementType = "GUISessionSidePanel";
 float GUISessionSidePanel_ShrinkSpeed = 150;
 
 const core::string GUISessionSidePanel::ProfileRedneringShader =
-		"half4 main_fp(float2 texCoord : TEXCOORD0, \
-	uniform sampler2D texA : register(s0),uniform float alpha,uniform float gray) : COLOR \
-	{\
-	half4 clr=tex2D(texA,texCoord);\
-	half2 v=(texCoord-0.5);\
-	half dst=dot(v,v);\
-	dst=dst>0.25?0:1;\
-	half3 gclr=dot(clr.rgb,half3(0.5,0.3,0.2));\
-	clr.rgb=gclr*gray+clr.rgb*(1-gray);\
-	return half4(clr.rgb,dst*alpha);\
-	}";
+"half4 main_fp(float2 texCoord : TEXCOORD0, "
+"uniform sampler2D texA : register(s0),uniform float alpha,uniform float gray) : COLOR "
+	"{"
+	"half4 clr=tex2D(texA,texCoord);"
+	"half2 v=(texCoord-0.5);"
+	"half dst=dot(v,v);"
+	"dst=dst>0.25?0:1;"
+	"half3 gclr=dot(clr.rgb,half3(0.5,0.3,0.2));"
+	"clr.rgb=gclr*gray+clr.rgb*(1-gray);"
+	"return half4(clr.rgb,dst*alpha);"
+	"}";
 GUISessionSidePanel::GUISessionSidePanel(IGUIManager* m):
 IGUIPanelElement(ElementType, m)
 {

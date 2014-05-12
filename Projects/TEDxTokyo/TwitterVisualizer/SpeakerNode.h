@@ -3,6 +3,7 @@
 #ifndef SpeakerNode_h__
 #define SpeakerNode_h__
 
+#include "DataTypes.h"
 #include "ITedNode.h"
 
 namespace mray
@@ -24,12 +25,22 @@ public:
 	SpeakerNode(ted::CSpeaker* s);
 	virtual~SpeakerNode();
 
-	void AddTweet(TweetNode* t)
-	{
-		m_subTweets.push_back(t);
+	ted::CSpeaker* GetSpeaker(){
+		return m_speaker;
 	}
 
-	void Draw();
+	ted::IDType GetUserID();
+	core::string GetUserDisplyName();
+
+	void AddTweet(TweetNode* t);
+	const std::vector<TweetNode*>& GetSubTweets(){ return m_subTweets; }
+	virtual void Update(float dt);
+
+
+	void Draw(NodeRenderer *r);
+	void DrawSubTweets();
+	virtual ITedNode* GetNodeFromPoint(const math::vector2d& pos);
+	virtual math::rectf GetBoundingBox(bool includeChildren);
 };
 
 }

@@ -5,23 +5,23 @@
 /********************************************************************
 	created:	2014/04/30
 	created:	30:4:2014   17:39
-	filename: 	F:\Development\mrayEngine\Projects\TEDxTokyo\TwitterVisualizer\GUISessionDetailsTopPanel.h
+	filename: 	F:\Development\mrayEngine\Projects\TEDxTokyo\TwitterVisualizer\GUISpeakerDetailsPanel.h
 	file path:	F:\Development\mrayEngine\Projects\TEDxTokyo\TwitterVisualizer
-	file base:	GUISessionDetailsTopPanel
+	file base:	GUISpeakerDetailsPanel
 	file ext:	h
 	author:		MHD Yamen Saraiji
 	
 	purpose:	
 *********************************************************************/
 
-#ifndef __GUISessionDetailsTopPanel__
-#define __GUISessionDetailsTopPanel__
+#ifndef __GUISpeakerDetailsPanel__
+#define __GUISpeakerDetailsPanel__
 
 
 
 #include "IGUIPanelElement.h"
 #include "GUIElementFactoryDef.h"
-#include "GUISessionDetailsPanelLayout.h"
+#include "GUISpeakerDetailsPanelLayout.h"
 
 
 namespace mray
@@ -35,7 +35,7 @@ namespace GUI
 
 	class GUISessionSidePanel;
 
-class GUISessionDetailsTopPanel :public IGUIPanelElement,public GUISessionDetailsPanelLayout
+	class GUISpeakerDetailsPanel :public IGUIPanelElement, public GUISpeakerDetailsPanelLayout
 {
 	DECLARE_RTTI;
 public:
@@ -49,19 +49,18 @@ protected:
 
 	void _OnSpeakerChange(IObject* sender, PVOID param);
 public:
-	GUISessionDetailsTopPanel(IGUIManager* m);
-	virtual ~GUISessionDetailsTopPanel();
-
-	void SetSessionDetails(ted::SessionDetails* d);
+	GUISpeakerDetailsPanel(IGUIManager* m);
+	virtual ~GUISpeakerDetailsPanel();
 
 	void SetSidePanel(GUISessionSidePanel* p);
+
 
 	virtual bool OnEvent(Event* e);
 
 	virtual void Update(float dt);
 	virtual void Draw(const math::rectf*vp);
 };
-DECLARE_ELEMENT_FACTORY(GUISessionDetailsTopPanel);
+DECLARE_ELEMENT_FACTORY(GUISpeakerDetailsPanel);
 
 }
 }

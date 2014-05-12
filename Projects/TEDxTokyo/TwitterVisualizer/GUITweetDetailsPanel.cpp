@@ -48,6 +48,7 @@ void GUITweetDetailsPanel::SetTweet(ted::TwitterTweet* t)
 	{
 		TwitterID->SetText(t->user->name);
 		Details->SetText(t->text);
+		TwitterImage->SetSourceImage(t->user->imageUrl);
 	}
 }
 bool GUITweetDetailsPanel::OnEvent(Event* e)

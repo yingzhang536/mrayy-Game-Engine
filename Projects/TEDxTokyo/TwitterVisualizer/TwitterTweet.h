@@ -49,6 +49,8 @@ public:
 	TwitterTweet* replyToTweet;
 	TwitterUserProfile* replyToUser;
 
+	std::vector<TwitterTweet*> replies;
+
 	struct Entities
 	{
 		std::vector<core::stringw> hashTags;

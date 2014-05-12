@@ -116,6 +116,7 @@ public:
 			out.user = new TwitterUserProfile();
 			Parse(in.user, *out.user);
 			TwitterUserProfile::AddTwitterUserProfile(out.user);
+			out.user->tweets.push_back(&out);
 		}
 		for (int i = 0; i < in.entities.hashTags.size(); ++i)
 			out.entities.hashTags.push_back(ConvertToUtf16(in.entities.hashTags[i]));
@@ -140,9 +141,18 @@ public:
 	{
 
 		if (in.in_reply_to_user_id != 0)
+		{
 			out.replyToUser = TwitterUserProfile::GetUserByID(in.in_reply_to_user_id, false);
+			if (out.replyToUser)
+				out.replyToUser->replies.push_back(&out);
+		}
 		if (in.in_reply_to_status_id != 0)
+		{
 			out.replyToTweet = TwitterTweet::GetTweetByID(in.in_reply_to_status_id, false);
+
+			if (out.replyToTweet)
+				out.replyToTweet->replies.push_back(&out);
+		}
 	}
 
 	void GetTweetsSynced(const core::stringw& keyword, IDType since, uint count, std::vector<TwitterTweet*>& tweets)
