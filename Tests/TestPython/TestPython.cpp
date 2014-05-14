@@ -7,6 +7,16 @@
 #include <sstream>
 #include <boost/python.hpp>
 
+
+void printLog(const std::string& message)
+{
+	printf("Python call: %s\n", message.c_str());
+}
+BOOST_PYTHON_MODULE(MyLib)
+{
+	boost::python::def("printlog", printLog, "Write to the log. \n Input: message string \n Output: NULL");
+
+}
 void setupPython()
 {
 	try {
@@ -51,6 +61,7 @@ void initPython(std::string pythonLibPath)
 	Py_SetPythonHome((char*)pythonHome.c_str());
 	Py_Initialize();
 
+	PyRun_SimpleString("import sys");
 	// set the proper python path
 	std::stringstream strstr;
 	strstr << "sys.path.append(\"";
@@ -75,15 +86,17 @@ void initPython(std::string pythonLibPath)
 	strstr << pythonDLLPath;
 	strstr << "\");";
 	PyRun_SimpleString(strstr.str().c_str());
-
+	initMyLib();
 	if (PyErr_Occurred())
 		PyErr_Print();
+
 	setupPython();
+	PyRun_SimpleString("printlog(\"hello world from python\"");;
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	initPython("C:\\Users\\telesar\\Documents\\SmartBody\\python27\\lib");
+	initPython("C:\\Users\\myamens\\Documents\\SmartBody\\python27\\lib");
 	return 0;
 }
 

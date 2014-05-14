@@ -11,6 +11,9 @@
 #include "IThreadManager.h"
 #include "NodeRenderer.h"
 #include "TwitterTweet.h"
+#include "SceneCamera.h"
+#include "AppData.h"
+
 
 namespace mray
 {
@@ -27,6 +30,7 @@ SessionRenderer::SessionRenderer()
 	m_hoverItem = 0;
 	m_nodeRenderer = new NodeRenderer();
 	m_dataMutex = OS::IThreadManager::getInstance().createMutex();
+	m_camera = new SceneCamera;
 }
 
 SessionRenderer::~SessionRenderer()
@@ -34,8 +38,14 @@ SessionRenderer::~SessionRenderer()
 	delete m_physics;
 	delete m_dataMutex;
 	delete m_nodeRenderer;
+	delete m_camera;
 }
 
+
+void SessionRenderer::SetRenderingVP(const math::rectf& vp)
+{
+	m_camera->SetViewPort(vp);
+}
 
 void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 {
@@ -53,7 +63,8 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 	{
 		speakerCount += slist[i]->GetSpeakers().size();
 	}
-	float rad = 200;
+	std::vector<SpeakerNode*> spList;
+	float rad = 400;
 	for (int i = 0; i < slist.size();++i)
 	{
 		const std::vector<ted::CSpeaker*>& speakers = slist[i]->GetSpeakers();
@@ -73,6 +84,7 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 			s->SetPhysics(n);
 			m_speakers[s->GetUserDisplyName()] = s;
 
+			spList.push_back(s);
 			m_renderNodes.push_back(s);
 		}
 	}
@@ -81,13 +93,11 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 
 	SpeakerMap::iterator  it = m_speakers.begin();
 
-	if(false)
-	for (int i=0; it != m_speakers.end(); ++it,++i)
+	//if(false)
+	for (int i = 0;i<spList.size(); ++i)
 	{
-		int i2 = (i + 1) % m_speakers.size();
-		SpeakerMap::iterator  it2 = m_speakers.begin();
-		std::advance(it2, i2);
-		msa::physics::Spring2D* spr = m_physics->makeSpring(it->second->GetPhysics(), it2->second->GetPhysics(), 0.01, segment);
+		int i2 = (i + 1) % spList.size();
+		msa::physics::Spring2D* spr = m_physics->makeSpring(spList[i]->GetPhysics(), spList[i2]->GetPhysics(), 0.01, segment);
 
 	}
 }
@@ -156,7 +166,7 @@ void SessionRenderer::_OnSpeakerChanged(ted::CSpeaker*s)
 
 ITedNode* SessionRenderer::GetNodeFromPosition(const math::vector2d& pos)
 {
-	math::vector2d p = ConvertToWorldSpace(pos);
+	math::vector2d p = m_camera->ConvertToWorldSpace(pos);
 	m_dataMutex->lock();
 	ITedNode* ret = 0;
 	SpeakerMap::iterator  it = m_speakers.begin();
@@ -183,16 +193,20 @@ void SessionRenderer::Update(float dt)
 		it->second->Update(dt);
 	}
 	m_dataMutex->unlock();
-
 	//m_translation.x += 20 * dt;
 	//SetTransformation(m_translation, 0, 1);
+
+	if (m_hoverItem)
+		m_camera->FrameBox(m_hoverItem->GetBoundingBox(true));
+	else
+		m_camera->FrameBox(CalcAllBox());
+	m_camera->Update(dt);
 }
 void SessionRenderer::Draw()
 {
 	math::matrix4x4 oldT;
 	Engine::getInstance().getDevice()->getTransformationState(video::TS_WORLD,oldT);
-	Engine::getInstance().getDevice()->setTransformationState(video::TS_WORLD, m_transformation);
-
+	m_camera->ApplyTransformation();
 	m_dataMutex->lock();
 	m_nodeRenderer->Clear();
 
@@ -202,8 +216,35 @@ void SessionRenderer::Draw()
 		it->second->Draw(m_nodeRenderer);
 	}
 	m_dataMutex->unlock();
+
+	if (gAppData.Debugging)
+	{
+		Engine::getInstance().getDevice()->unuseShader();
+		if (m_hoverItem)
+		{
+			Engine::getInstance().getDevice()->draw2DRectangle(m_hoverItem->GetBoundingBox(true), 1, false);
+		}
+	}
 	m_nodeRenderer->RenderAll(this);
 	Engine::getInstance().getDevice()->setTransformationState(video::TS_WORLD, oldT);
+}
+
+math::rectf SessionRenderer::CalcAllBox()
+{
+	math::rectf rc;
+	SpeakerMap::iterator  it = m_speakers.begin();
+	for (; it != m_speakers.end(); ++it)
+	{
+		math::rectf r = it->second->GetBoundingBox(true);
+		if (it == m_speakers.begin())
+			rc = r;
+		else
+		{
+			rc.addPoint(r.ULPoint);
+			rc.addPoint(r.BRPoint);
+		}
+	}
+	return rc;
 }
 
 void SessionRenderer::SetHoverdItem(ITedNode* node)
@@ -213,32 +254,9 @@ void SessionRenderer::SetHoverdItem(ITedNode* node)
 	m_hoverItem = node;
 	if (m_hoverItem)
 		m_hoverItem->OnHoverOn();
+
 }
 
 
-void SessionRenderer::SetTransformation(const math::vector2d& pos, float angle, const math::vector2d& scale)
-{
-	m_translation = pos;
-	m_scale = scale;
-	m_transformation.setTranslation(math::vector3d(pos.x, pos.y, 0));
-	m_transformation.rotateZ(angle);
-	if (scale != 1)
-	{
-		math::matrix4x4 o;
-		o.setScale(math::vector3d(scale.x, scale.y, 1));
-		m_transformation = m_transformation*o;
-	}
-}
-
-math::vector2d SessionRenderer::ConvertToWorldSpace(const math::vector2d& pos)
-{
-	math::vector3d p= m_transformation.inverseTransformVector(math::vector3d(pos.x, pos.y, 0));
-	return math::vector2d(p.x, p.y);
-}
-math::vector2d SessionRenderer::ConvertToScreenSpace(const math::vector2d& pos)
-{
-	math::vector3d p = m_transformation*math::vector3d(pos.x, pos.y, 0);
-	return math::vector2d(p.x, p.y);
-}
 }
 }

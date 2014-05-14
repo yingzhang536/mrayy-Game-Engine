@@ -88,7 +88,7 @@ namespace ted
 				if (dt > interval)
 				{
 					std::vector<ted::TwitterTweet*> tweets;
-					gAppData.tweetProvider->GetTweetsSynced(L"#hq_anime ", m_sinceID, 150, tweets);
+					gAppData.tweetProvider->GetTweetsSynced(L"#TEDxTokyo ", m_sinceID, 150, tweets);
 					OnTweetsLoaded(tweets);
 					m_lastTime = gTimer.getActualTime();
 				}
@@ -175,17 +175,38 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 	if (e->getType() == ET_Mouse)
 	{
 		MouseEvent *evt = (MouseEvent *)e;
-		scene::ITedNode* node= m_sessionRenderer->GetNodeFromPosition(evt->pos);
-		if (dynamic_cast<scene::TweetNode*>( node))
+		if (evt->event == MET_MOVED)
 		{
-			ted::TwitterTweet* t= dynamic_cast<scene::TweetNode*>(node)->GetTweet();
-			m_screenLayout->TweetDetails->SetTweet(t);
-			m_sessionRenderer->SetHoverdItem(node);
+			scene::ITedNode* node = m_sessionRenderer->GetNodeFromPosition(evt->pos);
+			if (dynamic_cast<scene::TweetNode*>(node))
+			{
+				scene::TweetNode*tn = dynamic_cast<scene::TweetNode*>(node);
+				ted::TwitterTweet* t = tn->GetTweet();
+				m_screenLayout->TweetDetails->SetTweet(t);
+			}
+
 		}
-		else if (dynamic_cast<scene::SpeakerNode*>(node))
+		if (evt->event == MET_LEFTDOWN)
 		{
-			//ted::CSpeaker* t = dynamic_cast<scene::SpeakerNode*>(node)->GetSpeaker();
-			//m_screenLayout->SessionDetails->SetTweet(t);
+			scene::ITedNode* node = m_sessionRenderer->GetNodeFromPosition(evt->pos);
+			if (dynamic_cast<scene::TweetNode*>(node))
+			{
+				scene::TweetNode*tn=dynamic_cast<scene::TweetNode*>(node);
+				ted::TwitterTweet* t = tn->GetTweet();
+				m_screenLayout->TweetDetails->SetTweet(t);
+				if (tn->GetSubTweets().size()>0)
+					m_sessionRenderer->SetHoverdItem(node);
+			}
+			else if (dynamic_cast<scene::SpeakerNode*>(node))
+			{
+				m_sessionRenderer->SetHoverdItem(node);
+				//ted::CSpeaker* t = dynamic_cast<scene::SpeakerNode*>(node)->GetSpeaker();
+				//m_screenLayout->SessionDetails->SetTweet(t);
+			}
+			if (!node)
+			{
+				m_sessionRenderer->SetHoverdItem(0);
+			}
 		}
 	}
 
@@ -204,6 +225,7 @@ video::IRenderTarget* SessionScene::Draw(const math::rectf& rc)
 {
 	IRenderingScene::Draw(rc);
 
+	m_sessionRenderer->SetRenderingVP(rc);
 	Engine::getInstance().getDevice()->setRenderTarget(GetRenderTarget());
 	m_sessionRenderer->Draw();
 	m_guiMngr->DrawAll(&rc);

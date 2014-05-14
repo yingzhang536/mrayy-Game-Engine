@@ -34,6 +34,7 @@ namespace scene
 	class SpeakerNode;
 	class TweetNode;
 	class NodeRenderer;
+	class SceneCamera;
 class SessionRenderer
 {
 protected:
@@ -52,19 +53,19 @@ protected:
 	msa::physics::World2D* m_physics;
 	OS::IMutex* m_dataMutex;
 	ITedNode* m_hoverItem;
-
-	math::vector2d m_translation;
-	math::vector2d m_scale;
-
-	math::matrix4x4 m_transformation;
+	SceneCamera* m_camera;
 
 	void _RenderConnections();
 	void _RenderSpeakers();
 	void _RenderTweets();
 
+	math::rectf CalcAllBox();
+
 public:
 	SessionRenderer();
 	virtual ~SessionRenderer();
+
+	void SetRenderingVP(const math::rectf& vp);
 
 	void SetSessions(ted::SessionContainer*sessions);
 
@@ -81,10 +82,7 @@ public:
 
 	void Update(float dt);
 
-	void SetTransformation(const math::vector2d& pos, float angle, const math::vector2d& scale);
 
-	math::vector2d ConvertToWorldSpace(const math::vector2d& pos);
-	math::vector2d ConvertToScreenSpace(const math::vector2d& pos);
 };
 
 }

@@ -100,7 +100,7 @@ public:
 		int i = out.imageUrl.find("_normal");
 		if (i != -1)
 		{
-			out.imageUrlHi = out.imageUrl.substr(0, i) +"_small"+ out.imageUrl.substr(i + 7, out.imageUrl.size() - (i + 7));
+			out.imageUrlHi = out.imageUrl.substr(0, i) +"_bigger"+ out.imageUrl.substr(i + 7, out.imageUrl.size() - (i + 7));
 		//	out.imageUrlLow = out.imageUrl.substr(0, i) + out.imageUrl.substr(i + 7, out.imageUrl.size() - (i + 7));
 		}
 	}

@@ -133,6 +133,7 @@
     <ClInclude Include="msaPhysics\MSAPhysicsSpring.h" />
     <ClInclude Include="msaPhysics\MSAPhysicsWorld.h" />
     <ClInclude Include="PhNode.h" />
+    <ClInclude Include="SceneCamera.h" />
     <ClInclude Include="SessionRenderer.h" />
     <ClInclude Include="SessionScene.h" />
     <ClInclude Include="TweetsVisualizeScene.h" />
@@ -180,6 +181,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="NodeRenderer.cpp" />
+    <ClCompile Include="SceneCamera.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
+    </ClCompile>
     <ClCompile Include="SessionRenderer.cpp" />
     <ClCompile Include="SessionScene.cpp" />
     <ClCompile Include="SpeakerNode.cpp" />

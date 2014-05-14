@@ -267,6 +267,9 @@
     <ClInclude Include="TwitterProvider.h">
       <Filter>Source Files\Data\Twitter</Filter>
     </ClInclude>
+    <ClInclude Include="SceneCamera.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -367,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="TwitterProvider.cpp">
       <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCamera.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

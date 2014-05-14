@@ -111,7 +111,8 @@ OS::IStreamPtr InternetCacheManager::GetOrCreateItem(const core::string& url)
 			return OS::IStreamPtr::Null;
 		}
 		stream= AddCachedItem(req->GetStream());
-		stream->reopen(OS::BIN_READ);
+		if (stream)
+			stream->reopen(OS::BIN_READ);
 	}
 	return stream;
 }

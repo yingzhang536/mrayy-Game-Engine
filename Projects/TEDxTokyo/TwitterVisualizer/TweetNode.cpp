@@ -51,7 +51,7 @@ ted::IDType TweetNode::GetSpeakerID()
 }
 void TweetNode::Update(float dt)
 {
-	const float speed = 4;
+	const float speed = 1;
 	if (IsHovered(true))
 	{
 		if (m_hoverValue < 1)
@@ -78,7 +78,7 @@ void TweetNode::Update(float dt)
 
 	if (m_alpha < 1)
 	{
-		m_alpha +=0.3* dt;
+		m_alpha +=0.1* dt;
 		if (m_alpha > 1)
 			m_alpha = 1;
 	}

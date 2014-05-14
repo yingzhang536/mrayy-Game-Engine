@@ -56,9 +56,15 @@ void Application::onEvent(Event* event)
 {
 	math::rectf rc;
 	if (m_mainVP)
+	{
+		if (event->getType()==ET_ResizeEvent)
+			m_mainVP->updateViewPort();
 		rc = m_mainVP->getAbsRenderingViewPort();
+	}
 	if (m_scene)
+	{
 		m_scene->OnEvent(event, rc);
+	}
 }
 
 void Application::init(const OptionContainer &extraOptions)
@@ -193,6 +199,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 }
 void Application::update(float dt)
 {
+	dt = math::clamp(dt, 0.001f, 0.1f);
 	CMRayApplication::update(dt);
 	m_scene->Update(dt);
 }
