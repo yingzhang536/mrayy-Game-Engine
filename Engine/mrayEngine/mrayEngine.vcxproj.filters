@@ -2306,6 +2306,9 @@
     <ClInclude Include="include\DateTime.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
+    <ClInclude Include="include\AImpSceneLoader.h">
+      <Filter>Source Files\codecs\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">
@@ -3615,6 +3618,9 @@
     </ClCompile>
     <ClCompile Include="src\DateTime.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AImpSceneLoader.cpp">
+      <Filter>Source Files\codecs\models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

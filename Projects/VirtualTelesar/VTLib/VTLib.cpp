@@ -23,6 +23,7 @@
 #include "KinBodyControlComponent.h"
 #include "GGComponent.h"
 #include "ContactDisablerComponent.h"
+#include "VTCalibrationComponent.h"
 
 
 namespace mray
@@ -51,6 +52,7 @@ void RefVTLib()
 	REGISTER_COMPONENT_FACTORY(KinBodyControlComponent);
 	REGISTER_COMPONENT_FACTORY(GGComponent);
 	REGISTER_COMPONENT_FACTORY(ContactDisablerComponent);;
+	REGISTER_COMPONENT_FACTORY(VTCalibrationComponent);;
 
 	new VT::CommunicationManager();
 }
@@ -80,6 +82,7 @@ void ReleaseVTLib()
 	UNREGISTER_COMPONENT_FACTORY(KinBodyControlComponent);
 	UNREGISTER_COMPONENT_FACTORY(GGComponent);
 	UNREGISTER_COMPONENT_FACTORY(ContactDisablerComponent);
+	UNREGISTER_COMPONENT_FACTORY(VTCalibrationComponent);
 
 }
 

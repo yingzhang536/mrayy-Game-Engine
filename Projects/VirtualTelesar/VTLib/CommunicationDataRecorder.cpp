@@ -27,6 +27,15 @@ void CommunicationDataRecorder::OnDataArrived(ICommunicationLayer* layer,const C
 	if(m_mode!=Recording)
 		return;
 	//const CommunicationData*data=dynamic_cast<const CommunicationDataF*>(d);
+
+	m_commData.push_back(*d);
+	const std::list<CommunicationData::DataPair>& lst = d->GetData();
+	std::list<CommunicationData::DataPair>::const_iterator it = lst.begin();
+	for (; it != lst.end(); ++it)
+	{
+		const CommunicationData::DataPair& p = *it;
+
+	}
 }
 
 void CommunicationDataRecorder::SetRecording(const core::string& path)

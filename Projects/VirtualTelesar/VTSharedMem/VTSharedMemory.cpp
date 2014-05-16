@@ -348,7 +348,7 @@ const std::vector<core::string>& VTSharedMemoryImpl::GetScheme()
 	return m_schemeNames;
 }
 
-bool VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const core::string& args)
+core::string VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const core::string& args)
 {
 	if (cmd.equals_ignore_case("calib"))
 	{
@@ -356,9 +356,20 @@ bool VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const core::stri
 		Update(0.01f);
 		Sleep(20);
 		m_data->agent->data->status.calibration = false;
-		return true;
+		return "done";
 	}
-	return false;
+	if (cmd.equals_ignore_case("done?"))
+	{
+		if (args.equals_ignore_case("glove"))
+		{
+			return "no";
+		}
+		if (args.equals_ignore_case("posture"))
+		{
+			return "no";
+		}
+	}
+	return "";
 }
 
 VTSharedMemory::VTSharedMemory(const core::string& name)

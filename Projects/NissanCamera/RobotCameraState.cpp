@@ -20,6 +20,30 @@ namespace mray
 namespace NCam
 {
 
+	class TestController :public TBee::IHeadController
+	{
+	protected:
+	public:
+		TestController()
+		{}
+		virtual~TestController()
+		{}
+
+		virtual math::quaternion GetHeadOrientation()
+		{
+			float time = gTimer.getActualTimeAccurate();
+			math::vector3d angles;
+			angles.x = 20 * sin(time*0.001f);
+			angles.y = 30 * sin(time*0.002f);
+			angles.z = 40 * sin(time*0.005f);
+			return math::quaternion(angles);
+		}
+		virtual math::vector3d GetHeadPosition()
+		{
+			return 0;
+		}
+	};
+
 RobotCameraState::RobotCameraState()
 {
 	m_exitCode = 0;
@@ -28,7 +52,8 @@ RobotCameraState::RobotCameraState()
 	m_videoSource = new TBee::LocalCameraVideoSource();
 	m_robotConnector->SetCommunicator(new TBee::LocalRobotCommunicator());
 
-	m_headController = new TBee::CalibHeadController(new TBee::OptiTrackHeadController(1));
+	//m_headController = new TBee::CalibHeadController(new TBee::OptiTrackHeadController(1));
+	m_headController = new TBee::CalibHeadController(new TestController());
 
 	m_robotConnector->SetHeadController(m_headController);
 	m_hmdFov = 80;
@@ -206,6 +231,7 @@ void RobotCameraState::OnExit()
 	m_robotConnector->DisconnectRobot();
 }
 
+float time = 0;
 void RobotCameraState::Update(float dt)
 {
 	Parent::Update(dt);
@@ -213,6 +239,9 @@ void RobotCameraState::Update(float dt)
 	m_robotConnector->UpdateStatus();
 	math::vector3d rot = m_robotConnector->GetHeadRotation();
 	math::vector3d pos = m_robotConnector->GetHeadPosition();
+
+	rot.x = 20 * sin(time);
+	time += dt;
 	rot.y = -rot.y;
 	rot.z = -rot.z;
 	if (m_lockAxis[0])

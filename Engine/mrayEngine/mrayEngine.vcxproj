@@ -117,7 +117,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -176,7 +176,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -309,6 +309,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AImpSceneLoader.h" />
     <ClInclude Include="include\AtlasPacker.h" />
     <ClInclude Include="include\BatchRenderer.h" />
     <ClInclude Include="include\BinPacker.h" />
@@ -418,6 +419,7 @@
     <ClInclude Include="include\SSkyPlaneNode.h" />
     <ClInclude Include="include\STerrain.h" />
     <ClCompile Include="ICameraVideoGrabber.cpp" />
+    <ClCompile Include="src\AImpSceneLoader.cpp" />
     <ClCompile Include="src\AtlasPacker.cpp" />
     <ClCompile Include="src\BinPacker.cpp" />
     <ClCompile Include="src\BitmapFontData.cpp" />

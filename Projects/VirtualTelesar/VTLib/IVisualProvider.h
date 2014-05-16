@@ -12,7 +12,7 @@ namespace VT
 {
 
 
-class IVisualProvider
+class IVisualProvider :public ICommunicationProvider
 {
 	DECLARE_RTTI;
 protected:

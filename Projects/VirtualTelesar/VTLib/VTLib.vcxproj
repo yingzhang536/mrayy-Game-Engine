@@ -161,12 +161,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CalibrationManager.cpp" />
     <ClCompile Include="ContactCollisionDebugger.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
     </ClCompile>
     <ClCompile Include="ContactDisablerComponent.cpp" />
     <ClCompile Include="GGComponent.cpp" />
     <ClCompile Include="GGDriver.cpp" />
+    <ClCompile Include="VTCalibrationComponent.cpp" />
+    <ClCompile Include="VTCalibrationManager.cpp" />
+    <ClCompile Include="VTGloveCalibrationStep.cpp" />
     <ClCompile Include="GUIComponentTreeBox.cpp" />
     <ClCompile Include="GUISpringTouchElement.cpp" />
     <ClCompile Include="GUIMotorConnector.cpp" />
@@ -204,17 +208,24 @@
     <ClCompile Include="CommunicationData.cpp" />
     <ClCompile Include="CommunicatorScheme.cpp" />
     <ClCompile Include="GUIGraphPlotElement.cpp" />
+    <ClCompile Include="VTPostureCalibrationStep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalibrationManager.h" />
     <ClInclude Include="ContactCollisionDebugger.h" />
     <ClInclude Include="ContactDisablerComponent.h" />
     <ClInclude Include="GGComponent.h" />
     <ClInclude Include="GGDriver.h" />
+    <ClInclude Include="VTCalibrationComponent.h" />
+    <ClInclude Include="VTCalibrationManager.h" />
+    <ClInclude Include="VTGloveCalibrationStep.h" />
     <ClInclude Include="GUIComponentTreeBox.h" />
     <ClInclude Include="GUISpringTouchElement.h" />
     <ClInclude Include="GUIMotorConnector.h" />
     <ClInclude Include="IAudioProvider.h" />
+    <ClInclude Include="ICalibrationStep.h" />
     <ClInclude Include="ICommunicationProvider.h" />
+    <ClInclude Include="IControlProvider.h" />
     <ClInclude Include="IForceFeedbackDriver.h" />
     <ClInclude Include="IRobotJointComponent.h" />
     <ClInclude Include="ISensorModulator.h" />
@@ -225,6 +236,7 @@
     <ClInclude Include="MotorConnection.h" />
     <ClInclude Include="mywsock.h" />
     <ClInclude Include="PIDController.h" />
+    <ClInclude Include="VTPostureCalibrationStep.h" />
     <ClInclude Include="RobotCommunicator.h" />
     <ClInclude Include="SensorCurve.h" />
     <ClInclude Include="SpringTouchSensorComponent.h" />

@@ -8,6 +8,7 @@
 #include "3dsLoader.h"
 #include "mdlLoaderV0.h"
 #include "MeshV2Loader.h"
+#include "AImpSceneLoader.h"
 
 
 
@@ -26,6 +27,7 @@ MeshResourceManager::MeshResourceManager()
 	//addMeshLoader(new loaders::_3dsLoader());
 	addMeshLoader(new loaders::mdlLoaderV0());
 	addMeshLoader(new loaders::MeshV2Loader());
+	loaders::AImpSceneLoader::InitImporters(m_meshLoader);
 
 }
 MeshResourceManager::~MeshResourceManager(){

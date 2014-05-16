@@ -1,0 +1,12 @@
+Settings{
+	Bits	"24"
+	Camera_Left	"No"
+	Camera_Right	"No"
+	Debugging	"Yes"
+	Fullscreen	"False"
+	Monitor	"0"
+	Multisample	"0"
+	Resolution	"720,1280"
+	Stereoscopic	"None"
+	VSync	"False"
+}

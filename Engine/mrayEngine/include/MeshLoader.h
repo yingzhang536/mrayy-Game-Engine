@@ -21,13 +21,15 @@ namespace loaders
 
 class MRAY_DLL MeshLoader
 {
-	std::list<IMeshLoader*> Loaders;
+	std::map<core::string,IMeshLoader*> m_Loaders;
 public:
 	MeshLoader(){}
 	virtual ~MeshLoader();
 	void addLoader(IMeshLoader* loader);
 	scene::SMesh* Load(const  core::string&name);
 	scene::SMesh* Load(OS::IStream* file);
+
+	IMeshLoader* GetLoader(const core::string& ext);
 };
 
 };//loaders

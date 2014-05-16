@@ -40,6 +40,9 @@
 #include "IFileMonitor.h"
 #include "DynamicFontGenerator.h"
 
+#include "PythonScriptManager.h"
+
+
 namespace mray
 {
 namespace NCam
@@ -240,6 +243,9 @@ void Application::init(const OptionContainer &extraOptions)
 		AppData::Instance()->optiDataSource->ConnectLocal();
 
 	gLogManager.log("Starting Application", ELL_INFO);
+
+	script::PythonScriptManager* scriptManager = new script::PythonScriptManager();
+	scriptManager->ExecuteFile(gFileSystem.openFile("testPython.py"));
 
 }
 void Application::_createViewports()

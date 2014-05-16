@@ -17,6 +17,7 @@
 #include "KinBodyControlComponent.h"
 #include "GGComponent.h"
 #include "ContactDisablerComponent.h"
+#include "VTCalibrationComponent.h"
 
 namespace mray
 {
@@ -43,7 +44,8 @@ namespace VT
 
 	IMPLEMENT_RTTI(CoupledJointComponent,IVTComponent);
 	IMPLEMENT_RTTI(SpringTouchSensorComponent,IVTComponent);
-	IMPLEMENT_RTTI(KinBodyControlComponent,IVTComponent)
+	IMPLEMENT_RTTI(KinBodyControlComponent, IVTComponent);
+	IMPLEMENT_RTTI(VTCalibrationComponent, IVTComponent);
 
 	IMPLEMENT_GAMECOMPONENT_FACTORY(SoundListenerComponent);
 	IMPLEMENT_GAMECOMPONENT_FACTORY(MountableComponent);
@@ -60,6 +62,7 @@ namespace VT
 	IMPLEMENT_GAMECOMPONENT_FACTORY(KinBodyControlComponent);
 	IMPLEMENT_GAMECOMPONENT_FACTORY(GGComponent);
 	IMPLEMENT_GAMECOMPONENT_FACTORY(ContactDisablerComponent);
+	IMPLEMENT_GAMECOMPONENT_FACTORY(VTCalibrationComponent);
 
 }
 }

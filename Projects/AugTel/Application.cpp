@@ -59,6 +59,8 @@
 
 #include "IDirOS.h"
 
+#include "MeshResourceManager.h"
+
 namespace mray
 {
 namespace AugTel
@@ -271,7 +273,6 @@ void Application::init(const OptionContainer &extraOptions)
 		m_cam2 = extraOptions.GetOptionByName("Camera1")->getValueIndex();
 	}
 	_InitResources();
-
 
 
 	GUI::GUIRegisterer::RegisterElements();

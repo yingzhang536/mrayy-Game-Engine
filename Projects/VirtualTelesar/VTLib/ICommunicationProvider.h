@@ -33,6 +33,7 @@ public:
 
 	virtual EProviderStatus QueryState() = 0;
 
+	virtual void Update(float dt){}
 };
 
 
