@@ -2,7 +2,7 @@
 
 
 #include "mrayDev.h"
-#include "CFps.h"
+#include "FPSCalc.h"
 #include "ITimer.h"
 #include "ShaderSemanticTable.h"
 #include "BenchmarkItem.h"

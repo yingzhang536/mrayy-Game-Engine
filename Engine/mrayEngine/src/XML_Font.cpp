@@ -19,10 +19,18 @@ IFont* XML_Font::loadXML(OS::IStream* stream){
 		return false;
 	}
 
-	xml::XMLElement*elem= xmlTree.getSubElement(mT("Font"));
-	if(!elem)
-		return false;
-	return readFontElement(elem);
+	xml::XMLElement*elem= xmlTree.getSubElement(mT("Fonts"));
+	if (!elem)
+		return 0;
+	elem = elem->getSubElement("Font");
+	IFont* f = 0;
+	while (elem)
+	{
+		f=readFontElement(elem);
+		gFontResourceManager.addFont(f);
+		elem = elem->nextSiblingElement("Font");
+	}
+	return f;
 }
 
 IFont* XML_Font::readFontElement(xml::XMLElement*attrs){

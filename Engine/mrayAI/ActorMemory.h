@@ -28,7 +28,7 @@ class MRAY_AI_DLL ActorMemory:public IAIComponent
 private:
 protected:
 	MemoryTicketList m_tickets;
-	uint m_fogetFactor;//how long this agent well keep track of an actor in his memory
+	double m_fogetFactor;//how long this agent well keep track of an actor in his memory
 	
 	DECLARE_PROPERTY_TYPE(ForgetFactor,uint,MRAY_AI_DLL)
 public:

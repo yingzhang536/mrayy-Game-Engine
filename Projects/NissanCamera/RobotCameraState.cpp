@@ -31,7 +31,7 @@ namespace NCam
 
 		virtual math::quaternion GetHeadOrientation()
 		{
-			float time = gTimer.getActualTimeAccurate();
+			float time = gTimer.getSeconds();
 			math::vector3d angles;
 			angles.x = 20 * sin(time*0.001f);
 			angles.y = 30 * sin(time*0.002f);

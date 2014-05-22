@@ -48,7 +48,7 @@ void GstStereoStreamVideoSource::Close()
 bool GstStereoStreamVideoSource::Blit()
 {
 	bool dirty = false;
-	m_providers->Update(gFPS.dt());
+	m_providers->Update(gEngine.getFPS()->dt());
 	if (m_providers->HasNewImage(0))
 	{
 		const video::ImageInfo* image = m_providers->GetImage(0);

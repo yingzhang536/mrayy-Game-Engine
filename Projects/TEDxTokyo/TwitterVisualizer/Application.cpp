@@ -37,6 +37,10 @@
 #include "Viewport.h"
 #include "TwitterTweet.h"
 #include "TwitterUserProfile.h"
+#include "GUISceneSpacePanel.h"
+
+#include "GUISweepingText.h"
+#include "SFModSoundmanager.h"
 
 namespace mray
 {
@@ -90,6 +94,10 @@ void Application::init(const OptionContainer &extraOptions)
 	network::createWin32Network();
 
 	{
+		m_soundManager = new sound::SFModSoundManager();
+		gAppData.soundManager = m_soundManager;
+	}
+	{
 		//gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
 		GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 		GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
@@ -119,6 +127,8 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUISpeakerDetailsPanel);
 		REGISTER_GUIElement_FACTORY(GUITweetDetailsPanel);
 		REGISTER_GUIElement_FACTORY(GUIProfilePicture);
+		REGISTER_GUIElement_FACTORY(GUISceneSpacePanel);
+		REGISTER_GUIElement_FACTORY(GUISweepingText);
 	}
 
 	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
@@ -150,6 +160,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 {
 	video::TextureUnit tex;
 
+	m_scene->Update(GetDrawFPS().dt());
 	getDevice()->set2DMode();
 	getDevice()->setViewport(m_mainVP);
 	m_scene->Draw(m_mainVP->getAbsRenderingViewPort());
@@ -185,7 +196,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		attr.wrap = 0;
 		attr.RightToLeft = 0;
 		core::UTFString msg;
-		msg = L"FPS: " + core::string_to_wchar(core::StringConverter::toString(gFPS.getFPS()));
+		msg = L"FPS: " + core::string_to_wchar(core::StringConverter::toString(gEngine.getFPS()->getFPS()));
 		font->print(math::rectf(0, 0, 200, 100), &attr, &math::rectf(0, 0, 200, 100), msg, &m_guiRender);
 		
 		msg = "Draw Calls=" + core::StringConverter::toString(getDevice()->getBatchDrawnCount());
@@ -201,7 +212,7 @@ void Application::update(float dt)
 {
 	dt = math::clamp(dt, 0.001f, 0.1f);
 	CMRayApplication::update(dt);
-	m_scene->Update(dt);
+	m_soundManager->runSounds(dt);
 }
 
 }

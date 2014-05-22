@@ -20,7 +20,7 @@
 namespace mray{
 namespace OS{
 
-class MRAY_DLL ITimer:public ISingleton<ITimer>
+class MRAY_DLL ITimer
 {
 public:
 	ITimer(){}
@@ -29,20 +29,14 @@ public:
 	virtual void initTimer()=0;
 
 	//! get ms value
-	virtual ulong getActualTime(void)=0;
+	virtual ulong getMilliseconds(void)=0;
 
-	//! get time in the internal precision (use with GetDifference100() )
-	virtual double getActualTimeAccurate()=0;
+	virtual ulong getMicroseconds() = 0;
+	virtual double getSeconds() = 0;
 };
 
-#define gTimer mray::OS::ITimer::getInstance()
 }
 }
-
-//this macro calculates block execution time 
-#define calcTime(dt)\
-	for(float __aux=0, __t1=gTimer.getActualTime();__aux!=1;__aux=1,\
-	dt=gTimer.getActualTime()-__t1)
 
 #endif //___ITimer___
 

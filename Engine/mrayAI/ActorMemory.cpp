@@ -2,6 +2,7 @@
 
 #include "ActorMemory.h"
 #include "ITimer.h"
+#include "Engine.h"
 #include "AIComponentTypes.h"
 
 
@@ -104,7 +105,7 @@ MemoryTicketList& ActorMemory::GetMemoryTickets()
 
 void ActorMemory::Update(float dt)
 {
-	uint time=gTimer.getActualTime();
+	double time=gEngine.getTimer()->getSeconds();
 	MemoryTicketList::iterator it= m_tickets.begin();
 	while (it!= m_tickets.end())
 	{

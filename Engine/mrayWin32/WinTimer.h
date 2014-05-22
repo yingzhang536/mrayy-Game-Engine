@@ -17,17 +17,12 @@ namespace OS{
 class MRAY_Win32_DLL WinTimer:public ITimer
 {
 	
-	int highPerformanceTimerSupport;
+	LONGLONG m_lastTime;
+	DWORD m_startTick;
+	LARGE_INTEGER m_startTime;
+	LARGE_INTEGER m_frequency;
+	DWORD_PTR m_timerMask;
 
-	ulong m_startTime;
-
-	double resolution;
-	LARGE_INTEGER performanceTimerStart;
-	LARGE_INTEGER frequency;
-
-	double reminder;
-	
-	bool highPerformanceSupport;
 public:
 	WinTimer();
 	virtual~WinTimer(){};
@@ -35,11 +30,13 @@ public:
 	void initTimer();
 
 	//! get ms value
-	ulong getActualTime(void);
+	virtual ulong getMilliseconds(void);;
 
-	//! get time in the internal precision (use with GetDifference100() )
-	double getActualTimeAccurate();
-
+	virtual ulong getMicroseconds();
+	virtual double getSeconds()
+	{
+		return (double)getMicroseconds()*0.001;
+	}
 	
 };
 

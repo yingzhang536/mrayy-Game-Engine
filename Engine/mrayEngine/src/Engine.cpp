@@ -61,7 +61,7 @@
 #include "SoundManagerFactory.h"
 #include "IErrorDialog.h"
 #include "ITimer.h"
-#include "CFPS.h"
+#include "FPSCalc.h"
 #include "SParticleSystemFactory.h"
 #include "SMeshManipulator.h"
 #include "EventQueue.h"
@@ -80,223 +80,398 @@ namespace mray
 {
 
 
-Engine::Engine(GCPtr<OS::IOSystem> system)
-{
+	class EngineImpl
+	{
+	public:
 
+		JobPool* jobPool;
 
-	m_rootBenchmark=new BenchmarkItem(mT("Engine"));
+		GCPtr<OS::IOSystem> ioSystem;
+		GCPtr<video::IVideoDevice> device;
+		OS::ArchiveManager* archiveManager;
 
-	new FunctionProfileManager();
-	new DefaultObjects();
+		scene::MeshGenerator* meshGenerator;
+		//	GCPtr<GUI::GUIThemeManager> skinManager;
+		GUI::GUIThemeManager* themeManager;
 
-	DefaultObjects::registerDefaultObjects();
+		ILogManager* loggerManager;
+		PluginManager* pluginManager;
 
-	new EnumManager();
-	DefaultEnum::registerDefaultEnum();
+		sound::SoundManagerFactory* soundManagerFactory;
+		/*
+		TextureResourceManager* textureResManager;
+		SoundResourceManager* soundResManager;
+		MaterialResourceManager* mtrlResManager;
+		MeshResourceManager* meshResManager;
+		FontResourceManager* fontResManager;
+		ImageSetResourceManager* imagesetResManager;
+		ShaderResourceManager* shaderResManager;
+		AnimationResourceManager* animResManager;*/
+		ResourceGroup* resourceGroup;
 
-	new CommandManager();
+		DelegateManager* delegateManager;
 
-	m_ioSystem=system;
+		scene::SMeshManipulator* meshManipulator;
+		scene::SParticleSystemFactory* particleSystemFactory;
 
-	m_traceManager=new TraceManager();
+		xml::IXMLParser* xmlParser;
 
-	traceFunction(eEngine);
+		EventQueue* eventQueue;
 
+		TraceManager* traceManager;
 
-	m_delegateManager=new DelegateManager();
+		math::MTrigTable* mathTrigTable;
 
-	m_scheduleManager=new ScheduleManager();
 
-	m_mathTrigTable=new math::MTrigTable();
+		video::DeviceFactory* deviceFactory;
 
+		video::ShaderSemanticTable* shaderSemTable;
 
-	m_loggerManager=new LogManager();
+		CPUInfo* cpuInfo;
 
-	new LogSubSystemManager();
+		ScheduleManager* scheduleManager;
 
-	m_cpuInfo=new CPUInfo();
+		BenchmarkItem *rootBenchmark;
 
-	m_eventQueue=new EventQueue();
+		OS::ITimer* timer;
+		core::FPSCalc* fpsCounter;
 
-	m_jobPool=new JobPool();
+	public:
 
-	m_particleSystemFactory=new scene::SParticleSystemFactory();
+		EngineImpl(GCPtr<OS::IOSystem> system)
+		{
+			rootBenchmark = new BenchmarkItem(mT("Engine"));
 
-	m_meshManipulator=new scene::SMeshManipulator();
+			new FunctionProfileManager();
+			new DefaultObjects();
 
+			DefaultObjects::registerDefaultObjects();
 
-// 	GCPtr<StreamLogger> logger= new StreamLogger(true);
-// 	m_loggerManager->addLogDevice(logger);
-// 	logger->setStream(gFileSystem.createTextFileWriter(mT("log.txt")));
+			new EnumManager();
+			DefaultEnum::registerDefaultEnum();
 
-	m_resourceGroup=new ResourceGroup();
+			new CommandManager();
 
-	m_shaderSemTable=new video::ShaderSemanticTable();
+			ioSystem = system;
 
-	new scene::MeshFileCreatorManager();
+			traceManager = new TraceManager();
 
+			traceFunction(eEngine);
 
-	new ScriptResourceManager();
 
-	new scene::SceneHelper();
+			delegateManager = new DelegateManager();
 
-	new scene::SkyBoxManager();
+			scheduleManager = new ScheduleManager();
 
-	new AsyncLoadManager();
+			mathTrigTable = new math::MTrigTable();
 
-	m_pluginManager=new PluginManager();
 
-	new FileResourceManager();
-	new AnimationResourceManager();
-	new SkeletonResourceManager();
-	new MaterialResourceManager();
-	new SoundResourceManager();
-	new MeshResourceManager();
-	new TextureResourceManager(0);
-	new FontResourceManager(0);
-	new ShaderResourceManager(0);
-	new ImageSetResourceManager();
-	new VideoResourceManager();
+			loggerManager = new LogManager();
 
-	new video::TextureSourceFactory();
+			new LogSubSystemManager();
 
-	m_soundManagerFactory=new sound::SoundManagerFactory();
+			cpuInfo = new CPUInfo();
 
-	m_meshGenerator=new scene::MeshGenerator();
-	
+			eventQueue = new EventQueue();
 
-	m_xmlParser=new xml::XMLExpatParser();
+			jobPool = new JobPool();
 
+			particleSystemFactory = new scene::SParticleSystemFactory();
 
-	m_archiveManager=new OS::ArchiveManager();
+			meshManipulator = new scene::SMeshManipulator();
 
-	m_fpsCounter = new core::CFPS();
 
+			// 	GCPtr<StreamLogger> logger= new StreamLogger(true);
+			// 	loggerManager->addLogDevice(logger);
+			// 	logger->setStream(gFileSystem.createTextFileWriter(mT("log.txt")));
 
-//	m_skinManager=new GUI::GUIThemeManager();
-	m_themeManager=new GUI::GUIThemeManager();
+			resourceGroup = new ResourceGroup();
 
+			shaderSemTable = new video::ShaderSemanticTable();
 
-	new GUI::GUIOverlayManager();
-	new GUI::GUIElementFactory();
+			new scene::MeshFileCreatorManager();
 
-	gTimer.initTimer();
 
-	
-	m_deviceFactory=new video::DeviceFactory();
+			new ScriptResourceManager();
 
-	new scene::MeshAnimatorManager();
+			new scene::SceneHelper();
 
-	new GUI::TextDecorateNodeFactory();
+			new scene::SkyBoxManager();
 
+			new AsyncLoadManager();
 
-	new network::InternetCacheManager();
+			pluginManager = new PluginManager();
 
-}
-Engine::~Engine(){
-	traceFunction(Engine);
+			new FileResourceManager();
+			new AnimationResourceManager();
+			new SkeletonResourceManager();
+			new MaterialResourceManager();
+			new SoundResourceManager();
+			new MeshResourceManager();
+			new TextureResourceManager(0);
+			new FontResourceManager(0);
+			new ShaderResourceManager(0);
+			new ImageSetResourceManager();
+			new VideoResourceManager();
 
-	delete network::InternetCacheManager::getInstancePtr();
+			new video::TextureSourceFactory();
 
-	delete m_pluginManager;
+			soundManagerFactory = new sound::SoundManagerFactory();
 
-	delete m_mathTrigTable;
+			meshGenerator = new scene::MeshGenerator();
 
-	delete m_deviceFactory;
 
-	delete m_themeManager;
+			xmlParser = new xml::XMLExpatParser();
 
-	delete GUI::TextDecorateNodeFactory::getInstancePtr();
-	delete scene::MeshAnimatorManager::getInstancePtr();
-	delete GUI::GUIOverlayManager::getInstancePtr();
-	delete GUI::GUIElementFactory::getInstancePtr();
 
-	delete AsyncLoadManager::getInstancePtr();
+			archiveManager = new OS::ArchiveManager();
 
-	delete scene::SkyBoxManager::getInstancePtr();
+			fpsCounter = new core::FPSCalc();
 
+			timer = system->createTimer();
+			timer->initTimer();
+			fpsCounter->resetTime(timer->getSeconds());
 
-	delete m_archiveManager;
-	SoundResourceManager::getInstance().removeAll();
-	ScriptResourceManager::getInstance().removeAll();
-	FileResourceManager::getInstance().removeAll();
-	FontResourceManager::getInstance().removeAll();
-	ShaderResourceManager::getInstance().removeAll();
-	MaterialResourceManager::getInstance().removeAll();
-	MeshResourceManager::getInstance().removeAll();
-	AnimationResourceManager::getInstance().removeAll();
-	ImageSetResourceManager::getInstance().removeAll();
-	TextureResourceManager::getInstance().removeAll();
-	VideoResourceManager::getInstance().removeAll();
 
-	delete video::TextureSourceFactory::getInstancePtr();
+			//	skinManager=new GUI::GUIThemeManager();
+			themeManager = new GUI::GUIThemeManager();
 
-	delete m_resourceGroup;
-	delete m_soundManagerFactory;
 
-	delete m_xmlParser;
+			new GUI::GUIOverlayManager();
+			new GUI::GUIElementFactory();
 
-	delete m_particleSystemFactory;
-	delete m_meshManipulator;
 
-	delete m_shaderSemTable;
 
-	delete m_scheduleManager;
+			deviceFactory = new video::DeviceFactory();
 
-	delete m_meshGenerator;
+			new scene::MeshAnimatorManager();
 
-	m_device=0;
-	OS::IDllManager::getInstance().ClearLibraries();
-	delete m_jobPool;
-	
-	m_loggerManager->log(mT("Engine shutdown"),ELL_SUCCESS);
-	m_loggerManager->close();
+			new GUI::TextDecorateNodeFactory();
 
-	delete scene::SceneHelper::getInstancePtr();
-	delete scene::MeshFileCreatorManager::getInstancePtr();
 
-	delete LogSubSystemManager::getInstancePtr();
+			new network::InternetCacheManager();
 
-	delete m_loggerManager;
+		}
+		~EngineImpl(){
+			traceFunction(Engine);
 
+			delete network::InternetCacheManager::getInstancePtr();
 
-	delete CommandManager::getInstancePtr();
+			delete pluginManager;
 
-	delete m_delegateManager;
+			delete mathTrigTable;
 
-	delete m_cpuInfo;
-	delete m_eventQueue;
-	delete m_fpsCounter;
+			delete deviceFactory;
 
+			delete themeManager;
 
-	forceExitFunction();
-	delete m_traceManager;
+			delete GUI::TextDecorateNodeFactory::getInstancePtr();
+			delete scene::MeshAnimatorManager::getInstancePtr();
+			delete GUI::GUIOverlayManager::getInstancePtr();
+			delete GUI::GUIElementFactory::getInstancePtr();
 
-	DefaultEnum::removeDefaultEnum();
-	delete EnumManager::getInstancePtr();
-	delete DefaultObjects::getInstancePtr();
+			delete AsyncLoadManager::getInstancePtr();
 
-	delete FunctionProfileManager::getInstancePtr();
+			delete scene::SkyBoxManager::getInstancePtr();
 
-	delete m_rootBenchmark;
-	m_ioSystem=0;
-}
+
+			delete archiveManager;
+			SoundResourceManager::getInstance().removeAll();
+			ScriptResourceManager::getInstance().removeAll();
+			FileResourceManager::getInstance().removeAll();
+			FontResourceManager::getInstance().removeAll();
+			ShaderResourceManager::getInstance().removeAll();
+			MaterialResourceManager::getInstance().removeAll();
+			MeshResourceManager::getInstance().removeAll();
+			AnimationResourceManager::getInstance().removeAll();
+			ImageSetResourceManager::getInstance().removeAll();
+			TextureResourceManager::getInstance().removeAll();
+			VideoResourceManager::getInstance().removeAll();
+
+			delete video::TextureSourceFactory::getInstancePtr();
+
+			delete resourceGroup;
+			delete soundManagerFactory;
+
+			delete xmlParser;
+
+			delete particleSystemFactory;
+			delete meshManipulator;
+
+			delete shaderSemTable;
+
+			delete scheduleManager;
+
+			delete meshGenerator;
+
+			device = 0;
+			OS::IDllManager::getInstance().ClearLibraries();
+			delete jobPool;
+
+			loggerManager->log(mT("Engine shutdown"), ELL_SUCCESS);
+			loggerManager->close();
+
+			delete scene::SceneHelper::getInstancePtr();
+			delete scene::MeshFileCreatorManager::getInstancePtr();
+
+			delete LogSubSystemManager::getInstancePtr();
+
+			delete loggerManager;
+
+
+			delete CommandManager::getInstancePtr();
+
+			delete delegateManager;
+
+			delete cpuInfo;
+			delete eventQueue;
+			delete fpsCounter;
+			delete timer;
+
+			forceExitFunction();
+			delete traceManager;
+
+			DefaultEnum::removeDefaultEnum();
+			delete EnumManager::getInstancePtr();
+			delete DefaultObjects::getInstancePtr();
+
+			delete FunctionProfileManager::getInstancePtr();
+
+			delete rootBenchmark;
+			ioSystem = 0;
+		}
+
+
+		void updateBenchMark(){
+			traceFunction(Engine);
+			static double lastTime = 0;
+			double t = timer->getSeconds();
+			lastTime = t;
+		}
+
+		void updateEngine(){
+			traceFunction(Engine);
+			float currtime = timer->getSeconds();
+			fpsCounter->regFrame(currtime);
+			updateBenchMark();
+			video::ShaderSemanticTable::getInstance().setTime(timer->getSeconds());
+			video::ShaderSemanticTable::getInstance().setDTime(fpsCounter->dt());
+			scheduleManager->update(fpsCounter->dt());
+		}
+
+		/*
+		GCPtr<video::IVideoDevice> Engine::createDevice(video::EDeviceType deviceType,uint window,math::Point2di size,
+		int bits,bool vsync,int multiSample,bool stencilBuffer)
+		{
+
+		traceFunction(Engine);
+		device=deviceFactory->createDevice(deviceType,window,size,bits,vsync,multiSample,stencilBuffer);
+		if(!device){
+		gLogManager.log(mT("Device Type Unkown!"),ELL_WARNING);
+		return 0;
+		}
+
+		textureResManager->setDevice(device);
+		fontResManager->setDevice(device);
+		shaderResManager->setDevice(device);
+
+		if(device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
+		{
+		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(true);
+		}else
+		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(false);
+		return device;
+
+		}*/
+		GCPtr<video::IVideoDevice> createDevice(const core::string& type)
+		{
+			traceFunction(Engine);
+			if (device)
+				gLogManager.log(mT("Device already created"), ELL_ERROR);
+
+			device = deviceFactory->createDevice(type);
+			if (!device){
+				gLogManager.log(mT("Device Type Unkown!"), ELL_WARNING);
+				return 0;
+			}
+
+			TextureResourceManager::getInstance().setDevice(device);
+			FontResourceManager::getInstance().setDevice(device);
+			ShaderResourceManager::getInstance().setDevice(device);
+
+
+			if (device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
+			{
+				scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(true);
+			}
+			else
+				scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(false);
+
+			gLogManager.log(mT("Device Created: ") + type, ELL_SUCCESS);
+			return device;
+
+		}
+
+		void loadPlugins(const core::string &pluginsConfigFile){
+			traceFunction(Engine);
+			gLogManager.startSection(mT("Loading Plugins"));
+			OS::IStreamPtr stream = gFileSystem.createTextFileReader(pluginsConfigFile.c_str());
+			GCPtr<script::CSettingsFile> resources = new script::CSettingsFile(stream);
+			script::SConfigTag*tag = resources->getTag(mT("Plugins"));
+			if (tag){
+				script::SConfigTag::AttributesIT it = tag->m_attrSet.begin();
+				for (; it != tag->m_attrSet.end(); ++it){
+					PluginManager::getInstance().addPlugin(it->second);
+				}
+			}
+			gLogManager.endSection(1);
+		}
+
+		void loadResourceFile(const core::string &resFile){
+
+			traceFunction(Application);
+			OS::IStreamPtr stream = gFileSystem.createTextFileReader(resFile);
+			GCPtr<script::CSettingsFile> resources = new script::CSettingsFile(stream);
+			script::SConfigTag*tag = resources->getTag(mT("SearchPath"));
+			if (tag){
+				script::SConfigTag::AttributesIT it = tag->m_attrSet.begin();
+				for (; it != tag->m_attrSet.end(); ++it){
+					gFileSystem.addPath(it->second);
+				}
+			}
+			tag = resources->getTag(mT("Archive"));
+			if (tag){
+				script::SConfigTag::AttributesIT it = tag->m_attrSet.begin();
+				for (; it != tag->m_attrSet.end(); ++it){
+					OS::ArchiveManager::getInstance().addArchive(it->second);
+				}
+			}
+			tag = resources->getTag(mT("Materials"));
+			if (tag){
+				script::SConfigTag::AttributesIT it = tag->m_attrSet.begin();
+				for (; it != tag->m_attrSet.end(); ++it){
+					gMaterialResourceManager.parseMaterialScript(gFileSystem.createBinaryFileReader(it->second));
+				}
+			}
+		}
+	};
+
+	Engine::Engine(GCPtr<OS::IOSystem> system)
+	{
+
+		m_impl = new EngineImpl(system);
+	}
+	Engine::~Engine()
+	{
+		delete m_impl;
+	}
 
 void Engine::updateBenchMark(){
-	traceFunction(Engine);
-	static ulong lastTime=0;
-	ulong t=gTimer.getActualTime();
-	lastTime=t;
+	m_impl->updateBenchMark();
 }
 
 void Engine::updateEngine(){
-	traceFunction(Engine);
-	float currtime=gTimer.getActualTime();
-	core::CFPS::getInstance().regFrame(currtime);
-	updateBenchMark();
-	video::ShaderSemanticTable::getInstance().setTime(gTimer.getActualTime()*0.001);
-	video::ShaderSemanticTable::getInstance().setDTime(gFPS.dt());
-	m_scheduleManager->update(gFPS.dt());
+	m_impl->updateEngine();
 }
 
 /*
@@ -305,94 +480,43 @@ GCPtr<video::IVideoDevice> Engine::createDevice(video::EDeviceType deviceType,ui
 {
 
 	traceFunction(Engine);
-	m_device=m_deviceFactory->createDevice(deviceType,window,size,bits,vsync,multiSample,stencilBuffer);
-	if(!m_device){
+	device=deviceFactory->createDevice(deviceType,window,size,bits,vsync,multiSample,stencilBuffer);
+	if(!device){
 		gLogManager.log(mT("Device Type Unkown!"),ELL_WARNING);
 		return 0;
 	}
 
-	m_textureResManager->setDevice(m_device);
-	m_fontResManager->setDevice(m_device);
-	m_shaderResManager->setDevice(m_device);
+	textureResManager->setDevice(device);
+	fontResManager->setDevice(device);
+	shaderResManager->setDevice(device);
 
-	if(m_device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
+	if(device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
 	{
 		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(true);
 	}else
 		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(false);
-	return m_device;
+	return device;
 
 }*/
 GCPtr<video::IVideoDevice> Engine::createDevice(const core::string& type)
 {
-	traceFunction(Engine);
-	if(m_device)
-		gLogManager.log(mT("Device already created"),ELL_ERROR);
-
-	m_device=m_deviceFactory->createDevice(type);
-	if(!m_device){
-		gLogManager.log(mT("Device Type Unkown!"),ELL_WARNING);
-		return 0;
-	}
-
-	TextureResourceManager::getInstance().setDevice(m_device);
-	FontResourceManager::getInstance().setDevice(m_device);
-	ShaderResourceManager::getInstance().setDevice(m_device);
-
-	
-	if(m_device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
-	{
-		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(true);
-	}else
-		scene::MeshAnimatorManager::getInstance().SetGPUBasedAnimators(false);
-
-	gLogManager.log(mT("Device Created: ")+ type,ELL_SUCCESS);
-	return m_device;
+	return m_impl->createDevice(type);
 
 }
 
 void Engine::loadPlugins(const core::string &pluginsConfigFile){
-	traceFunction(Engine);
-	gLogManager.startSection(mT("Loading Plugins"));
-	OS::IStreamPtr stream=gFileSystem.createTextFileReader(pluginsConfigFile.c_str());
-	GCPtr<script::CSettingsFile> resources=new script::CSettingsFile(stream);
-	script::SConfigTag*tag= resources->getTag(mT("Plugins"));
-	if(tag){
-		script::SConfigTag::AttributesIT it= tag->m_attrSet.begin();
-		for(;it!=tag->m_attrSet.end();++it){
-			PluginManager::getInstance().addPlugin(it->second);
-		}
-	}
-	gLogManager.endSection(1);
+	m_impl->loadPlugins(pluginsConfigFile);
 }
 
 void Engine::loadResourceFile(const core::string &resFile){
+	m_impl->loadResourceFile(resFile);
 
-	traceFunction(Application);
-	OS::IStreamPtr stream=gFileSystem.createTextFileReader(resFile);
-	GCPtr<script::CSettingsFile> resources=new script::CSettingsFile(stream);
-	script::SConfigTag*tag= resources->getTag(mT("SearchPath"));
-	if(tag){
-		script::SConfigTag::AttributesIT it= tag->m_attrSet.begin();
-		for(;it!=tag->m_attrSet.end();++it){
-			gFileSystem.addPath(it->second);
-		}
-	}
-	tag= resources->getTag(mT("Archive"));
-	if(tag){
-		script::SConfigTag::AttributesIT it= tag->m_attrSet.begin();
-		for(;it!=tag->m_attrSet.end();++it){
-			OS::ArchiveManager::getInstance().addArchive(it->second);
-		}
-	}
-	tag= resources->getTag(mT("Materials"));
-	if(tag){
-		script::SConfigTag::AttributesIT it= tag->m_attrSet.begin();
-		for(;it!=tag->m_attrSet.end();++it){
-			gMaterialResourceManager.parseMaterialScript(gFileSystem.createBinaryFileReader(it->second));
-		}
-	}
 }
+GCPtr<video::IVideoDevice> Engine::getDevice(){ return m_impl-> device; }
+
+OS::ITimer* Engine::getTimer(){ return m_impl->timer; }
+core::FPSCalc* Engine::getFPS(){ return m_impl->fpsCounter; }
+BenchmarkItem* Engine::getRootBenchmarking(){ return m_impl->rootBenchmark; }
 
 
 /*

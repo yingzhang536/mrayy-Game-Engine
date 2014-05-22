@@ -33,9 +33,9 @@ namespace ted
 namespace GUI
 {
 
-	class GUISessionSidePanel;
+class GUISessionSidePanel;
 
-	class GUISpeakerDetailsPanel :public IGUIPanelElement, public GUISpeakerDetailsPanelLayout
+class GUISpeakerDetailsPanel :public IGUIPanelElement, public GUISpeakerDetailsPanelLayout
 {
 	DECLARE_RTTI;
 public:

@@ -12,7 +12,7 @@
 #include <TraceManager.h>
 #include <MaterialResourceManager.h>
 
-#include <CFPS.h>
+#include <FPSCalc.h>
 #include <ITimer.h>
 #include <common.h>
 #include <WinOSystem.h>
@@ -256,8 +256,9 @@ void CMRayApplication::onWindowResizedEvent(float x,float y){
 }
 
 void CMRayApplication::init(const OptionContainer &extraOptions){
-	math::Randomizer::srand(gTimer.getActualTime());
+	math::Randomizer::srand(gEngine.getTimer()->getMilliseconds());
 	JobPool::getInstance().SetupDefaultPools();
+	m_drawFPS.resetTime(gEngine.getTimer()->getSeconds());
 }
 void CMRayApplication::doFrame()
 {
@@ -266,7 +267,7 @@ void CMRayApplication::doFrame()
 		drawFrame();
 
 		m_inputManager->capture();
-		float dt=core::CFPS::getInstance().dt();
+		float dt = gEngine.getFPS()->dt();
 		update(dt);
 
 		Engine::getInstance().updateEngine();
@@ -274,11 +275,12 @@ void CMRayApplication::doFrame()
 }
 void CMRayApplication::drawFrame()
 {
-	float t=gTimer.getActualTimeAccurate();
+	float t=gEngine.getTimer()->getSeconds();
 	if(m_limitFps && m_limitFpsCount>0 && (t-m_drawTimeCounter)<1000.0f/m_limitFpsCount)
 	{
 		return;
 	}
+	m_drawFPS.regFrame(t);
 	m_drawTimeCounter=t;
 	for(int i=0;i<m_renderWindowLst.size();++i)
 	{
@@ -293,7 +295,7 @@ void CMRayApplication::drawFrame()
 
 void CMRayApplication::run(){
 
-	gFPS.resetTime(gTimer.getActualTime());
+	gEngine.getFPS()->resetTime(gEngine.getTimer()->getSeconds());
 	while(Win32WindowUtils::doMessagePump() && !m_terminate){
 		doFrame();
 	}

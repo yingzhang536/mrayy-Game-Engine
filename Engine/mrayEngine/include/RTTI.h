@@ -32,7 +32,7 @@ public:
 	{
 		m_name=core::StringConverter::toString(name);
 
-		m_guid=m_name;
+ 		m_guid=m_name;
 	};
 
 	const mray::GUID& GetGUID()const{return m_guid;}

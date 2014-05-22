@@ -1,6 +1,8 @@
 
 
 #include "stdafx.h"
+#if 0
+
 #include "AImpSceneLoader.h"
 
 #include "StringUtil.h"
@@ -9,6 +11,7 @@
 #include "RenderMaterial.h"
 #include "RenderPass.h"
 #include "RenderTechnique.h"
+
 
 #include "assimp/Importer.hpp"	//OO version Header!
 #include "assimp/PostProcess.h"
@@ -288,3 +291,5 @@ aiScene::~aiScene()
 
 	delete static_cast<Assimp::ScenePrivateData*>(mPrivate);
 }
+
+#endif

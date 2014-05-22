@@ -270,6 +270,15 @@
     <ClInclude Include="SceneCamera.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="GUISceneSpacePanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScenePanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISweepingText.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -374,6 +383,12 @@
     <ClCompile Include="SceneCamera.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="GUISceneSpacePanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISweepingText.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
@@ -389,6 +404,9 @@
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISpeakerDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>

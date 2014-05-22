@@ -98,19 +98,9 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 #include "mTypes.h"
 #include "ITimer.h"
-#include "CFPS.h"
+#include "FPSCalc.h"
 #include "ILogManager.h"
 #include "CRawLoader.h"
 #include "TexWriter.h"

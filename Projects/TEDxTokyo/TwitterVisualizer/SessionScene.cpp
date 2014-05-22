@@ -22,12 +22,41 @@
 #include "SpeakerNode.h"
 #include "IThreadFunction.h"
 #include "IThreadManager.h"
+#include "GUISceneSpacePanel.h"
+#include "GUIElementRegion.h"
 
+#include "GUISessionSidePanel.h"
+#include "GUISpeakerDetailsPanel.h"
 namespace mray
 {
 namespace ted
 {
 
+
+
+	class SessionRendererCallback
+	{
+		GUI::GUISessionSidePanel* m_sidePanel;
+		CSpeaker* m_selectedSpeaker;
+	public:
+
+		SessionRendererCallback()
+		{
+			m_selectedSpeaker = 0;
+		}
+		CSpeaker* GetSpeaker(){ return m_selectedSpeaker; }
+
+		void SetSidePanel(GUI::GUISessionSidePanel* sp)
+		{
+			sp->OnSpeakerChange += CreateObjectDelegate(SessionRendererCallback, this, _OnSpeakerChange);
+		}
+		void _OnSpeakerChange(IObject* sender, PVOID param)
+		{
+			m_selectedSpeaker = (CSpeaker*)param;
+			gAppData.SpeakerChange.__FIRE__OnSpeakerChange(m_selectedSpeaker);
+		}
+
+	}g_sessionCallback;
 
 	class TwitterProviderListener :public ted::ITwitterProviderListener,public OS::IThreadFunction
 	{
@@ -42,7 +71,7 @@ namespace ted
 
 		TwitterProviderListener()
 		{
-			interval = 5000;
+			interval = 5;
 			m_sinceID = 0;
 		}
 		~TwitterProviderListener()
@@ -83,14 +112,14 @@ namespace ted
 		{
 			while (caller->isActive())
 			{
-				float t = gTimer.getActualTime();
+				float t = gEngine.getTimer()->getSeconds();
 				float dt = (t - m_lastTime);
 				if (dt > interval)
 				{
 					std::vector<ted::TwitterTweet*> tweets;
 					gAppData.tweetProvider->GetTweetsSynced(L"#TEDxTokyo ", m_sinceID, 150, tweets);
 					OnTweetsLoaded(tweets);
-					m_lastTime = gTimer.getActualTime();
+					m_lastTime = gEngine.getTimer()->getSeconds();
 				}
 			}
 		}
@@ -135,13 +164,22 @@ void SessionScene::Init()
 	m_guiMngr->SetRootElement(m_guiroot);
 
 	{
+		m_sessionRenderer = new scene::SessionRenderer();
+		m_sessionRenderer->SetSessions(gAppData.sessions);
+	}
+	{
 		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIScreenLayout_V2.gui");
 		m_screenLayout = new GUI::GUIScreenLayoutImplV2();
 		screenOverlay->CreateElements(m_guiMngr, m_guiroot, 0, m_screenLayout);
+		g_sessionCallback.SetSidePanel(m_screenLayout->SessionsBar);
+		m_screenLayout->ScenePanel->SetSessionRenderer(m_sessionRenderer);
+
+
+		m_screenLayout->SessionsBar->SetSessionContainer(gAppData.sessions);
 	}
 	{
-		m_sessionRenderer = new scene::SessionRenderer();
-		m_sessionRenderer->SetSessions(gAppData.sessions);
+		m_bgm = gAppData.soundManager->loadSound("sounds//TedXTokyoBGM.mp3",true,sound::ESNDT_2D);
+		m_bgm->setLooping(true);
 	}
 	if (true)
 	{
@@ -159,11 +197,13 @@ void SessionScene::Init()
 void SessionScene::OnEnter()
 {
 	gAppData.leapDevice->AddListener(this);
+	m_bgm->play();
 }
 
 void SessionScene::OnExit()
 {
 	gAppData.leapDevice->RemoveListener(this);
+	m_bgm->stop();
 }
 
 
@@ -197,13 +237,7 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 				if (tn->GetSubTweets().size()>0)
 					m_sessionRenderer->SetHoverdItem(node);
 			}
-			else if (dynamic_cast<scene::SpeakerNode*>(node))
-			{
-				m_sessionRenderer->SetHoverdItem(node);
-				//ted::CSpeaker* t = dynamic_cast<scene::SpeakerNode*>(node)->GetSpeaker();
-				//m_screenLayout->SessionDetails->SetTweet(t);
-			}
-			if (!node)
+			else 
 			{
 				m_sessionRenderer->SetHoverdItem(0);
 			}
@@ -225,9 +259,7 @@ video::IRenderTarget* SessionScene::Draw(const math::rectf& rc)
 {
 	IRenderingScene::Draw(rc);
 
-	m_sessionRenderer->SetRenderingVP(rc);
 	Engine::getInstance().getDevice()->setRenderTarget(GetRenderTarget());
-	m_sessionRenderer->Draw();
 	m_guiMngr->DrawAll(&rc);
 	return GetRenderTarget();
 }

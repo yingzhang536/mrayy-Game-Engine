@@ -5,6 +5,7 @@
 #include "macros.h"
 #include "ILogManager.h"
 #include "ITimer.h"
+#include "Engine.h"
 #include "StringConverter.h"
 
 
@@ -60,13 +61,13 @@ TraceFunctionProfile::TraceFunctionProfile(const char*name,const mchar*catagory,
 }
 void TraceFunctionProfile::enterFunction(){
 	if(m_timeStumb){
-		m_startTime=gTimer.getActualTime();
+		m_startTime=gEngine.getTimer()->getSeconds();
 	}
 	TraceManager::getInstance().pushFunction(this);
 }
 void TraceFunctionProfile::exitFunction(){
 	if(m_timeStumb){
-		m_endTime=gTimer.getActualTime();
+		m_endTime = gEngine.getTimer()->getSeconds();
 	}
 	TraceManager::getInstance().popFunction(this);
 

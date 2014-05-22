@@ -18,6 +18,7 @@
 
 #include <cmrayapplication.h>
 #include "IRenderingScene.h"
+#include "ISoundManager.h"
 
 namespace mray
 {
@@ -26,6 +27,8 @@ class Application :public CMRayApplication
 protected:
 	ted::IRenderingScene* m_scene;
 	scene::ViewPort* m_mainVP;
+
+	GCPtr<sound::ISoundManager> m_soundManager;
 public:
 	Application();
 	virtual~Application();

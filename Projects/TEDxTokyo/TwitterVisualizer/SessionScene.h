@@ -4,6 +4,7 @@
 
 #include "IRenderingScene.h"
 #include "LeapDevice.h"
+#include "ISound.h"
 
 namespace mray
 {
@@ -35,6 +36,8 @@ protected:
 
 	scene::SessionRenderer* m_sessionRenderer;
 	TwitterProviderListener* m_providerListener;
+
+	sound::ISoundPtr m_bgm;
 
 public:
 	SessionScene();

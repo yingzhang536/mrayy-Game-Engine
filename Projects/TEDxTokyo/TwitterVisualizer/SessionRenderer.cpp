@@ -13,16 +13,18 @@
 #include "TwitterTweet.h"
 #include "SceneCamera.h"
 #include "AppData.h"
-
+#include "ViewPort.h"
 
 namespace mray
 {
 namespace scene
 {
 
+
 SessionRenderer::SessionRenderer()
 {
 	m_sessions = 0;
+	m_activeSpeaker = 0;
 	{
 		m_physics = new msa::physics::World2D();
 		m_physics->setGravity(0);
@@ -31,6 +33,10 @@ SessionRenderer::SessionRenderer()
 	m_nodeRenderer = new NodeRenderer();
 	m_dataMutex = OS::IThreadManager::getInstance().createMutex();
 	m_camera = new SceneCamera;
+
+	m_speakerDistance = 400;
+	m_tweetsDistance = 80;
+	gAppData.SpeakerChange.AddListener(this);
 }
 
 SessionRenderer::~SessionRenderer()
@@ -54,8 +60,6 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 	if (!m_sessions)
 		return;
 
-	msa::physics::Particle2D* root = new msa::physics::Particle2D(math::vector2d(400, 400));
-	root->makeFixed();
 	const std::vector<ted::SessionDetails*>& slist=m_sessions->GetSessions();
 
 	int speakerCount = 0;
@@ -65,47 +69,43 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 	}
 	std::vector<SpeakerNode*> spList;
 	float rad = 400;
+	math::vector2d pos;
 	for (int i = 0; i < slist.size();++i)
 	{
 		const std::vector<ted::CSpeaker*>& speakers = slist[i]->GetSpeakers();
 		for (int j = 0; j < speakers.size(); ++j)
 		{
 			SpeakerNode* s = new SpeakerNode(speakers[j]);
-			math::vector2d pos = root->getPosition();
-			pos.x += rad*math::cosd(m_speakers.size() * 360.0f / speakerCount);
-			pos.y += rad*math::sind(m_speakers.size() * 360.0f / speakerCount);
+
+
+
 			msa::physics::Particle2D* n = new msa::physics::Particle2D(pos);
 			m_physics->addParticle(n);
-			msa::physics::Spring2D* spr = m_physics->makeSpring(root, n,  0.005, rad);
+			n->makeFixed();
+			//msa::physics::Spring2D* spr = m_physics->makeSpring(root, n,  0.005, rad);
 
 			s->SetSize(40);
 			n->setRadius(s->GetSize() );
 			
 			s->SetPhysics(n);
 			m_speakers[s->GetUserDisplyName()] = s;
+			m_speakersSeq.push_back(s);
 
 			spList.push_back(s);
 			m_renderNodes.push_back(s);
+
+			pos.y += m_speakerDistance;
+			pos.x = math::Randomizer::randRange(-200, 200);
 		}
 	}
 
-	float segment = rad*math::TwoPI32 / m_speakers.size();
-
-	SpeakerMap::iterator  it = m_speakers.begin();
-
-	//if(false)
-	for (int i = 0;i<spList.size(); ++i)
-	{
-		int i2 = (i + 1) % spList.size();
-		msa::physics::Spring2D* spr = m_physics->makeSpring(spList[i]->GetPhysics(), spList[i2]->GetPhysics(), 0.01, segment);
-
-	}
 }
 
 void SessionRenderer::AddTweetsNodes(const std::vector<TweetNode*> &nodes)
 {
 	if (!nodes.size())
 		return;
+	gAppData.soundManager->playSound("sounds//TweetArrived.mp3", 0, true, 100, false, sound::ESNDT_2D);
 	m_dataMutex->lock();
 	for (int i = 0; i < nodes.size(); ++i)
 	{
@@ -159,8 +159,13 @@ void SessionRenderer::AddTweetsNodes(const std::vector<TweetNode*> &nodes)
 	m_dataMutex->unlock();
 }
 
-void SessionRenderer::_OnSpeakerChanged(ted::CSpeaker*s)
+void SessionRenderer::_OnSpeakerChange(ted::CSpeaker*s)
 {
+	SpeakerMap::iterator it= m_speakers.find(s->GetTwitterID());
+	if (it == m_speakers.end())
+		return;
+	m_activeSpeaker = it->second;
+	SetHoverdItem(m_activeSpeaker);
 }
 
 
@@ -204,13 +209,20 @@ void SessionRenderer::Update(float dt)
 }
 void SessionRenderer::Draw()
 {
+	video::IVideoDevice* dev = Engine::getInstance().getDevice();
+
 	math::matrix4x4 oldT;
-	Engine::getInstance().getDevice()->getTransformationState(video::TS_WORLD,oldT);
+	dev->getTransformationState(video::TS_WORLD,oldT);
 	m_camera->ApplyTransformation();
 	m_dataMutex->lock();
 	m_nodeRenderer->Clear();
 
-	SpeakerMap::iterator  it = m_speakers.begin();
+	SpeakerMap::iterator  it, it2;
+	for (int i = 0; i<m_speakersSeq.size()-1; ++i)
+	{
+		m_nodeRenderer->AddSpeakerSpeaker(m_speakersSeq[i], m_speakersSeq[i+1]);
+	}
+	it = m_speakers.begin();
 	for (; it != m_speakers.end(); ++it)
 	{
 		it->second->Draw(m_nodeRenderer);
@@ -219,14 +231,14 @@ void SessionRenderer::Draw()
 
 	if (gAppData.Debugging)
 	{
-		Engine::getInstance().getDevice()->unuseShader();
+		dev->unuseShader();
 		if (m_hoverItem)
 		{
-			Engine::getInstance().getDevice()->draw2DRectangle(m_hoverItem->GetBoundingBox(true), 1, false);
+			dev->draw2DRectangle(m_hoverItem->GetBoundingBox(true), 1, false);
 		}
 	}
 	m_nodeRenderer->RenderAll(this);
-	Engine::getInstance().getDevice()->setTransformationState(video::TS_WORLD, oldT);
+	dev->setTransformationState(video::TS_WORLD, oldT);
 }
 
 math::rectf SessionRenderer::CalcAllBox()
@@ -252,6 +264,8 @@ void SessionRenderer::SetHoverdItem(ITedNode* node)
 	if (m_hoverItem)
 		m_hoverItem->OnHoverOff();
 	m_hoverItem = node;
+	if (!m_hoverItem)
+		m_hoverItem = m_activeSpeaker;
 	if (m_hoverItem)
 		m_hoverItem->OnHoverOn();
 

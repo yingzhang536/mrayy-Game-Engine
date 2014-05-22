@@ -300,7 +300,7 @@ public:
 
 	bool NeedData(GstBuffer** b)
 	{
-		double t = gTimer.getActualTimeAccurate();
+		double t = gTimer.getSeconds();
 		double ms = t-m_time;
 		if (ms < 1000.0 / (m_frameRate))
 		{
@@ -367,7 +367,8 @@ public:
 		// 		GST_BUFFER_TIMESTAMP(buffer) = gst_util_uint64_scale(m_counter, GST_SECOND, m_frameRate);//m_counter * GST_SECOND/20;// 
 		// 
 		// 		++m_counter;
-		// 		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+		// 		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+
 
 		GstFlowReturn ret=GST_FLOW_OK;
 		//g_signal_emit_by_name(gstSrc, "push-buffer", buffer, &ret);

@@ -32,11 +32,13 @@ class SessionDetails
 protected:
 
 	core::string m_sessionName;
-	core::string m_description;
+	core::string m_theme;
+	video::SColor m_color;
 
 	std::vector<CSpeaker*> m_speakers;
 
-	core::CTime m_sessionTime;
+	core::CTime m_sessionStartTime;
+	core::CTime m_sessionEndTime;
 public:
 	SessionDetails(){}
 	virtual ~SessionDetails()
@@ -48,29 +50,34 @@ public:
 		m_speakers.clear();
 	}
 
+	const video::SColor& GetColor()const{ return m_color; }
 	const core::string& GetSessionName()const{ return m_sessionName; }
-	const core::string& GetDescription()const{ return m_description; }
-	const core::CTime& GetSessionTime()const{ return m_sessionTime; }
+	const core::string& GetTheme()const{ return m_theme; }
+	const core::CTime& GetSessionStartTime()const{ return m_sessionStartTime; }
+	const core::CTime& GetSessionEndTime()const{ return m_sessionEndTime; }
 	const std::vector<CSpeaker*>& GetSpeakers()const{ return m_speakers; }
 
 
 	void LoadFromXML(xml::XMLElement* e)
 	{
 		m_sessionName = e->getValueString("SessionName");
-		m_sessionTime = core::CTime::Parse(e->getValueString("SessionTime"));
+		m_theme = e->getValueString("Theme");
+		m_sessionStartTime = core::CTime::Parse(e->getValueString("SessionStartTime"));
+		m_sessionEndTime = core::CTime::Parse(e->getValueString("SessionEndTime"));
 
+		math::vector3d clr = core::StringConverter::toVector3d(e->getValueString("Color"))/255.0f;
+		m_color.Set(clr.x, clr.y, clr.z, 1);
 		xml::XMLElement* elem = e->getSubElement("Speaker");
+		int o = 0;
 		while (elem)
 		{
 			CSpeaker* s = new CSpeaker(this);
 			s->LoadFromXML(elem);
+			s->SetOrder(o);
+			++o;
 			m_speakers.push_back(s);
 			elem = elem->nextSiblingElement("Speaker");
 		}
-		elem = e->getSubElement("Description");
-		xml::XMLTextNode* tn = elem->GetTextNode();
-		if (tn)
-			m_description = tn->GetValue();
 	}
 };
 

@@ -17,11 +17,11 @@
 #ifndef __AImpSceneLoader__
 #define __AImpSceneLoader__
 
+#if 0
 
 #include "SMesh.h"
 #include "IMeshLoader.h"
 #include "IStream.h"
-
 
 namespace mray
 {
@@ -48,4 +48,5 @@ public:
 }
 }
 
+#endif
 #endif

@@ -81,6 +81,7 @@ void GUISessionSidePanel::SetSessionContainer(ted::SessionContainer* s)
 			m_speakers.push_back(ifo);
 		}
 	}
+	_SetCurrentSpeaker(0);
 }
 bool GUISessionSidePanel::OnEvent(Event* e)
 {

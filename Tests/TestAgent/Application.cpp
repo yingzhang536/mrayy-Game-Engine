@@ -778,13 +778,13 @@ void Application::update(float dt){
 	CMRayApplication::update(dt);
 
 	double t0,t1;
-	t0=gTimer.getActualTimeAccurate();
+	t0=gTimer.getSeconds();
 	m_aiSystem->Update(dt);
-	t1=gTimer.getActualTimeAccurate();
+	t1=gTimer.getSeconds();
 	m_aiTime=t1-t0;
 	t0=t1;
 	m_phManager->update(dt);
-	t1=gTimer.getActualTimeAccurate();
+	t1=gTimer.getSeconds();
 	m_phTime=t1-t0;
 	m_gameEntManager->update(dt);
 
@@ -808,7 +808,7 @@ void Application::draw()
 {
 	double t0;
 	core::array<AI::TacticalPoint*> tactPoints;
-	t0=gTimer.getActualTimeAccurate();
+	t0=gTimer.getSeconds();
 
 	CMRayApplication::draw();
 	m_tacticalManager->GetNodesFromVector(m_visibilityVec,tactPoints);
@@ -818,7 +818,7 @@ void Application::draw()
 		getDevice()->draw3DLine(tactPoints[i]->pos,tactPoints[i]->pos+math::vector3d(0,7,0),video::SColor(255,0,0,255));
 	}
 
-	m_renderTime=gTimer.getActualTimeAccurate()-t0;
+	m_renderTime=gTimer.getSeconds()-t0;
 
 	if(m_isCreating)
 	{

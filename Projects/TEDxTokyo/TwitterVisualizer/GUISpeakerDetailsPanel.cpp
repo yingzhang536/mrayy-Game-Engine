@@ -67,8 +67,13 @@ void GUISpeakerDetailsPanel::_OnSpeakerChange(IObject* sender, PVOID param)
 	ted::CSpeaker* speaker= m_sidePanel->GetActiveSpeaker();
 	ted::SessionDetails* session= speaker->GetSession();
 	SessionName->SetText(session->GetSessionName());
-	SpeakerName->SetText(speaker->GetTwitterID());
+	core::string sp = core::string("SPEAKER ") + core::StringConverter::toString(speaker->GetOrder()+1);
+	SpeakerID->SetText(sp);
+	SpeakerName->SetText(speaker->GetName());
 	SpeakerImage->SetSourceImage(speaker->GetPicture());
+	SessionStartTime->SetText(core::CTime::ToString(session->GetSessionStartTime(), false, false));
+	SessionEndTime->SetText(core::CTime::ToString(session->GetSessionEndTime(), false, false));
+
 }
 
 void GUISpeakerDetailsPanel::Update(float dt)
@@ -97,8 +102,8 @@ void GUISpeakerDetailsPanel::Draw(const math::rectf*vp)
 	dev->draw2DRectangle(r->GetRect(), GetColor());
 
 
-	core::DateTime dt = core::DateTime::Now();
-	SessionTime->SetText(core::DateTime::ToString(dt));
+	//core::DateTime dt = core::DateTime::Now();
+	//SessionTime->SetText(core::DateTime::ToString(dt));
 
 	if (m_sidePanel)
 	{

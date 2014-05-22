@@ -14,7 +14,7 @@ SceneCamera::SceneCamera()
 {
 	m_scale = 1;
 	m_targetScale = 1;
-	m_targetSpeed = 1;
+	m_targetSpeed = 5;
 }
 
 SceneCamera::~SceneCamera()
@@ -28,11 +28,20 @@ void SceneCamera::ResetView()
 	m_targetScale = 1;
 }
 
-void SceneCamera::FrameBox(const math::rectf& rc)
+void SceneCamera::FrameBox(const math::rectf& r)
 {
+	math::vector2d margin = 50;
+	math::rectf rc = r;
+	rc.ULPoint -= margin;
+	rc.BRPoint += margin;
 	math::vector2d sz = m_vp.getSize()/rc.getSize();
 	m_targetScale = math::Min(sz.x, sz.y);
-	m_targetTranslation = (m_vp.ULPoint - rc.ULPoint) *m_targetScale;
+
+	math::vector2d diff;
+	diff = rc.getSize()*m_targetScale - m_vp.getSize();
+
+	m_targetTranslation = m_vp.ULPoint + (math::vector2d(0) - rc.ULPoint) *m_targetScale;
+	m_targetTranslation -= diff*0.5;
 }
 
 void SceneCamera::MoveTo(const math::rectf& rc, float speed)

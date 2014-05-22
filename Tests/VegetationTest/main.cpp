@@ -2517,7 +2517,7 @@ public:
 
 		if(m_screenEffShader)
 		{
-			float v=abs(sin(gTimer.getActualTimeAccurate()*0.0005));
+			float v=abs(sin(gTimer.getSeconds()*0.0005));
 			m_screenEffShader->GetFragmentShader()->setConstant(mT("lerpVal"),&v,1);
 		}
 
@@ -2595,7 +2595,7 @@ public:
 			getDevice()->set3DMode();
 		}
 
-		double t1=gTimer.getActualTimeAccurate();
+		double t1=gTimer.getSeconds();
 		{
 
 
@@ -2606,7 +2606,7 @@ public:
 				m_debugManager->EndDraw();
 			}
 		}
-		t1=gTimer.getActualTimeAccurate()-t1;
+		t1=gTimer.getSeconds()-t1;
 		//printf("%f\n",t1);
 /*
 		getDevice()->set3DMode();

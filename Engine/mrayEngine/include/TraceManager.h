@@ -32,8 +32,8 @@ public:
 	core::stringc m_name;
 	core::string m_catagory;
 	bool m_timeStumb;
-	ulong m_startTime;
-	ulong m_endTime;
+	double m_startTime;
+	double m_endTime;
 
 	TraceFunctionProfile(const char*name,const mchar*catagory,bool timeStumb=0);
 	void enterFunction();
