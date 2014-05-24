@@ -24,6 +24,7 @@ namespace OS{
 
 	class IDirOS;
 	class ISystemProcess;
+	class ITimer;
 
 	struct SMemoryState
 	{
@@ -71,6 +72,8 @@ class MRAY_DLL IOSystem:public ISingleton<IOSystem>
 public:
 	virtual~IOSystem(){}
 	virtual IDirOS* createDirSystem()=0;
+
+	virtual ITimer* createTimer() = 0;
 
 	virtual bool getMemoryState(SMemoryState& state)=0;
 	virtual bool getPowerState(SPowerStatus& state)=0;

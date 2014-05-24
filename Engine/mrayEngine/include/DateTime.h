@@ -116,6 +116,8 @@ public:
 
 	const CDate& GetDate()const;
 	const CTime& GetTime()const;
+	CDate& GetDate();
+	CTime& GetTime();
 
 
 	bool operator<(const DateTime& o)const;

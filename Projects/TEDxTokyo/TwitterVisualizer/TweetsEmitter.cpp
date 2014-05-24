@@ -66,7 +66,7 @@ void TweetsEmitter::reSpawn(IParticle* p)
 	part->lifeSpawn = -1;
 	part->scale = 0.8;
 
-	float random = 3 + part->GetTweet()->date.GetDay();
+	float random = 3 + part->GetTweet()->date.GetDate().GetDay();
 	part->SetTargetRadius(random);
 
 	setupParticle(part);

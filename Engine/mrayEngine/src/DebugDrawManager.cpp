@@ -9,7 +9,7 @@
 #include "IMutex.h"
 #include "IThreadManager.h"
 #include "DefaultColors.h"
-#include "CFPS.h"
+#include "FPSCalc.h"
 #include "MeshGenerator.h"
 #include "MeshBufferData.h"
 #include "MutexLocks.h"

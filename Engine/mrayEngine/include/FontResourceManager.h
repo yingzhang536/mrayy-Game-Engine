@@ -57,6 +57,8 @@ public:
 	GUI::IFontPtr loadFont(const core::string& name);
 	const GUI::IFontPtr& getFontByName(const core::string& name);
 
+	void addFont(GUI::IFontCRef f);
+
 	void setDevice(video::IVideoDevice* dev);
 
 	void addXMLParser(const IFontXMLParserPtr& p);

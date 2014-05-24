@@ -21,7 +21,6 @@
 #include <VideoLoggerSystem.h>
 
 #include <ITimer.h>
-#include <CFps.h>
 
 #include <matrix3x3.h>
 #include <LightNode.h>

@@ -43,7 +43,7 @@ public:
 	IDType ID;
 	TwitterUserProfile* user;
 	core::stringw text;
-	core::CDate date;
+	core::DateTime date;
 	int retweets;
 
 	TwitterTweet* replyToTweet;

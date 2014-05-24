@@ -146,31 +146,31 @@ bool IEyesRenderingBaseState::OnEvent(Event* e, const math::rectf& rc)
 	if (e->getType() == ET_Keyboard)
 	{
 		KeyboardEvent* evt = (KeyboardEvent*)e;
-		if (evt->press )
+		if (evt->press && false) // image correction
 		{
 			if (evt->key == KEY_Y)
 			{
-				m_correctionValue[0]->floatParam[0] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsU.x += 0.01*(evt->shift ? -1 : 1);
 			}
 			else if (evt->key == KEY_U)
 			{
-				m_correctionValue[0]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsU.y += 0.01*(evt->shift ? -1 : 1);
 			}
 			else if (evt->key == KEY_I)
 			{
-				m_correctionValue[0]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsU.z += 0.01*(evt->shift ? -1 : 1);
 			}
 			else if (evt->key == KEY_H)
 			{
-				m_correctionValue[1]->floatParam[0] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsV.x += 0.01*(evt->shift ? -1 : 1);
 			}
 			else if (evt->key == KEY_J)
 			{
-				m_correctionValue[1]->floatParam[1] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsV.y += 0.01*(evt->shift ? -1 : 1);
 			}
 			else if (evt->key == KEY_K)
 			{
-				m_correctionValue[1]->floatParam[2] += 0.01*(evt->shift ? -1 : 1);
+				m_correctionParamsV.z += 0.01*(evt->shift ? -1 : 1);
 			}
 		}
 	}
@@ -437,8 +437,8 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	};
 	if (m_eyes[index].flip90)
 	{
-    		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
-    		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+//     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
+//     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
 		if (!m_eyes[index].cw)
 		{
 			coords[0].set(tc.ULPoint.x, tc.BRPoint.y);

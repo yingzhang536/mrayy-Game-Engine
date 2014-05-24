@@ -4,6 +4,7 @@
 #include "GStreamVideoProvider.h"
 
 #include "GstVideoPlayer.h"
+#include "Engine.h"
 
 
 namespace mray
@@ -33,13 +34,13 @@ void GStreamVideoProvider::LoadSideBySideMovie(const core::string& left, const c
 
 	m_playBack->loadSideBySideMovie(left, right);
 	m_playBack->play();
-	m_startTime = gTimer.getActualTimeAccurate();
+	m_startTime = gEngine.getTimer()->getSeconds();
 }
 void GStreamVideoProvider::LoadMovie(const core::string& path)
 {
 	m_playBack->loadMovie(path);
 	m_playBack->play();
-	m_startTime = gTimer.getActualTimeAccurate();
+	m_startTime = gEngine.getTimer()->getSeconds();
 
 }
 
@@ -47,13 +48,13 @@ void GStreamVideoProvider::ConnectToCameras(const core::string& ip, int  videoPo
 {
 	m_playBack->Connect(ip,videoPort,audioPort,localPort);
 	m_playBack->play();
-	m_startTime = gTimer.getActualTimeAccurate();
+	m_startTime = gEngine.getTimer()->getSeconds();
 }
 void GStreamVideoProvider::Open2Streams(int port1, int port2)
 {
 	m_playBack->Open2Streams(port1,port2);
 	m_playBack->play();
-	m_startTime = gTimer.getActualTimeAccurate();
+	m_startTime = gEngine.getTimer()->getSeconds();
 }
 void GStreamVideoProvider::Disconnect()
 {
@@ -90,7 +91,7 @@ void GStreamVideoProvider::Update(float dt)
 int GStreamVideoProvider::GetRecvBytesPerSecond()
 {
 	int bytes = m_playBack->RecevedBytes();
-	return bytes * 1000.0f/ (gTimer.getActualTimeAccurate() - m_startTime);
+	return bytes * 1000.0f/ (gEngine.getTimer()->getSeconds() - m_startTime);
 }
 
 

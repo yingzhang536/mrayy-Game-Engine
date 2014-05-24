@@ -84,12 +84,12 @@ namespace VT
 		}
 		virtual void execute(OS::IThread*caller,void*arg)
 		{
-			float t0=gTimer.getActualTimeAccurate();
+			float t0=gTimer.getSeconds();
 			float acc=0;
 			const float physicsUpdateSpeed=1/60.0f;
 			while(caller->isActive() && !m_phManager->IsClosed())
 			{
-				float t1=gTimer.getActualTimeAccurate();
+				float t1=gTimer.getSeconds();
 				float dt=physicsUpdateSpeed;//t1-t0;
 				//printf("t0=%f,t1=%f,dt=%f",t0,t1,dt);
 				t0=t1;

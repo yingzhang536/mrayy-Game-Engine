@@ -117,7 +117,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -176,7 +176,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -957,7 +957,7 @@
     <ClInclude Include="include\ASCIIEncoding.h" />
     <ClInclude Include="include\BitConverter.h" />
     <ClInclude Include="include\BitVector.h" />
-    <ClInclude Include="include\CFPS.h" />
+    <ClInclude Include="include\FPSCalc.h" />
     <ClInclude Include="include\CKeyableAttr.h" />
     <ClInclude Include="include\HashMap.h" />
     <ClInclude Include="include\HeapAllocator.h" />
@@ -1775,7 +1775,7 @@
     <ClCompile Include="src\SoftwareStreamBuffer.cpp" />
     <ClCompile Include="src\ASCIIEncoding.cpp" />
     <ClCompile Include="src\BitConverter.cpp" />
-    <ClCompile Include="src\cfps.cpp" />
+    <ClCompile Include="src\FPSCalc.cpp" />
     <ClCompile Include="src\mString.cpp" />
     <ClCompile Include="src\PoolMemoryAllocator.cpp" />
     <ClCompile Include="src\StringConverter.cpp" />

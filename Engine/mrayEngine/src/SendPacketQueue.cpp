@@ -7,6 +7,7 @@
 
 #include "SendPacketQueue.h"
 #include "INetwork.h"
+#include "Engine.h"
 #include "ISocket.h"
 #include "MutexLocks.h"
 #include "IReliableSocket.h"
@@ -82,7 +83,7 @@ void SendPacketQueue::update(int allowedTime){
 
 	INetwork*net=INetwork::getInstancePtr();
 
-	ullong startTime=gTimer.getActualTime();
+	ullong startTime=gEngine.getTimer()->getSeconds();
 	std::list<SPacketItem* >::iterator it;
 	std::list<SPacketItem* >::iterator it2;
 	bool done=false;
@@ -92,7 +93,7 @@ void SendPacketQueue::update(int allowedTime){
 		it=m_sendItems.begin();
 		for(;it!=m_sendItems.end() && !done;){
 				remove=0;
-				int currTime=gTimer.getActualTime();
+				int currTime = gEngine.getTimer()->getSeconds();
 				if(currTime-startTime>allowedTime){
 					done = true;
 				}
@@ -163,7 +164,7 @@ void SendPacketQueue::addPacket(const void*data,int size,const NetAddress& addre
 			item->packetID=m_lastSendID++;
 	}
 	item->mode=mode;
-	item->nextTime=(uint)gTimer.getActualTime();
+	item->nextTime = (uint)gEngine.getTimer()->getSeconds();
 
 	item->address=address;
 
@@ -191,7 +192,7 @@ void SendPacketQueue::addPacket(const void*data,int size,const NetAddress& addre
 
 			SPacketItem *pitem=item;
 			if(immediate){
-				uint currtime=(uint)gTimer.getActualTime();
+				uint currtime=(uint)gEngine.getTimer()->getSeconds();
 				sendPacket(pitem);
 				if(!pitem->isReliable()){
 					pitem->remove=1;

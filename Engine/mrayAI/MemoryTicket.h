@@ -38,7 +38,7 @@ public:
 			delete soundTick;
 	}
 
-	uint time;	//last "updated" time for this memory ticket
+	double time;	//last "updated" time for this memory ticket
 	void UpdateTime(uint t){
 		time=time>t? time:t ;
 	}

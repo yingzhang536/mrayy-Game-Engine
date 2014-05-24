@@ -27,7 +27,7 @@ MeshResourceManager::MeshResourceManager()
 	//addMeshLoader(new loaders::_3dsLoader());
 	addMeshLoader(new loaders::mdlLoaderV0());
 	addMeshLoader(new loaders::MeshV2Loader());
-	loaders::AImpSceneLoader::InitImporters(m_meshLoader);
+//	loaders::AImpSceneLoader::InitImporters(m_meshLoader);
 
 }
 MeshResourceManager::~MeshResourceManager(){

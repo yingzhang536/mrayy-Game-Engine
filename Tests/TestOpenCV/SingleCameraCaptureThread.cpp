@@ -54,7 +54,7 @@ void SingleCameraCaptureThread::setup()
 void SingleCameraCaptureThread::execute(OS::IThread*caller,void*arg)
 {
 	int frame=0;
-	float t0=gTimer.getActualTimeAccurate();
+	float t0=gTimer.getSeconds();
 	float accTime=0;
 	int frameCtr=0;
 	while(caller->isActive())
@@ -68,7 +68,7 @@ void SingleCameraCaptureThread::execute(OS::IThread*caller,void*arg)
 			m_image->setData(tmp->imageData,tmp->Size,tmp->format);
 		}
 		++frame;
-		float t1=gTimer.getActualTimeAccurate();
+		float t1=gTimer.getSeconds();
 		float dt=t1-t0;
 		accTime+=dt;
 		if(accTime>1000)

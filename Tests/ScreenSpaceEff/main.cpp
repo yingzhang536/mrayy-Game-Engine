@@ -101,13 +101,13 @@ public:
 
 	virtual bool Execute()
 	{
-		float t1=gTimer.getActualTimeAccurate();
+		float t1=gTimer.getSeconds();
 		float t=0;
 		for(int i=0;i<40000;++i)
 		{
 			t=math::sind(t)+math::cosd(t);
 		}
-		float t2=gTimer.getActualTimeAccurate();
+		float t2=gTimer.getSeconds();
 		printf("%f\n",t2-t1);
 		return true;
 	}
@@ -631,16 +631,16 @@ public:
 
 		m_tb->EndProcessing();
 
-		float startT=gTimer.getActualTimeAccurate();
+		float startT=gTimer.getSeconds();
 		float maxTime=0;
 		for(int i=0;i<50;++i)
 		{
-			float t1=gTimer.getActualTimeAccurate();
+			float t1=gTimer.getSeconds();
 			pieces[i].Execute();
-			float t2=gTimer.getActualTimeAccurate();
+			float t2=gTimer.getSeconds();
 			maxTime=math::Max(maxTime,t2-t1);
 		}
-		float endT=gTimer.getActualTimeAccurate();
+		float endT=gTimer.getSeconds();
 		printf("exec=%f,maxTime=%f\n",endT-startT,maxTime);
 */
 		GCPtr<StreamLogger> logger=new StreamLogger(1);
@@ -1142,9 +1142,9 @@ public:
 	void update(float dt)
 	{
 		//PROFILE_FUNCTION();
-		double t=gTimer.getActualTimeAccurate();
+		double t=gTimer.getSeconds();
 		CMRayApplication::update(dt);
-		m_updateTime=gTimer.getActualTimeAccurate()-t;
+		m_updateTime=gTimer.getSeconds()-t;
 
 		m_soundRec->CaptureSamples(m_recorderSamples);
 		core::array<uchar>& data= m_soundEncoder.EncodeBuffer(m_recorderSamples);

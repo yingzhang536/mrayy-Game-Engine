@@ -329,7 +329,7 @@ const video::ImageInfo*  FlyCameraVideoGrabber::GetLastFrame()
 
 void FlyCameraVideoGrabber::BlitImage(const uchar* buf,int rows,int cols)
 {
-	float t=gTimer.getActualTimeAccurate();
+	float t=gTimer.getSeconds();
 	if(t-m_lastGrabbed<15)
 		return;
 	m_lastGrabbed=t;

@@ -19,6 +19,7 @@
 
 #include "IMutex.h"
 
+#include "AppData.h"
 #include "DataTypes.h"
 
 namespace mray
@@ -35,7 +36,7 @@ namespace scene
 	class TweetNode;
 	class NodeRenderer;
 	class SceneCamera;
-class SessionRenderer
+class SessionRenderer :public ted::ISpeakerChangeListener
 {
 protected:
 	NodeRenderer* m_nodeRenderer;
@@ -47,6 +48,10 @@ protected:
 	typedef std::map<core::string, SpeakerNode*> SpeakerMap;
 
 
+	float m_speakerDistance;
+	float m_tweetsDistance;
+
+	std::vector<SpeakerNode*> m_speakersSeq;
 	SpeakerMap m_speakers;
 	TweetMap m_tweets;
 
@@ -54,6 +59,7 @@ protected:
 	OS::IMutex* m_dataMutex;
 	ITedNode* m_hoverItem;
 	SceneCamera* m_camera;
+	SpeakerNode* m_activeSpeaker;
 
 	void _RenderConnections();
 	void _RenderSpeakers();
@@ -69,7 +75,7 @@ public:
 
 	void SetSessions(ted::SessionContainer*sessions);
 
-	void _OnSpeakerChanged(ted::CSpeaker*s);
+	virtual void _OnSpeakerChange(ted::CSpeaker* sp);
 
 	void AddTweetsNodes(const std::vector<TweetNode*> &nodes);
 

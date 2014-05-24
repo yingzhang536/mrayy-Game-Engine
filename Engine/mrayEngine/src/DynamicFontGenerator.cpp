@@ -35,7 +35,7 @@ namespace GUI
 				DeleteFont(font);
 		}
 
-		void Recreate(int res, bool bold, bool italic, const core::stringw& fontName)
+		void Recreate(int res, bool bold, bool italic, bool underline, const core::stringw& fontName)
 		{
 			if (font)
 				DeleteFont(font);
@@ -44,7 +44,7 @@ namespace GUI
 				0, 0, 0,
 				bold ? FW_BOLD : 0,
 				italic,
-				0,
+				underline,
 				0,
 				ANSI_CHARSET | ARABIC_CHARSET,
 				OUT_DEFAULT_PRECIS,
@@ -61,6 +61,9 @@ DynamicFontGenerator::DynamicFontGenerator()
 {
 	m_data = new DynamicFontGeneratorImpl;
 	m_dirty = false;
+	m_underline = false;
+	m_bold = false;
+	m_italic = false;
 	m_textureSize = 1024;
 	AddCharacterRange('A', 'Z');
 	AddCharacterRange('a', 'z');
@@ -168,14 +171,12 @@ void DynamicFontGenerator::GenerateFont()
 
 	m_dirty = false;
 	m_texture->createTexture(math::vector3di(m_textureSize.x,m_textureSize.y, 1), video::EPixel_Alpha8);
-	bool bold = false;
-	bool italic = false;
 
 	bool m_mask = true;
 
 	if (m_data->fontDirty)
 	{
-		m_data->Recreate(m_fontResolution, bold, italic, m_fontName);
+		m_data->Recreate(m_fontResolution, m_bold, m_italic,m_underline, m_fontName);
 	}
 
 

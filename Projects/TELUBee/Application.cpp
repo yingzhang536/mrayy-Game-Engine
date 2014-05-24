@@ -393,7 +393,7 @@ void Application::RenderUI(const math::rectf& rc)
 			attr.wrap=0;
 			attr.RightToLeft=0;
 			core::string msg=mT("FPS= ");
-			msg+=core::StringConverter::toString((int)core::CFPS::getInstance().getFPS());
+			msg += core::StringConverter::toString((int)gEngine.getFPS()->getFPS());
 			font->print(math::rectf(rc.getWidth() - 250, rc.getHeight() - 50, 10, 10), &attr, 0, msg, m_guiRender);
 			yoffset+=attr.fontSize;
 

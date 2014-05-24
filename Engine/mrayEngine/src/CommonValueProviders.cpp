@@ -3,7 +3,8 @@
 #include "stdafx.h"
 #include "CommonValueProviders.h"
 #include "ITimer.h"
-#include "CFPS.h"
+#include "FPSCalc.h"
+#include "Engine.h"
 
 
 namespace mray
@@ -13,7 +14,7 @@ namespace mray
 	}
 	float TimeValueProvier::GetValue()
 	{
-		return gTimer.getActualTimeAccurate();
+		return gEngine.getTimer()-> getSeconds();
 	}
 
 
@@ -22,6 +23,6 @@ namespace mray
 	}
 	float FPSValueProvier::GetValue()
 	{
-		return gFPS.dt();
+		return gEngine.getFPS()->dt();
 	}
 }

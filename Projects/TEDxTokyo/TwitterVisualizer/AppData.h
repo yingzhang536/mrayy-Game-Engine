@@ -4,6 +4,7 @@
 #define AppData_h__
 
 #include "ISingleton.h"
+#include "ISoundManager.h"
 
 namespace mray
 {
@@ -15,6 +16,14 @@ namespace ted
 {
 	class TwitterProvider;
 	class SessionContainer;
+	class CSpeaker;
+
+
+	class ISpeakerChangeListener
+	{
+	public:
+		virtual void _OnSpeakerChange(CSpeaker* sp){}
+	};
 
 class AppData :public ISingleton<AppData>
 {
@@ -39,6 +48,14 @@ public:
 	nui::LeapDevice* leapDevice;
 
 	SessionContainer* sessions;
+
+	sound::ISoundManager* soundManager;
+
+	class SpeakerChangeCallback :public ListenerContainer<ISpeakerChangeListener*>
+	{
+	public:
+		DECLARE_FIRE_METHOD(_OnSpeakerChange, (CSpeaker* sp), (sp));
+	}SpeakerChange;
 };
 
 #define gAppData ted::AppData::getInstance()

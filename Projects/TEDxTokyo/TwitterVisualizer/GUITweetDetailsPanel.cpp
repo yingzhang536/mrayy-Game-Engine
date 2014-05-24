@@ -49,7 +49,11 @@ void GUITweetDetailsPanel::SetTweet(ted::TwitterTweet* t)
 		TwitterID->SetText(t->user->name);
 		Details->SetText(t->text);
 		TwitterImage->SetSourceImage(t->user->imageUrl);
+		TweetTime->SetText(core::DateTime::ToString(t->date));
+		m_active = true;
 	}
+	else
+		m_active = false;
 }
 bool GUITweetDetailsPanel::OnEvent(Event* e)
 {
@@ -62,8 +66,10 @@ bool GUITweetDetailsPanel::OnEvent(Event* e)
 			m_active = true;
 			return true;
 		}
-		else
+		else	{
+
 			m_active = false;
+		}
 	}
 	return false;
 }
@@ -75,15 +81,19 @@ void GUITweetDetailsPanel::Update(float dt)
 #define DECREASE(x,l,v) if(x>(l)){ x-=(v);} if(x<(l)){x=(l);}
 #define INCREASE(x,l,v) if(x<(l)){ x+=(v);} if(x>(l)){x=(l);}
 
+	math::vector2d sz = this->GetSize();
 	float a = GetAlpha();
 	if (!m_active)
 	{
+		DECREASE(sz.y, 100, 200*dt);
 		DECREASE(a, 0.2, dt);
 	}
 	else
 	{
+		INCREASE(sz.y, 200, 200 * dt);
 		INCREASE(a, 1, dt);
 	}
+	SetSize(sz);
 	SetAlpha(a);
 }
 void GUITweetDetailsPanel::Draw(const math::rectf*vp)
@@ -95,8 +105,7 @@ void GUITweetDetailsPanel::Draw(const math::rectf*vp)
 	dev->draw2DRectangle(r->GetRect(), GetColor());
 
 
-	core::DateTime dt = core::DateTime::Now();
-	TweetTime->SetText(core::DateTime::ToString(dt));
+//	core::DateTime dt = core::DateTime::Now();
 
 	if (m_sidePanel)
 	{

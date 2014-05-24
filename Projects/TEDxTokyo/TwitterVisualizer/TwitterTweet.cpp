@@ -44,7 +44,7 @@ void TwitterTweet::LoadXML(xml::XMLElement* e)
 {
 	ID = core::StringConverter::toUInt(e->getValueString("ID"));
 	text = ConvertToUtf16(e->getValueString("text"));
-	core::CDate::Parse(e->getValueString("date"), date);
+	core::DateTime::Parse(e->getValueString("date"), date);
 	retweets = core::StringConverter::toUInt(e->getValueString("retweets"));
 	user = TwitterUserProfile::GetUserByID(core::StringConverter::toUInt(e->getValueString("user")),false);
 }
@@ -56,7 +56,7 @@ void TwitterTweet::SaveXML(xml::XMLElement* e)
 	elem->addAttribute("ID", core::StringConverter::toString(ID));
 	elem->addAttribute("user", core::StringConverter::toString(user->ID));
 	elem->addAttribute("text", ConvertToUtf8(text));
-	elem->addAttribute("date", core::CDate::ToString(date));
+	elem->addAttribute("date", core::DateTime::ToString(date));
 	elem->addAttribute("retweets", core::StringConverter::toString(retweets));
 
 	xml::XMLElement* hashtags = new xml::XMLElement("Hashtags");

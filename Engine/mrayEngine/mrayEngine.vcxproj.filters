@@ -2036,9 +2036,6 @@
     <ClInclude Include="include\BitVector.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\CFPS.h">
-      <Filter>Source Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="include\CKeyableAttr.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
@@ -2308,6 +2305,9 @@
     </ClInclude>
     <ClInclude Include="include\AImpSceneLoader.h">
       <Filter>Source Files\codecs\models</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FPSCalc.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3475,9 +3475,6 @@
     <ClCompile Include="src\BitConverter.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\cfps.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\PoolMemoryAllocator.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
@@ -3621,6 +3618,9 @@
     </ClCompile>
     <ClCompile Include="src\AImpSceneLoader.cpp">
       <Filter>Source Files\codecs\models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FPSCalc.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

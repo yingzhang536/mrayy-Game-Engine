@@ -10,6 +10,7 @@
 #include "JobPool.h"
 #include "ThreadBarrier.h"
 #include "ITimer.h"
+#include "Engine.h"
 
 namespace mray
 {
@@ -29,9 +30,9 @@ namespace mray
 
 		virtual bool ExecuteJob()
 		{
-			m_startTime=gTimer.getActualTimeAccurate();
+			m_startTime = gEngine.getTimer()->getSeconds();
 			JobOrderPieceCollection::ExecuteJob();
-			m_endTime=gTimer.getActualTimeAccurate();
+			m_endTime = gEngine.getTimer()->getSeconds();
 
 			//printf("Signal-");
 			m_barrier->Signal();

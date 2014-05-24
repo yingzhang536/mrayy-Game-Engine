@@ -437,10 +437,10 @@ public:
 
 					m_adsr.keyOn();
 
-					m_pressLength[e->key]=gTimer.getActualTimeAccurate();
+					m_pressLength[e->key]=gTimer.getSeconds();
 				}else
 				{
-					float dT=gTimer.getActualTimeAccurate()-m_pressLength[e->key];
+					float dT=gTimer.getSeconds()-m_pressLength[e->key];
 					if(e->key>=KEY_1 && e->key<=KEY_9)
 					{
 						int i=e->key-KEY_1;

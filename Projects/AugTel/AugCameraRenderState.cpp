@@ -53,6 +53,7 @@
 #include "NodeHeadController.h"
 
 #include "LocalRobotCommunicator.h"
+#include "RemoteRobotCommunicator.h"
 
 #define VT_USING_SHAREDMEM
 #define VIDEO_PORT 5000
@@ -167,7 +168,7 @@ namespace AugTel
 	m_depthTime = 0;
 
 	m_depthVisualizer = new DepthVisualizer();
-	m_robotConnector->SetCommunicator(new TBee::LocalRobotCommunicator());
+	m_robotConnector->SetCommunicator(new TBee::RemoteRobotCommunicator());
 
 	m_viewDepth = false;
 

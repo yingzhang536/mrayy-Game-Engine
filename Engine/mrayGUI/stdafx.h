@@ -68,7 +68,7 @@
 #include "DefaultColors.h"
 
 #include "ILogManager.h"
-#include "CFPS.h"
+#include "FPSCalc.h"
 #include "FontResourceManager.h"
 #include "TextureResourceManager.h"
 #include "GUIBatchRenderer.h"

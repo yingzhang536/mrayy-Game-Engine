@@ -15,6 +15,7 @@
 
 #include "AIComponentTypes.h"
 #include "DefaultColors.h"
+#include "Engine.h"
 
 namespace mray{
 namespace AI{
@@ -68,7 +69,7 @@ void VisionSensor::Update(float dt)
 	m_owner->GetAISystem()->QueryActors(area,actors);
 	INavWorld*world=m_owner->GetAISystem()->GetNavigationWorld();
 
-	uint time=gTimer.getActualTime();
+	double time=gEngine.getTimer()->getSeconds();
 
 	AIActorList::iterator it=actors.begin();
 	for (;it!=actors.end();++it)

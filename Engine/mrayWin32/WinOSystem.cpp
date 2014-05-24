@@ -21,7 +21,6 @@ namespace OS{
 
 
 WinOSystem::WinOSystem(){
-	m_timer=new OS::WinTimer();
 	m_registryManager=new OS::WinRegistry();
 	m_fileSystem=new OS::WinFileSystem();
 	m_dllManager=new OS::WinDllManager();
@@ -64,9 +63,13 @@ WinOSystem::~WinOSystem(){
 	m_clipboardManager=0;
 	m_fileSystem=0;
 	m_registryManager=0;
-	m_timer=0;
-
+	
 	delete Win32MessageProc::getInstancePtr();
+}
+
+ITimer* WinOSystem::createTimer()
+{
+	return new WinTimer();
 }
 
 

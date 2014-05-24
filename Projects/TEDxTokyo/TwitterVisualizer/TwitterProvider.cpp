@@ -107,7 +107,8 @@ public:
 	void Parse(const Twitter::Tweet& in, TwitterTweet& out)
 	{
 		out.ID = in.id;
-		out.date = in.created_at.GetDate();
+		out.date.SetDate(in.created_at.GetDate());
+		out.date.SetTime(in.created_at.GetTime());
 		out.retweets = in.retweet_count;
 		out.text = ConvertToUtf16(in.text);
 		out.user = TwitterUserProfile::GetUserByID(in.user.id, true);

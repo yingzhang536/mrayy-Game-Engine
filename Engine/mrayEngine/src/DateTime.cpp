@@ -5,7 +5,7 @@
 #include "StringUtil.h"
 #include <time.h>
 #include <sstream>
-
+#include <iomanip>
 
 namespace mray
 {
@@ -128,12 +128,13 @@ core::string CTime::ToString(const CTime& time)
 
 core::string CTime::ToString(const CTime& time, bool _24Format, bool seconds)
 {
-	std::ostringstream stream;
-	stream << time.GetHour(_24Format) << mT(":") << time.GetMinute();
+	std::stringstream stream;
+	stream << std::setfill('0') << std::setw(2) << time.GetHour(_24Format);
+	stream << mT(":") << std::setfill('0') << std::setw(2) << time.GetMinute();
 	if(seconds)
-		stream << mT(":") << time.GetSecond();
-	if (_24Format)
-		stream <<"-"<< time.IsAM() ? "AM" : "PM";
+		stream << mT(":") << std::setfill('0') << std::setw(2) << time.GetSecond();
+	if (!_24Format)
+		stream << "-" <<  (time.IsAM() ? "AM" : "PM");
 	return stream.str();
 }
 
@@ -378,6 +379,15 @@ const CDate& DateTime::GetDate()const
 }
 
 const CTime& DateTime::GetTime()const
+{
+	return m_time;
+}
+ CDate& DateTime::GetDate()
+{
+	return m_date;
+}
+
+ CTime& DateTime::GetTime()
 {
 	return m_time;
 }

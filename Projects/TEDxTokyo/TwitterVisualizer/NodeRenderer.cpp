@@ -87,6 +87,13 @@ void NodeRenderer::_renderConnections(SessionRenderer *r)
 		points[1] = (m_tweetsConn[i].b->GetPosition());
 		dev->draw2DLine(points, 2, video::SColor(1, 1, 1, 1));
 	}
+	Engine::getInstance().getDevice()->setLineWidth(5);
+	for (int i = 0; i < m_speakerConn.size(); ++i)
+	{
+		points[0] = (m_speakerConn[i].a->GetPosition());
+		points[1] = (m_speakerConn[i].b->GetPosition());
+		dev->draw2DLine(points, 2, video::SColor(1, 0, 0, 1));
+	}
 
 }
 

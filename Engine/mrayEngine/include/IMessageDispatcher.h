@@ -15,6 +15,7 @@
 #define ___IMessageDispatcher___
 
 #include "MessageTelegram.h"
+#include "Engine.h"
 #include "ITimer.h"
 #include <set>
 
@@ -46,7 +47,7 @@ public:
 		{
 			SendTelegram(msgTele);
 		}else{
-			double currentTime=gTimer.getActualTimeAccurate();
+			double currentTime=gEngine.getTimer()->getSeconds();
 			msgTele.dispatchTime=currentTime+delay;
 			m_telegrams.insert(msgTele);
 		}
@@ -54,7 +55,7 @@ public:
 
 	void ProcessMessages()
 	{
-		double currentTime=gTimer.getActualTimeAccurate();
+		double currentTime=gEngine.getTimer()->getSeconds();
 
 		while (!m_telegrams.empty())
 		{

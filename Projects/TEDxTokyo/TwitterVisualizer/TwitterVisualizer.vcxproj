@@ -71,7 +71,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;TelubeeLib.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;mrayTweetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;sqlapi.lib;Leap.lib;mrayTweetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,6 +102,9 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BackgroundEmitter.h" />
     <ClInclude Include="ConnectionLineRenderer.h" />
+    <ClInclude Include="GUIScenePanelLayout.h" />
+    <ClInclude Include="GUISceneSpacePanel.h" />
+    <ClInclude Include="GUISweepingText.h" />
     <ClInclude Include="NodeRenderer.h" />
     <ClInclude Include="CSpeaker.h" />
     <ClInclude Include="DataTypes.h" />
@@ -174,6 +177,8 @@
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
     <ClCompile Include="GUIProfilePicture.cpp" />
+    <ClCompile Include="GUISceneSpacePanel.cpp" />
+    <ClCompile Include="GUISweepingText.cpp" />
     <ClCompile Include="GUITweetDetailsPanel.cpp" />
     <ClCompile Include="IRenderingScene.cpp" />
     <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
@@ -214,6 +219,7 @@
     <ClCompile Include="XMLDBHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui" />
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout_V1.gui">
       <FileType>Document</FileType>
     </Overlay>

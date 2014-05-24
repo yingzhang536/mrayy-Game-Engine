@@ -35,7 +35,10 @@ public:
 	{
 		SessionDetails->SetSidePanel(SessionsBar);
 		TweetDetails->SetSidePanel(SessionsBar);
-		SessionsBar->SetSessionContainer(gAppData.sessions);
+
+		ScenePanel->SetLeftElement(SessionsBar);
+		ScenePanel->SetTopElement(SessionDetails);
+		ScenePanel->SetBottomElement(TweetDetails);
 	}
 };
 

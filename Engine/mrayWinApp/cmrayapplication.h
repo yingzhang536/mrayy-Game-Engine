@@ -18,6 +18,8 @@
 #include <RenderWindow.h>
 
 #include "CompileConfig.h"
+#include "IErrorDialog.h"
+#include "FPSCalc.h"
 
 namespace mray{
 
@@ -39,6 +41,8 @@ protected:
 
 	std::vector<video::RenderWindow*> m_renderWindowLst;
 
+	core::FPSCalc m_drawFPS;
+
 	bool m_enableSceneManager;
 	bool m_enableGUIManager;
 	bool m_enablePhysicsManager;
@@ -57,6 +61,8 @@ public:
 
 	virtual void init(const OptionContainer &extraOptions);
 	virtual void run();
+
+	const core::FPSCalc& GetDrawFPS(){ return m_drawFPS; }
 
 	void drawFrame();
 
