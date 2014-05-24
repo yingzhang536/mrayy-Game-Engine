@@ -22,7 +22,7 @@ namespace mray
 {
 	namespace ted
 	{
-		class UserDB;
+		class TwitterUserProfile;
 	}
 namespace GUI
 {
@@ -30,13 +30,13 @@ namespace GUI
 class TwitterProfileListItem:public IListItem
 {
 protected:
-	ted::UserDB* m_user;
+	ted::TwitterUserProfile* m_user;
 	video::ITexturePtr m_profilePic;
 public:
-	TwitterProfileListItem(ted::UserDB* user);
+	TwitterProfileListItem(ted::TwitterUserProfile* user);
 	virtual~TwitterProfileListItem();
 
-	ted::UserDB* GetUser(){ return m_user; }
+	ted::TwitterUserProfile* GetUser(){ return m_user; }
 
 	virtual core::UTFString toString()const;
 

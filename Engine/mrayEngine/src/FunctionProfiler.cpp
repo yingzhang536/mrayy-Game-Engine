@@ -2,6 +2,7 @@
 
 #include "FunctionProfiler.h"
 #include "ITimer.h"
+#include "Engine.h"
 #include "FunctionProfileManager.h"
 
 
@@ -25,7 +26,7 @@ const std::string& FunctionProfiler::GetName()const {return m_name;}
 void FunctionProfiler::OnEnter()
 {
 	m_subTime=0;
-	m_enterTime=gTimer.getActualTimeAccurate();
+	m_enterTime=gEngine.getTimer()->getSeconds();
 	m_caller=currentFunction;
 	if(m_caller)
 		m_level=m_caller->m_level+1;
@@ -37,7 +38,7 @@ void FunctionProfiler::OnEnter()
 }
 void FunctionProfiler::OnExit()
 {
-	m_executionTime=gTimer.getActualTimeAccurate()-m_enterTime;
+	m_executionTime=gEngine.getTimer()->getSeconds()-m_enterTime;
 	m_totalExecutionTime+=m_executionTime;
 	if(m_caller)
 		m_caller->m_subTime+=m_executionTime;

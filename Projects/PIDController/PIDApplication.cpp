@@ -123,9 +123,9 @@ void PIDApplication::CreateFluid()
 {
 	FX::FluidSolverDesc desc;
 
-	desc.resolution.set(256,256);
+	desc.resolution.set(256,64);
 	desc.doRGB=1;
-	desc.solverIterations=10;
+	desc.solverIterations=5;
 	desc.fadeSpeed=0.05;
 	desc.colorDiffusion=0.00;
 	desc.wrapX=false;
@@ -287,6 +287,8 @@ void PIDApplication::init(const OptionContainer &extraOptions)
 	game::CameraOrbitComp* camOrbit=new game::CameraOrbitComp();
 	camOrbit->SetCamera(m_camera,m_inputManager);
 	ent->AddComponent(camOrbit);
+
+	CreateFluid();
 }
 
 void PIDApplication::CreateScene()
@@ -303,6 +305,7 @@ void PIDApplication::WindowPostViweportUpdate(video::RenderWindow* wnd,scene::Vi
 		ptPlane.Draw();
 	}
 	m_gameManager->DebugRender(0);
+	getDevice()->set2DMode();
 	if(m_fluidTexture)
 	{
 		static ulong lastT=gTimer.getActualTime();
@@ -316,7 +319,6 @@ void PIDApplication::WindowPostViweportUpdate(video::RenderWindow* wnd,scene::Vi
 		getDevice()->useTexture(0,&m_fluidTexUnit);
 		getDevice()->draw2DImage(math::rectf(0,0,1000,1000),1);
 	}
-	getDevice()->set2DMode();
 	GUI::IFont*font=gFontResourceManager.getDefaultFont();
 	if(font)
 	{
@@ -351,7 +353,7 @@ void PIDApplication::update(float dt)
 
 	if(m_animating)
 		ptPlane.m_camera->rotate(math::quaternion(10*gFPS.dt(),math::vector3d(1,0,0)),scene::TS_Local);
-	//m_fluidSolver->Update(dt);
+	m_fluidSolver->Update(dt);
 	m_phManager->update(dt);
 	m_gameManager->Update(dt);
 }

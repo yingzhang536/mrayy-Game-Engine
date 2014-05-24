@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Twitter">
-      <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cppdb">
       <UniqueIdentifier>{bea5e4e9-1803-4364-9cb7-23b32a86ecdd}</UniqueIdentifier>
     </Filter>
@@ -31,14 +28,44 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{f0919b28-25f0-4151-b8cc-167aed02d036}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Leap">
-      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Particles\Particle Effects">
       <UniqueIdentifier>{b1b060c8-a5a1-4aa3-9e97-075d7fdeef29}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Particles\Emitters">
       <UniqueIdentifier>{b70d26cb-53ec-4efa-89e1-69e1c7ffaf9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Interface v2.0">
+      <UniqueIdentifier>{9f73c75c-7cf0-4cdb-8235-2c3349e1b251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\interface v1.0">
+      <UniqueIdentifier>{4636de2e-aca5-451e-bf64-5bb070ad177c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{506e9574-830f-4924-bed7-62c5d5f342a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{f21c0b34-5fc1-42d0-a6d5-f11f85ebd59b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{c86a5d99-2bd4-4fcf-affa-852cf9ef632d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data\Twitter">
+      <UniqueIdentifier>{c5e79e68-d0f0-4240-b187-e2b0f8f2e0e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{d16fc0bc-e228-4082-b1e0-21f16d02fd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DB">
+      <UniqueIdentifier>{35ae461b-38a4-4132-9d8c-6a68d578fa84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{650f3a35-1fb6-4bd3-8646-283b12b3e047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics\MSA">
+      <UniqueIdentifier>{4587dea7-7e68-4470-9c6c-7f4b72af30bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Leap">
+      <UniqueIdentifier>{44804a9d-0c77-4420-87cf-ad5cda66ffbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +84,6 @@
     <ClInclude Include="TweetsEmitter.h">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
-    <ClInclude Include="TweetDB.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
     <ClInclude Include="BackgroundEmitter.h">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClInclude>
@@ -75,14 +99,8 @@
     <ClInclude Include="RTFTextParser.h">
       <Filter>Source Files\RTF</Filter>
     </ClInclude>
-    <ClInclude Include="DBHandler.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
     <ClInclude Include="DataTypes.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
-    <ClInclude Include="UserDB.h">
-      <Filter>Source Files\Twitter</Filter>
+      <Filter>Source Files\DB</Filter>
     </ClInclude>
     <ClInclude Include="TrailParticle.h">
       <Filter>Source Files\Particles</Filter>
@@ -90,23 +108,176 @@
     <ClInclude Include="TweetParticle.h">
       <Filter>Source Files\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="TwitterProfileListItem.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIUserProfile.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUITweetItem.h">
-      <Filter>Source Files\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="LeapDevice.h">
       <Filter>Source Files\Leap</Filter>
     </ClInclude>
-    <ClInclude Include="GUIScreenLayout.h">
-      <Filter>Source Files\GUI</Filter>
+    <ClInclude Include="GUITweetItem.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
     </ClInclude>
-    <ClInclude Include="GUIScreenLayoutImpl.h">
-      <Filter>Source Files\GUI</Filter>
+    <ClInclude Include="GUIUserProfile.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProfileListItem.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionSidePanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionDetails.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionContainer.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeakerNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TweetNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpeaker.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AppData.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterUserProfile.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterTweet.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="TweetsVisualizeScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITweetDetailsPanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITweetDetailsPanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIProfilePicture.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="PhNode.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics2D.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics3D.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsAttraction.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsCallbacks.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsConstraint.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsDataRecorder.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParams.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticle.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleDrawer.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleUpdater.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSector.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSpring.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsWorld.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACore.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreCommon.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreMath.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\msacore-mray.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAObjCPointer.h">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV1.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayout_V1.h">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayout_V2.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV2.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionRenderer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ITedNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionSidePanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeRenderer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProvider.h">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCamera.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISceneSpacePanel.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScenePanelLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISweepingText.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,11 +296,8 @@
     <ClCompile Include="BackgroundEmitter.cpp">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClCompile>
-    <ClCompile Include="TweetDB.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
     <ClCompile Include="DataTypes.cpp">
-      <Filter>Source Files\Twitter</Filter>
+      <Filter>Source Files\DB</Filter>
     </ClCompile>
     <ClCompile Include="TrailParticle.cpp">
       <Filter>Source Files\Particles</Filter>
@@ -137,23 +305,8 @@
     <ClCompile Include="TweetsEmitter.cpp">
       <Filter>Source Files\Particles\Emitters</Filter>
     </ClCompile>
-    <ClCompile Include="DBHandler.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
-    <ClCompile Include="UserDB.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
     <ClCompile Include="TweetParticle.cpp">
       <Filter>Source Files\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="TwitterProfileListItem.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUIUserProfile.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUITweetItem.cpp">
-      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="LeapDevice.cpp">
       <Filter>Source Files\Leap</Filter>
@@ -161,10 +314,100 @@
     <ClCompile Include="PAVelocityOverTimeInterpolater.cpp">
       <Filter>Source Files\Particles\Particle Effects</Filter>
     </ClCompile>
+    <ClCompile Include="GUITweetItem.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIUserProfile.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProfileListItem.cpp">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISessionSidePanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionContainer.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLDBHandler.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterUserProfile.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterTweet.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="AppData.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLDBHandler.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderingScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TweetsVisualizeScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITweetDetailsPanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIProfilePicture.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
+      <Filter>Source Files\Physics\MSA</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeakerNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionRenderer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TweetNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISpeakerDetailsPanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeRenderer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProvider.cpp">
+      <Filter>Source Files\Data\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCamera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISceneSpacePanel.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISweepingText.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout.gui">
-      <Filter>Source Files\GUI</Filter>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout_V1.gui">
+      <Filter>Source Files\GUI\interface v1.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUISessionSidePanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISpeakerDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>
 </Project>

@@ -23,11 +23,13 @@ namespace OS
 {
 
 template <typename T>
-class MRAY_DLL CMutexVar
+class  CMutexVar
 {
 	IMutex* m_mutex;
 	T m_var;
 public:
+	CMutexVar() :m_mutex(0)
+	{	}
 	CMutexVar(IMutex* m):m_mutex(m)
 	{	}
 	CMutexVar(IMutex* m,T v):m_var(v)

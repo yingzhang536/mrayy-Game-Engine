@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "TweetParticle.h"
-#include "TweetDB.h"
+#include "TwitterTweet.h"
 #include "TweetsEmitter.h"
 
 
@@ -11,12 +11,12 @@ namespace mray
 {
 namespace ted
 {
-	class TweetDB;
+	class TwitterTweet;
 }
 namespace scene
 {
 
-TweetParticle::TweetParticle(TweetsEmitter* e, ted::TweetDB* tweet)
+TweetParticle::TweetParticle(TweetsEmitter* e, ted::TwitterTweet* tweet)
 :IBaseParticle(e), m_tweet(tweet)
 {
 	m_levelID = 0;

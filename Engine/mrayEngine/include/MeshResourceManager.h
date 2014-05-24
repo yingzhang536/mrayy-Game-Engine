@@ -22,12 +22,13 @@ protected:
 	
 	virtual IResourcePtr loadResourceFromFile(OS::IStream* file);
 
-	void addMeshLoader(loaders::IMeshLoader*loader);
 
 	virtual core::string getDefaultGroup();
 public:
 	MeshResourceManager();
 	virtual~MeshResourceManager();
+
+	void addMeshLoader(loaders::IMeshLoader*loader);
 
 	GCPtr<scene::SMesh> loadMesh(const core::string&name,bool instance);
 

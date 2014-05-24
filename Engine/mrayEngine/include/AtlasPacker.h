@@ -11,6 +11,7 @@ namespace mray
 namespace video
 {
 	class AtlasPackerImpl;
+	class ImageSet;
 
 class MRAY_DLL AtlasPacker
 {
@@ -22,6 +23,9 @@ public:
 
 	void SetMaxSize(const math::vector2d& size);
 	const math::vector2d& GetMaxSize()const;
+
+	void SetTargetImageSet(video::ImageSet* imageSet);
+	video::ImageSet* GetTargetImageSet();
 	
 	void SetPadding(int p);
 	int GetPadding()const;

@@ -40,7 +40,7 @@ namespace mray
 	bool AreaInteraction::ChannelArea::Calculate(float threshold)
 	{
 		float w=0;
-		float time=gTimer.getActualTimeAccurate();
+		float time=gTimer.getSeconds();
 		for (int i=0;i<areas.size();++i)
 		{
 			float x=areas[i].Calculate(threshold);

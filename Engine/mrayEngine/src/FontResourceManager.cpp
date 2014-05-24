@@ -14,6 +14,9 @@
 #include "Engine.h"
 #include "DynamicFontGenerator.h"
 
+#include "IOSystem.h"
+#include "IDirOS.h"
+#include "StringUtil.h"
 
 namespace mray{
 
@@ -89,6 +92,54 @@ public:
 };
 core::string truetypeXMLFontLoader::type=mT("trueType");
 
+////////////////////////
+
+
+class dynamicFontXMLFontLoader :public IFontXMLParser
+{
+	static core::string type;
+public:
+	virtual const mchar* getType(){
+		return type.c_str();
+	}
+	virtual bool canLoad(const mchar* t){
+		return type.equals_ignore_case(t);
+	}
+	virtual GUI::IFont* parseAttributes(xml::XMLElement*attrs){
+		traceFunction(eGUI);
+		xml::XMLAttribute*a = attrs->getAttribute(mT("Name"));
+		if (!a){
+			gLogManager.log(mT("Error While Parsing Font XML File, No Name for the Font"), ELL_ERROR);
+		}
+		uint res = 96;
+		bool bold = false;
+		bool italic = false;
+		bool underline = false;
+		math::vector2di size = 2048;
+		xml::XMLAttribute*attr = attrs->getAttribute(mT("Size"));
+		if (attr)
+			size = core::StringConverter::toVector2d(attr->value);
+		attr = attrs->getAttribute(mT("Resolution"));
+		if (attr){
+			res = core::StringConverter::toUInt(attr->value);
+		}
+		bold = attrs->getValueBool("bold");
+		italic = attrs->getValueBool("italic");
+		underline = attrs->getValueBool("underline");
+
+		GUI::DynamicFontGenerator* font = new GUI::DynamicFontGenerator();
+		font->SetFontName(core::string_to_wchar(a->value));
+		font->SetTextureSize(size);
+		font->SetBold(bold);
+		font->SetItalic(italic);
+		font->SetUnderline(underline);
+		font->SetFontResolution(res);
+		font->Init();
+		return font;
+	}
+};
+core::string dynamicFontXMLFontLoader::type = mT("dynamicFont");
+
 ///////////////////////////////////////////
 
 
@@ -102,6 +153,7 @@ FontResourceManager::FontResourceManager(video::IVideoDevice*device)
 {
 	addXMLParser(new glyphXMLFontLoader());
 	addXMLParser(new truetypeXMLFontLoader());
+	addXMLParser(new dynamicFontXMLFontLoader());
 }
 
 FontResourceManager::~FontResourceManager(){
@@ -131,7 +183,7 @@ IResourcePtr FontResourceManager::loadResourceFromFile(OS::IStream* file){
 	GUI::IFont* font=m_fontParser.loadXML(file);
 	
 	if(font){
-		m_fontList.insert(FontList::value_type(font->getName(),font));
+	//	m_fontList.insert(FontList::value_type(font->getName(),font));
 	}
 	
 	return font;
@@ -143,9 +195,28 @@ const GUI::IFontPtr& FontResourceManager::getDefaultFont(){
 }
 void FontResourceManager::setDefaultFont(const GUI::IFontPtr& f){
 	m_defaultFont=f;
-	m_fontList[mT("Default")]=f;
+	//m_fontList[mT("Default")]=f;
 }
+int FontResourceManager::loadFontsFromDir(const core::string& dir)
+{
+	OS::IDirOS* dirOS = OS::IOSystem::getInstance().createDirSystem();
+	dirOS->changeDir(dir);
+	int c=dirOS->getFilesCount();
+	int total = 0;
+	core::string fname, path, ext;
+	for (int i = 0; i < c; ++i)
+	{
+		fname= dirOS->getFullFileName(i);
+		core::StringUtil::SplitPathExt(fname, path, ext);
+		if (ext == "fnt")
+		{
+			loadFont(fname);
+			total++;
+		}
+	}
+	return total;
 
+}
 GUI::IFontPtr FontResourceManager::loadFont(const core::string& name){
 	GUI::IFontPtr font=getOrCreate(name);
 	return font;
@@ -157,7 +228,12 @@ const GUI::IFontPtr& FontResourceManager::getFontByName(const core::string& name
 	return m_defaultFont;
 }
 
-
+void FontResourceManager::addFont(GUI::IFontCRef f)
+{
+	if (f.isNull())
+		return;
+	m_fontList[f->getName()]= f;
+}
 void FontResourceManager::addXMLParser(const IFontXMLParserPtr& p){
 	core::string t=p->getType();
 	t.make_lower();

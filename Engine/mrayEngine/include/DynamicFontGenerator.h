@@ -38,11 +38,21 @@ protected:
 	bool m_dirty;
 	core::stringw m_fontName;
 	int m_fontResolution;
+	bool m_bold;
+	bool m_underline;
+	bool m_italic;
 public:
 	DynamicFontGenerator();
 	virtual~DynamicFontGenerator();
 
 	void Init();
+
+	void SetBold(bool b){ m_bold = b; }
+	bool GetBold(){ return m_bold; }
+	void SetUnderline(bool b){ m_underline = b; }
+	bool GetUnderline(){ return m_underline; }
+	void SetItalic(bool b){ m_italic = b; }
+	bool GetItalic(){ return m_italic; }
 
 	void SetTextureSize(const math::vector2di& size);
 	const math::vector2di& GetTextureSize();

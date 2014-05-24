@@ -15,7 +15,7 @@ ConnectionLineRenderer::ConnectionLineRenderer() :MeshRenderableNode(0)
 {
 	m_dirty = false;
 	m_buffer = m_mesh->addNewBuffer();
-	m_buffer->getMeshBuffer()->setRenderType(video::MR_LINE_STRIP);
+	m_buffer->getMeshBuffer()->setRenderType(video::MR_LINES);
 	m_buffer->getMeshBuffer()->createStream(0, video::EMST_Position, video::ESDT_Point3f, 2, video::IHardwareBuffer::EUT_Dynamic, true, true);
 	m_buffer->getMeshBuffer()->createStream(0, video::EMST_Color, video::ESDT_Point4f, 2, video::IHardwareBuffer::EUT_Dynamic, true, true);
 	m_buffer->getMeshBuffer()->createIndexBuffer(video::IHardwareIndexBuffer::EIT_16Bit, 2, video::IHardwareBuffer::EUT_Dynamic, true, true);

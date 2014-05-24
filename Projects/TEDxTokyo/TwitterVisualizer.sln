@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TwitterVisualizer", "TwitterVisualizer\TwitterVisualizer.vcxproj", "{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845} = {8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "twitcurl", "..\..\Dependencies\libtwitcurl\twitcurl.vcxproj", "{00175D8C-EA44-48AE-AC59-B3B7BE04E65C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mrayTweetLib", "..\..\Plugins\mrayTweetLib\mrayTweetLib.vcxproj", "{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}"
+	ProjectSection(ProjectDependencies) = postProject
+		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C} = {00175D8C-EA44-48AE-AC59-B3B7BE04E65C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSONCpp", "..\..\Dependencies\jsoncpp\JSONCpp.vcxproj", "{32045109-F1BD-4DF1-8196-30C4E1118493}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}.Debug|Win32.Build.0 = Debug|Win32
+		{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}.Release|Win32.ActiveCfg = Release|Win32
+		{BFCA7986-FFED-4C32-AEAB-6CBDF025A0C3}.Release|Win32.Build.0 = Release|Win32
+		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C}.Debug|Win32.Build.0 = Debug|Win32
+		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C}.Release|Win32.ActiveCfg = Release|Win32
+		{00175D8C-EA44-48AE-AC59-B3B7BE04E65C}.Release|Win32.Build.0 = Release|Win32
+		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Debug|Win32.Build.0 = Debug|Win32
+		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Release|Win32.ActiveCfg = Release|Win32
+		{8155E8C8-F3AA-4C45-BDF1-B45DD0A87845}.Release|Win32.Build.0 = Release|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Debug|Win32.ActiveCfg = Debug|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Debug|Win32.Build.0 = Debug|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Release|Win32.ActiveCfg = Release|Win32
+		{32045109-F1BD-4DF1-8196-30C4E1118493}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

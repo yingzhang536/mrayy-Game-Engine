@@ -46,6 +46,18 @@
     <Filter Include="Source Files\Components\Debug">
       <UniqueIdentifier>{3fcc2914-2bb4-4028-9b50-191d8d3b24e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ServiceProvider">
+      <UniqueIdentifier>{4d3e0c43-88a3-4456-9743-46aabbdc7e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Calibration">
+      <UniqueIdentifier>{d82414c9-b5b4-4515-8c1a-faf9c23e8381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Calibration\Virtual Telesar">
+      <UniqueIdentifier>{919c8cfb-0fc2-4baf-a7a9-1f4db7227740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Calib">
+      <UniqueIdentifier>{13ef717b-d921-4429-b464-8ff175858526}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RTTI_OBJ.cpp">
@@ -155,6 +167,21 @@
     </ClCompile>
     <ClCompile Include="ContactDisablerComponent.cpp">
       <Filter>Source Files\Components\definition</Filter>
+    </ClCompile>
+    <ClCompile Include="CalibrationManager.cpp">
+      <Filter>Source Files\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="VTGloveCalibrationStep.cpp">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClCompile>
+    <ClCompile Include="VTPostureCalibrationStep.cpp">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClCompile>
+    <ClCompile Include="VTCalibrationManager.cpp">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClCompile>
+    <ClCompile Include="VTCalibrationComponent.cpp">
+      <Filter>Source Files\Components\Calib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,6 +337,36 @@
     </ClInclude>
     <ClInclude Include="ContactDisablerComponent.h">
       <Filter>Source Files\Components\definition</Filter>
+    </ClInclude>
+    <ClInclude Include="IAudioProvider.h">
+      <Filter>Source Files\ServiceProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommunicationProvider.h">
+      <Filter>Source Files\ServiceProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="IVisualProvider.h">
+      <Filter>Source Files\ServiceProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="IControlProvider.h">
+      <Filter>Source Files\ServiceProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="ICalibrationStep.h">
+      <Filter>Source Files\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="CalibrationManager.h">
+      <Filter>Source Files\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="VTGloveCalibrationStep.h">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClInclude>
+    <ClInclude Include="VTPostureCalibrationStep.h">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClInclude>
+    <ClInclude Include="VTCalibrationManager.h">
+      <Filter>Source Files\Calibration\Virtual Telesar</Filter>
+    </ClInclude>
+    <ClInclude Include="VTCalibrationComponent.h">
+      <Filter>Source Files\Components\Calib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -90,7 +90,7 @@ bool GUIPanel::_OnMouseEvent(MouseEvent*evt)
 			GetCreator()->SetMouseOn(this);
 		}
 		evt->setRecived();
-		return true;
+		//return true;
 	}else
 	{
 		if(GetCreator()->HasMouseOn(this))

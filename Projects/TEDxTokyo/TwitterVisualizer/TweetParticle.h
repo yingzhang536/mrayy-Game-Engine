@@ -22,7 +22,7 @@ namespace mray
 {
 	namespace ted
 	{
-		class TweetDB;
+		class TwitterTweet;
 	}
 namespace scene
 {
@@ -32,17 +32,17 @@ namespace scene
 class TweetParticle:public IBaseParticle
 {
 protected:
-	ted::TweetDB* m_tweet;
+	ted::TwitterTweet* m_tweet;
 	float m_targetRadius;
 
 	int m_levelID;
 
 	math::vector3d m_randomAxis;
 public:
-	TweetParticle(TweetsEmitter* e,ted::TweetDB* tweet);
+	TweetParticle(TweetsEmitter* e,ted::TwitterTweet* tweet);
 	virtual~TweetParticle();
 
-	ted::TweetDB* GetTweet(){ return m_tweet; }
+	ted::TwitterTweet* GetTweet(){ return m_tweet; }
 
 	int GetLevelID(){ return m_levelID; }
 

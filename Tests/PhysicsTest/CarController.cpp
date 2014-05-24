@@ -70,7 +70,7 @@ void CarController::execute(OS::IThread*caller,void*arg)
 
 void CarController::SendCommand(const uchar*buff,int index)
 {
-	float t=gTimer.getActualTimeAccurate();
+	float t=gTimer.getSeconds();
 	if(t-m_lastT[index]<50)
 		return;
 	m_lastT[index]=t;

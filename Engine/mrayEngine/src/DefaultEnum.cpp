@@ -141,14 +141,14 @@ void DefaultEnum::registerDefaultEnum(){
 	//Font Alignment
 	StartRegisterEnum(EFontAligment);
 	RegisterEnumValueA(mT("TopLeft"),EFA_TopLeft);
-	RegisterEnumValueA(mT("TopRight"),EFA_TopCenter);
-	RegisterEnumValueA(mT("TopMiddle"),EFA_TopRight);
+	RegisterEnumValueA(mT("TopCenter"), EFA_TopCenter);
+	RegisterEnumValueA(mT("TopRight"), EFA_TopRight);
 	RegisterEnumValueA(mT("MiddleLeft"),EFA_MiddleLeft);
-	RegisterEnumValueA(mT("MiddleRight"),EFA_MiddleCenter);
-	RegisterEnumValueA(mT("MiddleMiddle"),EFA_MiddleRight);
+	RegisterEnumValueA(mT("MiddleCenter"), EFA_MiddleCenter);
+	RegisterEnumValueA(mT("MiddleRight"), EFA_MiddleRight);
 	RegisterEnumValueA(mT("BottomLeft"),EFA_BottomLeft);
-	RegisterEnumValueA(mT("BottomRight"),EFA_BottomCenter);
-	RegisterEnumValueA(mT("BottomMiddle"),EFA_BottomRight);
+	RegisterEnumValueA(mT("BottomCenter"), EFA_BottomCenter);
+	RegisterEnumValueA(mT("BottomRight"), EFA_BottomRight);
 	EndRegisterEnum();
 
 	//Alignment Button

@@ -23,3 +23,4 @@
 
 //#define SA_UNICODE
 #include <SQLAPI.h>
+#include "msaPhysics/MSAPhysics2D.h"

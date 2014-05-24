@@ -4,7 +4,6 @@
 #include "WinCursorControl.h"
 //#include <GUIManager.h>
 //#include <GUIAnimatedSprite.h>
-#include <CFPS.h>
 //#include <TextureResourceManager.h>
 
 namespace mray{

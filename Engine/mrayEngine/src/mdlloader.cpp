@@ -28,6 +28,7 @@
 #include "TextureResourceManager.h"
 #include "BoneNode.h"
 #include "MeshBufferData.h"
+#include "StringUtil.h"
 
 namespace mray{
 namespace loaders{
@@ -566,9 +567,9 @@ scene::SMesh*mdlLoader::load(OS::IStream* file)
 }
 bool mdlLoader::canLoad(const  core::string&name)
 {
-	core::string str(name);
-	str.make_lower();
-	return strSearch(str.c_str(),mT(".mdl"))!=0;
+	core::string path,ext;
+	core::StringUtil::SplitPathExt(name, path, ext);
+	return ext.equals_ignore_case(mT("mdl"));
 }
 
 

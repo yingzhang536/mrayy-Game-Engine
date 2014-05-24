@@ -57,9 +57,8 @@ void charDataHandler(void *data, const XML_Char *text, int len)
 {
 	if(len==1)return;
 	core::string str;
-	str.resize(len+1);
+	str.resize(len);
 	mraySystem::memCopy(&str[0],text,len);
-	str[len]=0;
 	str=core::StringUtil::Trim(str);
 	if(str=="")
 		return;

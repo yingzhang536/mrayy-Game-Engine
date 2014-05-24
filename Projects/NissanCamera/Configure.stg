@@ -6,7 +6,11 @@ Settings{
 	Fullscreen	"False"
 	Monitor	"0"
 	Multisample	"0"
+<<<<<<< HEAD
 	Resolution	"1280,800"
+=======
+	Resolution	"720,1280"
+>>>>>>> 01f40b2f8b35b31cc868b822317ab72bba293e7f
 	Stereoscopic	"None"
 	VSync	"False"
 }

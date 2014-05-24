@@ -49,7 +49,7 @@ public:
 	
 	virtual const std::vector<core::string>& GetScheme()=0;
 
-	virtual bool InjectCommand(const core::string& cmd, const core::string& args){ return false; }
+	virtual core::string InjectCommand(const core::string& cmd, const core::string& args){ return ""; }
 };
 
 }

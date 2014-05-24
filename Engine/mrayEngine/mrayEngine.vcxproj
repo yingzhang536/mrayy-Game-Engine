@@ -309,11 +309,13 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AImpSceneLoader.h" />
     <ClInclude Include="include\AtlasPacker.h" />
     <ClInclude Include="include\BatchRenderer.h" />
     <ClInclude Include="include\BinPacker.h" />
     <ClInclude Include="include\BitmapFontData.h" />
     <ClInclude Include="include\CommonValueProviders.h" />
+    <ClInclude Include="include\DateTime.h" />
     <ClInclude Include="include\DynamicFontGenerator.h" />
     <ClInclude Include="include\FileTextureSource.h" />
     <ClInclude Include="include\GUIElement3D.h" />
@@ -417,10 +419,12 @@
     <ClInclude Include="include\SSkyPlaneNode.h" />
     <ClInclude Include="include\STerrain.h" />
     <ClCompile Include="ICameraVideoGrabber.cpp" />
+    <ClCompile Include="src\AImpSceneLoader.cpp" />
     <ClCompile Include="src\AtlasPacker.cpp" />
     <ClCompile Include="src\BinPacker.cpp" />
     <ClCompile Include="src\BitmapFontData.cpp" />
     <ClCompile Include="src\CommonValueProviders.cpp" />
+    <ClCompile Include="src\DateTime.cpp" />
     <ClCompile Include="src\DynamicFontGenerator.cpp" />
     <ClCompile Include="src\FileTextureSource.cpp" />
     <ClCompile Include="src\GUIElement3D.cpp" />
@@ -953,7 +957,7 @@
     <ClInclude Include="include\ASCIIEncoding.h" />
     <ClInclude Include="include\BitConverter.h" />
     <ClInclude Include="include\BitVector.h" />
-    <ClInclude Include="include\CFPS.h" />
+    <ClInclude Include="include\FPSCalc.h" />
     <ClInclude Include="include\CKeyableAttr.h" />
     <ClInclude Include="include\HashMap.h" />
     <ClInclude Include="include\HeapAllocator.h" />
@@ -1771,7 +1775,7 @@
     <ClCompile Include="src\SoftwareStreamBuffer.cpp" />
     <ClCompile Include="src\ASCIIEncoding.cpp" />
     <ClCompile Include="src\BitConverter.cpp" />
-    <ClCompile Include="src\cfps.cpp" />
+    <ClCompile Include="src\FPSCalc.cpp" />
     <ClCompile Include="src\mString.cpp" />
     <ClCompile Include="src\PoolMemoryAllocator.cpp" />
     <ClCompile Include="src\StringConverter.cpp" />

@@ -32,13 +32,13 @@ public:
 		,position(o.position),direction(o.direction)
 	{
 	}
-	VisionMemTick(uint t,const math::vector3d&pos,const math::vector3d&dir,bool v):time(t),isVisible(v)
+	VisionMemTick(double t,const math::vector3d&pos,const math::vector3d&dir,bool v):time(t),isVisible(v)
 		,position(pos),direction(dir)
 	{
 	}
 	virtual~VisionMemTick(){}
 
-	uint time;	//last time been saw
+	double time;	//last time been saw
 
 	math::vector3d position;	//last position
 

@@ -20,7 +20,6 @@
 #include <IDllManager.h>
 #include <IOSClipboard.h>
 #include <IOSRegistry.h>
-#include <ITimer.h>
 
 namespace mray{
 namespace OS{
@@ -33,7 +32,6 @@ private:
 	GCPtr<IDllManager> m_dllManager;
 	GCPtr<IOSClipboard> m_clipboardManager;
 	GCPtr<IOSRegistry> m_registryManager;
-	GCPtr<ITimer> m_timer;
 
 
 	std::vector<uint> m_processorsAffineMask;
@@ -44,6 +42,7 @@ public:
 	virtual ~WinOSystem();
 
 	virtual IDirOS* createDirSystem();
+	virtual ITimer* createTimer() ;
 
 	virtual bool getMemoryState(SMemoryState& state);
 	virtual bool getPowerState(SPowerStatus& state);

@@ -2,6 +2,7 @@
 
 #include "BenchmarkItem.h"
 #include "ITimer.h"
+#include "Engine.h"
 
 namespace mray
 {
@@ -66,7 +67,7 @@ void BenchmarkItem::OnEnter()
 {
 	if(!m_entered)
 	{
-		m_enterTime=gTimer.getActualTimeAccurate();
+		m_enterTime=gEngine.getTimer()->getSeconds();
 		m_entered=true;
 	}
 }
@@ -75,7 +76,7 @@ float BenchmarkItem::OnExit()
 	if(m_entered)
 	{
 		++m_samples;
-		m_lastTime=gTimer.getActualTimeAccurate()-m_enterTime;
+		m_lastTime = gEngine.getTimer()->getSeconds() - m_enterTime;
 		m_totalTime+=m_lastTime;
 
 		m_entered=false;

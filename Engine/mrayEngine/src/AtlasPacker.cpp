@@ -4,6 +4,7 @@
 
 #include "BinPacker.h"
 #include "Engine.h"
+#include "ImageSet.h"
 
 
 
@@ -18,6 +19,8 @@ class AtlasPackerImpl
 public:
 	AtlasPackerImpl()
 	{
+		imageset = 0;
+		padding = 2;
 	}
 
 	video::ITexturePtr texture;
@@ -26,6 +29,7 @@ public:
 	int padding;
 
 	core::BinPacker packer;
+	video::ImageSet* imageset;
 };
 
 
@@ -58,6 +62,14 @@ video::ITexturePtr AtlasPacker::GetTexture()const
 {
 	return m_impl->texture;
 }
+void AtlasPacker::SetTargetImageSet(video::ImageSet* imageSet)
+{
+	m_impl->imageset = imageSet;
+}
+video::ImageSet* AtlasPacker::GetTargetImageSet()
+{
+	return m_impl->imageset;
+}
 
 
 bool AtlasPacker::AddTexture(video::ITexture* tex)
@@ -79,11 +91,46 @@ bool AtlasPacker::PackTextures(video::ITexture** textures, int count)
 
 	std::vector<core::BinPackerOutRect> packs;
 	bool ret= m_impl->packer.Pack(rects, packs, m_impl->maxSize);
-	if (!ret)
-		return false;
+	
+	if (m_impl->imageset)
+	{
+		m_impl->imageset->ClearRegions();
+		for (int i = 0; i < packs.size(); ++i)
+		{
+			video::ITexture* tex = textures[packs[i].ID];
+			const math::vector3d& sz = tex->getSize();
+			ImageRegion* r = m_impl->imageset->CreateRegion(tex->getResourceName());
+			math::rectf tc(packs[i].pos.x, packs[i].pos.y, sz.x, sz.y);
+			r->SetSrcRect(tc);
+			tc.ULPoint /= math::vector2d(sz.x, sz.y);
+			tc.BRPoint /= math::vector2d(sz.x, sz.y);
+			r->SetTextureRect(tc);
+		}
+	}
 
-//	m_impl->texture->getSurface(0)->lock()
+	video::LockedPixelBox box= m_impl->texture->getSurface(0)->lock(math::box3d(0, math::vector3d(m_impl->maxSize.x, m_impl->maxSize.y,1 )),video::IHardwareBuffer::ELO_Normal);
 
+	for (int i = 0; i < packs.size(); ++i)
+	{
+		video::ITexture* tex = textures[packs[i].ID];
+		const math::vector3d& sz = tex->getSize();
+		video::LockedPixelBox src = tex->getSurface(0)->lock(math::box3d(0, sz), video::IHardwareBuffer::ELO_ReadOnly);
+
+		uchar* dptr = (uchar*)box.data;
+		uchar* sptr = (uchar*)src.data;
+
+		dptr += (int)(packs[i].pos.x + box.box.getWidth()*packs[i].pos.y) * 4;
+		for (int y = 0; y < sz.y; ++y)
+		{
+			memcpy(dptr,sptr,(int)src.box.getWidth()*4);
+			sptr += (int)src.box.getWidth() * 4;
+			dptr += (int)(box.box.getWidth()*packs[i].pos.y) * 4;
+		}
+
+		tex->getSurface(0)->unlock();
+	}
+
+	m_impl->texture->getSurface(0)->unlock();
 	return true;
 }
 

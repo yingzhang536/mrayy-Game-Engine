@@ -19,12 +19,12 @@ namespace VT
 		CommunicationManagerThreadFunction(CommunicationManager*m){m_manager=m;}
 		virtual void execute(OS::IThread*caller,void*arg)
 		{
-			float t1=gTimer.getActualTimeAccurate();
+			float t1=gTimer.getSeconds();
 			float dt=0;
 			while(caller->isActive())
 			{
 				OS::IThreadManager::getInstance().sleep(10);
-				float t2=gTimer.getActualTimeAccurate();
+				float t2=gTimer.getSeconds();
 				dt=t2-t1;
 				t1=t2;
 				m_manager->_OnUpdateTick(dt);

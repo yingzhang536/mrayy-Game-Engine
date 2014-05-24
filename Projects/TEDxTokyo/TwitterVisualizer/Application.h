@@ -17,73 +17,23 @@
 
 
 #include <cmrayapplication.h>
-#include "DynamicFontGenerator.h"
-#include "ISQLConnection.h"
-#include "ISQLManager.h"
-#include "IGUIListBox.h"
-#include "LeapDevice.h"
+#include "IRenderingScene.h"
+#include "ISoundManager.h"
 
 namespace mray
 {
-	namespace scene
-	{
-		class TweetsEmitter;
-		class TweetParticle;
-	}
-
-	namespace GUI
-	{
-		class GUIUserProfile;
-		class IGUIEditBox;
-		class GUITweetItem;
-		class IGUIStackPanel;
-
-		class GUIScreenLayoutImpl;
-	}
-class Application :public CMRayApplication,public nui::ILeapListener
+class Application :public CMRayApplication
 {
 protected:
-	GCPtr<GUI::DynamicFontGenerator> m_fontGen;
+	ted::IRenderingScene* m_scene;
+	scene::ViewPort* m_mainVP;
 
-	GCPtr<scene::SParticleSystem> m_particleSystem;
-
-	GCPtr<db::ISQLManager> m_dbManager;
-	GCPtr<db::ISQLConnection> m_dbConnection;
-
-	scene::CameraNode* m_camera;
-	math::vector3d m_orbitAngles;
-
-	video::ITexture* m_loadedTexture;
-
-	std::vector < video::ITexturePtr> m_images;
-
-	GUI::IGUIPanelElement* m_guiroot;
-	/*
-	GUI::IGUIEditBox* m_userNameTxt;
-	GUI::IGUIListBox* m_usersList;
-	GUI::GUIUserProfile* m_userProfile;
-	GUI::IGUIStackPanel* m_tweetsStack;
-	*/
-	GUI::GUIScreenLayoutImpl* m_screenLayout;
-
-	std::vector<GUI::GUITweetItem*> m_tweetItems;
-
-	scene::TweetsEmitter* m_tweetEmitter;
-	std::vector<scene::TweetParticle*> m_loadedParticles;
-
-	GCPtr<nui::LeapDevice> m_leap;
-
-	math::vector3d m_speedVec;
-	math::vector3d m_leapVec;
-	float m_cameraRadius;
-
-	bool m_debugging;
-
-	void _OnUserNameChange(IObject* sender, PVOID param);
-	void _OnSelectUserChange(IObject* sender, PVOID param);
+	GCPtr<sound::ISoundManager> m_soundManager;
 public:
 	Application();
 	virtual~Application();
+
+	virtual void onEvent(Event* event);
 
 	virtual void init(const OptionContainer &extraOptions);
 
@@ -91,7 +41,6 @@ public:
 
 	virtual void WindowPostRender(video::RenderWindow* wnd);
 
-	virtual void OnGesture(nui::LeapDevice* d, nui::ELeapGestureType type, Leap::Gesture g);
 
 };
 

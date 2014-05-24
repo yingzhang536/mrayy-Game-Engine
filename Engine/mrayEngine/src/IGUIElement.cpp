@@ -33,8 +33,10 @@ IGUIElement::IGUIElement(const GUID& type,IGUIManager* creator)
 {
 	m_defaultRegion=new GUIElementRegion(this);
 
-	m_anchor[EEA_Top] = true;
-	m_anchor[EEA_Left] = true;
+	m_anchor[EEA_Top] = false;
+	m_anchor[EEA_Left] = false;
+	m_anchor[EEA_Bottom] = false;
+	m_anchor[EEA_Right] = false;
 	fillProperties();
 }
 IGUIElement::~IGUIElement()
@@ -61,7 +63,8 @@ void IGUIElement::fillProperties()
 		dic->addPropertie(&PropertyTypeID::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeVisible::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeEnabled::instance,mT("Design"));
-		dic->addPropertie(&PropertyTypePosition::instance,mT("Design"));
+		dic->addPropertie(&PropertyTypePosition::instance, mT("Design"));
+		dic->addPropertie(&PropertyTypeAnchorPosition::instance, mT("Design"));
 		dic->addPropertie(&PropertyTypeSize::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeHorizontalAlignment::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeVerticalAlignment::instance,mT("Design"));
@@ -70,6 +73,11 @@ void IGUIElement::fillProperties()
 		dic->addPropertie(&PropertyTypeColor::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeDeriveAlpha::instance,mT("Design"));
 		dic->addPropertie(&PropertyTypeAlpha::instance,mT("Design"));
+		dic->addPropertie(&PropertyTypeAnchorLeft::instance, mT("Design"));
+		dic->addPropertie(&PropertyTypeAnchorRight::instance, mT("Design"));
+		dic->addPropertie(&PropertyTypeAnchorTop::instance, mT("Design"));
+		dic->addPropertie(&PropertyTypeAnchorBottom::instance, mT("Design"));
+
 	}
 
 	AddEvent(&OnMouseEnter);
@@ -173,7 +181,7 @@ void IGUIElement::_UpdateAlignment(const math::rectf*vp)
 
 void IGUIElement::_UpdateAnchor(const math::rectf*vp)
 {
-	/*
+	
 	const math::vector2d& pos = GetDerivedPosition();
 	const math::vector2d& size = GetSize();
 
@@ -195,7 +203,7 @@ void IGUIElement::_UpdateAnchor(const math::rectf*vp)
 	}
 	if (m_anchor[EEA_Right])
 	{
-		m_unclippedRect.BRPoint.x = pos.x;
+		m_unclippedRect.BRPoint.x = parentRC.BRPoint.x - m_anchorPosition.x;
 	}
 	if (m_anchor[EEA_Top])
 	{
@@ -203,9 +211,27 @@ void IGUIElement::_UpdateAnchor(const math::rectf*vp)
 	}
 	if (m_anchor[EEA_Bottom])
 	{
-		m_unclippedRect.ULPoint.x = parentRC.BRPoint.x - pos.x;
+		m_unclippedRect.BRPoint.y = parentRC.BRPoint.y - m_anchorPosition.y;
+	}
+
+
+	if (!m_anchor[EEA_Left])
+	{
+		m_unclippedRect.ULPoint.x = m_unclippedRect.BRPoint.x - size.x;
+	}
+	if (!m_anchor[EEA_Right])
+	{
 		m_unclippedRect.BRPoint.x = m_unclippedRect.ULPoint.x + size.x;
-	}*/
+	}
+	if (!m_anchor[EEA_Top])
+	{
+		m_unclippedRect.ULPoint.y = m_unclippedRect.BRPoint.y - size.y;
+	}
+	if (!m_anchor[EEA_Bottom])
+	{
+		m_unclippedRect.BRPoint.y = m_unclippedRect.ULPoint.y + size.y;
+	}
+	m_defaultRegion->SetRect(m_unclippedRect);
 }
 
 void IGUIElement::SetCreator(IGUIManager* mngr)
@@ -375,6 +401,19 @@ const math::vector2d& IGUIElement::GetPosition()const
 {
 	return m_position;
 }
+
+bool IGUIElement::SetAnchorPosition(const math::vector2d& pos)
+{
+	if (m_locked)
+		return false;
+	m_anchorPosition = pos;
+	return true;
+}
+
+const math::vector2d& IGUIElement::GetAnchorPosition()const
+{
+	return m_anchorPosition;
+}
 const math::vector2d& IGUIElement::GetDerivedPosition()
 {
 	if(m_derivedPosDirt)
@@ -450,25 +489,29 @@ bool IGUIElement::_UpdateRegion(const math::rectf*vp)
 	}
 	if(m_unclippedRectDirt || m_docking!=EED_None)
 	{
-		if(m_docking==EED_None){
-			_UpdateAlignment(vp);
-		}else
-		{
-			if(m_unclippedRectDirt || m_attachedRegion && m_clippedRectDirt)
-			{
-				_UpdateDocking(vp);
-			}
-		}
 
-		m_unclippedRectDirt=false;
+	
 		m_clippedRectDirt=true;
 		res=true;
 	}
 	if(m_clippedRectDirt)
 	{
+		if (m_docking == EED_None){
+			if (m_anchor[EEA_Left] || m_anchor[EEA_Right] || m_anchor[EEA_Top] || m_anchor[EEA_Bottom])
+				_UpdateAnchor(vp);
+			else
+				_UpdateAlignment(vp);
+		}
+		else
+		{
+			if (m_unclippedRectDirt || m_attachedRegion && m_clippedRectDirt)
+			{
+				_UpdateDocking(vp);
+			}
+		}
 		if(m_attachedRegion )
 			m_defaultRegion->SetClipRect(m_attachedRegion->GetClippedRect());
-
+		m_unclippedRectDirt = false;
 		m_clippedRectDirt=false;
 		res=true;
 	}
@@ -498,9 +541,13 @@ IGUIPanelElement* IGUIElement::GetParent()const
 }
 
 
-void IGUIElement::SetAnchor(EElementAnchor anchor, bool set)
+bool IGUIElement::SetAnchor(EElementAnchor anchor, bool set)
 {
+	if (m_locked)
+		return false;
 	m_anchor[anchor] = set;
+	m_unclippedRectDirt = true;
+	return true;
 }
 bool IGUIElement::GetAnchor(EElementAnchor anchor)const
 {
@@ -700,7 +747,12 @@ IMPLEMENT_PROPERTY_TYPE_GENERIC(Enabled,IGUIElement,bool,SetEnabled,IsEnabled,co
 //////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_PROPERTY_TYPE_HEADER(Position,IGUIElement,vector2d,mT("Position"),EPBT_Struct,mT("Control's position"),0);
-IMPLEMENT_PROPERTY_TYPE_GENERIC(Position,IGUIElement,math::vector2d,SetPosition,GetPosition,core::StringConverter::toString,core::StringConverter::toVector2d,false)
+IMPLEMENT_PROPERTY_TYPE_GENERIC(Position, IGUIElement, math::vector2d, SetPosition, GetPosition, core::StringConverter::toString, core::StringConverter::toVector2d, false)
+
+//////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(AnchorPosition, IGUIElement, vector2d, mT("AnchorPosition"), EPBT_Struct, mT("Control's position"), 0);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(AnchorPosition, IGUIElement, math::vector2d, SetAnchorPosition, GetAnchorPosition, core::StringConverter::toString, core::StringConverter::toVector2d, false)
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -865,7 +917,27 @@ IMPLEMENT_PROPERTY_TYPE_GENERIC(Alpha,IGUIElement,float,SetAlpha,GetAlpha,core::
 //////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_PROPERTY_TYPE_HEADER(DeriveAlpha,IGUIElement,bool,mT("DeriveAlpha"),EPBT_Basic,mT("Derive alpha value?"),1);
-IMPLEMENT_PROPERTY_TYPE_GENERIC(DeriveAlpha,IGUIElement,bool,SetDeriveAlpha,GetDeriveAlpha,core::StringConverter::toString,core::StringConverter::toBool,false)
+IMPLEMENT_PROPERTY_TYPE_GENERIC(DeriveAlpha, IGUIElement, bool, SetDeriveAlpha, GetDeriveAlpha, core::StringConverter::toString, core::StringConverter::toBool, false)
+
+//////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(AnchorLeft, IGUIElement, bool, mT("AnchorLeft"), EPBT_Basic, mT("Left anchor"), 1);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(AnchorLeft, IGUIElement, bool, SetAnchorLeft, GetAnchorLeft, core::StringConverter::toString, core::StringConverter::toBool, true)
+
+//////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(AnchorRight, IGUIElement, bool, mT("AnchorRight"), EPBT_Basic, mT("Right anchor"), 1);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(AnchorRight, IGUIElement, bool, SetAnchorRight, GetAnchorRight, core::StringConverter::toString, core::StringConverter::toBool, true)
+
+//////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(AnchorTop, IGUIElement, bool, mT("AnchorTop"), EPBT_Basic, mT("Top anchor"), 1);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(AnchorTop, IGUIElement, bool, SetAnchorTop, GetAnchorTop, core::StringConverter::toString, core::StringConverter::toBool, false)
+
+//////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(AnchorBottom, IGUIElement, bool, mT("AnchorBottom"), EPBT_Basic, mT("Bottom anchor"), 1);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(AnchorBottom, IGUIElement, bool, SetAnchorBottom, GetAnchorBottom, core::StringConverter::toString, core::StringConverter::toBool, false)
 
 }
 }

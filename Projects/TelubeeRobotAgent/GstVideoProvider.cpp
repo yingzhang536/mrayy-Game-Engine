@@ -300,7 +300,7 @@ public:
 
 	bool NeedData(GstBuffer** b)
 	{
-		double t = gTimer.getActualTimeAccurate();
+		double t = gTimer.getSeconds();
 		double ms = t-m_time;
 		if (ms < 1000.0 / (m_frameRate))
 		{
@@ -367,7 +367,8 @@ public:
 		// 		GST_BUFFER_TIMESTAMP(buffer) = gst_util_uint64_scale(m_counter, GST_SECOND, m_frameRate);//m_counter * GST_SECOND/20;// 
 		// 
 		// 		++m_counter;
-		// 		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+		// 		GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale(1, GST_SECOND, m_frameRate) * 2;
+
 
 		GstFlowReturn ret=GST_FLOW_OK;
 		//g_signal_emit_by_name(gstSrc, "push-buffer", buffer, &ret);
@@ -595,12 +596,21 @@ public:
 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			" tune=zerolatency"
 			//" rc-lookahead=1"
+<<<<<<< HEAD
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 		//	" !gdppay" 
 			" ! mysink name=sink sync=false ";
 #else
 
 		gstString = "appsrc name=src ! "
+=======
+			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+			" !gdppay" 
+			" ! mysink name=sink sync=false ";
+#else
+
+		gstString = "appsrc name=src ! "
+>>>>>>> 01f40b2f8b35b31cc868b822317ab72bba293e7f
 			"video/x-raw,format=RGB,framerate=" + core::StringConverter::toString(m_frameRate) + "/1" +
 			",width=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().x) +
 			",height=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().y) +

@@ -46,7 +46,7 @@ public:
 	
 	const std::vector<core::string>& GetScheme();
 
-	bool InjectCommand(const core::string& cmd, const core::string& args);
+	core::string InjectCommand(const core::string& cmd, const core::string& args);
 };
 
 }

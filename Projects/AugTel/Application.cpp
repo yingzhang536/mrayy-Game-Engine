@@ -59,6 +59,8 @@
 
 #include "IDirOS.h"
 
+#include "MeshResourceManager.h"
+
 namespace mray
 {
 namespace AugTel
@@ -273,7 +275,6 @@ void Application::init(const OptionContainer &extraOptions)
 	_InitResources();
 
 
-
 	GUI::GUIRegisterer::RegisterElements();
 
 	LoadSettingsXML("TBeeSettings.xml");
@@ -332,6 +333,7 @@ void Application::init(const OptionContainer &extraOptions)
 	_initStates();
 	LoadSettingsXML("States.xml");
 
+	if (false)
 	{
 		video::AtlasPacker packer;
 		std::vector < video::ITexture*> textures;

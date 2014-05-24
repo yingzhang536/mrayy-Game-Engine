@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "TweetsEmitter.h"
 
-#include "TweetDB.h"
+#include "TwitterTweet.h"
 #include "TweetParticle.h"
 
 namespace mray
@@ -22,10 +22,10 @@ TweetsEmitter::~TweetsEmitter()
 
 IParticle*  TweetsEmitter::createParticle()
 {
-	ted::TweetDB*t;
-	if (m_lastSpawnTweet >= ted::TweetDB::TweetDBList.size())
+	ted::TwitterTweet*t;
+	if (m_lastSpawnTweet >= ted::TwitterTweet::TwitterTweetList.size())
 		return 0;
-	t = ted::TweetDB::TweetDBList[m_lastSpawnTweet++];
+	t = ted::TwitterTweet::TwitterTweetList[m_lastSpawnTweet++];
 	TweetParticle* part = new TweetParticle(this, t);
 
 	return part;
@@ -66,7 +66,7 @@ void TweetsEmitter::reSpawn(IParticle* p)
 	part->lifeSpawn = -1;
 	part->scale = 0.8;
 
-	float random = 3 + part->GetTweet()->date.day;
+	float random = 3 + part->GetTweet()->date.GetDate().GetDay();
 	part->SetTargetRadius(random);
 
 	setupParticle(part);
@@ -74,7 +74,7 @@ void TweetsEmitter::reSpawn(IParticle* p)
 	part->position = m_system->getOwner()->getAbsoluteTransformation()*(part->position);
 	m_tweetParticleMap[part->GetTweet()->ID] = part;
 }
-void TweetsEmitter::AddTweet(ted::TweetDB* t)
+void TweetsEmitter::AddTweet(ted::TwitterTweet* t)
 {
 }
 TweetParticle* TweetsEmitter::GetTweetParticle(ulong id)

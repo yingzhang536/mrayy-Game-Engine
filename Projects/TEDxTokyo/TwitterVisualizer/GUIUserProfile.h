@@ -23,7 +23,7 @@ namespace mray
 {
 	namespace ted
 	{
-		class UserDB;
+		class TwitterUserProfile;
 	}
 namespace GUI
 {
@@ -32,9 +32,9 @@ class GUIUserProfile:public IGUIElement
 {
 	DECLARE_RTTI;
 public:
-	static const core::string ElementType;
+	static const GUID ElementType;
 protected:
-	ted::UserDB* m_user;
+	ted::TwitterUserProfile* m_user;
 	video::ITexturePtr m_profilePic;
 	video::IGPUShaderProgramPtr m_maskingShader;
 
@@ -45,8 +45,8 @@ public:
 	GUIUserProfile(GUI::IGUIManager* creator);
 	virtual~GUIUserProfile();
 
-	void SetUser(ted::UserDB* u);
-	ted::UserDB* GetUser();
+	void SetUser(ted::TwitterUserProfile* u);
+	ted::TwitterUserProfile* GetUser();
 
 
 	virtual void Update(float dt);

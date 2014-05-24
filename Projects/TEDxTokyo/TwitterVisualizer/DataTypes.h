@@ -20,27 +20,14 @@
 
 namespace mray
 {
-namespace core
+namespace ted
 {
 
-class DateTime
-{
-protected:
-public:
+	typedef unsigned long long IDType;
 
-	int year;
-	int month;
-	int day;
-
-	DateTime():year(2014),month(1),day(1)
-	{}
-	virtual~DateTime(){}
-
-	void Parse(const core::string& str);
-};
-
-
-core::stringw ConvertToStringW(const char* multibyte, int cnt);
+	core::stringw ConvertToStringW(const char* multibyte, int cnt);
+	core::stringw ConvertToUtf16(const core::string& utf8);
+	core::string ConvertToUtf8(const core::stringw& utf16);
 
 }
 }

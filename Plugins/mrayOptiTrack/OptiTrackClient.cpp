@@ -4,6 +4,7 @@
 #include "ILogManager.h"
 #include "StringConverter.h"
 #include "ITimer.h"
+#include "Engine.h"
 
 #include <optiTrack\NatNetTypes.h>
 #include <optiTrack\NatNetClient.h>
@@ -222,7 +223,7 @@ void OptiTrackClient::_PreHandleData()
 {
 
 	// same system latency test
-	float fThisTick = (float)gTimer.getActualTimeAccurate();
+	float fThisTick = (float)gEngine.getTimer()->getSeconds();
 	//	float fDiff = fThisTick - data->fLatency;
 	//	double dDuration = fDiff;
 	m_totalSamples++;
@@ -241,7 +242,7 @@ bool OptiTrackClient::Connect(OptiConnectType connection,const core::string& ser
 {
 	int iResult;
 	iResult=m_data->Initialize(connection==Opti_Unicast? ConnectionType_Unicast: ConnectionType_Multicast,serverIP,localIP,multiCastInterface);
-	m_lastTime=gTimer.getActualTimeAccurate();;
+	m_lastTime = gEngine.getTimer()->getSeconds();;
 	m_samplesPerSecond=0;
 	m_timeAcc=0;
 	m_totalSamples=0;
