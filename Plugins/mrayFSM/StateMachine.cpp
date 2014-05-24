@@ -40,24 +40,28 @@ StateMachine::~StateMachine(){
 }
 
 
-void StateMachine::setActiveState(const core::string& name){
-	if(m_activeState && m_activeState->state->getName()==name)
+void StateMachine::setActiveState(IState* state){
+	if (!state)
 		return;
-	NameIDMap::iterator it= m_stateNames.find(name);
-	if(it!=m_stateNames.end()){
-		IState*state=m_states[it->second];
-		StateTransitionMap::iterator it2= m_transitions.find(state);
-		if(it2!=m_transitions.end()){
-			m_activeState=it2->second;
-			if(it2->second)
-			{
-				it2->second->state->onEnter(m_activeState->state);
-				FIRE_LISTENR_METHOD(OnStateChanged,(this,m_activeState->state,it2->second->state));
-				m_activeState= it2->second;
-			}
+	if (m_activeState && m_activeState->state == state)
+		return;
+	StateTransitionMap::iterator it2 = m_transitions.find(state);
+	if (it2 != m_transitions.end()){
+		m_activeState = it2->second;
+		if (it2->second)
+		{
+			it2->second->state->onEnter(m_activeState->state);
+			FIRE_LISTENR_METHOD(OnStateChanged, (this, m_activeState->state, it2->second->state));
+			m_activeState = it2->second;
 		}
 	}
 }
+void StateMachine::setActiveStateByName(const core::string& name)
+{
+	
+	setActiveState(getState(name));
+}
+
 
 IState* StateMachine::getActiveState()const{
 	if(!m_activeState)
@@ -92,15 +96,9 @@ bool StateMachine::addCondition(ICondition*cond){
 
 	return true;
 }
-bool StateMachine::addTransition(const core::string&from,const core::string&to,const core::string&condition){
-	IState*fromSt=getState(from);
-	if(!fromSt)
-		return false;
-	IState*toSt=getState(to);
-	if(!toSt)
-		return false;
-	ICondition*cond=getCondition(condition);
-	if(!cond)
+bool StateMachine::addTransition(IState*fromSt, IState*toSt, ICondition*cond)
+{
+	if (!fromSt || !toSt || !cond)
 		return false;
 
 	StateTransitionMap::iterator it= m_transitions.find(fromSt);
@@ -111,6 +109,13 @@ bool StateMachine::addTransition(const core::string&from,const core::string&to,c
 		it->second->transitions.push_back(trans);
 	}
 	return true;
+}
+bool StateMachine::addTransitionByName(const core::string& from, const core::string& to, const core::string&condition)
+{
+	IState*fromSt = getState(from);
+	IState*toSt = getState(to);
+	ICondition*cond = getCondition(condition);
+	return addTransition(fromSt, toSt, cond);
 }
 IState*StateMachine::getState(const core::string&name)const{
 	NameIDMap::const_iterator it=m_stateNames.find(name);

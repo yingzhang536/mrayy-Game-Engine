@@ -54,7 +54,7 @@ protected:
 	void OnDepthViewerPressed(IObject* caller, void* args);
 
 public:
-	LoginScreenState();
+	LoginScreenState(const core::string& name);
 	virtual~LoginScreenState();
 
 

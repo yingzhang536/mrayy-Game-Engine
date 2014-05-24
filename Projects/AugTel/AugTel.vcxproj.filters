@@ -135,6 +135,9 @@
     <ClInclude Include="GUITypingTextBox.h">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClInclude>
+    <ClInclude Include="WaitCheckState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

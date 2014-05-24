@@ -73,7 +73,7 @@ protected:
 	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();
 public:
-	AugCameraRenderState(TBee::ICameraVideoSource* src);
+	AugCameraRenderState(TBee::ICameraVideoSource* src, const core::string& name);
 	virtual~AugCameraRenderState();
 
 	virtual bool OnEvent(Event* e, const math::rectf& rc);

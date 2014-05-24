@@ -51,7 +51,7 @@ namespace VT
 		void GetDebugString(std::vector<core::string>& lst);
 
 		const std::vector<core::string>& GetScheme();
-		bool InjectCommand(const core::string& cmd, const core::string& args);
+		core::string InjectCommand(const core::string& cmd, const core::string& args);
 
 	};
 
@@ -350,6 +350,8 @@ const std::vector<core::string>& VTSharedMemoryImpl::GetScheme()
 
 core::string VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const core::string& args)
 {
+	if (!m_data->agent->data)
+		return "";
 	if (cmd.equals_ignore_case("calib"))
 	{
 		m_data->agent->data->status.calibration = true;
@@ -414,7 +416,7 @@ const std::vector<core::string>& VTSharedMemory::GetScheme()
 	return m_impl->GetScheme();
 }
 
-bool VTSharedMemory::InjectCommand(const core::string& cmd, const core::string& args)
+core::string VTSharedMemory::InjectCommand(const core::string& cmd, const core::string& args)
 {
 	return m_impl->InjectCommand(cmd, args);
 }

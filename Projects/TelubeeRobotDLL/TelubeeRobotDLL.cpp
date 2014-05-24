@@ -3,9 +3,7 @@
 
 #include "stdafx.h"
 #include "TelubeeRobotDLL.h"
-
 #include "RobotSerialPort.h"
-
 #include <stdio.h>
 
 // This is the constructor of a class that has been exported.

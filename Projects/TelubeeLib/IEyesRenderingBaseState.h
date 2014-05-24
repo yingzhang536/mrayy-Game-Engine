@@ -73,7 +73,7 @@ protected:
 	virtual void _RenderUI(const math::rectf& rc);
 
 public:
-	IEyesRenderingBaseState();
+	IEyesRenderingBaseState(const core::string& name);
 	virtual~IEyesRenderingBaseState();
 
 	virtual void InitState();

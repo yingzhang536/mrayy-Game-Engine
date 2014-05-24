@@ -33,9 +33,9 @@ namespace NCam
 		{
 			float time = gTimer.getActualTimeAccurate();
 			math::vector3d angles;
-			angles.x = 20 * sin(time*0.001f);
-			angles.y = 30 * sin(time*0.002f);
-			angles.z = 40 * sin(time*0.005f);
+			//angles.x = 20 * sin(time*0.001f);
+			//angles.y = 30 * sin(time*0.002f);
+			angles.z = 20 * sin(time*0.005f);
 			return math::quaternion(angles);
 		}
 		virtual math::vector3d GetHeadPosition()

@@ -16,10 +16,7 @@
 #ifndef __RobotSerialPort__
 #define __RobotSerialPort__
 
-
-
 	struct RobotStatus;
-
 	class RobotSerialPortImpl;
 	class ITelubeeRobotListener;
 class RobotSerialPort
@@ -27,8 +24,15 @@ class RobotSerialPort
 protected:
 
 	RobotSerialPortImpl* m_impl;
-	int robot_control(int velocity_x, int velocity_y, int rotation, int control);
+	float robotX, robotY, robotZ;
+	float pan, tilt, roll;
+	int omni_control(int velocity_x, int velocity_y, int rotation, int control);
+	int yamahaInitialize();
+	int yamahaXY_control(float pos_x, float pos_y, int control);
 	int head_control(float pan, float tilt, float roll);
+
+	static DWORD WINAPI timerThreadHead(RobotSerialPort *robot, LPVOID pdata);
+	static DWORD WINAPI timerThreadBase(RobotSerialPort *robot, LPVOID pdata);
 
 public:
 	RobotSerialPort();
@@ -39,6 +43,7 @@ public:
 	void DisconnectRobot();
 	bool IsConnected();
 	void UpdateRobotStatus(const RobotStatus& st);
+
 };
 
 

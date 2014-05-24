@@ -29,6 +29,12 @@ math::vector3d OculusHeadController::GetHeadPosition()
 	 return math::vector3d::Zero;
 }
 
+void OculusHeadController::Recalibrate()
+{
+	if (AppData::Instance()->oculusDevice)
+		AppData::Instance()->oculusDevice->ResetOrientation();
+}
+
 }
 }
 

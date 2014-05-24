@@ -41,7 +41,7 @@ protected:
 
 	virtual void _RenderUI(const math::rectf& rc);
 public:
-	RemoteCameraRenderingState();
+	RemoteCameraRenderingState(const core::string& name);
 	virtual~RemoteCameraRenderingState();
 
 	virtual void InitState();

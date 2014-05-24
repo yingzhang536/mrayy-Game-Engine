@@ -149,7 +149,7 @@ public:
                   Tserial_event();
                  ~Tserial_event();
     int           connect          (char *port, int rate, int parity,
-                                    char ByteSize, bool modem_events);
+		char ByteSize, bool modem_events, bool flowControl);
 
     void          setManager       (type_myCallBack manager);
     void          setRxSize        (int size);

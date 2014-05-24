@@ -45,7 +45,7 @@ OpenNIHandler::OpenNIHandler()
 {
 
 	m_threadFunc = 0;
-	m_size.set(640,480);
+	m_size.set(320,240);
 
 	m_center = 0.5;
 	m_scale = 1;
@@ -101,7 +101,7 @@ void OpenNIHandler::Close()
 	m_started = false;
 	m_openNiCamera->Close();
 	OS::IThreadManager::getInstance().killThread(m_thread);
-	delete m_thread;
+//	delete m_thread;
 	m_thread = 0;
 	
 }

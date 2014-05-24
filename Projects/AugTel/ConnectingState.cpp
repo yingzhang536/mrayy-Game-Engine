@@ -156,7 +156,8 @@ namespace AugTel
 	};
 	
 
-ConnectingState::ConnectingState()
+	ConnectingState::ConnectingState(const core::string& name)
+		:IRenderingState(name)
 {
 	m_connectScreen = new GUI::GUIConnectingScreenImpl;
 }

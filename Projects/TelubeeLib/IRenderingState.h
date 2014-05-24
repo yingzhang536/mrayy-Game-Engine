@@ -16,7 +16,7 @@
 
 
 #include "TBeeCommon.h"
-
+#include "BaseRenderState.h"
 namespace mray
 {
 
@@ -29,7 +29,7 @@ namespace TBee
 
 #define STATE_EXIT_CODE 1
 
-class IRenderingState
+class IRenderingState :public BaseRenderState
 {
 protected:
 
@@ -39,12 +39,9 @@ protected:
 	video::ITexturePtr m_rtTexture[2];
 	video::IRenderTargetPtr m_renderTarget[2];
 public:
-	IRenderingState():m_exitCode(0)
+	IRenderingState(const core::string& n) :BaseRenderState(n), m_exitCode(0)
 	{}
 	virtual~IRenderingState(){}
-
-	void SetName(const core::string& n){m_name=n;}
-	const core::string& GetName(){return m_name;}
 
 	virtual void InitState();
 

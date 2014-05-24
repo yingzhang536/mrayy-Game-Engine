@@ -61,7 +61,7 @@ protected:
 
 	void _CreatePhysicsSystem();
 public:
-	ConnectingState();
+	ConnectingState(const core::string& name);
 	virtual ~ConnectingState();
 
 	virtual void InitState();

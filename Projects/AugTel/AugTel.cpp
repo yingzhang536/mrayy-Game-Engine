@@ -109,7 +109,7 @@ EntryPoint
 
 	//VLDEnable();
 	app->loadResourceFile(mT("atdataPath.stg"));
-	if (app->startup(mT("SIGGRAPH14 - AugTel 1.00"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
+	if (app->startup(mT("Robomech 2014 - Depth Touch"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
 	{
 		app->run();
 	}

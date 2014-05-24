@@ -100,7 +100,7 @@ void Tserial_event::disconnect(void){
 
 
 int  Tserial_event::connect (char *port_arg, int  rate_arg,  int parity_arg,
-	char ByteSize , bool modem_events)
+	char ByteSize , bool modem_events, bool flowControl)
 {
 	int  erreur;
 	DCB  dcb;
@@ -119,6 +119,7 @@ int  Tserial_event::connect (char *port_arg, int  rate_arg,  int parity_arg,
 		rate        = rate_arg;
 		parityMode  = parity_arg;
 		check_modem = modem_events;
+		hard_handshake = flowControl;
 
 		erreur      = 0;
 		ZeroMemory(&ovReader   ,sizeof(ovReader)   );  // clearing the overlapped
@@ -157,14 +158,22 @@ int  Tserial_event::connect (char *port_arg, int  rate_arg,  int parity_arg,
 		dcb.fInX            = FALSE;
 		dcb.fOutX           = FALSE;
 
-		hard_handshake = false;
+		//hard_handshake = flowControl;
+		//hard_handshake = false;
 
 		if (hard_handshake)
 		{
-			dcb.fOutxDsrFlow    = TRUE;
-			dcb.fOutxCtsFlow    = TRUE;
-			dcb.fRtsControl     = RTS_CONTROL_HANDSHAKE;
-			dcb.fDtrControl     = DTR_CONTROL_HANDSHAKE;
+			// modified by charith on 2014.03.13
+			dcb.fInX = TRUE;
+			dcb.fOutX = TRUE;
+
+			dcb.fOutxDsrFlow    = FALSE;
+			dcb.fOutxCtsFlow    = FALSE;
+
+			dcb.fDsrSensitivity = FALSE;
+
+			dcb.fRtsControl     = RTS_CONTROL_DISABLE;
+			dcb.fDtrControl = DTR_CONTROL_DISABLE;
 		}
 		else
 		{

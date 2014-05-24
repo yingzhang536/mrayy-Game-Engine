@@ -305,7 +305,7 @@ public:
 	void Update(float dt)
 	{
 
-		if (AppData::Instance()->headController == EHeadControllerType::Oculus && AppData::Instance()->oculusDevice)
+		if ( AppData::Instance()->oculusDevice)
 		{
 			oculusManager->Update(dt);
 			AppData::Instance()->oculusDevice->Update(dt);

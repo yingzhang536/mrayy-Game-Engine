@@ -210,6 +210,9 @@
     <ClInclude Include="FlyingTelubeeRobotCommunicator.h">
       <Filter>Source Files\Robot</Filter>
     </ClInclude>
+    <ClInclude Include="NodeHeadController.h">
+      <Filter>Source Files\Input Controller\Head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -322,6 +325,9 @@
     </ClCompile>
     <ClCompile Include="FlyingTelubeeRobotCommunicator.cpp">
       <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeHeadController.cpp">
+      <Filter>Source Files\Input Controller\Head</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

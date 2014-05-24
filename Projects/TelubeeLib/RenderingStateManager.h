@@ -33,15 +33,13 @@ protected:
 	IRenderingState* m_oldState;
 	GCPtr<ITransitionBlender> m_blender;
 
-
 	void OnStateChanged(StateMachine*,IState* oldS,IState* newS);
 
 public:
 	RenderingStateManager();
 	virtual~RenderingStateManager();
 
-	void AddState(IRenderingState* st,const core::string&name);
-
+	void AddState(IRenderingState* st);
 	IRenderingState* GetActiveState();
 
 	virtual bool OnEvent(Event* e, const math::rectf& rc);
@@ -51,10 +49,12 @@ public:
 	virtual void OnUpdate(float dt);
 	virtual void OnDraw(const math::rectf& rc,video::IRenderTarget* rt,ETargetEye eye);
 
-	void SetInitialState(const core::string&name);
-	void AddTransition(const core::string&a,const core::string&b,int code);
+	void SetInitialState(IRenderingState* st);
+	void AddTransition(IRenderingState* a, IRenderingState* b, int code);
 	void InitStates();
 	ITransitionBlender* GetBlender(){return m_blender;}
+
+
 
 	void LoadSettingsXML(xml::XMLElement* e);
 	void WriteSettingsXML(xml::XMLElement* e);

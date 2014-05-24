@@ -27,7 +27,8 @@ class NullRenderState:public IRenderingState
 {
 protected:
 public:
-	NullRenderState(){m_exitCode=STATE_EXIT_CODE;}
+	NullRenderState():IRenderingState("Null")
+	{m_exitCode=STATE_EXIT_CODE;}
 	virtual~NullRenderState(){}
 };
 

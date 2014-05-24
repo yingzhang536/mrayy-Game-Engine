@@ -32,9 +32,9 @@ namespace TBee
 		}
 		virtual bool checkCondition()
 		{
-			BaseRenderState* s=(BaseRenderState*)m_machine->getActiveState();
-			if(s && s->GetState())
-				return s->GetState()->GetExitCode()==m_code;
+			IRenderingState* s = dynamic_cast<IRenderingState*>(m_machine->getActiveState());
+			if (s)
+				return s->GetExitCode()==m_code;
 			return false;
 		}
 	};
@@ -61,15 +61,15 @@ void RenderingStateManager::OnStateChanged(StateMachine*,IState* oldS,IState* ne
 {
 	if(m_oldState)
 		m_oldState->OnExit();
-	m_oldState=((BaseRenderState*) oldS)->GetState();
+	m_oldState = dynamic_cast<IRenderingState*>(oldS);
 	m_blender->Reset();
 }
 
-void RenderingStateManager::AddState(IRenderingState* st,const core::string&name)
+void RenderingStateManager::AddState(IRenderingState* st)
 {
 	if(!st)
 		return;
-	m_stateMachine->addState(new BaseRenderState(name,st));
+	m_stateMachine->addState(st);
 
 }
 
@@ -79,12 +79,12 @@ IRenderingState* RenderingStateManager::GetActiveState()
 	if(!s)
 		return 0;
 
-	return s->GetState();
+	return dynamic_cast<IRenderingState*>(s);
 }
 
 bool RenderingStateManager::OnEvent(Event* event, const math::rectf& rc)
 {
-	BaseRenderState* s=(BaseRenderState*)m_stateMachine->getActiveState();
+	IRenderingState* s = dynamic_cast<IRenderingState*>(m_stateMachine->getActiveState());
 	if(!s)
 		return false;
 
@@ -95,21 +95,21 @@ bool RenderingStateManager::OnEvent(Event* event, const math::rectf& rc)
 		{
 			if(e->key==KEY_F8)
 			{
-				s->GetState()->ForceExit();
+				s->ForceExit();
 			}
 		}
 	}
 
-	return s->GetState()->OnEvent(event,rc);
+	return s->OnEvent(event,rc);
 
 }
 void RenderingStateManager::OnEnter(IApplicationState* prev)
 {
 	m_blender->Reset();
 	m_oldState=0;
-	BaseRenderState* s=(BaseRenderState*)m_stateMachine->getActiveState();
-	if(s)
-		s->GetState()->OnEnter(0);
+	IRenderingState* s = dynamic_cast<IRenderingState*>(m_stateMachine->getActiveState());
+	if (s)
+		s->OnEnter(0);
 }
 void RenderingStateManager::OnExit()
 {
@@ -118,17 +118,17 @@ void RenderingStateManager::OnExit()
 		m_oldState->OnExit();
 		m_oldState=0;
 	}
-	BaseRenderState* s=(BaseRenderState*)m_stateMachine->getActiveState();
-	if(s)
-		s->GetState()->OnExit();
+	IRenderingState* s = dynamic_cast<IRenderingState*>(m_stateMachine->getActiveState());
+	if (s)
+		s->OnExit();
 
 	IApplicationState::OnExit();
 }
 void RenderingStateManager::OnUpdate(float dt)
 {
-	BaseRenderState* s=(BaseRenderState*)m_stateMachine->getActiveState();
-	if(s)
-		s->GetState()->Update(dt);
+	IRenderingState* s = dynamic_cast<IRenderingState*>(m_stateMachine->getActiveState());
+	if (s)
+		s->Update(dt);
 	if(m_oldState)
 	{
 		m_oldState->Update(dt);
@@ -142,7 +142,7 @@ void RenderingStateManager::OnUpdate(float dt)
 
 	if(s)
 	{
-		bool canSleep=s->GetState()->CanSleep();
+		bool canSleep=s->CanSleep();
 		if(m_oldState)
 			canSleep&=m_oldState->CanSleep();
 
@@ -165,16 +165,16 @@ void RenderingStateManager::OnUpdate(float dt)
 }
 void RenderingStateManager::OnDraw(const math::rectf& rc,video::IRenderTarget* rt,ETargetEye eye)
 {
-	BaseRenderState* s=(BaseRenderState*)m_stateMachine->getActiveState();
-	if(!s)
+	IRenderingState* s = dynamic_cast<IRenderingState*>(m_stateMachine->getActiveState());
+	if (!s)
 		return;
 
 	video::TextureUnit t;
 
 	if(m_oldState)
 		m_oldState->Render(rc,eye);
-	s->GetState()->Render(rc,eye);
-	video::IRenderTarget* vrt=s->GetState()->GetLastFrame(eye);
+	s->Render(rc,eye);
+	video::IRenderTarget* vrt=s->GetLastFrame(eye);
 	if(vrt)
 		t.SetTexture(vrt->getColorTexture());
 
@@ -197,18 +197,19 @@ void RenderingStateManager::OnDraw(const math::rectf& rc,video::IRenderTarget* r
 
 }
 
-void RenderingStateManager::SetInitialState(const core::string&name)
+void RenderingStateManager::SetInitialState(IRenderingState* s)
 {
-	m_stateMachine->setActiveState(name);
+	m_stateMachine->setActiveState(s);
 }
-void RenderingStateManager::AddTransition(const core::string&a,const core::string&b,int code)
+void RenderingStateManager::AddTransition(IRenderingState* a, IRenderingState* b,int code)
 {
-	core::string name=mT("Trans@")+a+"_"+b+"#";
+	if (!a || !b)return;
+	core::string name = mT("Trans@") + a->getName() + "_" + b->getName() + "#";
 	name+=core::StringConverter::toString(code);
 	COnDoneCondition*cond= new COnDoneCondition(m_stateMachine,name,code);
 	if(!m_stateMachine->addCondition(cond))
 		delete cond;
-	m_stateMachine->addTransition(a,b,name);
+	m_stateMachine->addTransition(a, b, cond);
 }
 
 void RenderingStateManager::InitStates()
@@ -218,10 +219,10 @@ void RenderingStateManager::InitStates()
 
 	for (int i = 0; i < states.size(); ++i)
 	{
-		BaseRenderState* s = dynamic_cast<BaseRenderState*>(states[i]);
+		IRenderingState* s = dynamic_cast<IRenderingState*>(states[i]);
 		if (s)
 		{
-			s->GetState()->InitState();
+			s->InitState();
 		}
 	}
 }
@@ -235,12 +236,12 @@ void RenderingStateManager::LoadSettingsXML(xml::XMLElement* e)
 
 	for (int i = 0; i < states.size(); ++i)
 	{
-		BaseRenderState* s = dynamic_cast<BaseRenderState*>(states[i]);
+		IRenderingState* s = dynamic_cast<IRenderingState*>(states[i]);
 		if (s)
 		{
 			xml::XMLElement* se = e->getSubElement(s->getName());
 			if (se)
-				s->GetState()->LoadFromXML(se);
+				s->LoadFromXML(se);
 		}
 	}
 }
@@ -251,10 +252,10 @@ void RenderingStateManager::WriteSettingsXML(xml::XMLElement* e)
 
 	for (int i = 0; i < states.size(); ++i)
 	{
-		BaseRenderState* s = dynamic_cast<BaseRenderState*>(states[i]);
+		IRenderingState* s = dynamic_cast<IRenderingState*>(states[i]);
 		if (s)
 		{
-			s->GetState()->WriteToXML(e);
+			s->WriteToXML(e);
 		}
 	}
 }

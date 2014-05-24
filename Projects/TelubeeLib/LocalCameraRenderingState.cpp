@@ -26,7 +26,8 @@ namespace TBee
 {
 	int s_id=0;
 
-LocalCameraRenderingState::LocalCameraRenderingState()
+LocalCameraRenderingState::LocalCameraRenderingState(const core::string& name)
+	:IEyesRenderingBaseState(name)
 {
 	m_exitCode=0;
 

@@ -38,7 +38,7 @@ protected:
 	math::vector2d m_mousePos;
 	GCPtr<GUI::IGUIRenderer> m_guiRenderer;
 public:
-	GeomDepthState();
+	GeomDepthState(const core::string& name);
 	virtual~GeomDepthState();
 	virtual void InitState();
 	virtual bool OnEvent(Event* e, const math::rectf& rc);

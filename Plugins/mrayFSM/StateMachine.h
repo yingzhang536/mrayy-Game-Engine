@@ -60,12 +60,14 @@ public:
 	StateMachine();
 	virtual~StateMachine();
 
-	virtual void setActiveState(const core::string& name);
+	virtual void setActiveState(IState* s);
+	virtual void setActiveStateByName(const core::string& name);
 	virtual IState* getActiveState()const;
 
 	virtual void addState(IState*state);
 	virtual bool addCondition(ICondition*cond);
-	virtual bool addTransition(const core::string&from,const core::string&to,const core::string&condition);
+	virtual bool addTransition(IState*from, IState*to, ICondition*condition);
+	virtual bool addTransitionByName(const core::string& from, const core::string& to, const core::string&condition);
 
 	const std::vector<IState*>& getStates()const { return m_states; }
 	IState*getState(const core::string&name)const;

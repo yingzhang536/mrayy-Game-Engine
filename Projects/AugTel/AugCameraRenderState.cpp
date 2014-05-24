@@ -50,6 +50,8 @@
 #include "RenderWindow.h"
 #include "Application.h"
 
+#include "NodeHeadController.h"
+
 #include "LocalRobotCommunicator.h"
 
 #define VT_USING_SHAREDMEM
@@ -145,7 +147,8 @@ namespace AugTel
 	int TelesarCommunicationHandler::_refCount=0;
 	TelesarCommunicationHandler* TelesarCommunicationHandler::_instance=0;
 
-AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src)
+	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src,const core::string& name)
+		:IEyesRenderingBaseState(name)
 {
 	m_data = new AugCameraStateImpl();
 
@@ -244,6 +247,8 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			if (evt->key == KEY_C)
 			{
 				TelesarCommunicationHandler::Instance()->commLayer->InjectCommand("calib", "");
+
+				m_robotConnector->GetHeadController()->Recalibrate();
 				ok = true;
 			}
 		}
@@ -385,6 +390,7 @@ void AugCameraRenderState::InitState()
 		m_data->headMount->SetCamera(m_camera[0], m_camera[1]);
 		AugTel::HeadCameraComponent* eyes = ent->RetriveComponent<AugTel::HeadCameraComponent>(ent, "Head");
 		VT::CameraComponent* cameraComponent = ent->RetriveComponent<VT::CameraComponent>(ent,"stereoCamera");
+
 		if (eyes)
 		{
 			eyes->GetNode()->addChild(hm);
@@ -394,6 +400,14 @@ void AugCameraRenderState::InitState()
 		{
 			cameraComponent->MountCamera(hm, 0);
 		}
+
+		if (AppData::Instance()->headController == TBee::EHeadControllerType::SceneNode)
+		{
+			TBee::NodeHeadController* c = dynamic_cast<TBee::NodeHeadController*>(m_robotConnector->GetHeadController());
+			c->SetNode(hm);
+			c->SetInitialOrientation(hm->getAbsoluteOrintation());
+		}
+
 
 		scene::LightNode* lightSrc= m_sceneManager->createLightNode();
 		lightSrc->setPosition(math::vector3d(50, 50, 50));
@@ -461,6 +475,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	if(ifo)
 		m_robotConnector->ConnectRobotIP(ifo->IP, VIDEO_PORT, AUDIO_PORT, COMMUNICATION_PORT);
 	m_robotConnector->SetData("depthSize", "", false);
+	//m_robotConnector->EndUpdate();
 
 }
 

@@ -109,6 +109,7 @@
     <ClInclude Include="DepthVisualizer.h" />
     <ClInclude Include="GeomDepthCalculator.h" />
     <ClInclude Include="GeomDepthRect.h" />
+    <ClInclude Include="NodeHeadController.h" />
     <ClInclude Include="RemoteCameraRenderingState.h" />
     <ClInclude Include="GstFileVideoSource.h" />
     <ClInclude Include="GstStereoNetVideoSource.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="DepthVisualizer.cpp" />
     <ClCompile Include="GeomDepthCalculator.cpp" />
     <ClCompile Include="GeomDepthRect.cpp" />
+    <ClCompile Include="NodeHeadController.cpp" />
     <ClCompile Include="RemoteCameraRenderingState.cpp" />
     <ClCompile Include="GstFileVideoSource.cpp" />
     <ClCompile Include="GstStereoNetVideoSource.cpp" />

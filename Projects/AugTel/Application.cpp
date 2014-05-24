@@ -110,7 +110,6 @@ Application::Application()
 }
 Application::~Application()
 {
-	VT::ReleaseVTLib();
 
 	delete m_tbRenderer;
 	m_appStateManager = 0;
@@ -119,6 +118,7 @@ Application::~Application()
 	m_soundManager = 0;
 	delete ATAppGlobal::Instance()->robotInfoManager;
 	delete ATAppGlobal::Instance();
+	VT::ReleaseVTLib();
 }
 
 void Application::_InitResources()
@@ -195,41 +195,41 @@ void Application::onEvent(Event* event)
 
 void Application::_initStates()
 {
-	IRenderingState *nullState, *intro, *login, *camera, *depth, *streamerTest;
+	IRenderingState *nullState, *intro, *login, *camera, *depth, *remote=0;
 	nullState = new NullRenderState();
 	nullState->InitState();
-	m_renderingState->AddState(nullState, "Null");
+	m_renderingState->AddState(nullState);
 
-	intro = new ConnectingState();
-	m_renderingState->AddState(intro, "Intro");
+	intro = new ConnectingState("Intro");
+	m_renderingState->AddState(intro);
 	 
 
-	login = new LoginScreenState();
-	m_renderingState->AddState(login, "Login");
+	login = new LoginScreenState("Login");
+	m_renderingState->AddState(login);
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	core::string ip = "127.0.0.1";
 	if (ifo)
 		ip = ifo->IP;
 
-// 	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
-// 	m_renderingState->AddState(streamerTest, "CameraRemote");
+// 	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
+// 	m_renderingState->AddState(remote, "CameraRemote");
 
- 	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
- 	m_renderingState->AddState(camera, "AugCam");
+	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), "AugCam");
+ 	m_renderingState->AddState(camera);
 
-	depth = new GeomDepthState();
-	m_renderingState->AddState(depth, "Depth");
+	depth = new GeomDepthState("Depth");
+	m_renderingState->AddState(depth);
 
-	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition(nullState, login, STATE_EXIT_CODE);
 	//m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
-	m_renderingState->AddTransition("Login", "AugCam", ToLocalCamera_CODE);
+	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
 	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Login", "Depth", ToDepthView_CODE);
-	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("AugCam", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Depth", "Login", STATE_EXIT_CODE);
-	m_renderingState->SetInitialState("Null");
+	m_renderingState->AddTransition(login, depth, ToDepthView_CODE);
+	m_renderingState->AddTransition(remote, login, STATE_EXIT_CODE);
+	m_renderingState->AddTransition(camera, login, STATE_EXIT_CODE);
+	m_renderingState->AddTransition(depth, login, STATE_EXIT_CODE);
+	m_renderingState->SetInitialState(nullState);
 
 }
 
@@ -237,6 +237,7 @@ void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
 
+	ATAppGlobal::Instance()->headController = TBee::EHeadControllerType::Oculus;
 	ATAppGlobal::Instance()->Load("TBSettings.conf");
 	{
 		core::string v = extraOptions.GetOptionValue("Debugging");
@@ -362,8 +363,8 @@ void Application::init(const OptionContainer &extraOptions)
 			OptionContainer opt;
 			opt["title"].value = "Preview";
 			opt["VSync"].value = "false";
-			opt["Monitor"].value = "1";
-			m_previewWnd = getDevice()->CreateRenderWindow("Preview", math::vector2di(1280,720), true, opt, 0);
+			opt["Monitor"].value = "0";
+			m_previewWnd = getDevice()->CreateRenderWindow("Preview", math::vector2di(1280,720), false, opt, 0);
 			m_previewWnd->CreateViewport(mT("Main"), 0, 0, math::rectf(0, 0, 1, 1), 0);
 			AddRenderWindow(m_previewWnd);
 		}
@@ -428,7 +429,6 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 	if (wnd == m_previewWnd)
 	{
-		getDevice()->set2DMode();
 		math::rectf rc(0, wnd->GetSize());
 		video::TextureUnit tex;
 		

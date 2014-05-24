@@ -21,7 +21,8 @@ namespace AugTel
 {
 
 
-LoginScreenState::LoginScreenState()
+LoginScreenState::LoginScreenState(const core::string& name)
+	:IRenderingState(name)
 {
 	m_loginMenu=new GUILoginMenu();
 	m_status = EIdle;

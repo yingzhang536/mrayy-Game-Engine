@@ -15,7 +15,8 @@ namespace mray
 namespace AugTel
 {
 
-GeomDepthState::GeomDepthState()
+	GeomDepthState::GeomDepthState(const core::string& name)
+		:IRenderingState(name)
 {
 	m_openNiHandler = new TBee::OpenNIHandler();
 	m_visualizer = new TBee::DepthVisualizer();

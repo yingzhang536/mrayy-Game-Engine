@@ -74,8 +74,10 @@ namespace video
 		{
 			//m_mngr->RemoveDevice(m_owner);
 		//	m_device->Disconnect();
-			m_sensor->Release();
-			m_device->Release();
+			if (m_sensor)
+				m_sensor->Release();
+			if (m_device)
+				m_device->Release();
 		}
 
 	 	const OculusDeviceData& GetDeviceInfo()const
@@ -140,7 +142,13 @@ namespace video
 		math::quaternion GetOrientation()
 		{
 			Quatf q= m_fusion.GetPredictedOrientation();
-			return math::quaternion(q.w,-q.x,-q.y,q.z);/*
+// 			math::vector3d a;
+// 			q.GetEulerAngles<OVR::Axis_X, OVR::Axis_Y, OVR::Axis_Z, OVR::Rotate_CCW, OVR::Handed_L>(&a.x, &a.y, &a.z);
+// 			a.x = math::toDeg(a.x);
+// 			a.y = math::toDeg(a.y);
+// 			a.z = math::toDeg(a.z);
+			return math::quaternion(q.w, -q.x, -q.y, q.z); //math::quaternion(a.x, a.y, -a.z);// 
+			/*
 			math::vector3d ret;
 			m_fusion.GetPredictedOrientation().GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&ret.x,&ret.y,&ret.z);
 			return ret;*/

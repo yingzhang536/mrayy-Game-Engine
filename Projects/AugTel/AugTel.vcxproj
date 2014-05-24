@@ -129,6 +129,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TriggerObjectComponent.h" />
     <ClInclude Include="VisItemDescComponent.h" />
+    <ClInclude Include="WaitCheckState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

@@ -28,7 +28,8 @@ namespace mray
 			None,
 			Keyboard,
 			Oculus,
-			OptiTrack
+			OptiTrack,
+			SceneNode
 		};
 
 		enum class ERobotControllerType

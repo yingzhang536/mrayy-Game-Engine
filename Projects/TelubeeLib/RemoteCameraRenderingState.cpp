@@ -19,7 +19,8 @@ namespace TBee
 {
 
 
-RemoteCameraRenderingState::RemoteCameraRenderingState()
+RemoteCameraRenderingState::RemoteCameraRenderingState(const core::string& name)
+:IEyesRenderingBaseState(name)
 {
 
 	m_fps = 0;

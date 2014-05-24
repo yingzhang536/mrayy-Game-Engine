@@ -27,17 +27,17 @@ namespace TBee
 class BaseRenderState:public IState
 {
 protected:
-	IRenderingState* m_state;
 public:
-	BaseRenderState(const core::string&name, IRenderingState*s);
+	BaseRenderState(const core::string&name);
 	virtual~BaseRenderState();
-
-	IRenderingState* GetState(){return m_state;}
 
 	virtual void onEnter(IState*prev);
 	virtual void onUpdate();
 	virtual void onExit();
-	
+
+	virtual bool OnEvent(Event* e, const math::rectf& rc)=0;
+	virtual void OnEnter(IRenderingState*prev) = 0;
+	virtual void OnExit() = 0;
 };
 
 }

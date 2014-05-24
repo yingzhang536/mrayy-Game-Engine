@@ -81,7 +81,7 @@ bool ApplicationStateManager::OnEvent(Event* e, const math::rectf& rc)
 
 void ApplicationStateManager::SetInitialState(const core::string&name)
 {
-	m_stateMachine->setActiveState(name);
+	m_stateMachine->setActiveStateByName(name);
 }
 
 void ApplicationStateManager::AddTransition(const core::string&a,const core::string&b,int code)
@@ -91,7 +91,7 @@ void ApplicationStateManager::AddTransition(const core::string&a,const core::str
 	CAppOnDoneCondition*cond= new CAppOnDoneCondition(m_stateMachine,name,code);
 	if(!m_stateMachine->addCondition(cond))
 		delete cond;
-	m_stateMachine->addTransition(a,b,name);
+	m_stateMachine->addTransitionByName(a,b,name);
 }
 
 

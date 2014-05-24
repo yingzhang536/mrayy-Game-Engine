@@ -22,13 +22,15 @@
 #include "WiiboardInputController.h"
 #include "JoystickInputController.h"
 #include "KeyboardHeadController.h"
+#include "NodeHeadController.h"
 
 namespace mray
 {
 namespace TBee
 {
 
-IEyesRenderingBaseState::IEyesRenderingBaseState()
+IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
+:IRenderingState(name)
 {
 	m_exitCode = 0;
 
@@ -55,6 +57,9 @@ IEyesRenderingBaseState::IEyesRenderingBaseState()
 		break;;
 	case EHeadControllerType::OptiTrack:
 		m_robotConnector->SetHeadController(new OptiTrackHeadController(1));
+		break;;
+	case EHeadControllerType::SceneNode:
+		m_robotConnector->SetHeadController(new NodeHeadController());
 		break;;
 	default:
 		break;
@@ -202,6 +207,7 @@ void IEyesRenderingBaseState::OnEnter(IRenderingState*prev)
 	_UpdateCameraParams();
 
 	m_robotConnector->ConnectRobot();
+	m_robotConnector->EndUpdate();
 }
 
 
