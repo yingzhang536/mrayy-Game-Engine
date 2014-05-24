@@ -210,8 +210,8 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-// 	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
-// 	m_renderingState->AddState(streamerTest, "CameraRemote");
+ 	streamerTest = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
+ 	m_renderingState->AddState(streamerTest, "CameraRemote");
 
  	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
  	m_renderingState->AddState(camera, "AugCam");
@@ -220,7 +220,7 @@ void Application::_initStates()
 	m_renderingState->AddState(depth, "Depth");
 
 	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
-	//m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
+	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
 	m_renderingState->AddTransition("Login", "AugCam", ToLocalCamera_CODE);
 	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
 	m_renderingState->AddTransition("Login", "Depth", ToDepthView_CODE);

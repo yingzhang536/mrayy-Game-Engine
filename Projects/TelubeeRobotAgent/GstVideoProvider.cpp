@@ -596,7 +596,7 @@ public:
 			" tune=zerolatency"
 			//" rc-lookahead=1"
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
-			" !gdppay" 
+		//	" !gdppay" 
 			" ! mysink name=sink sync=false ";
 #else
 

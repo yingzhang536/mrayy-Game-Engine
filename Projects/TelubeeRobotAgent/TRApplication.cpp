@@ -436,8 +436,9 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 }
 void TRApplication::OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort)
 {
+	if (m_remoteAddr.address != address.address)
+		printf("User Connected : %s\n", address.toString().c_str());
 	m_remoteAddr.address = address.address;
-	//printf("User Connected : %s\n", address.toString().c_str());
 	m_videoProvider->StreamDataTo(address,videoPort,audioPort);
 	m_debugData.userAddress = address;
 	m_debugData.userConnected = true;
@@ -457,6 +458,7 @@ void TRApplication::OnUserDisconnected(RobotCommunicator* sender, const network:
 {
 	m_debugData.userConnected = false;
 	m_startVideo = false;
+	printf("User Disconnected : %s\n", address.toString().c_str());
 }
 
 void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg, const core::string& value)
