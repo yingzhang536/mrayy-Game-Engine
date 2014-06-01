@@ -134,11 +134,6 @@ void XMLElement::addAttribute(const core::string&name,const core::string&value){
 	str.replaceChar('&', '_');
 	str.replaceChar('<', '_');
 	str.replaceChar('>', '_');
-	core::string v = value;
-
-	v.replaceChar('&', '_');
-	v.replaceChar('<', '_');
-	v.replaceChar('>', '_');
 	m_Attributes.insert(xmlAttributesMap::value_type(str,XMLAttribute(name,value)));
 }
 void XMLElement::removeAttribute(const core::string&name){

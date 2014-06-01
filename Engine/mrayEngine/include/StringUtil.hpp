@@ -52,6 +52,20 @@ void StringUtilT<T>::NormalizePathSlashes(T*str){
 }
 
 template <typename T>
+core::tstring<T> StringUtilT<T>::FindAndReplace(const core::tstring<T>& a, const core::tstring<T>& findStr, const core::tstring<T>& replaceStr)
+{
+	core::tstring<T> ret=a;
+	size_t pos=0;
+	while ((pos=ret.find(findStr, pos)) != core::tstring<T>::npos)
+	{
+		ret.replace(pos, findStr.length(), replaceStr);
+		pos += replaceStr.length();
+	}
+	return ret;
+}
+
+
+template <typename T>
 bool StringUtilT<T>::BeginsWith(const core::tstring<T>& a, const core::tstring<T>& b, bool caseSensitive)
 {
 	const T* aptr = a.c_str();

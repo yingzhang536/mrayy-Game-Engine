@@ -5,6 +5,7 @@
 #include "XMLElement.h"
 #include "XMLComment.h"
 #include "XMLTextNode.h"
+#include "StringUtil.h"
 
 
 namespace mray{
@@ -110,8 +111,13 @@ XMLWriter& XMLWriter::addAttribute(const core::string&name,const core::string&va
 
 
 	//str+=mT("\n")+m_tabs;
-
-	str+=name+mT("=\"")+value +mT("\"");
+	core::string v;
+	v = core::StringUtil::FindAndReplace(value, "&", "&amp;");
+	v = core::StringUtil::FindAndReplace(v, "\"", "&quot;");
+	v = core::StringUtil::FindAndReplace(v, "'", "&apos;");
+	v = core::StringUtil::FindAndReplace(v, "<", "&lt;");
+	v = core::StringUtil::FindAndReplace(v, ">", "&gt;");
+	str+=name+mT("=\"")+v +mT("\"");
 	m_isLastAttribute=1;
 	
 	m_xmlstream+=(str);
@@ -189,7 +195,13 @@ void XMLWriter::WriteNode(XMLComment* elem)
 }
 void XMLWriter::WriteNode(XMLTextNode* elem)
 {
-	m_xmlstream+=(elem->GetValue());
+	core::string v;
+	v = core::StringUtil::FindAndReplace(elem->GetValue(), "&", "&amp;");
+	v = core::StringUtil::FindAndReplace(v, "\"", "&quot;");
+	v = core::StringUtil::FindAndReplace(v, "'", "&apos;");
+	v = core::StringUtil::FindAndReplace(v, "<", "&lt;");
+	v = core::StringUtil::FindAndReplace(v, ">", "&gt;");
+	m_xmlstream+=(v);
 }
 
 core::string XMLWriter::flush()

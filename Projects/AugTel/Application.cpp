@@ -238,6 +238,20 @@ void Application::_initStates()
 	m_renderingState->AddTransition(depth, login, STATE_EXIT_CODE);
 	m_renderingState->SetInitialState(nullState);
 
+	xml::XMLElement* root = new xml::XMLElement("Root");
+	root->addAttribute("AttrA", "Test & bad");
+	root->addAttribute("AttrB", "Test < bad");
+	root->addAttribute("AttrC", "Test > bad");
+	root->addAttribute("AttrD", "Test \" bad");
+	root->addAttribute("AttrE", "Test \' bad");
+
+	xml::XMLWriter w;
+	w.addElement(root);
+	OS::StreamWriter ww;
+	OS::IStreamPtr s = gFileSystem.openFile("test.xml", OS::TXT_WRITE);
+	ww.setStream(s);
+	ww.writeString(w.flush());
+	s->close();
 }
 
 void Application::init(const OptionContainer &extraOptions)

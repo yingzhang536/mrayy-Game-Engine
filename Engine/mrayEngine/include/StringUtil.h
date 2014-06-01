@@ -42,7 +42,7 @@ public:
 
 	static bool BeginsWith(const core::tstring<T>& a, const core::tstring<T>& b,bool caseSensitive=false);
 
-
+	static core::tstring<T> FindAndReplace(const core::tstring<T>& a, const core::tstring<T>& findStr, const core::tstring<T>& replaceStr);
 
 	//make "path" relative to "root"
 	//example:	root=c:\game\bin
