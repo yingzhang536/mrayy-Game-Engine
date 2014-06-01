@@ -47,6 +47,11 @@ SessionRenderer::~SessionRenderer()
 	delete m_camera;
 }
 
+void SessionRenderer::OnPointerMoved(const math::vector2d& pos)
+{
+}
+
+
 
 void SessionRenderer::SetRenderingVP(const math::rectf& vp)
 {
@@ -101,7 +106,104 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 
 }
 
-void SessionRenderer::AddTweetsNodes(const std::vector<TweetNode*> &nodes)
+void SessionRenderer::AddTweets(const std::vector<ted::TwitterTweet*> &tweets)
+{
+	for (int i = 0; i < tweets.size(); ++i)
+	{
+		bool found = false;
+		if (tweets[i]->replyToTweet != 0)
+		{
+			TweetMap::iterator it = m_tweets.find(tweets[i]->replyToTweet->ID);
+			if (it != m_tweets.end())
+			{
+
+				for (int j = 0; j < m_speakersSeq.size(); ++j)
+				{
+					if (it->second->GetSpeaker() == m_speakersSeq[j]->GetSpeaker())
+					{
+						_AddTweetNode(tweets[i], m_speakersSeq[j]);
+						found = true;
+						break;;
+					}
+				}
+			}
+
+		}
+		else
+		{
+			core::stringw txt = tweets[i]->text;
+			txt.make_lower();
+
+			for (int j = 0; j < m_speakersSeq.size(); ++j)
+			{
+				//if (tweets[i]->HasHashtag(m_speakersSeq[j]->GetSpeaker()->GetTwitterID()))
+				core::stringw id = core::string_to_wchar(  m_speakersSeq[j]->GetSpeaker()->GetTwitterID());
+				id.make_lower();
+				if (txt.find(id)!=-1)
+				{
+					_AddTweetNode(tweets[i], m_speakersSeq[j]);
+					found = true;
+					break;
+				}
+			}
+		}
+// 		if (!found)
+// 			delete tweets[i];
+	}
+}
+
+void SessionRenderer::_AddTweetNode(ted::TwitterTweet* t, SpeakerNode*speaker)
+{
+	m_dataMutex->lock();
+	if (m_tweets.find(t->ID) != m_tweets.end())
+	{
+		m_dataMutex->unlock();
+		return;
+	}
+	TweetNode* node = new TweetNode(speaker->GetSpeaker(),t);
+
+	m_tweets[node->GetTweetID()] = node;
+
+	float sz = 25;
+	msa::physics::Particle2D* n = new msa::physics::Particle2D();
+	n->setRadius(sz);
+	m_physics->addParticle(n);
+	node->SetPhysics(n);
+
+
+	ted::TwitterTweet* replyTweet = node->GetTweet()->replyToTweet;
+	ITedNode* target = 0;
+	if (replyTweet)
+	{
+		TweetMap::iterator it = m_tweets.find(replyTweet->ID);
+		if (it != m_tweets.end())
+		{
+			it->second->AddTweet(node);
+			target = it->second;
+		}
+	}
+	if (!target)
+	{
+		speaker->AddTweet(node);
+		target = speaker;
+	}
+
+	msa::physics::Particle2D *ph = target->GetPhysics();
+	math::vector2d pos = ph->getPosition();
+	float a = math::Randomizer::rand01() * 360;
+	msa::physics::Particle2D* nph = node->GetPhysics();
+	float r = math::Randomizer::rand01() * 50 + 50 + nph->getRadius() + ph->getRadius();
+	float r2 = r + 300;
+	pos.x += math::cosd(a) * r2;
+	pos.y += math::sind(a) * r2;
+	nph->moveTo(pos, true);
+	msa::physics::Spring2D* spr = m_physics->makeSpring(ph, nph, 0.0001, r);
+
+
+	m_dataMutex->unlock();
+}
+
+void SessionRenderer::_AddTweetsNodes(const std::vector<TweetNode*> &nodes)
 {
 	if (!nodes.size())
 		return;
@@ -165,7 +267,7 @@ void SessionRenderer::_OnSpeakerChange(ted::CSpeaker*s)
 	if (it == m_speakers.end())
 		return;
 	m_activeSpeaker = it->second;
-	SetHoverdItem(m_activeSpeaker);
+	SetSelectedItem(m_activeSpeaker);
 }
 
 
@@ -201,8 +303,8 @@ void SessionRenderer::Update(float dt)
 	//m_translation.x += 20 * dt;
 	//SetTransformation(m_translation, 0, 1);
 
-	if (m_hoverItem)
-		m_camera->FrameBox(m_hoverItem->GetBoundingBox(true));
+	if (m_selectedItem)
+		m_camera->FrameBox(m_selectedItem->GetBoundingBox(true));
 	else
 		m_camera->FrameBox(CalcAllBox());
 	m_camera->Update(dt);
@@ -216,7 +318,7 @@ void SessionRenderer::Draw()
 	m_camera->ApplyTransformation();
 	m_dataMutex->lock();
 	m_nodeRenderer->Clear();
-
+	m_nodeRenderer->SetClippingVP(m_camera->GetWorldSpaceViewPort());
 	SpeakerMap::iterator  it, it2;
 	for (int i = 0; i<m_speakersSeq.size()-1; ++i)
 	{
@@ -225,16 +327,16 @@ void SessionRenderer::Draw()
 	it = m_speakers.begin();
 	for (; it != m_speakers.end(); ++it)
 	{
-		it->second->Draw(m_nodeRenderer);
+		it->second->Draw(m_nodeRenderer,m_camera->GetWorldSpaceViewPort());
 	}
 	m_dataMutex->unlock();
 
 	if (gAppData.Debugging)
 	{
 		dev->unuseShader();
-		if (m_hoverItem)
+		if (m_selectedItem)
 		{
-			dev->draw2DRectangle(m_hoverItem->GetBoundingBox(true), 1, false);
+			dev->draw2DRectangle(m_selectedItem->GetBoundingBox(true), 1, false);
 		}
 	}
 	m_nodeRenderer->RenderAll(this);
@@ -264,13 +366,22 @@ void SessionRenderer::SetHoverdItem(ITedNode* node)
 	if (m_hoverItem)
 		m_hoverItem->OnHoverOff();
 	m_hoverItem = node;
-	if (!m_hoverItem)
-		m_hoverItem = m_activeSpeaker;
 	if (m_hoverItem)
 		m_hoverItem->OnHoverOn();
 
 }
 
+void SessionRenderer::SetSelectedItem(ITedNode* node)
+{
+	if (m_selectedItem)
+		m_selectedItem->OnSelectedOff();
+	m_selectedItem = node;
+	if (!m_selectedItem)
+		m_selectedItem = m_activeSpeaker;
+	if (m_selectedItem)
+		m_selectedItem->OnSelectedOn();
+
+}
 
 }
 }

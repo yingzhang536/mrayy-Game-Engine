@@ -17,6 +17,7 @@ namespace scene
 SpeakerNode::SpeakerNode(ted::CSpeaker* s)
 {
 	m_speaker = s;
+	m_glowFactor = 0;
 }
 SpeakerNode::~SpeakerNode()
 {
@@ -39,9 +40,10 @@ void SpeakerNode::AddTweet(TweetNode* t)
 	m_subTweets.push_back(t);
 	t->SetParent(this);
 }
-void SpeakerNode::Draw(NodeRenderer *r)
+void SpeakerNode::Draw(NodeRenderer *r, const math::rectf& rc)
 {
-	r->AddSpeaker(this);
+	if (rc.IsRectCollide(GetBoundingBox(false)))
+		r->AddSpeaker(this, m_glowFactor);
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
 		r->AddSpeakerTweetNode(this, m_subTweets[i]);
@@ -49,11 +51,36 @@ void SpeakerNode::Draw(NodeRenderer *r)
 
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
-		m_subTweets[i]->Draw(r);
+		m_subTweets[i]->Draw(r,rc);
 	}
 }
 void SpeakerNode::Update(float dt)
 {
+#define DECREASE(x,l,v) {if(x>(l)){ x-=(v);} if(x<(l)){x=(l);}}
+#define INCREASE(x,l,v) {if(x<(l)){ x+=(v);} if(x>(l)){x=(l);}}
+
+	if (m_selected)
+	{
+		if (m_hovered)
+		{
+			INCREASE(m_glowFactor, 1, dt);
+		}
+		else 
+		{
+			if (m_glowFactor > 0.8)
+			{
+				DECREASE(m_glowFactor, 0.8, dt);
+			}
+			else
+			{
+				INCREASE(m_glowFactor, 0.8, dt);
+			}
+		}
+	}
+	else
+	{
+		DECREASE(m_glowFactor, 0, dt);
+	}
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
 		m_subTweets[i]->Update(dt);

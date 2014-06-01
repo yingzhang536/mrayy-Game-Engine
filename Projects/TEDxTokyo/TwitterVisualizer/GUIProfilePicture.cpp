@@ -19,15 +19,17 @@ namespace GUI
 	const GUID GUIProfilePicture::ElementType = "GUIProfilePicture";
 
 	const core::string ProfileMaskingshader =
-		"float4 main_fp(float2 texCoord : TEXCOORD0, \
-		uniform sampler2D texA : register(s0),uniform float Alpha) : COLOR \
-		{\
-		vec4 clr=tex2D(texA,texCoord);\
-		float2 v=(texCoord-0.5);\
-		float dst=dot(v,v);\
-		dst=dst>0.25?0:Alpha;\
-		return float4(clr.rgb,dst);\
-		}";
+		"half4 main_fp(float2 texCoord : TEXCOORD0, "
+		"uniform sampler2D texA : register(s0),uniform float alpha,uniform float gray) : COLOR "
+		"{"
+		"half4 clr=tex2D(texA,texCoord);"
+		"half2 v=(texCoord-0.5);"
+		"half dst=dot(v,v);"
+		"dst=dst>0.25?0:1;"
+		"half3 gclr=dot(clr.rgb,half3(0.5,0.3,0.2));"
+		"clr.rgb=gclr*gray+clr.rgb*(1-gray);"
+		"return half4(clr.rgb,dst*alpha);"
+		"}";
 
 GUIProfilePicture::GUIProfilePicture(IGUIManager* m)
 :GUIStaticImage(m)
@@ -52,18 +54,16 @@ void GUIProfilePicture::Draw(const math::rectf*vp)
 
 	if (!IsVisible())return;
 	IGUIManager* creator = GetCreator();
-	const math::rectf& rect = GetDefaultRegion()->GetRect();
-	const math::rectf& clip = GetDefaultRegion()->GetClippedRect();
 	video::IVideoDevice*device = creator->GetDevice();
 	video::IGPUShaderProgram *shader = (video::IGPUShaderProgram*)gShaderResourceManager.getResource("ProfileMasking").pointer();
 	if (shader)
 	{
 		device->setFragmentShader(shader);
 		float a = GetDerivedAlpha();
-		shader->setConstant("Alpha", &a,1);
+		shader->setConstant("alpha", &a, 1);
+		shader->setConstant("gray", &a, 1);
 	}
-	creator->GetRenderQueue()->AddQuad(m_textureUnit, clip, m_texCoords, video::SColor(GetColor().R, GetColor().G, GetColor().B, GetDerivedAlpha()));
-	creator->GetRenderQueue()->Flush();
+	GUIStaticImage::Draw(vp);
 	if (shader)
 		device->setFragmentShader(0);
 

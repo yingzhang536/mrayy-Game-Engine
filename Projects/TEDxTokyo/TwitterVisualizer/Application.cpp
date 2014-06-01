@@ -40,7 +40,9 @@
 #include "GUISceneSpacePanel.h"
 
 #include "GUISweepingText.h"
+#include "GUIFadingText.h"
 #include "SFModSoundmanager.h"
+#include "GUIGestureInfo.h"
 
 namespace mray
 {
@@ -77,11 +79,13 @@ void Application::init(const OptionContainer &extraOptions)
 
 	{
 		new ted::AppData;
+		gAppData.app = this;
 		gAppData.Load("tedSettings.cfg");
 		gAppData.tweetProvider = new ted::TwitterProvider();
 		new ted::XMLDBHandler(gAppData.GetValue("DB", "Users"), gAppData.GetValue("DB", "Tweets"));
 
 	}
+	ShowCursor(0);
 
 	{
 		gAppData.Debugging = extraOptions.GetOptionValue("Debugging")=="Yes";
@@ -105,11 +109,13 @@ void Application::init(const OptionContainer &extraOptions)
 		gFontResourceManager.loadFontsFromDir(gFileSystem.getAppPath() + "..\\Data\\Fonts\\");
 
 		gImageSetResourceManager.loadImageSet("TedxTokyo.imageset");
+		gImageSetResourceManager.loadImageSet("leapGestures.imageset");
 
 		GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
 		font->SetFontName(L"Arial");
 		font->SetTextureSize(1024);
 		font->SetFontResolution(24);
+		font->SetBold(true);
 		font->Init();
 		gFontResourceManager.addResource(font, "Default");
 		gFontResourceManager.setDefaultFont(font);
@@ -129,6 +135,8 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUIProfilePicture);
 		REGISTER_GUIElement_FACTORY(GUISceneSpacePanel);
 		REGISTER_GUIElement_FACTORY(GUISweepingText);
+		REGISTER_GUIElement_FACTORY(GUIFadingText);
+		REGISTER_GUIElement_FACTORY(GUIGestureInfo);
 	}
 
 	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
@@ -213,6 +221,14 @@ void Application::update(float dt)
 	dt = math::clamp(dt, 0.001f, 0.1f);
 	CMRayApplication::update(dt);
 	m_soundManager->runSounds(dt);
+}
+
+void Application::onDone()
+{
+	CMRayApplication::onDone();
+	delete m_scene;
+	m_scene = 0;
+	ted::IDBHandler::getInstance().SaveDB();
 }
 
 }

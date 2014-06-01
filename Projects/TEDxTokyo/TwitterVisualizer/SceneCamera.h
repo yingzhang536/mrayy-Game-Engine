@@ -28,7 +28,8 @@ public:
 	virtual~SceneCamera();
 
 	void SetViewPort(const math::rectf& vp){ m_vp = vp; }
-	const math::rectf& GetViewPort(){ return m_vp ; }
+	const math::rectf& GetViewPort(){ return m_vp; }
+	math::rectf GetWorldSpaceViewPort();
 
 	void ResetView();
 	void FrameBox(const math::rectf& rc);

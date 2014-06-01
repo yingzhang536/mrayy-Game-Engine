@@ -18,12 +18,17 @@ protected:
 	core::string m_tweetsPath;
 	void _loadUsers();
 	void _loadTweets();
+
+	void _saveUsers();
+	void _saveTweets();
 public:
 	XMLDBHandler(const core::string& usersXML, const core::string& tweetsXML);
 	virtual~XMLDBHandler();
 
 
 	virtual void LoadDB() ;
+	virtual void SaveDB();
+
 	virtual bool IsConnected() ;
 	virtual void Close();
 

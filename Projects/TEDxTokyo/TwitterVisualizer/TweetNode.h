@@ -24,6 +24,7 @@ protected:
 	video::TextureUnit m_texture;
 	std::vector<TweetNode*> m_subTweets;
 
+	float m_sizeScaler;
 	float m_hoverValue;
 public:
 	TweetNode(ted::CSpeaker* s,ted::TwitterTweet* t);
@@ -47,7 +48,7 @@ public:
 	const std::vector<TweetNode*>& GetSubTweets(){ return m_subTweets; }
 	virtual void Update(float dt);
 
-	void Draw(NodeRenderer *r);
+	void Draw(NodeRenderer *r,const math::rectf& rc);
 	virtual ITedNode* GetNodeFromPoint(const math::vector2d& pos);
 	virtual math::rectf GetBoundingBox(bool includeChildren);
 	virtual void OnHoverOn(){ m_hovered = true; }

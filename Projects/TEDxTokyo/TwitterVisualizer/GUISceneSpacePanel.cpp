@@ -40,6 +40,8 @@ void GUISceneSpacePanel::_OnSpeakerChange(ted::CSpeaker* sp)
 {
 	m_targetColor= sp->GetSession()->GetColor();
 	Theme->SetText(sp->GetSession()->GetTheme());
+	Speaker->SetText(sp->GetName());
+	Info->SetText(sp->GetDescription());
 }
 
 void GUISceneSpacePanel::Update(float dt){

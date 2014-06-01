@@ -63,7 +63,7 @@ void charDataHandler(void *data, const XML_Char *text, int len)
 	if(str=="")
 		return;
 
-	((ExpatUserData*)data)->text+=str+"\n";
+	((ExpatUserData*)data)->text=str+"\n";
 	/*
 	IXMLListner*listner=static_cast<IXMLListner*>(data);
 	core::string str;

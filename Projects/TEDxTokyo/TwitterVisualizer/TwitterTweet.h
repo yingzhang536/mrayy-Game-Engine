@@ -58,6 +58,18 @@ public:
 		std::vector<TwitterUserProfile*> user_mentions;
 	}entities;
 
+	bool HasHashtag(const core::stringw& tag)
+	{
+		for (int i = 0; i < entities.hashTags.size(); ++i)
+		{
+			if (entities.hashTags[i].equals_ignore_case(tag))
+				return true;
+		}
+		return false;
+	}
+
+	bool HasUserMention(const core::stringw& name);
+
 	void LoadXML(xml::XMLElement* e);
 	void SaveXML(xml::XMLElement* e);
 };

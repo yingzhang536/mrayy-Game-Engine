@@ -40,6 +40,17 @@ TwitterTweet* TwitterTweet::GetTweetByID(IDType id, bool localOnly)
 
 }
 
+
+bool TwitterTweet::HasUserMention(const core::stringw& name)
+{
+	for (int i = 0; i < entities.user_mentions.size(); ++i)
+	{
+		if (entities.user_mentions[i]->name.equals_ignore_case(name))
+			return true;
+	}
+	return false;
+}
+
 void TwitterTweet::LoadXML(xml::XMLElement* e)
 {
 	ID = core::StringConverter::toUInt(e->getValueString("ID"));
@@ -47,10 +58,22 @@ void TwitterTweet::LoadXML(xml::XMLElement* e)
 	core::DateTime::Parse(e->getValueString("date"), date);
 	retweets = core::StringConverter::toUInt(e->getValueString("retweets"));
 	user = TwitterUserProfile::GetUserByID(core::StringConverter::toUInt(e->getValueString("user")),false);
+
+	IDType rtt = core::StringConverter::toUInt(e->getValueString("replyToTweet"));
+	IDType rtu = core::StringConverter::toUInt(e->getValueString("replyToUser"));
+	if (rtt != 0)
+	{
+		replyToTweet = TwitterTweet::GetTweetByID(rtt, true);
+	}
+	if (rtu != 0)
+	{
+		replyToUser = TwitterUserProfile::GetUserByID(rtu, true);
+	}
+
 }
 void TwitterTweet::SaveXML(xml::XMLElement* e)
 {
-	xml::XMLElement* elem = new xml::XMLElement("User");
+	xml::XMLElement* elem = new xml::XMLElement("Tweet");
 	e->addSubElement(elem);
 
 	elem->addAttribute("ID", core::StringConverter::toString(ID));
@@ -58,6 +81,12 @@ void TwitterTweet::SaveXML(xml::XMLElement* e)
 	elem->addAttribute("text", ConvertToUtf8(text));
 	elem->addAttribute("date", core::DateTime::ToString(date));
 	elem->addAttribute("retweets", core::StringConverter::toString(retweets));
+	if (replyToTweet)
+		elem->addAttribute("replyToTweet", core::StringConverter::toString(replyToTweet->ID));
+	else elem->addAttribute("replyToTweet", core::StringConverter::toString(0));
+	if (replyToUser)
+		elem->addAttribute("replyToUser", core::StringConverter::toString(replyToUser->ID));
+	else elem->addAttribute("replyToUser", core::StringConverter::toString(0));
 
 	xml::XMLElement* hashtags = new xml::XMLElement("Hashtags");
 	xml::XMLElement* urls = new xml::XMLElement("Urls");

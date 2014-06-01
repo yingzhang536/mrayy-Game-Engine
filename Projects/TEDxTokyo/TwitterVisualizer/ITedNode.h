@@ -30,11 +30,11 @@ class ITedNode
 protected:
 	msa::physics::Particle2D* m_phNode;
 	float m_sz;
-	bool m_hovered;
+	bool m_hovered, m_selected;
 	ITedNode* m_parent;
 	float m_alpha;
 public:
-	ITedNode() :m_phNode(0), m_sz(30), m_hovered(false), m_parent(0), m_alpha(1)
+	ITedNode() :m_phNode(0), m_sz(30), m_hovered(false), m_parent(0), m_alpha(1), m_selected(false)
 	{}
 	virtual ~ITedNode(){}
 
@@ -54,7 +54,7 @@ public:
 	void SetPhysics(msa::physics::Particle2D* n){ m_phNode = n; }
 	msa::physics::Particle2D* GetPhysics(){ return m_phNode ; }
 	virtual void Update(float dt){}
-	virtual void Draw(NodeRenderer *r){}
+	virtual void Draw(NodeRenderer *r, const math::rectf& rc){}
 
 	virtual bool IsPointInside(const math::vector2d& pos)
 	{
@@ -80,6 +80,8 @@ public:
 
 	virtual void OnHoverOn(){ m_hovered = true; }
 	virtual void OnHoverOff(){ m_hovered = false; }
+	virtual void OnSelectedOn(){ m_selected = true; }
+	virtual void OnSelectedOff(){ m_selected = false; }
 	virtual bool IsHovered(bool checkParent=false){
 		if (!m_hovered && checkParent && m_parent)
 		{

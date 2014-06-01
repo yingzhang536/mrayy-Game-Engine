@@ -4,7 +4,7 @@
 #include "TwitterService.h"
 
 #include "ILogManager.h"
-
+#include "StringUtil.h"
 #include <twitcurl.h>
 #include <exception>
 #include "json/json.h"
@@ -220,6 +220,72 @@ printValueTree(Json::Value &value, const std::string &path = ".")
 		break;
 	}
 }
+
+
+
+int GetMonth(const core::string& str)
+{
+	static const core::string months[] =
+	{
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"June",
+		"July",
+		"Aug",
+		"Sept",
+		"Oct",
+		"Nov",
+		"Dec"
+	};
+
+	for (int i = 0; i < 12; ++i)
+	{
+		if (months[i].equals_ignore_case(str))
+			return i;
+	}
+	return 0;
+}
+
+int GetDay(const core::string& str)
+{
+	static const core::string days[] =
+	{
+		"Sat",
+		"Sun",
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri"
+	};
+
+	for (int i = 0; i < 7; ++i)
+	{
+		if (days[i].equals_ignore_case(str))
+			return i;
+	}
+	return 0;
+}
+
+static void parseDate(const core::string& src, core::DateTime& dt)
+{
+	std::vector<core::string> splits = core::StringUtil::Split(src, " ");
+	std::vector<core::string> timeSplits = core::StringUtil::Split(splits[3], ":");
+
+	dt.SetTime(core::StringConverter::toInt(timeSplits[0]),
+		core::StringConverter::toInt(timeSplits[1]),
+		core::StringConverter::toInt(timeSplits[2]));
+
+
+	dt.SetDate(core::StringConverter::toInt(splits[5]),
+		GetMonth(splits[1]),
+		GetDay(splits[0]));
+}
+
+
 static bool parseUser(Json::Value &value, User& u)
 {
 	u.id = value["id"].asDouble();
@@ -237,6 +303,7 @@ static bool parseUser(Json::Value &value, User& u)
 	u.statuses_count = value["statuses_count"].asUInt();
 	u.url = value["url"].asString();
 	u.location = value["location"].asString();
+	parseDate(value["created_at"].asString(), u.created_at);
 	/*
 	const char* created_At = value["created_at"].asCString();
 	char cDay[5];
@@ -250,7 +317,6 @@ static bool parseUser(Json::Value &value, User& u)
 	*/
 	return true;
 }
-
 static bool parseUserMention(Json::Value& value, Tweet::UserMention& u)
 {
 
@@ -265,6 +331,8 @@ static bool parseUserMention(Json::Value& value, Tweet::UserMention& u)
 static bool parseTweet(Json::Value &value, Tweet& tweet)
 {
 	tweet.id = value["id"].asUInt();
+	parseDate(value["created_at"].asString(), tweet.created_at);
+
 	//tweet.created_at = value["created_at"].as();
 	tweet.in_reply_to_screen_name = value["in_reply_to_screen_name"].asString();
 	tweet.in_reply_to_status_id = value["in_reply_to_status_id"].asUInt();
@@ -279,6 +347,10 @@ static bool parseTweet(Json::Value &value, Tweet& tweet)
 	Json::Value& urls = entities["urls"];
 	Json::Value& user_mentions = entities["user_mentions"];
 	core::stringw tmp;
+
+	tweet.entities.hashTags.clear();
+	tweet.entities.urls.clear();
+	tweet.entities.user_mentions.clear();
 	for (int i = 0; i < hashtags.size(); ++i)
 	{
 		//utf8_to_utf16(hashtags[i]["text"].asCString(), tmp);

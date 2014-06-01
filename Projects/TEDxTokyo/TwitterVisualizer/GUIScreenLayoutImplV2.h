@@ -38,7 +38,7 @@ public:
 
 		ScenePanel->SetLeftElement(SessionsBar);
 		ScenePanel->SetTopElement(SessionDetails);
-		ScenePanel->SetBottomElement(TweetDetails);
+		//ScenePanel->SetBottomElement(TweetDetails);
 	}
 };
 

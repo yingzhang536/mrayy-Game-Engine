@@ -14,6 +14,7 @@
 
 #include "CSpeaker.h"
 #include "SessionDetails.h"
+#include "StringUtil.h"
 
 namespace mray
 {
@@ -66,10 +67,12 @@ void GUISpeakerDetailsPanel::_OnSpeakerChange(IObject* sender, PVOID param)
 {
 	ted::CSpeaker* speaker= m_sidePanel->GetActiveSpeaker();
 	ted::SessionDetails* session= speaker->GetSession();
-	SessionName->SetText(session->GetSessionName());
+	SessionName->SetText(core::StringUtil::ToUpper(session->GetSessionName()));
 	core::string sp = core::string("SPEAKER ") + core::StringConverter::toString(speaker->GetOrder()+1);
 	SpeakerID->SetText(sp);
-	SpeakerName->SetText(speaker->GetName());
+	SpeakerName->SetText( core::StringUtil::ToUpper(speaker->GetName()));
+	SpeakerTitle->SetText(core::StringUtil::ToUpper(speaker->GetTitle()));
+	TwitterID->SetText("#"+speaker->GetTwitterID());
 	SpeakerImage->SetSourceImage(speaker->GetPicture());
 	SessionStartTime->SetText(core::CTime::ToString(session->GetSessionStartTime(), false, false));
 	SessionEndTime->SetText(core::CTime::ToString(session->GetSessionEndTime(), false, false));

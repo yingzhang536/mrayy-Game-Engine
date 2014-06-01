@@ -41,6 +41,8 @@ public:
 
 	virtual void WindowPostRender(video::RenderWindow* wnd);
 
+	virtual void onDone();
+
 
 };
 

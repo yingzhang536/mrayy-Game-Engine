@@ -13,6 +13,7 @@
 #include "GUISessionSidePanel.h"
 #include "TwitterTweet.h"
 #include "TwitterUserProfile.h"
+#include "StringUtil.h"
 
 namespace mray
 {
@@ -47,7 +48,7 @@ void GUITweetDetailsPanel::SetTweet(ted::TwitterTweet* t)
 	if (m_tweet)
 	{
 		TwitterID->SetText(t->user->name);
-		Details->SetText(t->text);
+		Details->SetText(core::StringUtilW::ToUpper(t->text));
 		TwitterImage->SetSourceImage(t->user->imageUrl);
 		TweetTime->SetText(core::DateTime::ToString(t->date));
 		m_active = true;
@@ -85,12 +86,12 @@ void GUITweetDetailsPanel::Update(float dt)
 	float a = GetAlpha();
 	if (!m_active)
 	{
-		DECREASE(sz.y, 100, 200*dt);
+		DECREASE(sz.y, 120, 200*dt);
 		DECREASE(a, 0.2, dt);
 	}
 	else
 	{
-		INCREASE(sz.y, 200, 200 * dt);
+		INCREASE(sz.y, 160, 200 * dt);
 		INCREASE(a, 1, dt);
 	}
 	SetSize(sz);
