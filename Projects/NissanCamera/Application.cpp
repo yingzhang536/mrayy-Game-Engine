@@ -40,7 +40,7 @@
 #include "IFileMonitor.h"
 #include "DynamicFontGenerator.h"
 
-#include "PythonScriptManager.h"
+//#include "PythonScriptManager.h"
 
 
 namespace mray
@@ -147,25 +147,25 @@ void Application::_initStates()
 	IRenderingState *nullState, *streamerTest, *cameraState;
 	nullState = new TBee::NullRenderState();
 	nullState->InitState();
-	m_renderingState->AddState(nullState, "Null");
+	m_renderingState->AddState(nullState);
 
-	streamerTest = new TBee::RemoteCameraRenderingState();
+	streamerTest = new TBee::RemoteCameraRenderingState("CameraRemote");
 	streamerTest->InitState();
-	m_renderingState->AddState(streamerTest, "CameraRemote");
+	m_renderingState->AddState(streamerTest);
 
 	cameraState = new RobotCameraState();//TBee::LocalCameraRenderingState();
 	((RobotCameraState*)cameraState)->SetCameraInfo(Eye_Left, m_cameraID[Eye_Left]);
 	((RobotCameraState*)cameraState)->SetCameraInfo(Eye_Right, m_cameraID[Eye_Right]);
 	cameraState->InitState();
-	m_renderingState->AddState(cameraState, "CameraLocal");
+	m_renderingState->AddState(cameraState);
 
 	// 	ls = new TBee::LoginScreenState();
 // 	ls->InitState();
 // 	m_renderingState->AddState(ls, "Login");
 
-	m_renderingState->AddTransition("Null", "CameraLocal", STATE_EXIT_CODE);
+	m_renderingState->AddTransition(nullState, cameraState, STATE_EXIT_CODE);
 	//AddTransition("Streamer","Intro",STATE_EXIT_CODE);
-	m_renderingState->SetInitialState("Null");
+	m_renderingState->SetInitialState(nullState);
 }
 
 
@@ -244,8 +244,8 @@ void Application::init(const OptionContainer &extraOptions)
 
 	gLogManager.log("Starting Application", ELL_INFO);
 
-	script::PythonScriptManager* scriptManager = new script::PythonScriptManager();
-	scriptManager->ExecuteFile(gFileSystem.openFile("testPython.py"));
+// 	script::PythonScriptManager* scriptManager = new script::PythonScriptManager();
+// 	scriptManager->ExecuteFile(gFileSystem.openFile("testPython.py"));
 
 }
 void Application::_createViewports()
@@ -278,7 +278,7 @@ void Application::RenderUI(const math::rectf& rc)
 			attr.wrap=0;
 			attr.RightToLeft=0;
 			core::string msg=mT("FPS= ");
-			msg+=core::StringConverter::toString((int)core::CFPS::getInstance().getFPS());
+			msg+=core::StringConverter::toString((int)gEngine.getFPS()->getFPS());
 			font->print(math::rectf(rc.getWidth() - 250, rc.getHeight() - 50, 10, 10), &attr, 0, msg, m_guiRender);
 			yoffset+=attr.fontSize;
 

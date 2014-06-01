@@ -253,7 +253,7 @@ public:
 };
 
 
-void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
+void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 {
 	if (!AppData::Instance()->IsDebugging)
 		return;
@@ -308,6 +308,7 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc)
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
+		pos = r.ULPoint;
 		/*
 		math::vector3d correctionX(m_correctionValue[0]->floatParam[0], m_correctionValue[0]->floatParam[1], m_correctionValue[0]->floatParam[2]);
 		math::vector3d correctionY(m_correctionValue[1]->floatParam[0], m_correctionValue[1]->floatParam[1], m_correctionValue[1]->floatParam[2]);
@@ -459,7 +460,8 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	//draw UI
 
 
-	_RenderUI(rc);
+	math::vector2d pos = rc.ULPoint;
+	_RenderUI(rc,pos);
 
 	return m_renderTarget[index].pointer();
 }

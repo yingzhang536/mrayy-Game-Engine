@@ -37,6 +37,7 @@ namespace TBee
 {
 
 InMapRenderState::InMapRenderState()
+:IRenderingState("Maps")
 {
 	m_pageManager=0;
 	m_mapGUIManager=0;

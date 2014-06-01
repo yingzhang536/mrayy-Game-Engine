@@ -124,9 +124,9 @@ void RemoteCameraRenderingState::Update(float dt)
 	m_timeAcc += dt;
 }
 
-void RemoteCameraRenderingState::_RenderUI(const math::rectf& rc)
+void RemoteCameraRenderingState::_RenderUI(const math::rectf& rc, math::vector2d&pos)
 {
-	IEyesRenderingBaseState::_RenderUI(rc);
+	IEyesRenderingBaseState::_RenderUI(rc,pos);
 
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;
@@ -145,6 +145,7 @@ void RemoteCameraRenderingState::_RenderUI(const math::rectf& rc)
 		attr.RightToLeft = 0;
 
 		math::rectf r = rc;
+		r.ULPoint = pos;
 
 		core::string msg = mT("FPS:")+core::StringConverter::toString(m_fps);
 		font->print(r, &attr, 0, msg, m_guiRenderer);

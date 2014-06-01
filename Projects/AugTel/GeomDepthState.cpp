@@ -61,7 +61,7 @@ bool GeomDepthState::OnEvent(Event* e, const math::rectf& rc)
 			else if ( evt->key == KEY_F10)
 			{
 				core::string name = "screenShots/ScreenShot_";
-				name += core::StringConverter::toString(gTimer.getActualTime());
+				name += core::StringConverter::toString((int)gEngine.getTimer()->getSeconds());
 				gTextureResourceManager.writeResourceToDist(m_visualizer->GetDepthTexture(), name+"_depth.png");
 				gTextureResourceManager.writeResourceToDist(m_visualizer->GetNormalsTexture(), name + "_normals.png");
 

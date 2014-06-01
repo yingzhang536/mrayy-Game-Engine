@@ -22,7 +22,7 @@
 #include "ISound.h"
 #include "ISoundListener.h"
 #include "GUIManager.h"
-
+#include "GUIAugTelScreen.h"
 #include "IGUISliderBar.h"
 
 
@@ -61,8 +61,11 @@ protected:
 
 	TBee::OpenNIHandler* m_openNiHandler;
 
+	math::vector4d m_depthParams;
+
 	scene::SMeshPtr m_depthMesh;
 	scene::ISceneNode* m_depthNode;
+	GCPtr<GUI::GUIAugTelScreen> m_screenLayout;
 
 	TBee::DepthVisualizer* m_depthVisualizer;
 	bool m_viewDepth;
@@ -72,8 +75,9 @@ protected:
 
 	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();
+	virtual void _RenderUI(const math::rectf& rc, math::vector2d& pos);
 public:
-	AugCameraRenderState(TBee::ICameraVideoSource* src, const core::string& name);
+	AugCameraRenderState(TBee::ICameraVideoSource* src, TBee::IRobotCommunicator* comm, const core::string& name);
 	virtual~AugCameraRenderState();
 
 	virtual bool OnEvent(Event* e, const math::rectf& rc);

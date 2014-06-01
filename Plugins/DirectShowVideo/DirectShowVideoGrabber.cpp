@@ -94,7 +94,7 @@ bool DirectShowVideoGrabber::InitDevice(int device,int w,int h,int fps)
 	h=s_videoInput->getHeight(device);
 	int ppCnt=s_videoInput->getSize(device);
 
-	printf("Camera Index:%d Width=%d, Height=%d", m_device, w, h);
+	printf("Camera Index:%d Width=%d, Height=%d, FPS=%d\n", m_device, w, h);
 	if(m_size.x!=w || m_size.y!=h)
 	{
 		m_size.x=w;

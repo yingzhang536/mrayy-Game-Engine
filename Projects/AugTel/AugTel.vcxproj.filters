@@ -138,6 +138,18 @@
     <ClInclude Include="WaitCheckState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="GUICalibrationItem.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICalibrationItemLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIAugTelScreen.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIAugTelScreenLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -218,12 +230,24 @@
     <ClCompile Include="GUITypingTextBox.cpp">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClCompile>
+    <ClCompile Include="GUICalibrationItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIAugTelScreen.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIConnectingScreen.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUICalibrationItemLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIAugTelScreenLayout.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
   </ItemGroup>

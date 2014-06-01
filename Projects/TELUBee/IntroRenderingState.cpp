@@ -185,6 +185,7 @@ namespace TBee
 
 
 IntroRenderingState::IntroRenderingState()
+:IRenderingState("Intro")
 {
 	m_currentItem=0;
 }

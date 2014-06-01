@@ -78,10 +78,10 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
-		op.name = "Oculus";
-		op.value = "Yes";
-		op.valueSet.insert("Yes");
-		op.valueSet.insert("No");
+		op.name = "HeadController";
+		op.value = "IK";
+		op.valueSet.insert("IK");
+		op.valueSet.insert("Oculus");
 		extraOptions.push_back(op);
 		op.valueSet.clear();
 	}

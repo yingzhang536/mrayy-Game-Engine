@@ -55,6 +55,12 @@
 #include "LocalRobotCommunicator.h"
 #include "RemoteRobotCommunicator.h"
 
+#include "FontResourceManager.h"
+
+#include "GUIOverlayManager.h"
+#include "GUIOverlay.h"
+
+
 #define VT_USING_SHAREDMEM
 #define VIDEO_PORT 5000
 #define AUDIO_PORT 5002
@@ -148,7 +154,7 @@ namespace AugTel
 	int TelesarCommunicationHandler::_refCount=0;
 	TelesarCommunicationHandler* TelesarCommunicationHandler::_instance=0;
 
-	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src,const core::string& name)
+	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src , TBee::IRobotCommunicator* comm, const core::string& name)
 		:IEyesRenderingBaseState(name)
 {
 	m_data = new AugCameraStateImpl();
@@ -168,7 +174,7 @@ namespace AugTel
 	m_depthTime = 0;
 
 	m_depthVisualizer = new DepthVisualizer();
-	m_robotConnector->SetCommunicator(new TBee::RemoteRobotCommunicator());
+	m_robotConnector->SetCommunicator(comm);
 
 	m_viewDepth = false;
 
@@ -214,7 +220,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			else if ( evt->key == KEY_F10)
 			{
 				core::string name = "screenShots/ScreenShot_";
-				name += core::StringConverter::toString(gTimer.getActualTime());
+				name += core::StringConverter::toString((int)gEngine.getTimer()->getSeconds());
 				name += ".png";
 				gTextureResourceManager.writeResourceToDist(m_rtTexture[0], name);
 
@@ -234,9 +240,18 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			else if (evt->key == KEY_SPACE )
 			{
 				if (m_robotConnector->IsRobotConnected())
+				{
+					m_screenLayout->OnDisconnected();
 					m_robotConnector->EndUpdate();
+				}
 				else
+				{
+					TelesarCommunicationHandler::Instance()->commLayer->InjectCommand("calib", "");
+
+					m_robotConnector->GetHeadController()->Recalibrate();
 					m_robotConnector->StartUpdate();
+					m_screenLayout->OnConnected();
+				}
 				ok = true;
 			}
 			else if (evt->key == KEY_ESCAPE)// && evt->lshift)
@@ -316,6 +331,12 @@ void AugCameraRenderState::InitState()
 
 		ATAppGlobal::Instance()->guiManager = m_guiManager;
 	}
+
+	{
+		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIAugTelScreenLayout.gui");
+		m_screenLayout = new GUI::GUIAugTelScreen(m_guiManager);
+		screenOverlay->CreateElements(m_guiManager, m_guiroot, 0, m_screenLayout);
+	}
 	{
 		m_camVideoSrc->Init();
 	}
@@ -379,7 +400,7 @@ void AugCameraRenderState::InitState()
 			cam[i]->setZFar(10);
 
 			//if (ATAppGlobal::Instance()->oculusDevice)
-			cam[i]->setFovY(m_hmdFov);
+			cam[i]->setFovY(m_cameraFov);
 			cam[i]->setPosition(math::vector3d(0.03 - 0.06*i,0.07,0));
 			m_camera[i] = cam[i];
 		}
@@ -478,6 +499,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	m_robotConnector->SetData("depthSize", "", false);
 	//m_robotConnector->EndUpdate();
 
+	m_screenLayout->OnDisconnected();
 }
 
 void AugCameraRenderState::OnExit()
@@ -559,6 +581,42 @@ void AugCameraRenderState::_CalculateDepthGeom()
 	pos->unlock();
 	norm->unlock();
 }
+
+void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
+{
+	Parent::_RenderUI(rc,pos);
+
+	if (!AppData::Instance()->IsDebugging)
+		return;
+	GUI::IFont* font = gFontResourceManager.getDefaultFont();
+	GUI::FontAttributes attr;
+	video::IVideoDevice* dev = Engine::getInstance().getDevice();
+	AppData* app = AppData::Instance();
+	if (font)
+	{
+		attr.fontColor.Set(1, 1, 1, 1);
+		attr.fontAligment = GUI::EFA_MiddleLeft;
+		attr.fontSize = 18;
+		attr.hasShadow = true;
+		attr.shadowColor.Set(0, 0, 0, 1);
+		attr.shadowOffset = math::vector2d(2);
+		attr.spacing = 2;
+		attr.wrap = 0;
+		attr.RightToLeft = 0;
+
+		math::rectf r = rc;
+		r.ULPoint = pos;
+
+		core::string msg = mT("Depth Center:") + core::StringConverter::toString(m_openNiHandler->GetCenter());
+		font->print(r, &attr, 0, msg, m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
+		msg = mT("Depth Center:") + core::StringConverter::toString(m_openNiHandler->GetScale());
+		font->print(r, &attr, 0, msg, m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
+		m_guiRenderer->Flush();
+	}
+}
+
 #define DRAW_GRID false
 
 video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETargetEye eye)
@@ -666,6 +724,10 @@ void AugCameraRenderState::LoadFromXML(xml::XMLElement* e)
 
 	m_model = e->getValueString("Model");
 	m_optiProvider = e->getValueString("OptiProvider");
+
+	m_depthParams = core::StringConverter::toVector4d(e->getValueString("DepthParams"));
+	m_openNiHandler->SetCenter(math::vector2d(m_depthParams.x, m_depthParams.y));
+	m_openNiHandler->SetScale(math::vector2d(m_depthParams.z, m_depthParams.w));
 }
 
 }

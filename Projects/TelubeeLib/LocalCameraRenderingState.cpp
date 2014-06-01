@@ -208,9 +208,9 @@ void LocalCameraRenderingState::Update(float dt)
 }
 
 
-void LocalCameraRenderingState::_RenderUI(const math::rectf& rc)
+void LocalCameraRenderingState::_RenderUI(const math::rectf& rc, math::vector2d&pos)
 {
-	IEyesRenderingBaseState::_RenderUI(rc);
+	IEyesRenderingBaseState::_RenderUI(rc,pos);
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
@@ -237,6 +237,7 @@ void LocalCameraRenderingState::_RenderUI(const math::rectf& rc)
 		attr.RightToLeft = 0;
 
 		math::rectf r = rc;
+		r.ULPoint = pos;
 
 		/*controllers::IJoysticController* joystick = TBAppGlobals::inputMngr->getJoystick(0);
 

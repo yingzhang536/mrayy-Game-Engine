@@ -16,6 +16,7 @@ namespace TBee
 {
 	OculusDetectState* OculusDetectState::s_instance=0;
 OculusDetectState::OculusDetectState()
+:IRenderingState("Oculus")
 {
 	s_instance=this;
 	m_guiManager=0;

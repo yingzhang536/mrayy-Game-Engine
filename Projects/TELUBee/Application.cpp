@@ -43,6 +43,9 @@
 #include "JoystickDefinitions.h"
 #include "OptiTrackDataSource.h"
 
+
+#include "DynamicFontGenerator.h"
+
 #include "LocalCameraRenderingState.h"
 #include "RemoteCameraRenderingState.h"
 #include "FlyingTelubeeRenderState.h"
@@ -115,9 +118,16 @@ void Application::_InitResources()
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::IFont>font=gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
-	gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	font->SetFontName(L"Arial");
+	font->SetTextureSize(1024);
+	font->SetFontResolution(24);
+	font->Init();
+
+	//GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
+	//gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
 	gFontResourceManager.setDefaultFont(font);
+
 
 	gLogManager.log("Resources Loaded",ELL_SUCCESS);
 }
@@ -165,69 +175,72 @@ void Application::onEvent(Event* event)
 
 void Application::_initStates()
 {
-	IRenderingState *nullState, *streamerTest, *flyingTbeeState, *introState, *oc, *ls, *maps, *ctr, *cameraState, *videoState;
+	IRenderingState *nullState, *streamerTest, *flyingTbeeState, *introState, *oc, *ls, *maps, *ctr,  *videoState;
+	TBee::LocalCameraRenderingState *cameraState;
 	nullState = new TBee::NullRenderState();
 	nullState->InitState();
-	m_renderingState->AddState(nullState, "Null");
+	m_renderingState->AddState(nullState);
 
-	streamerTest = new TBee::RemoteCameraRenderingState();
+	streamerTest = new TBee::RemoteCameraRenderingState("CameraRemote");
 	streamerTest->InitState();
-	m_renderingState->AddState(streamerTest, "CameraRemote");
+	m_renderingState->AddState(streamerTest);
 
 	flyingTbeeState = new TBee::FlyingTelubeeRenderState();
 	flyingTbeeState->InitState();
-	m_renderingState->AddState(flyingTbeeState, "FlyingTbee");
+	m_renderingState->AddState(flyingTbeeState);
 
-	cameraState = new TBee::LocalCameraRenderingState();
+	cameraState = new TBee::LocalCameraRenderingState("CameraLocal");
 	cameraState->InitState();
-	m_renderingState->AddState(cameraState, "CameraLocal");
+	cameraState->SetCameraInfo(ETargetEye::Eye_Right, m_cam1);
+	cameraState->SetCameraInfo(ETargetEye::Eye_Left, m_cam2);
+	m_renderingState->AddState(cameraState);
 
 	videoState = new TBee::GSTVideoState();
 	videoState->InitState();
-	m_renderingState->AddState(videoState, "Video");
+	m_renderingState->AddState(videoState);
 
 	introState = new TBee::IntroRenderingState();
 	introState->InitState();
-	m_renderingState->AddState(introState, "Intro");
+	m_renderingState->AddState(introState);
 
 	 oc = TBee::OculusDetectState::Instance();
 	oc->InitState();
-	m_renderingState->AddState(oc, "Oculus");
+	m_renderingState->AddState(oc);
 
 	ls = new TBee::LoginScreenState();
 	ls->InitState();
-	m_renderingState->AddState(ls, "Login");
+	m_renderingState->AddState(ls);
 
 	maps = new TBee::InMapRenderState();
 	//maps->InitState();
-	m_renderingState->AddState(maps, "Map");
+	m_renderingState->AddState(maps);
 
 	ctr = new TBee::ConnectingToRobotScreen();
 	ctr->InitState();
-	m_renderingState->AddState(ctr, "Connecting");
+	m_renderingState->AddState(ctr);
 
 
-	m_renderingState->AddTransition("Null", "Login", STATE_EXIT_CODE);
+	m_renderingState->AddTransition(nullState, cameraState, STATE_EXIT_CODE);
 	//AddTransition("Streamer","Intro",STATE_EXIT_CODE);
 	if (TBAppGlobals::Instance()->headController==EHeadControllerType::Oculus)
 	{
-		m_renderingState->AddTransition("Intro", "Oculus", STATE_EXIT_CODE);
-		m_renderingState->AddTransition("Oculus", "Login", STATE_EXIT_CODE);
+		m_renderingState->AddTransition(introState, oc, STATE_EXIT_CODE);
+		m_renderingState->AddTransition(oc, ls, STATE_EXIT_CODE);
 	}
 	else
-		m_renderingState->AddTransition("Intro", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Login", "Map", ToMap_CODE);
-	m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
-	m_renderingState->AddTransition("Login", "FlyingTbee", ToFlyingTelubee_CODE);//Camera
-	m_renderingState->AddTransition("Login", "CameraLocal", ToLocalCamera_CODE);//Camera
-	m_renderingState->AddTransition("Login", "Video", ToVideo_CODE);//Video
-	m_renderingState->AddTransition("CameraRemote", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("CameraLocal", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Video", "Login", STATE_EXIT_CODE);
-	m_renderingState->AddTransition("Map", "Login", BackToTile_Code);
-	m_renderingState->AddTransition("Map", "Connecting", ConnectToRobot_Code);
-	m_renderingState->AddTransition("Connecting", "Map", BackToMap_Code);
-	m_renderingState->SetInitialState("Null");
+		m_renderingState->AddTransition(introState, ls, STATE_EXIT_CODE);
+	m_renderingState->AddTransition(ls, maps, ToMap_CODE);
+	//m_renderingState->AddTransition(ls, "CameraRemote", ToRemoteCamera_CODE);//Camera
+	//m_renderingState->AddTransition(ls, "FlyingTbee", ToFlyingTelubee_CODE);//Camera
+	m_renderingState->AddTransition(ls, cameraState, ToLocalCamera_CODE);//Camera
+	//m_renderingState->AddTransition(ls, "Video", ToVideo_CODE);//Video
+	//m_renderingState->AddTransition("CameraRemote", ls, STATE_EXIT_CODE);
+	//m_renderingState->AddTransition("CameraLocal", ls, STATE_EXIT_CODE);
+	//m_renderingState->AddTransition("Video", ls, STATE_EXIT_CODE);
+	//m_renderingState->AddTransition("Map", ls, BackToTile_Code);
+	//m_renderingState->AddTransition("Map", "Connecting", ConnectToRobot_Code);
+	//m_renderingState->AddTransition("Connecting", "Map", BackToMap_Code);
+	m_renderingState->SetInitialState(nullState);
 }
 
 class FileMonitorListener : public OS::IFileMonitorListener
@@ -297,6 +310,11 @@ void Application::init(const OptionContainer &extraOptions)
 			AppData::Instance()->stereoMode = ERenderStereoMode::StereoTV;
 		else if (v == "Oculus")
 			AppData::Instance()->stereoMode = ERenderStereoMode::Oculus;
+
+
+
+		m_cam1 = extraOptions.GetOptionByName("Camera0")->getValueIndex();
+		m_cam2 = extraOptions.GetOptionByName("Camera1")->getValueIndex();
 	}
 	_InitResources();
 

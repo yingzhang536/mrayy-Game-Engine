@@ -122,9 +122,17 @@ bool FingerTipComponent::_calculateForce(float dt)
 	}
 	if (m_ggDriver)
 	{
-		m_ggDriver->SetChannelValue(m_channel * 3 + 0, m_force.x);//shearing force
-		m_ggDriver->SetChannelValue(m_channel * 3 + 1, 0);				//always zero
-		m_ggDriver->SetChannelValue(m_channel * 3 + 2, m_force.z);//pressure force
+		const bool threeType = false;
+		if (threeType)
+		{
+			m_ggDriver->SetChannelValue(m_channel * 3 + 0, m_force.x);//shearing force
+			m_ggDriver->SetChannelValue(m_channel * 3 + 1, 0);				//always zero
+			m_ggDriver->SetChannelValue(m_channel * 3 + 2, m_force.z);//pressure force
+		}
+		else
+		{
+			m_ggDriver->SetChannelValue(m_channel , m_force.z);//shearing force
+		}
 	}
 	return true;
 }

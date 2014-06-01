@@ -11,6 +11,7 @@ namespace TBee
 {
 
 GStreamerTestState::GStreamerTestState()
+:IRenderingState("Video")
 {
 	m_providers = new GStreamVideoProvider();
 

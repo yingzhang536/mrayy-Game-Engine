@@ -22,6 +22,7 @@ namespace TBee
 
 
 FlyingTelubeeRenderState::FlyingTelubeeRenderState()
+:IEyesRenderingBaseState("FlyingTelubee")
 {
 
 	m_fps = 0;

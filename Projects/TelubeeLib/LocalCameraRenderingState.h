@@ -43,7 +43,7 @@ protected:
 	math::vector2d m_BoxSize;
 	GUI::IGUIRenderer* m_guiRenderer;
 
-	void _RenderUI(const math::rectf& rc);
+	void _RenderUI(const math::rectf& rc,math::vector2d&pos);
 public:
 	LocalCameraRenderingState(const core::string& name);
 	virtual~LocalCameraRenderingState();
@@ -61,6 +61,7 @@ public:
 	virtual video::IRenderTarget* Render(const math::rectf& rc,ETargetEye eye);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
+	virtual bool CanSleep(){ return true; }
 
 };
 

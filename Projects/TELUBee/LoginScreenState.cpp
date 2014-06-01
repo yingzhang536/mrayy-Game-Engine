@@ -29,6 +29,7 @@ namespace TBee
 
 
 LoginScreenState::LoginScreenState()
+:IRenderingState("Login")
 {
 	m_connection=TBAppGlobals::Instance()->sqlManager->CreateConnection();
 	m_loginMenu=new GUILoginMenu();

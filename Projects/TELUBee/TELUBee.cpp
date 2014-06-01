@@ -44,17 +44,18 @@ EntryPoint
 	op.valueSet.insert("No");
 	extraOptions.push_back(op);
 	op.valueSet.clear();
+	for (int j = 0; j < 2; ++j)
 	{
-		op.name="Camera";
+		op.name = "Camera" + core::StringConverter::toString(j);
 		video::DirectShowVideoGrabber ds;
-		int camsCount=ds.ListDevices();
-		for (int i=0;i<camsCount;++i)
+		int camsCount = ds.ListDevices();
+		for (int i = 0; i<camsCount; ++i)
 		{
-			op.valueSet.insert(ds.GetDeviceName(i));
+			op.valueSet.insert(core::StringConverter::toString(i) + " - " + ds.GetDeviceName(i));
 		}
-		if(op.valueSet.size()>0)
+		if (op.valueSet.size()>0)
 		{
-			op.value=*op.valueSet.begin();
+			op.value = *op.valueSet.begin();
 		}
 		extraOptions.push_back(op);
 		op.valueSet.clear();

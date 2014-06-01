@@ -355,8 +355,10 @@ core::string VTSharedMemoryImpl::InjectCommand(const core::string& cmd, const co
 	if (cmd.equals_ignore_case("calib"))
 	{
 		m_data->agent->data->status.calibration = true;
+		m_data->agent->data->status.finger_calibrate = true;
 		Update(0.01f);
 		Sleep(20);
+		m_data->agent->data->status.finger_calibrate = false;
 		m_data->agent->data->status.calibration = false;
 		return "done";
 	}

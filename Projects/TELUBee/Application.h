@@ -63,6 +63,10 @@ protected:
 
 	bool m_drawUI;
 
+	int m_cam1;
+	int m_cam2;
+
+
 	void _InitResources();
 	void RenderUI(const math::rectf& rc);
 

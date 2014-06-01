@@ -16,6 +16,7 @@ namespace TBee
 
 
 GSTVideoState::GSTVideoState()
+:IEyesRenderingBaseState("VideoState")
 {
 	m_videoSource = new GstFileVideoSource("","");
 

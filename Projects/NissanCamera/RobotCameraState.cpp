@@ -31,7 +31,7 @@ namespace NCam
 
 		virtual math::quaternion GetHeadOrientation()
 		{
-			float time = gTimer.getSeconds();
+			float time = gEngine.getTimer()->getSeconds();
 			math::vector3d angles;
 			//angles.x = 20 * sin(time*0.001f);
 			//angles.y = 30 * sin(time*0.002f);
@@ -45,6 +45,7 @@ namespace NCam
 	};
 
 RobotCameraState::RobotCameraState()
+:IRenderingState("RobotState")
 {
 	m_exitCode = 0;
 
@@ -142,13 +143,20 @@ void RobotCameraState::InitState()
 			math::vector3d(+1, +1, 0),
 			math::vector3d(-1, +1, 0)
 		};
-		math::vector2d tcPtr[4] =
-		{
-			math::vector2d(1,0),
-			math::vector2d(0,0),
-			math::vector2d(0,1),
-			math::vector2d(1,1)
+		math::vector2d tcPtr[4]={
+			 			math::vector2d(1,0),
+			 			math::vector2d(0,0),
+			 			math::vector2d(0,1),
+			 			math::vector2d(1, 1)
+
 		};
+
+		math::matrix3x3 rotMat;
+		if (i == 0)
+			rotMat.setAngle(90);
+		else rotMat.setAngle(-90);
+		for (int j = 0; j < 4; ++j)
+			tcPtr[j] = (rotMat*(tcPtr[j] * 2 - 1))*0.5 - 0.5f;
 		ushort idxPtr[6] = { 0, 1, 2, 0, 2, 3 };
 
 		pos->writeData(0, 4 * sizeof(math::vector3d), posPtr, true);

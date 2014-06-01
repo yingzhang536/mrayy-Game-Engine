@@ -42,7 +42,7 @@ namespace AugTel
 		if (bone)
 		{
 			math::quaternion q;
-			q.Slerp(bone->getOrintation(), initialRotation*ori, 4 * gFPS.dt());
+			q.Slerp(bone->getOrintation(), initialRotation*ori, 4 * gEngine.getFPS()->dt());
 			q = ori*rotationReset;
 			if (bone->getParent() && worldSpace)
 			{

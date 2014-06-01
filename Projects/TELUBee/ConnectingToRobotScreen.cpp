@@ -23,6 +23,7 @@ namespace TBee
 //#define USE_SEETHROUGH
 
 ConnectingToRobotScreen::ConnectingToRobotScreen()
+:IRenderingState("Connecting")
 {
 	m_connectingPnl=new GUIConnectingToRobot();
 	m_roboComm=new LocalRobotCommunicator();
