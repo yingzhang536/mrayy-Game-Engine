@@ -279,6 +279,18 @@
     <ClInclude Include="GUISweepingText.h">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClInclude>
+    <ClInclude Include="GUIGestureInfo.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIGestureElementLayout.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
+    <ClInclude Include="PointerNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFadingText.h">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -389,6 +401,15 @@
     <ClCompile Include="GUISweepingText.cpp">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </ClCompile>
+    <ClCompile Include="GUIGestureInfo.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="PointerNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIFadingText.cpp">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
@@ -407,6 +428,9 @@
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui">
+      <Filter>Source Files\GUI\Interface v2.0</Filter>
+    </Overlay>
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIGestureElementLayout.gui">
       <Filter>Source Files\GUI\Interface v2.0</Filter>
     </Overlay>
   </ItemGroup>

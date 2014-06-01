@@ -48,7 +48,13 @@ void SceneCamera::MoveTo(const math::rectf& rc, float speed)
 {
 }
 
-
+math::rectf SceneCamera::GetWorldSpaceViewPort()
+{
+	math::rectf rc;
+	rc.ULPoint = ConvertToWorldSpace(m_vp.ULPoint);
+	rc.BRPoint = ConvertToWorldSpace(m_vp.BRPoint);
+	return rc;
+}
 void SceneCamera::ApplyTransformation()
 {
 	_UpdateTransformation();

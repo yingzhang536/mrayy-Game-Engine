@@ -42,7 +42,7 @@ GUISessionSidePanel::GUISessionSidePanel(IGUIManager* m):
 IGUIPanelElement(ElementType, m)
 {
 	m_minWidth = 40;
-	m_maxWidth = 100;
+	m_maxWidth = 120;
 	m_state = Shrink;
 	m_sessions = 0;
 	m_szT = 0;
@@ -81,7 +81,7 @@ void GUISessionSidePanel::SetSessionContainer(ted::SessionContainer* s)
 			m_speakers.push_back(ifo);
 		}
 	}
-	_SetCurrentSpeaker(0);
+	SetCurrentSpeaker(0);
 }
 bool GUISessionSidePanel::OnEvent(Event* e)
 {
@@ -103,17 +103,17 @@ bool GUISessionSidePanel::OnEvent(Event* e)
 		{
 			if (evt->key == KEY_DOWN)
 			{
-				_SetCurrentSpeaker(m_currentSpeaker+1);
+				SetCurrentSpeaker(m_currentSpeaker + 1);
 			}
 			if (evt->key == KEY_UP)
 			{
-				_SetCurrentSpeaker(m_currentSpeaker - 1);
+				SetCurrentSpeaker(m_currentSpeaker - 1);
 			}
 		}
 	}
 	return false;
 }
-void GUISessionSidePanel::_SetCurrentSpeaker(int s)
+void GUISessionSidePanel::SetCurrentSpeaker(int s)
 {
 	if (s < 0)
 	{
@@ -210,17 +210,20 @@ void GUISessionSidePanel::Draw(const math::rectf*vp)
 		video::GPUUniform* grauU = shader->getUniform("gray");
 		if (shader)
 			dev->setFragmentShader(shader);
-		float sz = r->GetClippedRect().getWidth()*0.8f;
+		float sz = r->GetClippedRect().getWidth()*0.6f;
 
-		float x = r->GetClippedRect().ULPoint.x + sz*0.5;
+		float x = r->GetClippedRect().ULPoint.x + r->GetClippedRect().getWidth()*0.5;
 		float step = r->GetClippedRect().getHeight() / ((float)m_speakers.size() + 1);
 		float y = step;
+		const int selectedSpacing = 20;
 		for (int i = 0; i < m_speakers.size(); ++i)
 		{
 			float dst = (float)abs(m_speakerTransition - i) / (float)m_speakers.size();
 			tex.SetTexture(m_speakers[i].texture);
 			dev->useTexture(0, &tex);
 
+			if (i == m_currentSpeaker)
+				y += selectedSpacing;
 			float t = (powf(1 - dst,2.0f)*0.8 + 0.2);;
 			rc.ULPoint.y = y - sz*0.5f*t;
 			rc.BRPoint.y = y + sz*0.5f*t;
@@ -229,10 +232,12 @@ void GUISessionSidePanel::Draw(const math::rectf*vp)
 			rc.BRPoint.x = x + sz*0.5*t;
 			y += rc.getHeight();
 			float a = m_szT* t;
-			float g = 1-powf(1 - dst,10);// (dst != 0);
+			float g =  1-(i==m_currentSpeaker);//(dst != 0); //1-powf(1 - dst,10);//
 			shader->setConstant(alphaU, &a, 1);
 			shader->setConstant(grauU, &g, 1);
 			dev->draw2DImage(rc, video::SColor(1, 1, 1, a));
+			if (i == m_currentSpeaker)
+				y += selectedSpacing;
 		}
 		if (shader)
 			dev->setFragmentShader(0);

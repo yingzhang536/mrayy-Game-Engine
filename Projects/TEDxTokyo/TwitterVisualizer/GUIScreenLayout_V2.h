@@ -1,4 +1,5 @@
 #include "IGUISchemeBase.h"
+#include "GUIGestureInfo.h"
 #include "GUIPanel.h"
 #include "GUISceneSpacePanel.h"
 #include "GUISessionSidePanel.h"
@@ -16,16 +17,18 @@ public:
 	GUISessionSidePanel* SessionsBar;
 	GUISpeakerDetailsPanel* SessionDetails;
 	GUITweetDetailsPanel* TweetDetails;
+	GUIGestureInfo* GestureType;
 
 public:
 
-	GUIScreenLayout_V2():Root(0),ScenePanel(0),SessionsBar(0),SessionDetails(0),TweetDetails(0)
+	GUIScreenLayout_V2():Root(0),ScenePanel(0),SessionsBar(0),SessionDetails(0),TweetDetails(0),GestureType(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
 		m_elementsMap["ScenePanel"]=(IGUIElement**)&ScenePanel;
 		m_elementsMap["SessionsBar"]=(IGUIElement**)&SessionsBar;
 		m_elementsMap["SessionDetails"]=(IGUIElement**)&SessionDetails;
 		m_elementsMap["TweetDetails"]=(IGUIElement**)&TweetDetails;
+		m_elementsMap["GestureType"]=(IGUIElement**)&GestureType;
 
 	}
 

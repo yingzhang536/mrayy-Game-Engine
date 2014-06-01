@@ -102,6 +102,9 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BackgroundEmitter.h" />
     <ClInclude Include="ConnectionLineRenderer.h" />
+    <ClInclude Include="GUIFadingText.h" />
+    <ClInclude Include="GUIGestureElementLayout.h" />
+    <ClInclude Include="GUIGestureInfo.h" />
     <ClInclude Include="GUIScenePanelLayout.h" />
     <ClInclude Include="GUISceneSpacePanel.h" />
     <ClInclude Include="GUISweepingText.h" />
@@ -136,6 +139,7 @@
     <ClInclude Include="msaPhysics\MSAPhysicsSpring.h" />
     <ClInclude Include="msaPhysics\MSAPhysicsWorld.h" />
     <ClInclude Include="PhNode.h" />
+    <ClInclude Include="PointerNode.h" />
     <ClInclude Include="SceneCamera.h" />
     <ClInclude Include="SessionRenderer.h" />
     <ClInclude Include="SessionScene.h" />
@@ -176,6 +180,8 @@
     <ClCompile Include="BackgroundEmitter.cpp" />
     <ClCompile Include="ConnectionLineRenderer.cpp" />
     <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="GUIFadingText.cpp" />
+    <ClCompile Include="GUIGestureInfo.cpp" />
     <ClCompile Include="GUIProfilePicture.cpp" />
     <ClCompile Include="GUISceneSpacePanel.cpp" />
     <ClCompile Include="GUISweepingText.cpp" />
@@ -186,6 +192,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="NodeRenderer.cpp" />
+    <ClCompile Include="PointerNode.cpp" />
     <ClCompile Include="SceneCamera.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
     </ClCompile>
@@ -219,14 +226,19 @@
     <ClCompile Include="XMLDBHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui" />
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIGestureElementLayout.gui" />
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScenePanelLayout.gui">
+      <SubType>Designer</SubType>
+    </Overlay>
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUIScreenLayout_V1.gui">
       <FileType>Document</FileType>
     </Overlay>
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUIScreenLayout_V2.gui" />
     <Overlay Include="..\..\..\bin\Data\tedXTokyo\GUI\GUISpeakerDetailsPanelLayout.gui" />
     <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUISessionSidePanelLayout.gui" />
-    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui" />
+    <Overlay Include="..\..\..\Bin\Data\tedXTokyo\GUI\GUITweetDetailsPanelLayout.gui">
+      <SubType>Designer</SubType>
+    </Overlay>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

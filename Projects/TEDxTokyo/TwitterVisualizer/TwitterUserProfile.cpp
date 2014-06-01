@@ -54,8 +54,8 @@ void TwitterUserProfile::SaveXML(xml::XMLElement* e)
 
 	elem->addAttribute("ID", core::StringConverter::toString(ID));
 	elem->addAttribute("followersCount", core::StringConverter::toString(followersCount));
-	elem->addAttribute("imageUrl", "imageUrl");
-	elem->addAttribute("imageUrlHi", "imageUrlHi");
+	elem->addAttribute("imageUrl", imageUrl);
+	elem->addAttribute("imageUrlHi", imageUrlHi);
 	elem->addAttribute("name", ConvertToUtf8(name));
 	elem->addAttribute("displayName", ConvertToUtf8(displayName));
 	elem->addAttribute("place", ConvertToUtf8(place));

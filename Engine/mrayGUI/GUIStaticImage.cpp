@@ -15,6 +15,7 @@ namespace GUI{
 GUIStaticImage::GUIStaticImage(IGUIManager* creator):
 IGUIStaticImage(creator),m_texCoords(0,0,1,1)
 {
+	m_stretchMode = EImage_Stretch;
 	m_textureUnit=new video::TextureUnit();
 	fillProperties();
 }
@@ -28,7 +29,8 @@ void GUIStaticImage::fillProperties()
 	if(CreateDictionary(&dic))
 	{
 
-		dic->addPropertie(&PropertyTypeSource::instance,mT("Design"));
+		dic->addPropertie(&PropertyTypeStretchMode::instance, mT("Design"));
+		dic->addPropertie(&PropertyTypeSource::instance, mT("Design"));
 		dic->addPropertie(&PropertyTypeTexCoords::instance,mT("Design"));
 
 	}
@@ -67,6 +69,32 @@ bool GUIStaticImage::SetSourceImage(const core::string&path)
 	SetImage(tex);
 	return !tex.isNull();
 }
+
+void GUIStaticImage::SetStretchMode(EImageStretchMode m)
+{ 
+	m_stretchMode = m; 
+	switch (m_stretchMode)
+	{
+	case mray::GUI::EImage_None:
+	case mray::GUI::EImage_Stretch:
+	case mray::GUI::EImage_Center:
+	case mray::GUI::EImage_Zoom:
+		m_textureUnit->setTextureClamp(video::ETW_WrapT, video::ETC_CLAMP_TO_EDGE);
+		m_textureUnit->setTextureClamp(video::ETW_WrapS, video::ETC_CLAMP_TO_EDGE);
+		m_textureUnit->setTextureClamp(video::ETW_WrapR, video::ETC_CLAMP_TO_EDGE);
+		break;
+		break;
+	case mray::GUI::EImage_Tile:
+		m_textureUnit->setTextureClamp(video::ETW_WrapT, video::ETC_REPEAT);
+		m_textureUnit->setTextureClamp(video::ETW_WrapS, video::ETC_REPEAT);
+		m_textureUnit->setTextureClamp(video::ETW_WrapR, video::ETC_REPEAT);
+		break;
+	default:
+		break;
+	}
+}
+
+
 const core::string& GUIStaticImage::GetSourceImage()
 {
 	return m_source;
@@ -79,7 +107,47 @@ void GUIStaticImage::Draw(const math::rectf*vp)
 	const math::rectf& rect=GetDefaultRegion()->GetRect();
 	const math::rectf& clip=GetDefaultRegion()->GetClippedRect();
 	video::IVideoDevice*device=creator->GetDevice();
-	creator->GetRenderQueue()->AddQuad(m_textureUnit,clip,m_texCoords,video::SColor(GetColor().R,GetColor().G,GetColor().B,GetDerivedAlpha()));
+
+	math::vector2d texSz;
+	math::rectf tc;
+
+	if (!m_textureUnit->GetTexture())
+	{
+		tc = m_texCoords;
+	}
+	else
+	{
+		texSz.x = m_textureUnit->GetTexture()->getSize().x;
+		texSz.y = m_textureUnit->GetTexture()->getSize().y;
+		tc = m_texCoords;
+
+		switch (m_stretchMode)
+		{
+		case mray::GUI::EImage_None:
+			tc.ULPoint = m_texCoords.ULPoint;
+			tc.BRPoint.x = math::Min(m_texCoords.BRPoint.x, m_texCoords.ULPoint.x + texSz.x / clip.getWidth());
+			tc.BRPoint.y = math::Min(m_texCoords.BRPoint.y, m_texCoords.ULPoint.y + texSz.y / clip.getHeight());
+			break;
+		case mray::GUI::EImage_Stretch:
+			break;
+		case mray::GUI::EImage_Center:
+			break;
+		case mray::GUI::EImage_Zoom:
+		{
+			float min = math::Min(clip.getWidth(), clip.getHeight());
+			tc.ULPoint = m_texCoords.ULPoint;
+			tc.BRPoint.x =  m_texCoords.ULPoint.x + m_texCoords.getWidth() * clip.getWidth()/min;
+			tc.BRPoint.y =  m_texCoords.ULPoint.y + m_texCoords.getHeight() * clip.getHeight() / min;
+		}
+			break;
+		case mray::GUI::EImage_Tile:
+			break;
+		default:
+			break;
+		}
+	}
+
+	creator->GetRenderQueue()->AddQuad(m_textureUnit,clip,tc,video::SColor(GetColor().R,GetColor().G,GetColor().B,GetDerivedAlpha()));
 	creator->GetRenderQueue()->Flush();
 
 	IGUIElement::Draw(vp);
@@ -232,6 +300,66 @@ const core::string& GUIStaticImage::getSource(){
 }*/
 
 
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(StretchMode, GUIStaticImage, m_stretchMode, mT("StretchMode"), EPBT_Enum, mT(""), EImage_Stretch);
+
+GUIStaticImage::PropertyTypeStretchMode GUIStaticImage::PropertyTypeStretchMode::instance;
+EImageStretchMode GUIStaticImage::PropertyTypeStretchMode::GetValue(CPropertieSet*object)const
+{
+	GUIStaticImage* o = dynamic_cast<GUIStaticImage*>(object);
+	if (!o)
+		return m_default;
+	return o->GetStretchMode();
+}
+bool GUIStaticImage::PropertyTypeStretchMode::SetValue(CPropertieSet*object, const EImageStretchMode& v)
+{
+	GUIStaticImage* o = dynamic_cast<GUIStaticImage*>(object);
+	if (!o)return false;
+	 o->SetStretchMode(v);
+	 return true;
+}
+core::string GUIStaticImage::PropertyTypeStretchMode::toString(CPropertieSet*object)const
+{
+	switch (GetValue(object))
+	{
+	case EImage_None:
+		return "None";
+	case EImage_Stretch:
+		return "Stretch";
+	case EImage_Tile:
+		return "Tile";
+	case EImage_Center:
+		return "Center";
+	case EImage_Zoom:
+		return "Zoom";
+	default:
+		break;
+	}
+	return "";
+}
+bool GUIStaticImage::PropertyTypeStretchMode::parse(CPropertieSet*reciver, const core::string&str)
+{
+	EImageStretchMode v;
+	if (str.equals_ignore_case("None"))
+		v = EImage_None;
+	else if (str.equals_ignore_case("Stretch"))
+		v = EImage_Stretch;
+	else if (str.equals_ignore_case("Tile"))
+		v = EImage_Tile;
+	else if (str.equals_ignore_case("Center"))
+		v = EImage_Center;
+	else if (str.equals_ignore_case("Zoom"))
+		v = EImage_Zoom;
+	
+	return SetValue(reciver, (EImageStretchMode)v);
+}
+
+bool GUIStaticImage::PropertyTypeStretchMode::isDefault(CPropertieSet*reciver)const
+{
+	if (GetValue(reciver) == GetDefaultValue())
+		return true;
+	return false;
+}
 
 
 IMPLEMENT_PROPERTY_TYPE_HEADER(TexCoords,GUIStaticImage,rect,mT("TexCoords"),EPBT_Struct,mT(""),math::rectf(0,0,1,1));

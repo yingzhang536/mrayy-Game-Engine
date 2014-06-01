@@ -52,7 +52,6 @@ protected:
 
 	ted::SessionContainer* m_sessions;
 
-	void _SetCurrentSpeaker(int s);
 public:
 	GUISessionSidePanel(IGUIManager* m);
 	virtual~GUISessionSidePanel();
@@ -63,6 +62,12 @@ public:
 		return m_speakers[m_currentSpeaker].speaker;
 	}
 	void SetSessionContainer(ted::SessionContainer* s);
+
+	int GetCurrentSpeakerID(){ return m_currentSpeaker; }
+	void SetCurrentSpeaker(int id);
+	int GetSpeakersCount(){ return m_speakers.size(); }
+
+	bool IsActive(){ return m_state == Expand; }
 
 	virtual bool OnEvent(Event* e);
 

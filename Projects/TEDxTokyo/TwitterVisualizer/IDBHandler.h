@@ -21,6 +21,7 @@ public:
 	virtual~IDBHandler(){}
 
 	virtual void LoadDB() = 0;
+	virtual void SaveDB() = 0;
 	virtual bool IsConnected() = 0;
 
 	virtual void Close(){}

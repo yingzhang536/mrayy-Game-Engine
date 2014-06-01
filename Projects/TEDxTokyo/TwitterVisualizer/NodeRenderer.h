@@ -47,12 +47,23 @@ protected:
 		ITedNode *a;
 		TweetNode *b;
 	};
+	struct SpeakerNodeInfo
+	{
+		SpeakerNode* node;
+		float glow;
+	};
+	struct TweetNodeInfo
+	{
+		TweetNode* node;
+		float scale;
+	};
 	ConnectionLineRenderer *m_connRenderer;
 	std::vector<SpeakerConnectionInfo> m_speakerConn;
 	std::vector<NodeConnectionInfo> m_tweetsConn;
 
-	std::vector<SpeakerNode*> m_speakers;
-	std::vector<TweetNode*> m_tweets;
+	std::vector<SpeakerNodeInfo> m_speakers;
+	std::vector<TweetNodeInfo> m_tweets;
+	math::rectf m_clipRect;
 
 	void _renderConnections(SessionRenderer *r);
 	void _renderSpeakers(SessionRenderer *r);
@@ -67,13 +78,14 @@ public:
 
 	void Clear();
 	void RenderAll(SessionRenderer* r);
+	void SetClippingVP(const math::rectf& rc){ m_clipRect = rc; }
 
 	void AddSpeakerSpeaker(SpeakerNode*a, SpeakerNode* b);
 	void AddSpeakerTweetNode(SpeakerNode*a, TweetNode* b);
 	void AddTweetTweet(TweetNode*a, TweetNode* b);
 
-	void AddTweet(TweetNode* node);
-	void AddSpeaker(SpeakerNode* node);
+	void AddTweet(TweetNode* node,float scale);
+	void AddSpeaker(SpeakerNode* node,float glow);
 };
 
 }

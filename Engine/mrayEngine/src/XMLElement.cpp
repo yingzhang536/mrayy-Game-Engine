@@ -11,8 +11,9 @@ namespace xml{
 
 
 XMLElement::XMLElement(const core::string&name)
-		:m_name(name),m_prev(0),m_next(0),m_lastElem(0)
+		:m_prev(0),m_next(0),m_lastElem(0)
 {
+	setName(name);
 	//m_name.make_lower();
 	m_parent=0;
 }
@@ -35,7 +36,10 @@ void XMLElement::Clear()
 }
 void XMLElement::setName(const core::string&n)
 {
-	m_name=n;
+	m_name = n;
+	m_name.replaceChar('&', '_');
+	m_name.replaceChar('<', '_');
+	m_name.replaceChar('>', '_');
 }
 const core::string& XMLElement::getName()const{
 	return m_name;
@@ -127,6 +131,14 @@ int XMLElement::getAttributesCount(){
 void XMLElement::addAttribute(const core::string&name,const core::string&value){
 	core::string str=name;
 	str.make_lower();
+	str.replaceChar('&', '_');
+	str.replaceChar('<', '_');
+	str.replaceChar('>', '_');
+	core::string v = value;
+
+	v.replaceChar('&', '_');
+	v.replaceChar('<', '_');
+	v.replaceChar('>', '_');
 	m_Attributes.insert(xmlAttributesMap::value_type(str,XMLAttribute(name,value)));
 }
 void XMLElement::removeAttribute(const core::string&name){

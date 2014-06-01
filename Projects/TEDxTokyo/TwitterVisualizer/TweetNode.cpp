@@ -34,6 +34,7 @@ TweetNode::TweetNode(ted::CSpeaker* speaker, ted::TwitterTweet* t)
 	m_texture.SetTexture(tex);
 
 	m_alpha = 0;
+	m_sizeScaler = 0.5;
 
 }
 TweetNode::~TweetNode()
@@ -52,24 +53,26 @@ ted::IDType TweetNode::GetSpeakerID()
 void TweetNode::Update(float dt)
 {
 	const float speed = 1;
+#define DECREASE(x,l,v) if(x>(l)){ x-=(v);} if(x<(l)){x=(l);}
+#define INCREASE(x,l,v) if(x<(l)){ x+=(v);} if(x>(l)){x=(l);}
+
 	if (IsHovered(true))
 	{
-		if (m_hoverValue < 1)
-		{
-			m_hoverValue += speed* dt;
-			if (m_hoverValue > 1)
-				m_hoverValue = 1;
-		}
+		INCREASE(m_hoverValue, 1,speed*dt);
 	}
 	else
 	{
-		if (m_hoverValue>0)
-		{
-			m_hoverValue -= speed* dt;
-			if (m_hoverValue < 0)
-				m_hoverValue = 0;
-		}
-	}	
+		DECREASE(m_hoverValue, 0,speed*dt);
+
+	}
+	if (IsHovered(false))
+	{
+		INCREASE(m_sizeScaler, 1, speed*dt);
+	}
+	else
+	{
+		DECREASE(m_sizeScaler, 0.5, speed*dt);
+	}
 	
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
@@ -83,9 +86,10 @@ void TweetNode::Update(float dt)
 			m_alpha = 1;
 	}
 }
-void TweetNode::Draw(NodeRenderer *r)
+void TweetNode::Draw(NodeRenderer *r, const math::rectf& rc)
 {
-	r->AddTweet(this);
+	if (rc.IsRectCollide(GetBoundingBox(false)))
+		r->AddTweet(this, m_sizeScaler);
 
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
@@ -94,7 +98,7 @@ void TweetNode::Draw(NodeRenderer *r)
 
 	for (int i = 0; i < m_subTweets.size(); ++i)
 	{
-		m_subTweets[i]->Draw(r);
+		m_subTweets[i]->Draw(r,rc);
 	}
 }
 
@@ -106,7 +110,12 @@ ITedNode* TweetNode::GetNodeFromPoint(const math::vector2d& pos)
 		if (n)
 			return n;
 	}
-	return ITedNode::GetNodeFromPoint(pos);
+	math::rectf rc;
+	rc.ULPoint = GetPosition() - m_sizeScaler*GetSize()*0.5;
+	rc.BRPoint = GetPosition() + m_sizeScaler*GetSize()*0.5;
+	if (rc.IsPointInside(pos))
+		return this;
+	return 0;
 }
 math::rectf TweetNode::GetBoundingBox(bool includeChildren)
 {

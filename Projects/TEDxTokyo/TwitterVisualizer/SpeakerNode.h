@@ -21,6 +21,7 @@ class SpeakerNode :public ITedNode
 protected:
 	ted::CSpeaker* m_speaker;
 	std::vector<TweetNode*> m_subTweets;
+	float m_glowFactor;
 public:
 	SpeakerNode(ted::CSpeaker* s);
 	virtual~SpeakerNode();
@@ -37,7 +38,7 @@ public:
 	virtual void Update(float dt);
 
 
-	void Draw(NodeRenderer *r);
+	void Draw(NodeRenderer *r, const math::rectf& rc);
 	void DrawSubTweets();
 	virtual ITedNode* GetNodeFromPoint(const math::vector2d& pos);
 	virtual math::rectf GetBoundingBox(bool includeChildren);

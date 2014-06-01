@@ -72,6 +72,7 @@ void NodeRenderer::_renderConnections(SessionRenderer *r)
 {
 	m_connRenderer->update(0);
 	Engine::getInstance().getDevice()->useTexture(0, 0);
+	Engine::getInstance().getDevice()->unuseShader();
 	Engine::getInstance().getDevice()->setFragmentShader(m_connectionShader);
 	Engine::getInstance().getDevice()->setLineWidth(2);
 	if(false)
@@ -92,7 +93,7 @@ void NodeRenderer::_renderConnections(SessionRenderer *r)
 	{
 		points[0] = (m_speakerConn[i].a->GetPosition());
 		points[1] = (m_speakerConn[i].b->GetPosition());
-		dev->draw2DLine(points, 2, video::SColor(1, 0, 0, 1));
+		dev->draw2DLine(points, 2, video::SColor(1, 0, 0, 0.5));
 	}
 
 }
@@ -100,15 +101,31 @@ void NodeRenderer::_renderConnections(SessionRenderer *r)
 void NodeRenderer::_renderSpeakers(SessionRenderer *r)
 {
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
-	dev->setFragmentShader(m_speakerNodeShader);
+	dev->setFragmentShader(0);
 	video::TextureUnit tex;
 	math::vector2d pos;
+	tex.SetTexture(gTextureResourceManager.loadTexture2D("GlowBG.png"));
+	dev->useTexture(0, &tex);
 
 	for (int i = 0; i < m_speakers.size(); ++i)
 	{
-		scene::SpeakerNode* speaker = m_speakers[i];
+		scene::SpeakerNode* speaker = m_speakers[i].node;
 
 		pos = speaker->GetPosition();
+
+		float scale = speaker->GetSize()*m_speakers[i].glow;
+		math::rectf rc(pos, pos);
+		rc.ULPoint -= scale*0.8;
+		rc.BRPoint += scale*0.8;
+
+
+		dev->draw2DImage(rc, video::SColor(1,1,1,m_speakers[i].glow));
+	}
+	dev->setFragmentShader(m_speakerNodeShader);
+
+	for (int i = 0; i < m_speakers.size(); ++i)
+	{
+		scene::SpeakerNode* speaker = m_speakers[i].node;
 
 
 		tex.SetTexture(speaker->GetSpeaker()->GetTexture());
@@ -125,7 +142,7 @@ void NodeRenderer::_renderTweets(SessionRenderer *r)
 
 	for (int i = 0; i < m_tweets.size(); ++i)
 	{
-		scene::TweetNode* tweet = m_tweets[i];
+		scene::TweetNode* tweet = m_tweets[i].node;
 
 		pos = tweet->GetPosition();
 
@@ -134,8 +151,13 @@ void NodeRenderer::_renderTweets(SessionRenderer *r)
 		m_tweetNodeShader->setConstant("Gray", &g, 1);
 		m_tweetNodeShader->setConstant("Alpha", &a, 1);
 
+		float scale = tweet->GetSize()*m_tweets[i].scale;
+		math::rectf rc(tweet->GetPosition(), tweet->GetPosition());
+		rc.ULPoint -= scale*0.5;
+		rc.BRPoint += scale*0.5;
+
 		dev->useTexture(0, &tweet->GetImage());
-		dev->draw2DImage(tweet->GetBoundingBox(false), 1);
+		dev->draw2DImage(rc, 1);
 	}
 
 }
@@ -150,18 +172,26 @@ void NodeRenderer::RenderAll(SessionRenderer *r)
 
 
 void NodeRenderer::AddSpeakerSpeaker(SpeakerNode*a, SpeakerNode* b)
-{
+{/*
+	math::rectf combRC = a->GetBoundingBox(false);
+	combRC.addPoint(b->GetBoundingBox(false).ULPoint);
+	combRC.addPoint(b->GetBoundingBox(false).BRPoint);
+	if (!m_clipRect.IsRectCollide(combRC))
+		return;*/
 	SpeakerConnectionInfo c;
 	c.a = a;
 	c.b = b;
 	m_speakerConn.push_back(c);
 	math::vector2d pa = a->GetPosition();
 	math::vector2d pb = b->GetPosition();
-	m_connRenderer->AddConnection(math::vector3d(pa.x, pa.y, 0), math::vector3d(pb.x, pb.y, 0), video::SColor(1, 0, 0, 1), video::SColor(1, 0, 0, 1));
+	m_connRenderer->AddConnection(math::vector3d(pa.x, pa.y, 0), math::vector3d(pb.x, pb.y, 0), video::SColor(1, 0, 0, 0.5), video::SColor(1, 0, 0, 1));
 }
 
 void NodeRenderer::AddSpeakerTweetNode(SpeakerNode*a, TweetNode* b)
 {
+	if (!m_clipRect.IsRectCollide(a->GetBoundingBox(false))
+		&& !m_clipRect.IsRectCollide(b->GetBoundingBox(false)))
+		return;
 	NodeConnectionInfo c;
 	c.a = a;
 	c.b = b;
@@ -174,6 +204,9 @@ void NodeRenderer::AddSpeakerTweetNode(SpeakerNode*a, TweetNode* b)
 
 void NodeRenderer::AddTweetTweet(TweetNode*a, TweetNode* b)
 {
+	if (!m_clipRect.IsRectCollide(a->GetBoundingBox(false))
+		&& !m_clipRect.IsRectCollide(b->GetBoundingBox(false)))
+		return;
 	NodeConnectionInfo c;
 	c.a = a;
 	c.b = b;
@@ -185,14 +218,20 @@ void NodeRenderer::AddTweetTweet(TweetNode*a, TweetNode* b)
 }
 
 
-void NodeRenderer::AddTweet(TweetNode* node)
+void NodeRenderer::AddTweet(TweetNode* node,float scale)
 {
-	m_tweets.push_back(node);
+	TweetNodeInfo ifo;
+	ifo.node = node;
+	ifo.scale= scale;
+	m_tweets.push_back(ifo);
 }
 
-void NodeRenderer::AddSpeaker(SpeakerNode* node)
+void NodeRenderer::AddSpeaker(SpeakerNode* node,float glow)
 {
-	m_speakers.push_back(node);
+	SpeakerNodeInfo ifo;
+	ifo.node = node;
+	ifo.glow = glow;
+	m_speakers.push_back(ifo);
 
 }
 

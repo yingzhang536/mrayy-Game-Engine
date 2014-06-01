@@ -8,6 +8,7 @@
 
 namespace mray
 {
+	class Application;
 	namespace nui
 	{
 		class LeapDevice;
@@ -17,7 +18,6 @@ namespace ted
 	class TwitterProvider;
 	class SessionContainer;
 	class CSpeaker;
-
 
 	class ISpeakerChangeListener
 	{
@@ -43,6 +43,8 @@ public:
 	bool Debugging ;
 
 public:
+
+	Application* app;
 
 	TwitterProvider* tweetProvider;
 	nui::LeapDevice* leapDevice;

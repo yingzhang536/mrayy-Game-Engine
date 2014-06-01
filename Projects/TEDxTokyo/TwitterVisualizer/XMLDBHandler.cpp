@@ -32,6 +32,12 @@ void XMLDBHandler::LoadDB()
 	_loadTweets();
 }
 
+void XMLDBHandler::SaveDB()
+{
+	_saveUsers();
+	_saveTweets();
+}
+
 void XMLDBHandler::_loadUsers()
 {
 	xml::XMLTree tree;
@@ -63,11 +69,52 @@ void XMLDBHandler::_loadTweets()
 	e = e->getSubElement("Tweet");
 	while (e)
 	{
-		TwitterTweet* user = new TwitterTweet();
-		user->LoadXML(e);
-		TwitterTweet::AddTwitterTweet(user);
+		TwitterTweet* t = new TwitterTweet();
+		t->LoadXML(e);
+		TwitterTweet::AddTwitterTweet(t);
 		e = e->nextSiblingElement("Tweet");
 	}
+}
+
+void XMLDBHandler::_saveUsers()
+{
+
+	GCPtr<xml::XMLElement> root = new xml::XMLElement("Users");
+
+	for (int i = 0; i < TwitterUserProfile::TwitterUserProfileList.size(); ++i)
+	{
+		TwitterUserProfile::TwitterUserProfileList[i]->SaveXML(root);
+	}
+	xml::XMLWriter w;
+	w.addElement(root);
+	core::string str= w.flush();
+	OS::IStreamPtr stream = gFileSystem.openFile(m_usersPath, OS::TXT_WRITE);
+	if (!stream)
+		return;
+	OS::StreamWriter ww(stream);
+	ww.writeString(str);
+	stream->close();
+}
+
+void XMLDBHandler::_saveTweets()
+{
+
+	GCPtr<xml::XMLElement> root = new xml::XMLElement("Tweets");
+
+	for (int i = 0; i < TwitterTweet::TwitterTweetList.size(); ++i)
+	{
+		TwitterTweet::TwitterTweetList[i]->SaveXML(root);
+	}
+	xml::XMLWriter w;
+	w.addElement(root);
+	core::string str = w.flush();
+	OS::IStreamPtr stream = gFileSystem.openFile(m_tweetsPath, OS::TXT_WRITE);
+	if (!stream)
+		return;
+	OS::StreamWriter ww(stream);
+	ww.writeString(str);
+	stream->close();
+
 }
 
 bool XMLDBHandler::IsConnected()

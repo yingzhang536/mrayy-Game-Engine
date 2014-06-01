@@ -33,7 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	op.valueSet.clear();
 	//VLDEnable();
 	app->loadResourceFile(mT("tedDataPath.stg"));
-	if (app->startup(mT("TELUBee 1.00"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
+	if (app->startup(mT("TEDxTokyo 2014"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
 	{
 		app->run();
 	}

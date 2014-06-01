@@ -26,6 +26,7 @@ namespace mray
 {
 	namespace ted
 	{
+		class TwitterTweet;
 		class SessionContainer;
 		class CSpeaker;
 	}
@@ -36,6 +37,9 @@ namespace scene
 	class TweetNode;
 	class NodeRenderer;
 	class SceneCamera;
+	class PointerNode;
+
+
 class SessionRenderer :public ted::ISpeakerChangeListener
 {
 protected:
@@ -58,6 +62,7 @@ protected:
 	msa::physics::World2D* m_physics;
 	OS::IMutex* m_dataMutex;
 	ITedNode* m_hoverItem;
+	ITedNode* m_selectedItem;
 	SceneCamera* m_camera;
 	SpeakerNode* m_activeSpeaker;
 
@@ -66,10 +71,14 @@ protected:
 	void _RenderTweets();
 
 	math::rectf CalcAllBox();
+	void _AddTweetsNodes(const std::vector<TweetNode*> &nodes);
+	void _AddTweetNode(ted::TwitterTweet* t, SpeakerNode*speaker);
 
 public:
 	SessionRenderer();
 	virtual ~SessionRenderer();
+
+	void OnPointerMoved(const math::vector2d& pos);
 
 	void SetRenderingVP(const math::rectf& vp);
 
@@ -77,12 +86,16 @@ public:
 
 	virtual void _OnSpeakerChange(ted::CSpeaker* sp);
 
-	void AddTweetsNodes(const std::vector<TweetNode*> &nodes);
+	SpeakerNode* GetCurrentSpeaker(){ return m_activeSpeaker; }
+
+	void AddTweets(const std::vector<ted::TwitterTweet*> &tweets);
 
 	ITedNode* GetNodeFromPosition(const math::vector2d& pos);
 
 	void SetHoverdItem(ITedNode* node);
 	ITedNode* GetHoverdItem(){ return m_hoverItem; }
+	void SetSelectedItem(ITedNode* node);
+	ITedNode* GetSelectedItem(){ return m_selectedItem; }
 
 	void Draw();
 
