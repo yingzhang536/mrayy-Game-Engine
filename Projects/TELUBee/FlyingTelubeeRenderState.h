@@ -35,7 +35,7 @@ protected:
 
 	int m_port1, m_port2;
 
-	virtual void _RenderUI(const math::rectf& rc);
+	virtual void _RenderUI(const math::rectf& rc, math::vector2d& pos);
 public:
 	FlyingTelubeeRenderState();
 	virtual~FlyingTelubeeRenderState();

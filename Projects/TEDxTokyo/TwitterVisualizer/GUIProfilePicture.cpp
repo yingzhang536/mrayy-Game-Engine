@@ -39,7 +39,7 @@ GUIProfilePicture::GUIProfilePicture(IGUIManager* m)
 	video::IGPUShaderProgramPtr shader = gShaderResourceManager.getResource("ProfileMasking");
 	if (!shader)
 	{
-		shader = gShaderResourceManager.loadShader(ProfileMaskingshader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+		shader = gShaderResourceManager.loadShaderFromProgram("ProfileMasking",ProfileMaskingshader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 		shader->setResourceName("ProfileMasking");
 		gShaderResourceManager.addResource(shader, "ProfileMasking");
 	}

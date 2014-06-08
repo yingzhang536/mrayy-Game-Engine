@@ -15,6 +15,7 @@
 
 #include <DeviceCapabilites.h>
 #include <VideoLoggerSystem.h>
+#include <Engine.h>
 
 #include <LogManager.h>
 #include <Cg/cg.h>    /* Can't include this?  Is Cg Toolkit installed! */
@@ -34,35 +35,33 @@ std::vector<float> SGLCGShaderProgram::m_matrixArray;
 static const core::string s_SGLCGShaderProgram_type=mT("cg");
 
 
-SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const core::string&program,CGcontext context,
-									   EShaderProgramType type,const char* entryPoint)
+SGLCGShaderProgram::SGLCGShaderProgram(EShaderProgramType type, CGcontext context)
 	:IGPUShaderProgram(type)
 {
 	traceFunction(eVideo);
-	m_context=context;
-	m_device=device;
-	m_loaded=false;
-	if(!cgInitialized){
-		cgInitialized=true;
+	m_context = context;
+	m_loaded = false;
+	if (!cgInitialized){
+		cgInitialized = true;
 
-		if(checkForError(mT("creating m_context"))){
+		if (checkForError(mT("creating m_context"))){
 			return;
 		}
 		s_CgVertexProfile = cgGLGetLatestProfile(CG_GL_VERTEX);
 		cgGLSetOptimalOptions(s_CgVertexProfile);
-		if(checkForError(mT("selecting vertex profile"))){
+		if (checkForError(mT("selecting vertex profile"))){
 			//return;
 		}
 
 		s_CgFragmentProfile = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 		cgGLSetOptimalOptions(s_CgFragmentProfile);
-		if(checkForError(mT("selecting fragment profile"))){
+		if (checkForError(mT("selecting fragment profile"))){
 			//return;
 		}
 
-		s_CgGeometryProfile = cgGLGetLatestProfile(CG_GL_GEOMETRY );
+		s_CgGeometryProfile = cgGLGetLatestProfile(CG_GL_GEOMETRY);
 		cgGLSetOptimalOptions(s_CgGeometryProfile);
-		if(checkForError(mT("selecting Geometry profile"))){
+		if (checkForError(mT("selecting Geometry profile"))){
 			//return;
 		}
 
@@ -77,56 +76,94 @@ SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const c
 
 	cgGetError();
 
-	m_entryPoint=entryPoint;
-
-	const char** pargs= cgGLGetOptimalOptions(m_CgProfile);
-
-	const char* compilerArguments[] = { 0 };// {"-po", "ATI_draw_buffers", 0}; //,"-profileopts""dcls","-DTEST_ARG2=1"
-	textures.resize(device->getCapabilities()->getMaxTextureUnits());
-
-	if(m_type==EShader_VertexProgram)
-		m_CgProfile=s_CgVertexProfile;
-	else if(m_type==EShader_FragmentProgram)
-		m_CgProfile=s_CgFragmentProfile;
-	else if (m_type==EShader_GeometryProgram)
-		m_CgProfile=s_CgGeometryProfile;
-	else 
+	if (m_type == EShader_VertexProgram)
+		m_CgProfile = s_CgVertexProfile;
+	else if (m_type == EShader_FragmentProgram)
+		m_CgProfile = s_CgFragmentProfile;
+	else if (m_type == EShader_GeometryProgram)
+		m_CgProfile = s_CgGeometryProfile;
+	else
 	{
-		gLogManager.log(mT("Shader Type not supported"),ELL_WARNING);
+		gLogManager.log(mT("Shader Type not supported"), ELL_WARNING);
 		return;
 	}
+	textures.resize(gEngine.getDevice()->getCapabilities()->getMaxTextureUnits());
 
-	if(fromFile){
-		core::string prog;
-		core::stringc progPath;
-		m_Program=program;
-		gFileSystem.getCorrectFilePath(m_Program,prog);
-		core:: string_to_char(prog.c_str(),progPath);
-		if(progPath=="")
-		{
-			gLogManager.log(mT("Cann't find shader program: ")+prog,ELL_WARNING);
-		}
-		m_CgProgram =
-		  cgCreateProgramFromFile(
-		  m_context,              /* Cg runtime m_context */
-		  CG_SOURCE,                /* Program in human-readable form */
-		  progPath.c_str(),			
-		  m_CgProfile,        /* Profile */
-		  entryPoint,				/* Entry function name */
-		  compilerArguments);                    /* compiler options */
-	}else{
-		core::stringc prog;
-		core:: string_to_char(program.c_str(),prog);
-		m_CgProgram=
-		  cgCreateProgram(
-		  m_context,              /* Cg runtime m_context */
-		  CG_SOURCE,                /* Program in human-readable form */
-		  prog.c_str(),			
-		  m_CgProfile,        /* Profile */
-		  entryPoint,				/* Entry function name */
-		  compilerArguments);                    /*  compiler options */
+}
+
+
+
+bool SGLCGShaderProgram::LoadFromPath(const core::string&path, const char*entryPoint, const std::vector<core::string>& predef)
+{
+
+
+	m_entryPoint = entryPoint;
+
+	const char** pargs = cgGLGetOptimalOptions(m_CgProfile);
+
+	const char* compilerArguments[] = { 0 };// {"-po", "ATI_draw_buffers", 0}; //,"-profileopts""dcls","-DTEST_ARG2=1"
+
+	core::string prog;
+	core::stringc progPath;
+	m_Program = path;
+	gFileSystem.getCorrectFilePath(m_Program, prog);
+	core::string_to_char(prog.c_str(), progPath);
+	if (progPath == "")
+	{
+		gLogManager.log(mT("Cann't find shader program: ") + prog, ELL_WARNING);
 	}
-	if(checkForError(mT("creating shader program from file"))){
+	m_CgProgram =
+		cgCreateProgramFromFile(
+		m_context,              /* Cg runtime m_context */
+		CG_SOURCE,                /* Program in human-readable form */
+		progPath.c_str(),
+		m_CgProfile,        /* Profile */
+		entryPoint,				/* Entry function name */
+		compilerArguments);                    /* compiler options */
+
+	if (!_linkProgram())
+	{
+		unloadInternal();
+		return false;
+	}
+	m_loaded = true;
+	return true;
+}
+bool SGLCGShaderProgram::LoadShader(const core::string&program, const char*entryPoint, const std::vector<core::string>& predef)
+{
+
+
+	m_entryPoint = entryPoint;
+
+	const char** pargs = cgGLGetOptimalOptions(m_CgProfile);
+
+	const char* compilerArguments[] = { 0 };// {"-po", "ATI_draw_buffers", 0}; //,"-profileopts""dcls","-DTEST_ARG2=1"
+
+
+	core::stringc prog;
+	core::string_to_char(program.c_str(), prog);
+	m_CgProgram =
+		cgCreateProgram(
+		m_context,              /* Cg runtime m_context */
+		CG_SOURCE,                /* Program in human-readable form */
+		prog.c_str(),
+		m_CgProfile,        /* Profile */
+		entryPoint,				/* Entry function name */
+		compilerArguments);                    /*  compiler options */
+
+
+	if (!_linkProgram())
+	{
+		unloadInternal();
+		return false;
+	}
+	m_loaded = true;
+	return true;
+}
+
+bool SGLCGShaderProgram::_linkProgram()
+{
+	if (checkForError(mT("creating shader program from file"))){
 		const char* prog=cgGetProgramString(m_CgProgram, CG_COMPILED_PROGRAM);
 		core::string progStr;
 		core::char_to_string(prog,progStr);
@@ -134,19 +171,19 @@ SGLCGShaderProgram::SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const c
 		glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &pos);
 		gLogManager.log(progStr,ELL_INFO);
 		gLogManager.log(mT("Position=")+core::StringConverter::toString(pos),ELL_INFO);
-		return;
+		return false;
 	}
   
 	cgGLLoadProgram(m_CgProgram);
 	if(checkForError(mT("loading shader program")))
-		return;
+		return false;
 
 	loadUniforms();
 	if(checkForError(mT("loading Uniforms")))
-		return;
+		return false;
 
-	m_loaded=true;
 	
+	return true;
 }
 
 SGLCGShaderProgram::~SGLCGShaderProgram(){
@@ -395,7 +432,7 @@ void SGLCGShaderProgram::setTexture(const core::string&name,video::TextureUnit*t
 		if(idx<0)
 			idx=0;
 
-		m_device->useTexture(idx,tex);
+		gEngine.getDevice()->useTexture(idx,tex);
 
 
 		if(glActiveTextureARB)

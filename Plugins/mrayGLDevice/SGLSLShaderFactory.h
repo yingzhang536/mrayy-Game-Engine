@@ -25,10 +25,7 @@ public:
 
 	virtual bool canCreateType(const core::string& type);
 	
-	virtual IGPUShaderProgram* createShader(video::IVideoDevice*device,EShaderProgramType type,bool fromFile,
-		const core::string&program,const char*entryPoint);
-
-	virtual IGPUShaderProgram* createShader(video::IVideoDevice*device,EShaderProgramType type,OS::IStream* programStream,const char*entryPoint);
+	virtual IGPUShaderProgram* createShader(EShaderProgramType type);
 };
 
 }

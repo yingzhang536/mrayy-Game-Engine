@@ -44,13 +44,11 @@ bool SGLCGShaderFactory::canCreateType(const core::string&type){
 	return s_shaderType.equals_ignore_case(type);
 }
 
-IGPUShaderProgram* SGLCGShaderFactory::createShader(video::IVideoDevice*device,EShaderProgramType type,bool fromFile,
-												 const core::string&program,const char*entryPoint)
+IGPUShaderProgram* SGLCGShaderFactory::createShader(EShaderProgramType type)
 {
-	if(device->getDeviceType()==GLDev::m_deviceType)
+	//if(gEngine.getDevice()->getDeviceType()==GLDev::m_deviceType)
 	{
-		IGPUShaderProgram*prog= new SGLCGShaderProgram(device,fromFile,
-			program,m_context,type,entryPoint);
+		IGPUShaderProgram*prog = new SGLCGShaderProgram(type, m_context);
 		
 		return prog;
 	}
@@ -58,7 +56,7 @@ IGPUShaderProgram* SGLCGShaderFactory::createShader(video::IVideoDevice*device,E
 
 	return 0;
 }
-
+/*
 IGPUShaderProgram* SGLCGShaderFactory::createShader(video::IVideoDevice*device,EShaderProgramType type,OS::IStream* programStream,const char*entryPoint)
 {
 	if(device->getDeviceType()==GLDev::m_deviceType)
@@ -79,7 +77,7 @@ IGPUShaderProgram* SGLCGShaderFactory::createShader(video::IVideoDevice*device,E
 	}
 
 	return 0;
-}
+}*/
 
 }
 }

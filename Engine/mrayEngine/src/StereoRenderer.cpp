@@ -52,9 +52,9 @@ void StereoRenderer::_init()
 	SetOffset(0.06);
 
 	m_stereoPP=new video::GPUShader();
-	m_stereoPP->SetVertexShader(gShaderResourceManager.loadShader(mT("stereoscopicRB.cg"),video::EShader_VertexProgram,"main_vp",mT("cg")));
-	m_interlanceProg=gShaderResourceManager.loadShader(mT("stereoscopicRB.cg"),video::EShader_FragmentProgram,"main_Interlace",mT("cg"));
-	m_anglyphProg=gShaderResourceManager.loadShader(mT("stereoscopicRB.cg"),video::EShader_FragmentProgram,"main_Anglyph",mT("cg"));
+	m_stereoPP->SetVertexShader(gShaderResourceManager.loadShaderFromFile(mT("stereoscopicRB.cg"),video::EShader_VertexProgram,"main_vp",video::ShaderPredefList(), mT("cg")));
+	m_interlanceProg = gShaderResourceManager.loadShaderFromFile(mT("stereoscopicRB.cg"), video::EShader_FragmentProgram, "main_Interlace", video::ShaderPredefList(), mT("cg"));
+	m_anglyphProg = gShaderResourceManager.loadShaderFromFile(mT("stereoscopicRB.cg"), video::EShader_FragmentProgram, "main_Anglyph", video::ShaderPredefList(), mT("cg"));
 
 	video::IVideoDevice* device= Engine::getInstance().getDevice();
 

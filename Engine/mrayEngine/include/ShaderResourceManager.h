@@ -57,8 +57,13 @@ public:
 	void setDevice(video::IVideoDevice* dev);
 	void addShaderLoader(video::IGPUShaderFactory* loader);
 
-	video::IGPUShaderProgramPtr loadShader(const core::string&program,video::EShaderProgramType programType,
-		const char*entryPoint,const core::string&type=mT(""),bool fromFile=true);
+	video::IGPUShaderProgramPtr loadShaderFromFile(const core::string&path,video::EShaderProgramType programType,
+		const char*entryPoint, const video::ShaderPredefList& predef, const core::string&type = mT(""));
+
+	video::IGPUShaderProgramPtr loadShaderFromProgram(const core::string&name,const core::string&program, video::EShaderProgramType programType,
+		const char*entryPoint, const video::ShaderPredefList& predef, const core::string&type = mT(""));
+
+	video::IGPUShaderProgramPtr createEmptyShader(video::EShaderProgramType programType, const core::string&type);
 
 	void setDefaultShaderType(const core::string&type);
 	const core::string& getDefaultShaderType();

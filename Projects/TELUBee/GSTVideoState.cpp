@@ -98,9 +98,9 @@ void GSTVideoState::Update(float dt)
 	m_videoSource->Blit();
 }
 
-void GSTVideoState::_RenderUI(const math::rectf& rc)
+void GSTVideoState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 {
-	IEyesRenderingBaseState::_RenderUI(rc);
+	IEyesRenderingBaseState::_RenderUI(rc,pos);
 
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;

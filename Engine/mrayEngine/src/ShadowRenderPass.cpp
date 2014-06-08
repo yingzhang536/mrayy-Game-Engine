@@ -20,8 +20,8 @@ ShadowRenderPass::ShadowRenderPass(LightNode*light)
 	m_camera=0;
 	m_light=light;
 	m_defaultDepthShader=new video::GPUShader();
-	m_defaultDepthShader->SetVertexShader(gShaderResourceManager.loadShader(mT("depthShader.cg"),video::EShader_VertexProgram,"main_vp",mT("cg")));
-	m_defaultDepthShader->SetFragmentShader(gShaderResourceManager.loadShader(mT("depthShader.cg"),video::EShader_FragmentProgram,"main_fp",mT("cg")));
+	m_defaultDepthShader->SetVertexShader(gShaderResourceManager.loadShaderFromFile(mT("depthShader.cg"), video::EShader_VertexProgram, "main_vp", video::ShaderPredefList(), mT("cg")));
+	m_defaultDepthShader->SetFragmentShader(gShaderResourceManager.loadShaderFromFile(mT("depthShader.cg"), video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg")));
 	m_material=new video::RenderPass(0);
 	m_material->SetCullFaceDirection(video::ECFM_CW);
 }

@@ -37,8 +37,6 @@ protected:
 	static CGprofile	s_CgGeometryProfile;
 	static int	s_CgCounter;
 
-	IVideoDevice* m_device;
-
 	core::string m_Program;
 	core::string m_entryPoint;
 	bool m_loaded;
@@ -60,6 +58,8 @@ protected:
 	bool checkForError(const mchar*msg);
 	bool hasError();
 
+	bool _linkProgram();
+
 	virtual uint calcSizeInternal();
 
 	void loadUniforms();
@@ -67,14 +67,18 @@ protected:
 
 public:
 
-	SGLCGShaderProgram(IVideoDevice*device,bool fromFile,const core::string&program,
-		CGcontext context,EShaderProgramType type,const char* entryPoint);
-
+	SGLCGShaderProgram(EShaderProgramType type, CGcontext context);
+	
 	virtual~SGLCGShaderProgram();
 
 	virtual const core::string& getShaderType();
 
 	virtual const core::string& GetEntryPoint(){return m_entryPoint;}
+
+
+	virtual bool LoadShader(const core::string&program, const char*entryPoint, const std::vector<core::string>& predef) ;
+	virtual bool LoadFromPath(const core::string&path, const char*entryPoint, const std::vector<core::string>& predef);
+
 
 	virtual void use();
 	virtual void unuse();

@@ -42,7 +42,7 @@ protected:
 
 	float m_scaling;
 
-	virtual void _RenderUI(const math::rectf& rc);
+	virtual void _RenderUI(const math::rectf& rc,math::vector2d& pos);
 public:
 	GSTVideoState();
 	virtual~GSTVideoState();

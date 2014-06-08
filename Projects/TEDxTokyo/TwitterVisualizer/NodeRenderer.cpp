@@ -44,13 +44,13 @@ namespace scene
 NodeRenderer::NodeRenderer()
 {
 	m_connRenderer = new ConnectionLineRenderer();
-	m_speakerNodeShader = gShaderResourceManager.loadShader(SpeakerNodeShader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+	m_speakerNodeShader = gShaderResourceManager.loadShaderFromProgram("SpeakerNodeShader", SpeakerNodeShader, video::EShader_FragmentProgram, "main_fp",video::ShaderPredefList(), mT("cg"));
 	gShaderResourceManager.addResource(m_speakerNodeShader, "SpeakerNodeShader");
 
-	m_tweetNodeShader = gShaderResourceManager.loadShader(TweetNodeShader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+	m_tweetNodeShader = gShaderResourceManager.loadShaderFromProgram("TweetNodeShader", TweetNodeShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 	gShaderResourceManager.addResource(m_speakerNodeShader, "TweetNodeShader");
 
-	m_connectionShader = gShaderResourceManager.loadShader(ConnectionLineShader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+	m_connectionShader = gShaderResourceManager.loadShaderFromProgram("ConnectionLineShader",ConnectionLineShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 	gShaderResourceManager.addResource(m_speakerNodeShader, "ConnectionLineShader");
 }
 

@@ -52,7 +52,7 @@ IGUIPanelElement(ElementType, m)
 	video::IGPUShaderProgramPtr shader = gShaderResourceManager.getResource("ProfileRendering");
 	if (!shader)
 	{
-		shader = gShaderResourceManager.loadShader(ProfileRedneringShader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+		shader = gShaderResourceManager.loadShaderFromProgram("ProfileRendering",ProfileRedneringShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 		shader->setResourceName("ProfileRendering");
 		gShaderResourceManager.addResource(shader, "ProfileRendering");
 	}

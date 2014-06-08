@@ -37,12 +37,15 @@ enum EShaderProgramType
 	EShader_GeometryProgram
 };
 
+typedef std::vector<core::string> ShaderPredefList;
+
 class MRAY_DLL IGPUShaderProgram:public IResource
 {
 private:
 protected:
 	core::string m_name;
 	EShaderProgramType m_type;
+
 public:
 	IGPUShaderProgram(EShaderProgramType type):m_type(type)
 	{}
@@ -58,6 +61,9 @@ public:
 	{
 		return getUniform(name);
 	}
+
+	virtual bool LoadShader(const core::string&program, const char*entryPoint, const ShaderPredefList& predef) = 0;
+	virtual bool LoadFromPath(const core::string&path, const char*entryPoint, const ShaderPredefList& predef) = 0;
 
 	virtual const core::string& GetEntryPoint()=0;
 

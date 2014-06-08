@@ -4,6 +4,7 @@
 #include <IShaderConstantsCallback.h>
 #include <IFileSystem.h>
 #include <ILexical.h>
+#include <Engine.h>
 
 #include <LogManager.h>
 namespace mray{
@@ -14,54 +15,67 @@ static const core::string s_SGLSLShaderProgram_type=mT("glsl");
 const core::string SGLSLShaderProgram::m_entryPoint=mT("main");
 
 
-SGLSLShaderProgram::SGLSLShaderProgram(IVideoDevice*device,EShaderProgramType type,bool fromFile,const char*program)
-		:IGPUShaderProgram(type),hProgram(0)
+SGLSLShaderProgram::SGLSLShaderProgram(EShaderProgramType type)
+	:IGPUShaderProgram(type), hProgram(0)
 {
-	textures.resize(device->getCapabilities()->getMaxTextureUnits());
-	for(int i=0;i<textures.size();++i)
-		textures[i]=0;
+	textures.resize(gEngine.getDevice()->getCapabilities()->getMaxTextureUnits());
+	for (int i = 0; i < textures.size(); ++i)
+		textures[i] = 0;
 
+}
+
+bool SGLSLShaderProgram::LoadShader(const core::string&program, const char*entryPoint, const std::vector<core::string>& predef)
+{
+
+	return init(program.c_str());
+}
+bool SGLSLShaderProgram::LoadFromPath(const core::string&path, const char*entryPoint, const std::vector<core::string>& predef)
+{
 	 core::string temp;
 
 	core::stringc prog;
 	core::stringc line;
-	if(fromFile){
-		core::char_to_string(program,temp);
-		m_Prog=temp;
-		GCPtr<OS::IStream>vfile=gFileSystem.createTextFileReader(temp.c_str());
-		if(!vfile){
-			gLogManager.log(mT("cann't find shader program :"),temp,ELL_WARNING);
-			return ;
-		}
-		GCPtr<script::ILexical>vparser=new script::ILexical();
-		vparser->loadFromStream(vfile);
-		while(!vfile->eof()){
-			core::string_to_char(vparser->getLine(),line);
-			prog+=line;
-			prog+='\n';
-		}
-	}else
-		prog=program;
-	init(prog.c_str());
+	m_Prog = temp;
+	GCPtr<OS::IStream>vfile = gFileSystem.createTextFileReader(temp.c_str());
+	if (!vfile){
+		gLogManager.log(mT("cann't find shader program :"), temp, ELL_WARNING);
+		return false;
+	}
+	GCPtr<script::ILexical>vparser = new script::ILexical();
+	vparser->loadFromStream(vfile);
+	while (!vfile->eof()){
+		core::string_to_char(vparser->getLine(), line);
+		prog += line;
+		prog += '\n';
+	}
+
+	return LoadShader(prog, entryPoint, predef);
 }
 
 
 SGLSLShaderProgram::~SGLSLShaderProgram(){
-	if(hProgram){
+	unloadInternal();
+}
+
+void SGLSLShaderProgram::unloadInternal()
+{
+	IResource::unloadInternal();
+
+	if (hProgram){
 		glDeleteObjectARB(hProgram);
-		hProgram=0;
+		hProgram = 0;
 	}
 
 	textures.clear();
-		
 }
+
 uint SGLSLShaderProgram::calcSizeInternal(){
 	uint usize=sizeof(GPUUniform)*uniformsInfo.size();
 	return usize+sizeof(SGLSLShaderProgram);
 }
 
-void SGLSLShaderProgram::init(const char*program){
-	if(!createProgram())return;
+bool SGLSLShaderProgram::init(const char*program){
+	if(!createProgram())return false;
 	
 #if defined(GL_ARB_vertex_shader) && defined (GL_ARB_fragment_shader)
 
@@ -70,15 +84,21 @@ void SGLSLShaderProgram::init(const char*program){
 		type=GL_VERTEX_SHADER_ARB;
 	else type=GL_FRAGMENT_SHADER_ARB;
 
-	if(!createShader(type,program))return;
+	if (!createShader(type, program))
+	{
+		unloadInternal();
+		return false;
+	}
 	//if(!createShader(GL_FRAGMENT_SHADER_ARB,pixelProgram))return;
 #endif
 
-	if(!linkProgram())
-		return;
+	if (!linkProgram())
+	{
+		unloadInternal();
+		return false;
+	}
 
-
-
+	return true;
 }
 
 const core::string& SGLSLShaderProgram::getShaderType(){return s_SGLSLShaderProgram_type;}

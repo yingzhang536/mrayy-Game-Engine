@@ -27,10 +27,8 @@ public:
 	IGPUShaderFactory *getFactory(const core::string&type);
 
 
-	IGPUShaderProgram* createShader(const core::string&type,video::IVideoDevice*device,EShaderProgramType programType,bool fromFile,
-		const core::string&program,const char*entryPoint);
+	IGPUShaderProgram* createShader(const core::string&type,EShaderProgramType programType);
 
-	IGPUShaderProgram* createShader(const core::string&type,video::IVideoDevice*device,EShaderProgramType programType,OS::IStream* programStream,const char*entryPoint);
 };
 
 }

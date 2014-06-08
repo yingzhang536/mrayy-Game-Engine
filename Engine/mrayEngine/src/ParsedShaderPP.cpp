@@ -484,8 +484,8 @@ void ParsedShaderPP::ProcessingPass::Parse(xml::XMLElement*elem)
 
 	CreateRenderTargets(texSize);
 	m_shader=new GPUShader();
-	m_shader->SetVertexShader(gShaderResourceManager.loadShader(shaderVP,video::EShader_VertexProgram,mainVP.c_str(),mT("cg")));
-	m_shader->SetFragmentShader(gShaderResourceManager.loadShader(shaderFP,video::EShader_FragmentProgram,mainFP.c_str(),mT("cg")));
+	m_shader->SetVertexShader(gShaderResourceManager.loadShaderFromFile(shaderVP, video::EShader_VertexProgram, mainVP.c_str(), video::ShaderPredefList(), mT("cg")));
+	m_shader->SetFragmentShader(gShaderResourceManager.loadShaderFromFile(shaderFP, video::EShader_FragmentProgram, mainFP.c_str(), video::ShaderPredefList(), mT("cg")));
 
 
 	node=elem->getSubElement(mT("Value"));

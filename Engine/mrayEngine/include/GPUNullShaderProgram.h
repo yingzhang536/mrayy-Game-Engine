@@ -41,6 +41,9 @@ public:
 		return s_Type;
 	}
 
+	virtual bool LoadShader(const core::string&program, const char*entryPoint, const std::vector<core::string>& predef){ return true; }
+	virtual bool LoadFromPath(const core::string&path, const char*entryPoint, const std::vector<core::string>& predef) { return true; }
+
 	virtual const core::string& GetEntryPoint(){return core::string::Empty;}
 
 	virtual void use(){}

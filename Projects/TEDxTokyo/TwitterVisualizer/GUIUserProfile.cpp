@@ -40,7 +40,7 @@ GUIUserProfile::GUIUserProfile(GUI::IGUIManager* creator):
 	m_maskingShader = gShaderResourceManager.getResource("ProfileMasking");
 	if (!m_maskingShader)
 	{
-		m_maskingShader = gShaderResourceManager.loadShader(Maskingshader, video::EShader_FragmentProgram, "main_fp", mT("cg"), false);
+		m_maskingShader = gShaderResourceManager.loadShaderFromProgram("ProfileMasking",Maskingshader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 		m_maskingShader->setResourceName("ProfileMasking");
 		gShaderResourceManager.addResource(m_maskingShader, "ProfileMasking");
 	}

@@ -101,8 +101,8 @@ tRepeat(1),cameraPosDelta(1),cameraRotateDelta(5),terrPivot(0),m_position(pos),m
 		pass->setRenderState(video::RS_Smooth,video::ES_DontUse);
 
 		video::GPUShaderPtr shader=new video::GPUShader();
-		shader->SetVertexShader(gShaderResourceManager.loadShader(mT("TerrainLayer.cg"),video::EShader_VertexProgram,"main_vp",mT("cg")));
-		shader->SetFragmentShader(gShaderResourceManager.loadShader(mT("TerrainLayer.cg"),video::EShader_FragmentProgram,"main_fp",mT("cg")));
+		shader->SetVertexShader(gShaderResourceManager.loadShaderFromFile(mT("TerrainLayer.cg"), video::EShader_VertexProgram, "main_vp", video::ShaderPredefList(), mT("cg")));
+		shader->SetFragmentShader(gShaderResourceManager.loadShaderFromFile(mT("TerrainLayer.cg"), video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg")));
 
 		pass->setRenderShader(shader);
 	}

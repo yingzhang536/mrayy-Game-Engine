@@ -74,17 +74,22 @@ protected:
 
 	bool createProgram();
 	bool linkProgram();
-	void init(const char*program);
+	bool init(const char*program);
 	bool createShader(GLenum shaderType,const char*shaderName);
 	
 	EUniformType glslToUniform(GLenum type,size_t&outSize);
+	virtual void unloadInternal();
 
 
 	virtual uint calcSizeInternal();
 public:
-	SGLSLShaderProgram(IVideoDevice*device,EShaderProgramType type,bool fromFile,const char*program);
+	SGLSLShaderProgram(EShaderProgramType type);
 	virtual ~SGLSLShaderProgram();
 
+
+
+	virtual bool LoadShader(const core::string&program, const char*entryPoint, const std::vector<core::string>& predef) ;
+	virtual bool LoadFromPath(const core::string&path, const char*entryPoint, const std::vector<core::string>& predef);
 
 	virtual const core::string& getShaderType();
 

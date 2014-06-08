@@ -83,9 +83,7 @@ video::IGPUShaderProgramPtr ShaderResourceManager::parseShaderXMLElement(xml::XM
 	core::string_to_char(entryPoint->value.c_str(),epStr);
 
 	core::string program;
-	if(path)
-		program=path->value;
-	else
+	if(!path)
 	{
 	 	xml::XMLTextNode* tnode=elem->GetTextNode(); // try to load from path attribute
 		if(tnode)
@@ -94,7 +92,15 @@ video::IGPUShaderProgramPtr ShaderResourceManager::parseShaderXMLElement(xml::XM
 		}else
 			return video::IGPUShaderProgramPtr::Null; // failed to find a valid program to load
 	}
-	video::IGPUShaderProgramPtr m=loadShader(program,t,epStr.c_str(),type->value,path!=0);
+
+
+	video::IGPUShaderProgramPtr m;
+	
+	video::ShaderPredefList predef;
+	if (path)
+		m=loadShaderFromFile(path->value, t, epStr.c_str(), predef, type->value);
+	else
+		m = loadShaderFromProgram(name->value, program, t, epStr.c_str(), predef, type->value);
 	if(isAddResource)
 		addResource(m,name->value);
 	return m;
@@ -172,8 +178,14 @@ void ShaderResourceManager::addShaderLoader(video::IGPUShaderFactory* loader){
 	m_gpuFactory->addFactory(loader);
 }
 
-video::IGPUShaderProgramPtr ShaderResourceManager::loadShader(const core::string&program,video::EShaderProgramType programType,
-															  const char*entryPoint,const core::string&type,bool fromFile)
+video::IGPUShaderProgramPtr ShaderResourceManager::createEmptyShader(video::EShaderProgramType programType, const core::string&type)
+{
+	return m_gpuFactory->createShader(type, programType);
+
+}
+
+video::IGPUShaderProgramPtr ShaderResourceManager::loadShaderFromFile(const core::string&path,video::EShaderProgramType programType,
+	const char*entryPoint, const video::ShaderPredefList& predef, const core::string&type)
 {
 	if(!m_device)
 		return video::IGPUShaderProgramPtr::Null;
@@ -186,7 +198,7 @@ video::IGPUShaderProgramPtr ShaderResourceManager::loadShader(const core::string
 
 	video::IGPUShaderProgramPtr s;
 
-	s=getResource(program);
+	s=getResource(path);
 
 	if(s)
 		return s;
@@ -196,7 +208,48 @@ video::IGPUShaderProgramPtr ShaderResourceManager::loadShader(const core::string
 		t=m_defaultShaderType;
 	else t=type;
 
-	s=m_gpuFactory->createShader(type,m_device,programType,fromFile,program,entryPoint);
+	s = m_gpuFactory->createShader(type, programType);
+
+	if (!s)
+		return 0;
+
+	s->LoadFromPath(path, entryPoint, predef);
+
+	//addResource(s,name);
+	return s;
+}
+
+
+video::IGPUShaderProgramPtr ShaderResourceManager::loadShaderFromProgram(const core::string&name, const core::string&program, video::EShaderProgramType programType,
+	const char*entryPoint, const video::ShaderPredefList& predef, const core::string&type)
+{
+	if (!m_device)
+		return video::IGPUShaderProgramPtr::Null;
+	if (programType == video::EShader_VertexProgram && !m_device->getCapabilities()->isFeatureSupported(video::EDF_VertexProgram))
+		return m_nullShader;
+	if (programType == video::EShader_FragmentProgram && !m_device->getCapabilities()->isFeatureSupported(video::EDF_FragmentProgram))
+		return m_nullShader;
+	if (programType == video::EShader_GeometryProgram && !m_device->getCapabilities()->isFeatureSupported(video::EDF_GeometryProgram))
+		return m_nullShader;
+
+	video::IGPUShaderProgramPtr s;
+
+	s = getResource(name);
+
+	if (s)
+		return s;
+
+	core::string t;
+	if (type == mT(""))
+		t = m_defaultShaderType;
+	else t = type;
+
+	s = m_gpuFactory->createShader(type, programType);
+
+	if (!s)
+		return 0;
+
+	s->LoadShader(program, entryPoint, predef);
 
 	//addResource(s,name);
 	return s;

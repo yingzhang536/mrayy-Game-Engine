@@ -320,8 +320,8 @@ GCPtr<video::GPUShader> MaterialScript::parseShader(){
 	GCPtr<video::GPUShader> shdr=new video::GPUShader();
 
 	if(vp&&fp){
-		shdr->SetVertexShader(gShaderResourceManager.loadShader(vpPath,video::EShader_VertexProgram,"main_vp",type));
-		shdr->SetFragmentShader(gShaderResourceManager.loadShader(fpPath,video::EShader_FragmentProgram,"main_fp",type));
+		shdr->SetVertexShader(gShaderResourceManager.loadShaderFromFile(vpPath, video::EShader_VertexProgram, "main_vp", ShaderPredefList()));
+		shdr->SetFragmentShader(gShaderResourceManager.loadShaderFromFile(fpPath, video::EShader_FragmentProgram, "main_fp", ShaderPredefList()));
 	}
 	return shdr;
 }

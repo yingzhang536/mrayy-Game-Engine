@@ -34,21 +34,13 @@ IGPUShaderFactory*CShaderFactory::getFactory(const core::string&type){
 	return it->second;
 }
 
-IGPUShaderProgram* CShaderFactory::createShader(const core::string&type,video::IVideoDevice*device,EShaderProgramType programType,bool fromFile,
-												const core::string&program,const char*entryPoint)
+IGPUShaderProgram* CShaderFactory::createShader(const core::string&type,EShaderProgramType programType)
 {
 	IGPUShaderFactory*f=getFactory(type);
 	if(!f)return 0;
-	return f->createShader(device,programType,fromFile,program,entryPoint);
+	return f->createShader(programType);
 }
 
-IGPUShaderProgram* CShaderFactory::createShader(const core::string&type,video::IVideoDevice*device,
-												EShaderProgramType programType,OS::IStream* programStream,const char*entryPoint)
-{
-	IGPUShaderFactory*f=getFactory(type);
-	if(!f)return 0;
-	return f->createShader(device,programType,programStream,entryPoint);
-}
 
 void CShaderFactory::clear(){
 	std::map<core::string,IGPUShaderFactory*>::iterator it=m_factories.begin();
