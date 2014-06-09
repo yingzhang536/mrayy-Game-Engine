@@ -114,7 +114,7 @@ video::IRenderTarget* LoginScreenState::Render(const math::rectf& rc, TBee::ETar
 	dev->setRenderTarget(m_renderTarget[GetEyeIndex(eye)]);
 //	dev->set2DMode();
 	Engine::getInstance().getDevice()->draw2DRectangle(rc,video::DefaultColors::Black);
-	math::rectf vp(0, m_renderTarget[GetEyeIndex(eye)]->getSize());
+	math::rectf vp(0, m_renderTarget[GetEyeIndex(eye)]->GetSize());
 	m_guiManager->DrawAll(&vp);
 
 	GUI::GUIBatchRenderer renderer;

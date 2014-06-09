@@ -37,7 +37,7 @@ void GLMRenderTarget::setDevice(video::mrayDev* dev){
 	}
 	m_device=dynamic_cast<GLDev*>(dev);
 }
-math::vector2di GLMRenderTarget::getSize(){
+math::vector2di GLMRenderTarget::GetSize(){
 	return m_pbuffer->getSize();
 }
 
@@ -86,7 +86,7 @@ void GLMRenderTarget::unbind(){
 		m_device->setCurrentPBuffer(0);
 }
 
-const ITexturePtr& GLMRenderTarget::getColorTexture(int idx){
+const ITexturePtr& GLMRenderTarget::GetColorTexture(int idx){
 	if(idx>=m_textures.size()){
 		gLogManager.log(mT("GLMRenderTarget::getColorTexture() - index is out of range!"),ELL_ERROR);
 		return ITexturePtr::Null;
@@ -94,10 +94,10 @@ const ITexturePtr& GLMRenderTarget::getColorTexture(int idx){
 	return m_textures[idx];
 }
 
-const IHardwarePixelBufferPtr& GLMRenderTarget::getDepthBuffer(){
+const IHardwarePixelBufferPtr& GLMRenderTarget::GetDepthBuffer(){
 	return IHardwarePixelBufferPtr::Null;
 }
-const IHardwarePixelBufferPtr& GLMRenderTarget::getStencilBuffer(){
+const IHardwarePixelBufferPtr& GLMRenderTarget::GetStencilBuffer(){
 	return IHardwarePixelBufferPtr::Null;
 }
 
@@ -107,7 +107,7 @@ void GLMRenderTarget::Resize(int x,int y)
 	math::vector3di sz(x,y,1);
 	for(int i=0;i<c;++i)
 	{
-		video::ITexture* tex=getColorTexture(i);
+		video::ITexture* tex = GetColorTexture(i);
 		if(tex && tex->getSize()!=sz)
 			tex->createTexture(sz,tex->getImageFormat());
 	}

@@ -2523,7 +2523,7 @@ bool GLDev::setRenderTarget(video::IRenderTargetPtr rt,bool clearBackBuffer,bool
 		if(vpRect)
 			setViewportRect(*vpRect);
 		else
-			setViewportRect(math::recti(0,0, rt->getSize().x,rt->getSize().y));
+			setViewportRect(math::recti(0, 0, rt->GetSize().x, rt->GetSize().y));
 
 		rt->clear(clearColor,clearBackBuffer,clearZBuffer);
 	}

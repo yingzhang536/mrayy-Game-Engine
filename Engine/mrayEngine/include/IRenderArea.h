@@ -34,12 +34,15 @@ public:
 	{
 	}
 	//virtual math::vector2di getPosition(){ return math::vector2di::Zero; }
-	virtual math::vector2di getSize()=0;
+	virtual math::vector2di GetSize()=0;
 
-	virtual const ITexturePtr& getColorTexture(int i=0)=0;
+	virtual const ITexturePtr& GetColorTexture(int i=0)=0;
 
 	virtual void GetParameter(const core::string& name,void* param){}
-	
+
+	virtual int GetColorTextureCount() = 0;
+
+	virtual void Resize(int x, int y) = 0;
 };
 
 }

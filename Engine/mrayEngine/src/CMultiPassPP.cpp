@@ -28,7 +28,7 @@ void CMultiPassPP::Setup(const math::rectf& targetVP)
 	}
 
 }
-IRenderTarget* CMultiPassPP::render(IRenderTarget* input){
+IRenderArea* CMultiPassPP::render(IRenderArea* input){
 	if(!isEnabled())
 		return input;
 	std::list<IPostProcessingPtr>::iterator it=m_postProcessors.begin();
@@ -43,7 +43,7 @@ IRenderTarget* CMultiPassPP::render(IRenderTarget* input){
 	return m_output;
 
 }
-IRenderTarget* CMultiPassPP::getOutput(){
+IRenderArea* CMultiPassPP::getOutput(){
 	return m_output;
 }
 

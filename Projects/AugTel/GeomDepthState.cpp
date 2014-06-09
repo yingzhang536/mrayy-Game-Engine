@@ -129,7 +129,7 @@ bool GeomDepthState::OnEvent(Event* e, const math::rectf& rc)
 		{
 			if (m_openNiHandler->IsStarted() && evt->GetViewPort() )
 			{
-				m_mousePos = evt->pos / evt->GetViewPort()->getSize();
+				m_mousePos = evt->pos / evt->GetViewPort()->GetSize();
 				m_mousePos.x *= m_openNiHandler->GetNormalCalculator().Width();
 				m_mousePos.y *= m_openNiHandler->GetNormalCalculator().Height();
 			}

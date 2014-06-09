@@ -47,8 +47,6 @@ protected:
 	//owner render window
 	video::RenderWindow* m_renderWindow;
 
-	video::IRenderTargetPtr m_finalPPRT;
-
 	core::string m_name;
 
 	bool m_autoUpdateAbsRect;
@@ -124,8 +122,6 @@ public:
 	CameraNode* getCamera();
 	video::IRenderTargetCRef getRenderTarget();
 
-	video::IRenderTargetCRef  getRenderOutput();
-
 	void setViewPort(const math::rectf&vp);
 	void setAbsViewPort(const math::rectf&vp);
 
@@ -136,9 +132,12 @@ public:
 	void onRenderBegin();
 	void onRenderDone();
 
-	virtual math::vector2di getSize();
+	virtual math::vector2di GetSize();
 
-	virtual const video::ITexturePtr& getColorTexture(int i=0);
+	virtual const video::ITexturePtr& GetColorTexture(int i=0);
+	virtual int GetColorTextureCount() ;
+
+	virtual void Resize(int x, int y) ;
 
 	void SetClearColor(const video::SColor& c);
 	const video::SColor& GetClearColor(){return m_clearColor;}

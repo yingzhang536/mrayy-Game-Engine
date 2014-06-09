@@ -170,12 +170,12 @@ public:
 
 		video::IVideoDevice* device = Engine::getInstance().getDevice();
 		math::rectf rc = math::rectf(0, m_viewPort[i]->getAbsRenderingViewPort().getSize());
-		video::ITexture* tex = m_preFinalRT[i]->getColorTexture();
+		video::ITexture* tex = m_preFinalRT[i]->GetColorTexture();
 		if (tex->getSize().x != rc.getWidth() ||
 			tex->getSize().y != rc.getHeight())
 		{
 			tex->createTexture(math::vector3d(rc.getWidth(), rc.getHeight(), 1), video::EPixel_R8G8B8A8);
-			m_finalRT[i]->getColorTexture()->createTexture(math::vector3d(rc.getWidth(), rc.getHeight(), 1), video::EPixel_R8G8B8A8);
+			m_finalRT[i]->GetColorTexture()->createTexture(math::vector3d(rc.getWidth(), rc.getHeight(), 1), video::EPixel_R8G8B8A8);
 		}
 
 		owner->__FIRE_OnRendererDraw(owner, rc, m_preFinalRT[i], i == 0 ? Eye_Left : Eye_Right);
@@ -194,15 +194,15 @@ public:
 				pm = pm*m;
 				device->setTransformationState(video::TS_PROJECTION, pm);
 
-				texU.SetTexture(m_preFinalRT[i]->getColorTexture());
+				texU.SetTexture(m_preFinalRT[i]->GetColorTexture());
 				device->useTexture(0, &texU);
 				math::rectf tc = math::rectf(0, 0, 1, 1);
-				device->draw2DImage(math::rectf(0, renderTarget->getSize()), 1, 0, &tc);
+				device->draw2DImage(math::rectf(0, renderTarget->GetSize()), 1, 0, &tc);
 				device->setRenderTarget(0);
 				device->setTransformationState(video::TS_PROJECTION, m);
 			}
 			oculusRenderer[i]->render(renderTarget);
-			texU.SetTexture(oculusRenderer[i]->getOutput()->getColorTexture());
+			texU.SetTexture(oculusRenderer[i]->getOutput()->GetColorTexture());
 			device->setRenderTarget(m_finalRT[i], false, true, video::SColor(1, 1, 1, 0));
 			device->useTexture(0, &texU);
 			device->draw2DImage(rc, 1);
@@ -210,7 +210,7 @@ public:
 		}
 		else
 		{
-			texU.SetTexture(m_preFinalRT[i]->getColorTexture());
+			texU.SetTexture(m_preFinalRT[i]->GetColorTexture());
 			device->setRenderTarget(m_finalRT[i], false, true, video::SColor(1, 1, 1, 0));
 			device->useTexture(0, &texU);
 			math::rectf tc = math::rectf(0, 0, 1, 1);
@@ -246,8 +246,8 @@ public:
 			video::IShaderConstantsCallback cb;
 			device->useShader(m_stereoPP);
 			cb.setConstants(m_stereoPP);
-			texA.SetTexture(m_finalRT[0]->getColorTexture());
-			texB.SetTexture(m_finalRT[1]->getColorTexture());
+			texA.SetTexture(m_finalRT[0]->GetColorTexture());
+			texB.SetTexture(m_finalRT[1]->GetColorTexture());
 			m_stereoPP->GetFragmentShader()->setTexture(mT("texA"), &texA);
 			m_stereoPP->GetFragmentShader()->setTexture(mT("texB"), &texB);
 
@@ -285,7 +285,7 @@ public:
 // 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 // 
 // 				}
-				tex.SetTexture(m_finalRT[i]->getColorTexture());
+				tex.SetTexture(m_finalRT[i]->GetColorTexture());
 				device->useTexture(0, &tex);
 				device->draw2DImage(targetRect[i], 1);
 				/*

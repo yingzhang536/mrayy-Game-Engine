@@ -188,8 +188,8 @@ void StereoRenderer::Render()
 			video::IShaderConstantsCallback cb;
 			device->useShader(m_stereoPP);
 			cb.setConstants(m_stereoPP);
-			texA.SetTexture(m_leftVP->getRenderOutput()->getColorTexture());
-			texB.SetTexture(m_rightVP->getRenderOutput()->getColorTexture());
+			texA.SetTexture(m_leftVP->getRenderTarget()->GetColorTexture());
+			texB.SetTexture(m_rightVP->getRenderTarget()->GetColorTexture());
 			m_stereoPP->GetFragmentShader()->setTexture(mT("texA"),&texA);
 			m_stereoPP->GetFragmentShader()->setTexture(mT("texB"),&texB);
 

@@ -57,7 +57,7 @@ public:
 		const IHardwarePixelBufferPtr& depthBuffer,const IHardwarePixelBufferPtr& stencilBuffer,bool depthOnly);
 
 
-	math::vector2di getSize();
+	math::vector2di GetSize();
 
 	void bind();
 	void unbind();
@@ -70,9 +70,9 @@ public:
 	void deattachRenderTarget(const ITexturePtr&tex,uint index=0);
 
 
-	const ITexturePtr& getColorTexture(int idx=0);
-	const IHardwarePixelBufferPtr& getDepthBuffer();
-	const IHardwarePixelBufferPtr& getStencilBuffer();
+	const ITexturePtr& GetColorTexture(int idx=0);
+	const IHardwarePixelBufferPtr& GetDepthBuffer();
+	const IHardwarePixelBufferPtr& GetStencilBuffer();
 	int GetColorTextureCount(){return m_targets.size();}
 
 	void Resize(int x,int y);

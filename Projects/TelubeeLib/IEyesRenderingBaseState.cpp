@@ -219,7 +219,7 @@ void IEyesRenderingBaseState::OnExit()
 
 }
 
-class TextureRenderTarget :public video::IRenderTarget
+class TextureRenderTarget :public video::IRenderArea
 {
 protected:
 	video::ITexturePtr m_tex;
@@ -228,24 +228,10 @@ public:
 	virtual~TextureRenderTarget()
 	{
 	}
-
-	virtual void clear(const video::SColor&c, bool clearBackbuffer, bool clearDepthBuffer)
-	{
-	}
-
-	virtual void bind() {}
-	virtual void unbind() {}
-
-	virtual void attachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
-	virtual void deattachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
-
-	virtual const video::ITexturePtr& getColorTexture(int i = 0) { return m_tex; }
-	virtual const video::IHardwarePixelBufferPtr& getDepthBuffer() { return video::IHardwarePixelBufferPtr::Null; }
-	virtual const video::IHardwarePixelBufferPtr& getStencilBuffer() { return video::IHardwarePixelBufferPtr::Null; }
-
+	virtual const video::ITexturePtr& GetColorTexture(int i = 0) { return m_tex; }
 	virtual int GetColorTextureCount() { return 1; }
 	virtual void Resize(int x, int y) {}
-	virtual math::vector2di getSize()
+	virtual math::vector2di GetSize()
 	{
 		return math::vector2di(m_tex->getSize().x, m_tex->getSize().y);
 	}
@@ -352,7 +338,7 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 
 		m_lensCorrectionPP->Setup(math::rectf(0, size));
 		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
-		cameraTex = m_lensCorrectionPP->getOutput()->getColorTexture();
+		cameraTex = m_lensCorrectionPP->getOutput()->GetColorTexture();
 	}
 	dev->setRenderTarget(m_renderTarget[index],1,1,video::DefaultColors::Black);
 	dev->set2DMode();

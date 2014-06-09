@@ -257,7 +257,7 @@ void IShaderConstantsCallback::setUniform(IGPUShaderProgram*shader,GPUUniform* u
 			rt=ShaderSemanticTable::getInstance().getRenderTarget();
 			if(rt)
 			{
-				m_sharedRTTU.SetTexture(rt->getColorTexture());
+				m_sharedRTTU.SetTexture(rt->GetColorTexture());
 				shader->setTexture(mT("rtColor"),&m_sharedRTTU);
 			}
 			else

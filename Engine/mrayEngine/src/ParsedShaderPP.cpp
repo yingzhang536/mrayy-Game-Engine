@@ -105,7 +105,7 @@ void ParsedShaderPP::ProcessingPass::Setup(const math::rectf& rc)
 	}
 }
 
-IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
+IRenderArea* ParsedShaderPP::ProcessingPass::render(IRenderArea* input)
 {
 	IVideoDevice*device=m_owner->getDevice();
 	IShaderConstantsCallback callBack;
@@ -128,12 +128,12 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 	mainInputUnit.setTextureClamp(video::ETW_WrapS,ETC_CLAMP_TO_EDGE);
 	mainInputUnit.setTextureClamp(video::ETW_WrapT,ETC_CLAMP_TO_EDGE);
 
-	prevInputUnit.SetTexture(input->getColorTexture());
+	prevInputUnit.SetTexture(input->GetColorTexture());
 
 	video::IGPUShaderProgram* vshader= m_shader->GetVertexShader();
 	video::IGPUShaderProgram* fshader=m_shader->GetFragmentShader();
 
-	lastUnit=input->getColorTexture();
+	lastUnit = input->GetColorTexture();
 
 	for (int tex=0;tex<m_targetRenderTarget.size();++tex)
 	{
@@ -162,7 +162,7 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 					if(fshader)
 					{
 						video::TextureUnit t;
-						t.SetTexture(pass->getOutput()->getColorTexture(v.texIndex));
+						t.SetTexture(pass->getOutput()->GetColorTexture(v.texIndex));
 						//not a good way 
 						//pass->m_lastTexture->SetTexture(pass->m_lastRenderTarget->getColorTexture(v.texIndex));
 						fshader->setTexture(v.name,&t);//pass->m_lastTexture);
@@ -174,7 +174,7 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 				{
 					if(fshader)
 					{
-						inputUnit.SetTexture(input->getColorTexture(v.intParam));
+						inputUnit.SetTexture(input->GetColorTexture(v.intParam));
 						fshader->setTexture(v.name,&inputUnit);
 					}
 // 					if(v.name.equals_ignore_case(mT("tex0")))
@@ -189,7 +189,7 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 				}break;
 			case EV_MainInput:
 				{
-					mainInputUnit.SetTexture(m_owner->getInput()->getColorTexture(v.texIndex));
+				mainInputUnit.SetTexture(m_owner->getInput()->GetColorTexture(v.texIndex));
 					if(fshader)
 						fshader->setTexture(v.name,&mainInputUnit);
 // 					if(v.name.equals_ignore_case(mT("tex0")))
@@ -199,8 +199,8 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 				{
 					if(v.strParam.equals_ignore_case(mT("input")) ){
 						math::vector2d sz;
-						sz.x=input->getColorTexture()->getSize().x;
-						sz.y=input->getColorTexture()->getSize().y;
+						sz.x = input->GetColorTexture()->getSize().x;
+						sz.y = input->GetColorTexture()->getSize().y;
 // 						core::stringc vv;
 // 						core::string_to_char(v.name,vv);
 						GPUUniform* u=0;
@@ -308,7 +308,7 @@ IRenderTarget* ParsedShaderPP::ProcessingPass::render(IRenderTarget* input)
 	return ret;
 }
 
-IRenderTarget* ParsedShaderPP::ProcessingPass::getOutput()
+IRenderArea* ParsedShaderPP::ProcessingPass::getOutput()
 {
 	return m_lastRenderTarget;
 }
@@ -679,7 +679,7 @@ void ParsedShaderPP::ForwardPass::Setup(const math::rectf& rc)
 {
 }
 
-IRenderTarget* ParsedShaderPP::ForwardPass::render(IRenderTarget* input)
+IRenderArea* ParsedShaderPP::ForwardPass::render(IRenderArea* input)
 {
 	for(int i=0;i<m_targets.size();++i)
 	{
@@ -692,14 +692,14 @@ IRenderTarget* ParsedShaderPP::ForwardPass::render(IRenderTarget* input)
 				ProcessingPass*pass=m_owner->GetPass(v.passID);
 				if(!pass)
 					break;
-				tex=pass->getOutput()->getColorTexture(v.texIndex);
+				tex = pass->getOutput()->GetColorTexture(v.texIndex);
 			}
 			break;
 		case EV_Input:
-			tex=input->getColorTexture(v.texIndex);
+			tex = input->GetColorTexture(v.texIndex);
 			break;
 		case EV_MainInput:
-			tex=m_owner->getInput()->getColorTexture(v.texIndex);
+			tex = m_owner->getInput()->GetColorTexture(v.texIndex);
 			break;
 		}
 		m_targetTexture[i]->SetTexture(tex);
@@ -707,7 +707,7 @@ IRenderTarget* ParsedShaderPP::ForwardPass::render(IRenderTarget* input)
 	}
 	return m_lastRenderTarget;
 }
-IRenderTarget* ParsedShaderPP::ForwardPass::getOutput()
+IRenderArea* ParsedShaderPP::ForwardPass::getOutput()
 {
 	return m_lastRenderTarget;
 }
@@ -796,7 +796,7 @@ void ParsedShaderPP::SubPostEffect::Setup(const math::rectf& rc)
 		m_ppEffect->Setup(rc);
 }
 
-void ParsedShaderPP::SubPostEffect::ConstructRT(IRenderTarget* input)
+void ParsedShaderPP::SubPostEffect::ConstructRT(IRenderArea* input)
 {
 	for(int i=0;i<m_targets.size();++i)
 	{
@@ -809,28 +809,28 @@ void ParsedShaderPP::SubPostEffect::ConstructRT(IRenderTarget* input)
 				ProcessingPass*pass=m_owner->GetPass(v.passID);
 				if(!pass)
 					break;
-				tex=pass->getOutput()->getColorTexture(v.texIndex);
+				tex = pass->getOutput()->GetColorTexture(v.texIndex);
 			}
 			break;
 		case EV_Input:
-			tex=input->getColorTexture(v.texIndex);
+			tex = input->GetColorTexture(v.texIndex);
 			break;
 		case EV_MainInput:
-			tex=m_owner->getInput()->getColorTexture(v.texIndex);
+			tex = m_owner->getInput()->GetColorTexture(v.texIndex);
 			break;
 		}
 		m_targetTexture[i]->SetTexture(tex);
 		m_lastRenderTarget->attachRenderTarget(tex,i);
 	}
 }
-IRenderTarget* ParsedShaderPP::SubPostEffect::render(IRenderTarget* input)
+IRenderArea* ParsedShaderPP::SubPostEffect::render(IRenderArea* input)
 {
 	if(!m_ppEffect)
 		return input;
 	ConstructRT(input);
 	return m_ppEffect->render(m_lastRenderTarget);
 }
-IRenderTarget* ParsedShaderPP::SubPostEffect::getOutput()
+IRenderArea* ParsedShaderPP::SubPostEffect::getOutput()
 {
 	if(!m_ppEffect)
 		return 0;
@@ -1098,12 +1098,12 @@ void ParsedShaderPP::Setup(const math::rectf& targetVP)
 		m_passes[i]->Setup(targetVP);
 	}
 }
-IRenderTarget* ParsedShaderPP::render(IRenderTarget* input)
+IRenderArea* ParsedShaderPP::render(IRenderArea* input)
 {
 	if(!isEnabled())return input;
 	//getDevice()->set2DMode();
 	m_input=input;
-	IRenderTarget* inTex=input;
+	IRenderArea* inTex = input;
 	for (int i=0;i<m_passes.size();++i)
 	{
 		inTex=m_passes[i]->render(inTex);
@@ -1111,7 +1111,7 @@ IRenderTarget* ParsedShaderPP::render(IRenderTarget* input)
 	m_input=0;
 	return inTex;
 }
- IRenderTarget* ParsedShaderPP::getOutput()
+IRenderArea* ParsedShaderPP::getOutput()
 {
 	if(!m_result)
 		return 0;
@@ -1150,7 +1150,7 @@ IRenderTarget* ParsedShaderPP::render(IRenderTarget* input)
  }
 
 
- IRenderTarget* ParsedShaderPP::getInput()
+ IRenderArea* ParsedShaderPP::getInput()
  {
 	 return m_input;
  }

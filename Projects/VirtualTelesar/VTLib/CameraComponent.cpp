@@ -107,7 +107,7 @@ namespace VT
 			{
 				for(int i=0;i<16;++i)
 				{
-					video::ITexture* tex= rt->getColorTexture(i);
+					video::ITexture* tex= rt->GetColorTexture(i);
 					if(tex)
 					{
 						if(tex->getSize()!=math::vector3d(size.x,size.y,1))
@@ -127,7 +127,7 @@ namespace VT
 			{
 				for(int i=0;i<16;++i)
 				{
-					video::ITexture* tex= rt->getColorTexture(i);
+					video::ITexture* tex= rt->GetColorTexture(i);
 					if(tex)
 					{
 						if(tex->getSize()!=math::vector3d(size.x,size.y,1))

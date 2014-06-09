@@ -22,7 +22,6 @@ ViewPort::ViewPort():m_clearColor(0,0,0,0),m_name(""),m_camera(0),m_vp(0,0,1,1),
 	m_rtSizeDirty=false;
 
 	m_enablePostProcessing=0;
-
 	m_renderTargetTexUnit=new video::TextureUnit();
 
 	updateViewPort();
@@ -59,9 +58,9 @@ void ViewPort::setAutoClearRT(bool s){
 void ViewPort::SetAutoUpdateRTSize(bool autoUpdate)
 {
 	m_autoUpdateRenderTarget=autoUpdate;
-	if(m_autoUpdateRenderTarget && m_rt&& m_rt->getColorTexture())
+	if(m_autoUpdateRenderTarget && m_rt&& m_rt->GetColorTexture())
 	{
-		math::vector3d sz=m_rt->getColorTexture()->getSize();
+		math::vector3d sz=m_rt->GetColorTexture()->getSize();
 		if(sz.x!=m_absVP.getSize().x && sz.y!=m_absVP.getSize().y)
 			m_rtSizeDirty=true;
 	}
@@ -89,10 +88,6 @@ void ViewPort::_UpdateRTSize()
 	{
 		m_rt->Resize(m_absVP.getSize().x,m_absVP.getSize().y);
 	}
-	if(m_finalPPRT && m_finalPPRT->getSize()!=m_absVP.getSize())
-	{
-		m_finalPPRT->Resize(m_absVP.getSize().x,m_absVP.getSize().y);
-	}
 }
 void ViewPort::draw()
 {
@@ -100,7 +95,7 @@ void ViewPort::draw()
 
 	if(m_autoUpdateRenderTarget)
 	{
-		if(m_rt && m_rt->getSize()!=m_absVP.getSize() || m_finalPPRT && m_finalPPRT->getSize()!=m_absVP.getSize())
+		if(m_rt && m_rt->GetSize()!=m_absVP.getSize())
 			m_rtSizeDirty=true;
 	}
 	if(m_rtSizeDirty)
@@ -143,7 +138,7 @@ void ViewPort::updateViewPort(){
 		{
 			for(int i=0;i<4;++i)
 			{
-				video::ITexture *tex= m_rt->getColorTexture(i);
+				video::ITexture *tex= m_rt->GetColorTexture(i);
 				if(tex)
 				{
 					tex->createTexture(math::vector3d(size.x,size.y,1),tex->getImageFormat());
@@ -194,9 +189,6 @@ video::IRenderTargetCRef ViewPort::getRenderTarget(){
 	return m_rt;
 }
 
-video::IRenderTargetCRef ViewPort::getRenderOutput(){
-	return m_finalPPRT;
-}
 
 void ViewPort::setViewPort(const math::rectf&vp){
 	m_vp=vp;
@@ -260,40 +252,54 @@ void ViewPort::onRenderDone(){
 	if(m_postProcessing && m_enablePostProcessing && m_rt)
 	{
 		m_postProcessing->Setup(this->getAbsViewPort());
-		m_finalPPRT= m_postProcessing->render(m_rt);
+		video::IRenderArea* rt= m_postProcessing->render(m_rt);
 
 		//copy to renderTarget
 
 		device->setRenderTarget(m_rt,false,true,m_clearColor);
-		m_renderTargetTexUnit->SetTexture(m_finalPPRT->getColorTexture());
+		m_renderTargetTexUnit->SetTexture(rt->GetColorTexture());
 		device->useTexture(0,m_renderTargetTexUnit);
 		device->draw2DImage(math::rectf(0,m_absVP.getSize()),video::DefaultColors::White);
 		device->setRenderTarget(0,false,false,m_clearColor);
 	}
-	m_finalPPRT=m_rt;
 
-	if(m_finalPPRT && !m_onlyRenderTarget ){
+	if(!m_rt.isNull() && !m_onlyRenderTarget ){
 		//math::rectf rc=Engine::getInstance().getDevice()->getViewportRect();
 		device->setViewport(this);
-		m_renderTargetTexUnit->SetTexture(m_finalPPRT->getColorTexture());
+		m_renderTargetTexUnit->SetTexture(m_rt->GetColorTexture());
 		device->useTexture(0,m_renderTargetTexUnit);
 		device->draw2DImage(math::rectf(0,m_absRenderingVP.getSize()),video::DefaultColors::White,0,0);
 	}
 	//Engine::getInstance().getDevice()->set3DMode();
 }
 
-math::vector2di ViewPort::getSize()
+math::vector2di ViewPort::GetSize()
 {
 	return m_absVP.getSize();
 }
 
 
+void ViewPort::Resize(int x, int y)
+{
 
-const video::ITexturePtr& ViewPort::getColorTexture(int i)
+	if (!m_autoUpdateAbsRect)
+	{
+		m_absVP.BRPoint.x = m_absVP.ULPoint.x + x;
+		m_absVP.BRPoint.y = m_absVP.ULPoint.y + y;
+	}
+}
+
+const video::ITexturePtr& ViewPort::GetColorTexture(int i)
 {
 	if(m_rt)
-		return m_rt->getColorTexture(i);
+		return m_rt->GetColorTexture(i);
 	return video::ITexturePtr::Null;
+}
+int ViewPort::GetColorTextureCount()
+{
+	if (m_rt)
+		return m_rt->GetColorTextureCount();
+	return 0;
 }
 void ViewPort::SetClearColor(const video::SColor& c)
 {

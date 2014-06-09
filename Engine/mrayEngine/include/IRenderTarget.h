@@ -94,9 +94,9 @@ public:
 	virtual void attachRenderTarget(const ITexturePtr& tex,uint index=0)=0;
 	virtual void deattachRenderTarget(const ITexturePtr& tex,uint index=0)=0;
 	
-	virtual const ITexturePtr& getColorTexture(int i=0)=0;
-	virtual const IHardwarePixelBufferPtr& getDepthBuffer()=0;
-	virtual const IHardwarePixelBufferPtr& getStencilBuffer()=0;
+	virtual const ITexturePtr& GetColorTexture(int i=0)=0;
+	virtual const IHardwarePixelBufferPtr& GetDepthBuffer()=0;
+	virtual const IHardwarePixelBufferPtr& GetStencilBuffer()=0;
 
 	virtual int GetColorTextureCount()=0;
 

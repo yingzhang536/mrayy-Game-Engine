@@ -51,9 +51,6 @@
     <ClInclude Include="Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ATAppGlobal.h">
-      <Filter>Source Files\Shared</Filter>
-    </ClInclude>
     <ClInclude Include="AugCameraRenderState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
@@ -149,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="GUIAugTelScreenLayout.h">
       <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ATAppGlobal.h">
+      <Filter>Source Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

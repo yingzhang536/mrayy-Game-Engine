@@ -7,7 +7,8 @@
 namespace mray{
 namespace video{
 
-class IRenderTarget;
+	class IRenderArea;
+	class IRenderTarget;
 
 class IPostProcessing
 {
@@ -25,8 +26,8 @@ public:
 	}
 
 	virtual void Setup(const math::rectf& targetVP)=0;
-	virtual IRenderTarget* render(IRenderTarget* input)=0;
-	virtual IRenderTarget* getOutput()=0;
+	virtual IRenderArea* render(IRenderArea* input) = 0;
+	virtual IRenderArea* getOutput() = 0;
 };
 
 MakeSharedPtrType(IPostProcessing);

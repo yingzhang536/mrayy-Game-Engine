@@ -177,6 +177,21 @@ RobotSerialPort::~RobotSerialPort()
 }
 
 
+std::string RobotSerialPort::ScanePorts()
+{
+	char portName[64];
+	Tserial_event evt;
+	for (int i = 0; i < 20; ++i)
+	{
+		sprintf(portName, "COM%d", i);
+		int ret=evt.connect(portName, head_baudRate, SERIAL_PARITY_ODD, 8, FALSE, TRUE);
+
+		if (!ret){
+			evt.sendData("v\r\n",3);
+		}
+		evt.disconnect();
+	}
+}
 void RobotSerialPort::ConnectRobot()
 {
 
@@ -187,13 +202,19 @@ void RobotSerialPort::ConnectRobot()
 		m_impl->comROBOT->setManager(robot_SerialEventManager);
 		ret = m_impl->comROBOT->connect(robotCOM, robot_baudRate, SERIAL_PARITY_ODD, 8, FALSE, TRUE);
 		if (!ret){
-			printf("Robot Connected!\n", ret);
+
+			if (debug_print)
+				printf("Robot Connected!\n", ret);
 			m_impl->comROBOT->setRxSize(15);
 			yamahaInitialize();		// initialize yamaha robot
 		}
 		else{
-			printf("Robot not connected (%ld)\n", ret);
-			printf("Robot baud (%ld)\n", ret);
+
+			if (debug_print)
+			{
+				printf("Robot not connected (%ld)\n", ret);
+				printf("Robot baud (%ld)\n", ret);
+			}
 			m_impl->comROBOT->disconnect();
 			delete m_impl->comROBOT;
 			m_impl->comROBOT = 0;
@@ -204,11 +225,15 @@ void RobotSerialPort::ConnectRobot()
 		m_impl->comHEAD->setManager(head_SerialEventManager);
 		ret = m_impl->comHEAD->connect(headCOM, head_baudRate, SERIAL_PARITY_NONE, 8, FALSE, FALSE);
 		if (!ret){
-			printf("Head Connected!\n", ret);
+
+			if (debug_print)
+				printf("Head Connected!\n", ret);
 			m_impl->comHEAD->setRxSize(15);
 		}
 		else{
-			printf("Head not connected (%ld)\n", ret);
+
+			if (debug_print)
+				printf("Head not connected (%ld)\n", ret);
 			m_impl->comHEAD->disconnect();
 			delete m_impl->comHEAD;
 			m_impl->comHEAD = 0;
@@ -225,7 +250,8 @@ bool RobotSerialPort::IsConnected()
 void RobotSerialPort::DisconnectRobot()
 {
 	int ret = 0;
-	printf("Disconnecting Robot\n", ret);
+	if (debug_print)
+		printf("Disconnecting Robot\n", ret);
 	if (m_impl->comROBOT != 0){
 		m_impl->comROBOT->disconnect();
 	}
@@ -311,12 +337,13 @@ int RobotSerialPort::head_control(float pan, float tilt, float roll){
 	if (!m_impl->comHEAD)
 		return FALSE;
 
-	sprintf_s(sCommand, 128, "%3.2f,%3.2f,%3.2f,\n", pan, tilt, roll);
+	sprintf_s(sCommand, 128, "@%3.2f,%3.2f,%3.2f,\r\n", pan, tilt, roll);
 
 	packet_size = strlen(sCommand);
 	if (m_impl->comHEAD)
 		m_impl->comHEAD->sendData(sCommand, packet_size);
-	printf(sCommand);
+	if (debug_print)
+		printf(sCommand);
 
 	return true;
 

@@ -148,8 +148,8 @@ public:
 		GPUShader* GetShader(){return m_shader;}
 
 		virtual void Setup(const math::rectf& rc);
-		virtual IRenderTarget* render(IRenderTarget* input);
-		virtual IRenderTarget* getOutput();
+		virtual IRenderArea* render(IRenderArea* input);
+		virtual IRenderArea* getOutput();
 
 		virtual void Parse(xml::XMLElement*elem);
 	};
@@ -171,7 +171,7 @@ public:
 		};
 		std::vector<RenderTargetInfo> m_targets;
 
-		void ConstructRT(IRenderTarget* input);
+		void ConstructRT(IRenderArea* input);
 	public:
 		SubPostEffect(ParsedShaderPP* owner);
 		virtual~SubPostEffect();
@@ -179,8 +179,8 @@ public:
 		ParsedShaderPP* GetEffect(){return m_ppEffect;}
 
 		virtual void Setup(const math::rectf& rc);
-		virtual IRenderTarget* render(IRenderTarget* input);
-		virtual IRenderTarget* getOutput();
+		virtual IRenderArea* render(IRenderArea* input);
+		virtual IRenderArea* getOutput();
 
 		virtual void Parse(xml::XMLElement*elem);
 	};
@@ -204,8 +204,8 @@ public:
 		virtual~ForwardPass();
 
 		virtual void Setup(const math::rectf& rc);
-		virtual IRenderTarget* render(IRenderTarget* input);
-		virtual IRenderTarget* getOutput();
+		virtual IRenderArea* render(IRenderArea* input);
+		virtual IRenderArea* getOutput();
 
 		virtual void Parse(xml::XMLElement*elem);
 	};
@@ -229,7 +229,7 @@ protected:
 
 	ProcessingPass* m_result;
 
-	IRenderTarget* m_input;
+	IRenderArea* m_input;
 
 	math::rectf m_lastVP;
 
@@ -252,11 +252,11 @@ public:
 
 	IVideoDevice* getDevice();
 
-	IRenderTarget* getInput();
+	IRenderArea* getInput();
 
 	virtual void Setup(const math::rectf& targetVP);
-	virtual IRenderTarget* render(IRenderTarget* input);
-	virtual IRenderTarget* getOutput();
+	virtual IRenderArea* render(IRenderArea* input);
+	virtual IRenderArea* getOutput();
 
 };
 

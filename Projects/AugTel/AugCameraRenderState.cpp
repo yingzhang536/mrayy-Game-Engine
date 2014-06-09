@@ -209,7 +209,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 		{
 			if ( evt->key == KEY_F11)
 			{
-				gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->getColorTexture(), "depth.tga");
+				gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->GetColorTexture(), "depth.tga");
 			}
 			else
 			if ( evt->key == KEY_R)
@@ -276,9 +276,9 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 
 void AugCameraRenderState::_CreatePhysicsSystem()
 {
-	core::string maxIter = ATAppGlobal::Instance()->GetValue("Physics", "MaxIterations");
-	core::string maxTimestepDiv = ATAppGlobal::Instance()->GetValue("Physics", "MaxTimeStepDiv");
-	core::string simulationStepDiv = ATAppGlobal::Instance()->GetValue("Physics", "SimulationStepDiv");
+	core::string maxIter = gAppData.GetValue("Physics", "MaxIterations");
+	core::string maxTimestepDiv = gAppData.GetValue("Physics", "MaxTimeStepDiv");
+	core::string simulationStepDiv = gAppData.GetValue("Physics", "SimulationStepDiv");
 
 	float simStep;
 
@@ -329,7 +329,7 @@ void AugCameraRenderState::InitState()
 
 		m_showScene = true;
 
-		ATAppGlobal::Instance()->guiManager = m_guiManager;
+		gAppData.guiManager = m_guiManager;
 	}
 
 	{
@@ -344,6 +344,12 @@ void AugCameraRenderState::InitState()
 	{
 		gShaderResourceManager.parseShaderXML(gFileSystem.openFile("AT_Shaders.shd"));
 		gMaterialResourceManager.parseMaterialXML(gFileSystem.openFile("AT_materials.mtrl"));
+	}
+	{
+		video::ParsedShaderPP* pp = new video::ParsedShaderPP(gEngine.getDevice());
+		pp->LoadXML(gFileSystem.openFile("blur.peff"));
+		m_blurShader = pp;
+
 	}
 
 	{
@@ -399,14 +405,14 @@ void AugCameraRenderState::InitState()
 			cam[i]->setZNear(0.001);
 			cam[i]->setZFar(10);
 
-			//if (ATAppGlobal::Instance()->oculusDevice)
+			//if (gAppData.oculusDevice)
 			cam[i]->setFovY(m_cameraFov);
 			cam[i]->setPosition(math::vector3d(0.03 - 0.06*i,0.07,0));
 			m_camera[i] = cam[i];
 		}
 
 		game::GameEntity* ent = entLst[0];
-		hm->SetOculus(ATAppGlobal::Instance()->oculusDevice);
+		hm->SetOculus(gAppData.oculusDevice);
 		m_sceneManager->addSceneNode(hm);
 		m_data->headMount = hm;
 		m_data->headMount->SetCamera(m_camera[0], m_camera[1]);
@@ -482,16 +488,17 @@ void AugCameraRenderState::InitState()
 void AugCameraRenderState::OnEnter(IRenderingState*prev)
 {
 	Parent::OnEnter(prev);
-	ATAppGlobal::Instance()->optiDataSource->Connect(m_optiProvider);
+	gAppData.optiDataSource->Connect(m_optiProvider);
 #ifdef DEPTH_LOCAL
 	m_openNiHandler->Start(320, 240);
 #endif
-	ATAppGlobal::Instance()->headObject = m_data->headMount;
-	ATAppGlobal::Instance()->depthProvider = m_openNiHandler;
+	gAppData.headObject = m_data->headMount;
+	gAppData.depthProvider = m_openNiHandler;
+	gAppData.cameraProvider = m_videoSource;
 
 	m_camVideoSrc->Open();
 
-	ATAppGlobal::Instance()->dataCommunicator->Start(COMMUNICATION_PORT);
+	gAppData.dataCommunicator->Start(COMMUNICATION_PORT);
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	if(ifo)
@@ -505,12 +512,15 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 void AugCameraRenderState::OnExit()
 {
 	Parent::OnExit();
-	ATAppGlobal::Instance()->optiDataSource->Disconnect();
+	gAppData.optiDataSource->Disconnect();
 	m_camVideoSrc->Close();
 
 	m_openNiHandler->Close();
 
-	ATAppGlobal::Instance()->dataCommunicator->Stop();
+	gAppData.dataCommunicator->Stop();
+
+	gAppData.cameraProvider = 0;
+
 }
 void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 {
@@ -582,6 +592,37 @@ void AugCameraRenderState::_CalculateDepthGeom()
 	norm->unlock();
 }
 
+class TextureRTWrap :public video::IRenderArea
+{
+public:
+
+	video::ITexturePtr mTex;
+
+	TextureRTWrap(video::ITexture* t)
+	{
+		mTex = t;
+	}
+
+	virtual math::vector2di GetSize()
+	{
+		math::vector3di v = mTex->getSize();
+		return math::vector2d(v.x, v.y);
+	}
+
+	virtual const video::ITexturePtr& GetColorTexture(int i = 0)
+	{
+		return mTex;
+	}
+
+	virtual void GetParameter(const core::string& name, void* param){}
+
+	virtual int GetColorTextureCount() {
+		return 1;
+	}
+
+	virtual void Resize(int x, int y) {}
+};
+
 void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 {
 	Parent::_RenderUI(rc,pos);
@@ -592,6 +633,19 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 	GUI::FontAttributes attr;
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 	AppData* app = AppData::Instance();
+
+	m_blurShader->Setup(rc);
+
+	video::IRenderTarget* prevRT = gEngine.getDevice()->getRenderTarget();
+
+	m_blurShader->render(&TextureRTWrap(m_videoSource->GetEyeTexture(0)));
+
+	gEngine.getDevice()->setRenderTarget(prevRT, 0, 0);
+
+	video::TextureUnit tu;
+	tu.SetTexture(m_blurShader->getOutput()->GetColorTexture(0));
+	dev->useTexture(0, &tu);
+	dev->draw2DImage(rc, 1);
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -678,12 +732,12 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 
 	if (m_showScene)
 	{
-		tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
+		tex.SetTexture(m_viewport[index]->getRenderTarget()->GetColorTexture());
 		device->useTexture(0, &tex);
 		math::rectf tc = math::rectf(0, 0, 1, 1);
 		device->draw2DImage(vprect, 1, 0, &tc);
 	}
-	math::rectf vp(0, m_renderTarget[index]->getSize());
+	math::rectf vp(0, m_renderTarget[index]->GetSize());
 	m_guiManager->DrawAll(&vp);
 	return m_renderTarget[index];
 
@@ -701,7 +755,7 @@ void AugCameraRenderState::Update(float dt)
 
 	m_openNiHandler->Update(dt);
 
-	controllers::IKeyboardController* kb= ATAppGlobal::Instance()->inputMngr->getKeyboard();
+	controllers::IKeyboardController* kb= gAppData.inputMngr->getKeyboard();
 
 	math::vector2d s = m_openNiHandler->GetScale();
 	s.x += (kb->getKeyState(KEY_K) - kb->getKeyState(KEY_J))*dt*0.5f;

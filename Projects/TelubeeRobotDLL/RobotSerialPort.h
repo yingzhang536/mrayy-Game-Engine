@@ -34,6 +34,8 @@ protected:
 	static DWORD WINAPI timerThreadHead(RobotSerialPort *robot, LPVOID pdata);
 	static DWORD WINAPI timerThreadBase(RobotSerialPort *robot, LPVOID pdata);
 
+	std::string ScanePorts();
+
 public:
 	RobotSerialPort();
 	virtual~RobotSerialPort();

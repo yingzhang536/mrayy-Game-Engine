@@ -42,7 +42,7 @@ public:
 	virtual video::mrayDev*getDevice();
 	virtual void setDevice(video::mrayDev* dev);
 
-	virtual math::vector2di getSize();
+	virtual math::vector2di GetSize();
 
 	virtual void clear(const video::SColor&c,bool clearBackbuffer,bool clearDepthBuffer);
 
@@ -52,9 +52,9 @@ public:
 	virtual void bind();
 	virtual void unbind();
 
-	virtual const ITexturePtr& getColorTexture(int idx);
-	virtual const IHardwarePixelBufferPtr& getDepthBuffer();
-	virtual const IHardwarePixelBufferPtr& getStencilBuffer();
+	virtual const ITexturePtr& GetColorTexture(int idx);
+	virtual const IHardwarePixelBufferPtr& GetDepthBuffer();
+	virtual const IHardwarePixelBufferPtr& GetStencilBuffer();
 
 	int GetColorTextureCount(){return m_textures.size();}
 

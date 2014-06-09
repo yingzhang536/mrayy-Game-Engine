@@ -35,6 +35,7 @@ class OculusDevice;
 namespace TBee
 {
 	class OpenNIHandler;
+	class ICameraVideoSource;
 }
 using namespace TBee;
 namespace AugTel
@@ -58,6 +59,7 @@ public:
 		sqlManager = 0;
 		guiManager = 0;
 		dataCommunicator = 0;
+		cameraProvider = 0;
 	}
 	Application* App;
 	core::string ServerIP;
@@ -79,10 +81,13 @@ public:
 
 	TBee::OpenNIHandler* depthProvider;
 
+	TBee::ICameraVideoSource* cameraProvider;
 	DataCommunicator* dataCommunicator;
 
 	static ATAppGlobal* Instance(){ return (ATAppGlobal*)s_instance; }
 };
+
+#define gAppData (*AugTel::ATAppGlobal::Instance())
 
 }
 }

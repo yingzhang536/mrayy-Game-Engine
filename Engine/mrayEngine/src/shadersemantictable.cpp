@@ -350,7 +350,7 @@ video::ITexture* ShaderSemanticTable::getShadowMap(int id){
 		return 0;
 	if(!light->getShadowMap())
 		return 0;
-	return light->getShadowMap()->getColorTexture();
+	return light->getShadowMap()->GetColorTexture();
 }
 
 math::vector2di ShaderSemanticTable::getShadowMapSize(int id){

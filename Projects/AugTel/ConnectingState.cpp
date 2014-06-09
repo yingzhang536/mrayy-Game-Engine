@@ -368,14 +368,14 @@ video::IRenderTarget* ConnectingState::Render(const math::rectf& rc, TBee::ETarg
 	Parent::Render(rc, eye);
 	device->setRenderTarget(m_renderTarget[GetEyeIndex(eye)]);
 
-	tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
+	tex.SetTexture(m_viewport[index]->getRenderTarget()->GetColorTexture());
 	device->useTexture(0, &tex);
 	math::rectf tc = math::rectf(0, 0, 1, 1);
 	device->draw2DImage(vprect, 1, 0, &tc);
 
 	//	dev->set2DMode();
 	//Engine::getInstance().getDevice()->draw2DRectangle(rc, video::DefaultColors::Black);
-	math::rectf vp(0, m_renderTarget[GetEyeIndex(eye)]->getSize());
+	math::rectf vp(0, m_renderTarget[GetEyeIndex(eye)]->GetSize());
 	m_guiManager->DrawAll(&vp);
 
 	GUI::GUIBatchRenderer renderer;

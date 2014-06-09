@@ -382,7 +382,7 @@ void GLFBORenderTarget::clear(const video::SColor&c,bool clearBackbuffer,bool cl
 	glClear(mask);
 }
 
-math::vector2di GLFBORenderTarget::getSize(){
+math::vector2di GLFBORenderTarget::GetSize(){
 	return m_size;
 }
 
@@ -401,16 +401,16 @@ void GLFBORenderTarget::unbind(){
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
-const ITexturePtr& GLFBORenderTarget::getColorTexture(int i){
+const ITexturePtr& GLFBORenderTarget::GetColorTexture(int i){
 	if(i>=m_targets.size())
 		return ITexturePtr::Null;
 	return m_targets[i];
 }
-const IHardwarePixelBufferPtr& GLFBORenderTarget::getDepthBuffer(){
+const IHardwarePixelBufferPtr& GLFBORenderTarget::GetDepthBuffer(){
 	return m_depthBuffer;
 }	
 
-const IHardwarePixelBufferPtr& GLFBORenderTarget::getStencilBuffer(){
+const IHardwarePixelBufferPtr& GLFBORenderTarget::GetStencilBuffer(){
 	return m_stencilBuffer;
 }
 
@@ -420,7 +420,7 @@ void GLFBORenderTarget::Resize(int x,int y)
 	math::vector3di sz(x,y,1);
 	for(int i=0;i<c;++i)
 	{
-		video::ITexture* tex=getColorTexture(i);
+		video::ITexture* tex=GetColorTexture(i);
 		if(tex && tex->getSize()!=sz)
 			tex->createTexture(sz,tex->getImageFormat());
 	}

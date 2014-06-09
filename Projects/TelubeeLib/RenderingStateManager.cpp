@@ -176,17 +176,17 @@ void RenderingStateManager::OnDraw(const math::rectf& rc,video::IRenderTarget* r
 	s->Render(rc,eye);
 	video::IRenderTarget* vrt=s->GetLastFrame(eye);
 	if(vrt)
-		t.SetTexture(vrt->getColorTexture());
+		t.SetTexture(vrt->GetColorTexture());
 
 	math::vector2d r=rc.getSize();
 	if(rt)
 	{
 		Engine::getInstance().getDevice()->setRenderTarget(rt,true,true,video::SColor(0,0,0,1));
-		r=rt->getSize();
+		r = rt->GetSize();
 	}
 	if(m_oldState && m_oldState->GetLastFrame(eye))
 	{
-		m_blender->BlendImages(m_oldState->GetLastFrame(eye)->getColorTexture(),t.GetTexture(),math::rectf(0,r));
+		m_blender->BlendImages(m_oldState->GetLastFrame(eye)->GetColorTexture(),t.GetTexture(),math::rectf(0,r));
 
 	}else
 	{

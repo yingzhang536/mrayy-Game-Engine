@@ -463,7 +463,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		math::rectf rc(0, wnd->GetSize());
 		video::TextureUnit tex;
 		
-		tex.SetTexture(m_tbRenderer->GetEyeImage(0)->getColorTexture());
+		tex.SetTexture(m_tbRenderer->GetEyeImage(0)->GetColorTexture());
 		getDevice()->useTexture(0, &tex);
 
 		math::rectf trc;

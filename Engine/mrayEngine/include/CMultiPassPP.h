@@ -19,15 +19,15 @@ class MRAY_DLL CMultiPassPP:public IPostProcessing
 {
 protected:
 	std::list<IPostProcessingPtr>m_postProcessors;
-	IRenderTargetPtr m_output;
+	IRenderArea* m_output;
 	video::IVideoDevice*device;
 public:
 	CMultiPassPP(video::IVideoDevice*dev);
 	virtual ~CMultiPassPP();
 
 	virtual void Setup(const math::rectf& targetVP);
-	virtual IRenderTarget* render(IRenderTarget* input);
-	virtual IRenderTarget* getOutput();
+	virtual IRenderArea* render(IRenderArea* input);
+	virtual IRenderArea* getOutput();
 
 	void addPostProcessor(const IPostProcessingPtr&pp);
 	bool removePostProcessor(const IPostProcessingPtr&pp);

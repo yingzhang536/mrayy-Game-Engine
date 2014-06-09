@@ -68,6 +68,8 @@ protected:
 	GCPtr<GUI::GUIAugTelScreen> m_screenLayout;
 
 	TBee::DepthVisualizer* m_depthVisualizer;
+
+	video::IPostProcessing* m_blurShader;
 	bool m_viewDepth;
 
 	float m_depthTime;

@@ -52,14 +52,14 @@ IRenderTarget* CShaderPP::render(IRenderTarget* input)
 
 	if(m_shader->GetFragmentShader())
 	{
-		m_texUnit->SetTexture(input->getColorTexture());
+		m_texUnit->SetTexture(input->GetColorTexture());
 		m_shader->GetFragmentShader()->setTexture(mT("rtColor"),m_texUnit);
 	}
-	math::vector2d sz=input->getSize();
+	math::vector2d sz=input->GetSize();
 	if(m_shader->GetVertexShader())
 		m_shader->GetVertexShader()->setConstant(mT("viewPortSize"),&sz.x,2);
 	m_shader->use();
-		m_texUnit->SetTexture(input->getColorTexture());
+		m_texUnit->SetTexture(input->GetColorTexture());
 		device->useTexture(0,m_texUnit);
 		device->draw2DImage(origVP,SColor(255));
 		m_texUnit->SetTexture(0);
