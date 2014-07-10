@@ -285,6 +285,9 @@
     <Filter Include="Source Files\codecs\terrain">
       <UniqueIdentifier>{3696e1d3-13bb-4f0c-9254-d1d10b97e2d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\librarys\huffman">
+      <UniqueIdentifier>{aaf2e005-ee62-4b04-8940-014d80392f61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\mrayEngine.h">
@@ -2309,6 +2312,15 @@
     <ClInclude Include="include\FPSCalc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\UniqueIDGenerator.h">
+      <Filter>Source Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanCompression.h">
+      <Filter>Source Files\Compress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\include\huffman\huffman.h">
+      <Filter>Source Files\librarys\huffman</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">
@@ -3621,6 +3633,12 @@
     </ClCompile>
     <ClCompile Include="src\FPSCalc.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanCompression.cpp">
+      <Filter>Source Files\Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\include\huffman\huffman.c">
+      <Filter>Source Files\librarys\huffman</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -264,7 +264,7 @@ video::IRenderTarget* InMapRenderState::Render(const math::rectf& rc,ETargetEye 
 
 
 	video::TextureUnit tex;
-	tex.SetTexture(m_viewport->getRenderOutput()->getColorTexture());
+	tex.SetTexture(m_viewport->getRenderTarget()->GetColorTexture());
 	device->useShader(0);
 
 	device->set2DMode();

@@ -72,7 +72,7 @@ protected:
 	bool m_drawUI;
 
 	video::RenderWindow* m_previewWnd;
-
+	video::IRenderTargetPtr m_previewRT;
 	void _InitResources();
 	void RenderUI(const math::rectf& rc);
 

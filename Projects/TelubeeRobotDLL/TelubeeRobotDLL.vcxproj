@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agent.h" />
+    <ClInclude Include="IRobotController.h" />
     <ClInclude Include="movingAverage.h" />
     <ClInclude Include="RobotSerialPort.h" />
     <ClInclude Include="stdafx.h" />

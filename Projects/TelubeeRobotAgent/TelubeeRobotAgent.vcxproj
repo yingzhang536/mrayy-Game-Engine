@@ -98,6 +98,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraProfile.h" />
     <ClInclude Include="CMySrc.h" />
     <ClInclude Include="CombineVideoGrabber.h" />
     <ClInclude Include="CMySink.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="TRApplication.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraProfile.cpp" />
     <ClCompile Include="CMySrc.cpp" />
     <ClCompile Include="CombineVideoGrabber.cpp" />
     <ClCompile Include="CMySink.cpp" />

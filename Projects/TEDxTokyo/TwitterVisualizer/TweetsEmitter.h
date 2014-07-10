@@ -38,7 +38,7 @@ protected:
 	virtual IParticle*  createParticle();
 
 
-	std::map<ulong, TweetParticle*> m_tweetParticleMap;
+	std::map<ulong, TweetParticle*> m_TweetParticleMap;
 public:
 	TweetsEmitter();
 	virtual~TweetsEmitter();

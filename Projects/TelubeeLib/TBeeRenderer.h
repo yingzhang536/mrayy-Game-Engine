@@ -51,6 +51,7 @@ public:
 
 	void Render(scene::ViewPort* vp);
 
+
 	video::IRenderTargetPtr GetEyeImage(int i);
 
 

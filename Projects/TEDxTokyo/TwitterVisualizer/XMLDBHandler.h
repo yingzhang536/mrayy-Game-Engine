@@ -15,14 +15,14 @@ class XMLDBHandler :public IDBHandler
 {
 protected:
 	core::string m_usersPath;
-	core::string m_tweetsPath;
+	core::string m_TweetsPath;
 	void _loadUsers();
 	void _loadTweets();
 
 	void _saveUsers();
 	void _saveTweets();
 public:
-	XMLDBHandler(const core::string& usersXML, const core::string& tweetsXML);
+	XMLDBHandler(const core::string& usersXML, const core::string& TweetsXML);
 	virtual~XMLDBHandler();
 
 

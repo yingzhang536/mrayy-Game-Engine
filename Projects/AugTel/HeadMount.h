@@ -51,6 +51,8 @@ public:
 			{
 				m_parentOffset = getPosition();
 				m_parent->removeChild(this,true);
+				setPosition(math::vector3d(-1.684, 1.289, 0.636));
+				setOrintation(math::quaternion(-169, 23, 0));
 			}
 		}
 		else
@@ -108,10 +110,13 @@ public:
 			if (m_input->getMouse()->isPressed(controllers::EMB_Right)){
 				m_angles.y += -80 * m_input->getMouse()->getDX()*dt;
 				m_angles.x += 80 * m_input->getMouse()->getDY()*dt;
+
+				m_angles.z += 80 * (m_input->getKeyboard()->getKeyState(KEY_Q) -
+					m_input->getKeyboard()->getKeyState(KEY_E))*dt;
 			}
 
 		}
-		if (m_oculus)
+		if (m_oculus && false)
 		{
 			math::quaternion q = m_oculus->GetOrientation();
 			// 				q.x= q.x;
@@ -126,9 +131,11 @@ public:
 		this->setOrintation(resultQ);
 		float dx = m_speed*(m_input->getKeyboard()->getKeyState(KEY_A) -
 			m_input->getKeyboard()->getKeyState(KEY_D))*dt;
+		float dy = m_speed*(m_input->getKeyboard()->getKeyState(KEY_Z) -
+			m_input->getKeyboard()->getKeyState(KEY_X))*dt;
 		float dz = m_speed*(m_input->getKeyboard()->getKeyState(KEY_W) -
 			m_input->getKeyboard()->getKeyState(KEY_S))*dt;
-		this->translate(math::vector3d(dx, 0, dz), scene::TS_Local);
+		this->translate(math::vector3d(dx, dy, dz), scene::TS_Local);
 		/*
 		math::vector3d pos,rot;
 		if(m_trackCam->ReceiveData(pos,rot))

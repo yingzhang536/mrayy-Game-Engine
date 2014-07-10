@@ -23,6 +23,8 @@
 #include "JoystickInputController.h"
 #include "KeyboardHeadController.h"
 #include "NodeHeadController.h"
+#include "AppData.h"
+#include "CameraConfigurationManager.h"
 
 namespace mray
 {
@@ -34,18 +36,16 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 {
 	m_exitCode = 0;
 
-	m_cameraFov = 25;
 	m_videoSource = 0;
 
-	m_hmdDistance = 0;
 
 	m_robotConnector = new CRobotConnector();
 
 	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
 	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
-
-	m_correctionValue[0] = m_lensCorrectionPP->GetValue("final.HMDWrapParams1");
-	m_correctionValue[1] = m_lensCorrectionPP->GetValue("final.HMDWrapParams2");
+// 
+// 	m_correctionValue[0] = m_lensCorrectionPP->GetValue("final.HMDWrapParams1");
+// 	m_correctionValue[1] = m_lensCorrectionPP->GetValue("final.HMDWrapParams2");
 
 	switch (AppData::Instance()->headController)
 	{
@@ -88,9 +88,9 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 	m_headTilt = 0;
 
 	m_useLensCorrection = false;
-	m_correctionParamsU.set(1, 0, 0, 0);
-	m_correctionParamsV.set(1, 0, 0, 0);
 	m_enablePanning = false;
+	m_camConfigDirty = true;
+
 }
 
 
@@ -107,7 +107,9 @@ void IEyesRenderingBaseState::_UpdateCameraParams()
 	for (int i = 0; i < 2; ++i)
 	{
 		math::vector2d framesize = m_videoSource->GetEyeResolution(i)*m_videoSource->GetEyeScalingFactor(i);
-		if (m_eyes[i].flip90)
+
+		if (m_cameraConfiguration->cameraRotation[i] == TelubeeCameraConfiguration::CW
+			|| m_cameraConfiguration->cameraRotation[i] == TelubeeCameraConfiguration::CCW)
 			math::Swap(framesize.x, framesize.y);
 		if (framesize.y == 0)framesize.y = 1;
 		float camRatio = framesize.x / framesize.y;
@@ -116,18 +118,16 @@ void IEyesRenderingBaseState::_UpdateCameraParams()
 
 		float focal = 1;//in meter
 		float w1 = 2 * focal*tan(math::toRad(m_hmdFov*0.5f));
-		float w2 = 2 * (focal - m_hmdDistance)*tan(math::toRad(m_cameraFov*0.5f));
+		float w2 = 2 * (focal - m_cameraConfiguration->cameraOffset)*tan(math::toRad(m_cameraConfiguration->fov*0.5f));
 
 		float ratio = w2 / w1;
 		m_eyes[i].scale = m_hmdSize*ratio;
 	}
 }
 
-void IEyesRenderingBaseState::SetParameters(float targetAspectRatio, float hmdDistance, float cameraFov, float hmdFov)
+void IEyesRenderingBaseState::SetHMDParameters(float targetAspectRatio,  float hmdFov)
 {
 	m_targetAspectRatio = targetAspectRatio;
-	m_hmdDistance = hmdDistance;
-	m_cameraFov = cameraFov;
 	m_hmdFov = hmdFov;
 	_UpdateCameraParams();
 }
@@ -146,6 +146,7 @@ bool IEyesRenderingBaseState::OnEvent(Event* e, const math::rectf& rc)
 	if (e->getType() == ET_Keyboard)
 	{
 		KeyboardEvent* evt = (KeyboardEvent*)e;
+		/*
 		if (evt->press && false) // image correction
 		{
 			if (evt->key == KEY_Y)
@@ -172,7 +173,7 @@ bool IEyesRenderingBaseState::OnEvent(Event* e, const math::rectf& rc)
 			{
 				m_correctionParamsV.z += 0.01*(evt->shift ? -1 : 1);
 			}
-		}
+		}*/
 	}
 	
 	if (e->getType() == ET_Joystick)
@@ -328,13 +329,26 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	if (m_useLensCorrection)
 	{
 		math::vector2d size(cameraTex->getSize().x, cameraTex->getSize().y);
-		video::ParsedShaderPP::MappedParams* UParams = m_lensCorrectionPP->GetParam("WrapParamsU");
-		video::ParsedShaderPP::MappedParams* VParams = m_lensCorrectionPP->GetParam("WrapParamsV");
+		video::ParsedShaderPP::MappedParams* texRect = m_lensCorrectionPP->GetParam("texRect");
 
-		if (UParams)
-			UParams->SetValue(m_correctionParamsU);
-		if (VParams)
-			VParams->SetValue(m_correctionParamsV);
+		if (texRect)
+		{
+			math::rectf r=m_videoSource->GetEyeTexCoords(index);
+			texRect->SetValue(math::vector4d(r.ULPoint.x, r.ULPoint.y, r.BRPoint.x, r.BRPoint.y));
+		}
+		if (m_camConfigDirty)
+		{
+			video::ParsedShaderPP::MappedParams* OpticalCenter = m_lensCorrectionPP->GetParam("OpticalCenter");
+			video::ParsedShaderPP::MappedParams* FocalCoeff = m_lensCorrectionPP->GetParam("FCoff");
+			video::ParsedShaderPP::MappedParams* KPCoeff = m_lensCorrectionPP->GetParam("KCoff");
+
+			if (OpticalCenter)
+				OpticalCenter->SetValue(m_cameraConfiguration->OpticalCenter);
+			if (FocalCoeff)
+				FocalCoeff->SetValue(m_cameraConfiguration->FocalCoeff);
+			if (KPCoeff)
+				KPCoeff->SetValue(m_cameraConfiguration->KPCoeff);
+		}
 
 		m_lensCorrectionPP->Setup(math::rectf(0, size));
 		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
@@ -352,8 +366,10 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	tex.SetTexture(cameraTex);
 	//float croppingHeight=1-m_targetAspectRatio/m_cameraSource[index].ratio;
 	math::vector2d frameRes = m_videoSource->GetEyeResolution(index)*m_videoSource->GetEyeScalingFactor(index);
-	if (m_eyes[index].flip90)
+	if (m_cameraConfiguration->cameraRotation[index]==TelubeeCameraConfiguration::CW
+		|| m_cameraConfiguration->cameraRotation[index] == TelubeeCameraConfiguration::CCW)
 		math::Swap(frameRes.x, frameRes.y);
+
 	if (frameRes.y == 0)
 		frameRes.y = 1;
 	float targetHeight = frameRes.x / m_targetAspectRatio;
@@ -422,10 +438,21 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 		math::vector2d(tc.BRPoint.x, tc.BRPoint.y),
 		math::vector2d(tc.ULPoint.x, tc.BRPoint.y)
 	};
-	if (m_eyes[index].flip90)
+	if (m_cameraConfiguration->cameraRotation[index]!=TelubeeCameraConfiguration::None)
 	{
+		math::matrix3x3 rotMatrix;
+		if (m_cameraConfiguration->cameraRotation[index] == TelubeeCameraConfiguration::CW)
+			rotMatrix.setAngle(90);
+		else if (m_cameraConfiguration->cameraRotation[index] == TelubeeCameraConfiguration::CCW)
+			rotMatrix.setAngle(-90);
+		else if (m_cameraConfiguration->cameraRotation[index] == TelubeeCameraConfiguration::Flipped)
+			rotMatrix.setAngle(180);
 //     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
 //     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+
+		for (int i = 0; i < 4; ++i)
+			coords[i] = rotMatrix*(coords[i] -tc.getCenter())+tc.getCenter();
+		/*
 		if (!m_eyes[index].cw)
 		{
 			coords[0].set(tc.ULPoint.x, tc.BRPoint.y);
@@ -439,8 +466,7 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 			coords[1].set(tc.BRPoint.x, tc.BRPoint.y);
 			coords[2].set(tc.ULPoint.x, tc.BRPoint.y);
 			coords[3].set(tc.ULPoint.x, tc.ULPoint.y);
-		}
-		
+		}*/
 	}
 	dev->draw2DShapeTextured(points, coords, 4, 1, 1);
 	//draw UI
@@ -482,17 +508,6 @@ void IEyesRenderingBaseState::LoadFromXML(xml::XMLElement* e)
 {
 	IRenderingState::LoadFromXML(e);
 	xml::XMLAttribute* attr;
-
-	attr = e->getAttribute("CameraDistance");
-	if (attr)
-	{
-		m_hmdDistance = core::StringConverter::toFloat(attr->value);
-	}
-	attr = e->getAttribute("CameraFov");
-	if (attr)
-	{
-		m_cameraFov = core::StringConverter::toFloat(attr->value);
-	}
 	attr = e->getAttribute("HMDFov");
 	if (attr)
 	{
@@ -502,11 +517,6 @@ void IEyesRenderingBaseState::LoadFromXML(xml::XMLElement* e)
 	if (attr)
 	{
 		m_hmdSize = core::StringConverter::toVector2d(attr->value);
-	}
-	attr = e->getAttribute("Cam90");
-	if (attr)
-	{
-		m_eyes[0].flip90 = m_eyes[1].flip90 = core::StringConverter::toBool(attr->value);
 	}
 
 	attr = e->getAttribute("EnablePanning");
@@ -519,19 +529,14 @@ void IEyesRenderingBaseState::LoadFromXML(xml::XMLElement* e)
 	{
 		m_panningScale = core::StringConverter::toFloat(attr->value);
 	}
+	core::string camConfigName = e->getValueString("CameraConfiguration");
 
 	m_useLensCorrection = e->getValueBool("UseLensCorrection");
 
-	attr = e->getAttribute("CorrectionParamsU");
-	if (attr)
-	{
-		m_correctionParamsU = core::StringConverter::toVector4d(attr->value);
-	}
-	attr = e->getAttribute("CorrectionParamsV");
-	if (attr)
-	{
-		m_correctionParamsV = core::StringConverter::toVector4d(attr->value);
-	}
+	m_cameraConfiguration = AppData::Instance()->camConfig->GetCameraConfiguration(camConfigName);
+
+
+	m_camConfigDirty = true;
 	//m_robotConnector->LoadXML(e);
 }
 

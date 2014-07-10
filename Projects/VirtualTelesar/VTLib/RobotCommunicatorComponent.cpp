@@ -93,6 +93,25 @@ bool RobotCommunicatorComponent::InitComponent()
 	return true;
 }
 
+bool RobotCommunicatorComponent::SetEnabled(bool enabled)
+{
+
+	if (enabled && !m_enabled)
+	{
+
+		CommunicationManager::getInstance().AddCommunicator(this);
+		CommunicationManager::getInstance().AddRobotCommunication(m_communicator);
+	}
+	if (!enabled && m_enabled)
+	{
+
+		CommunicationManager::getInstance().RemoveCommunicator(this);
+		CommunicationManager::getInstance().RemoveRobotCommunication(m_communicator);
+	}
+
+	return ICommunicatorComponent::SetEnabled(enabled);
+}
+
 void RobotCommunicatorComponent::ReceiveData(const core::string& target,const CommValueList& values)
 {
 	if(!m_enabled)

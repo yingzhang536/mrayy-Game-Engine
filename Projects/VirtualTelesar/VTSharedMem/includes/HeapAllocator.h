@@ -3,7 +3,6 @@
 #define __HeapAllocator__
  
 #include "mTypes.h"
-#include "CompileConfig.h"
 #include <new>
 //#include "CMemory.h"
 

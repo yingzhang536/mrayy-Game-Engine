@@ -1,0 +1,92 @@
+
+
+#include "stdafx.h"
+#include "GUIFacultyList.h"
+#include "GUIProfilePicture.h"
+
+#include "GUIOverlayManager.h"
+#include "GUIOverlay.h"
+#include "GUIElementRegion.h"
+#include "SessionDetails.h"
+
+namespace mray
+{
+namespace GUI
+{
+
+	const GUID GUIFacultyList::ElementType = "GUIFacultyList";
+
+	IMPLEMENT_RTTI(GUIFacultyList, IGUIPanelElement);
+
+GUIFacultyList::GUIFacultyList(IGUIManager* m)
+:IGUIPanelElement(ElementType, m), GUIDockedElement(this)
+{
+	GUI::GUIOverlay* o = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIFacultyListLayout.GUI");
+	if (o)
+	{
+		o->CreateElements(m, this, this, this);
+
+		Advisers->SetUseScroll(false);
+		Committee->SetUseScroll(false);
+	}
+}
+
+GUIFacultyList::~GUIFacultyList()
+{
+}
+
+
+void GUIFacultyList::_ProcessList(const std::vector<kmd::CProfessor*>& p, std::vector<GUI::GUIProfilePicture*> &target, GUIStackPanel* o)
+{
+	float w = o->GetOffset();
+	float h = o->GetDefaultRegion()->GetRect().getHeight();
+	for (int i = 0; i < p.size(); ++i)
+	{
+		GUI::GUIProfilePicture* prof;
+		if(target.size()>i)
+		{
+			prof = target[i];
+		}
+		else
+		{
+			prof = new GUI::GUIProfilePicture(GetCreator());
+			target.push_back(prof);
+			o->AddElement(prof);
+		}
+		prof->SetSize(h - 10);
+		prof->SetPosition((0, 5));
+		prof->SetImage(p[i]->GetTexture());
+		prof->SetVisible(true);
+
+		w += target[i]->GetSize().x;
+		w += o->GetOffset();
+	}
+	for (int i = p.size(); i < target.size(); ++i)
+	{
+		target[i]->SetVisible(false);
+	}
+	o->SetSize(math::vector2d(w, h));
+}
+
+
+void GUIFacultyList::SetSubProject(kmd::CSubProject* p)
+{
+	const std::vector<kmd::CProfessor*>& adv = p->GetSession()->GetProjectProfessors();
+	const std::vector<kmd::CProfessor*>& com = p->GetSession()->GetComitteeProfessors();
+
+	_ProcessList(adv, m_advisers, Advisers);
+	_ProcessList(com, m_committee, Committee);
+}
+
+void GUIFacultyList::Update(float dt)
+{
+	if (!IsVisible())
+		return;
+	UpdateDocking();
+	IGUIPanelElement::Update(dt);
+}
+
+IMPLEMENT_ELEMENT_FACTORY(GUIFacultyList);
+
+}
+}

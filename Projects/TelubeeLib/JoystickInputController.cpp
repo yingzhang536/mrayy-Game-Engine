@@ -13,7 +13,7 @@ namespace TBee
 
 JoystickInputController::JoystickInputController()
 {
-
+	m_currentRotation = 0;
 }
 
 JoystickInputController::~JoystickInputController()
@@ -55,7 +55,9 @@ math::vector2d JoystickInputController::GetSpeed()
 	speed.x = joystick->getAxisState(JOYSTICK_Axis0).abs;
 	speed.y = joystick->getAxisState(JOYSTICK_Axis1).abs;
 
-	return speed;
+	m_currentSpeed += (speed - m_currentSpeed)*gEngine.getFPS()->dt()*3;
+
+	return m_currentSpeed;
 	
 }
 
@@ -65,8 +67,10 @@ float JoystickInputController::GetRotation()
 	if (!joystick)
 		return 0;
 	
-	 return joystick->getAxisState(JOYSTICK_Axis2).abs;
+	 float r= joystick->getAxisState(JOYSTICK_Axis2).abs;
 
+	 m_currentRotation = (r - m_currentRotation)*gEngine.getFPS()->dt() * 3;
+	 return m_currentRotation;
 }
 
 }

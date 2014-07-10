@@ -147,7 +147,25 @@
     <ClInclude Include="GUIAugTelScreenLayout.h">
       <Filter>Source Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="VTelesarRenderingState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIMotorConnectionPanel.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIGraphPlotElement.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTextureSource.h">
+      <Filter>Source Files\DataSource</Filter>
+    </ClInclude>
+    <ClInclude Include="VTBaseState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
     <ClInclude Include="ATAppGlobal.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="LatencyTestState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
   </ItemGroup>
@@ -236,6 +254,24 @@
     <ClCompile Include="GUIAugTelScreen.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="VTelesarRenderingState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIMotorConnectionPanel.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIGraphPlotElement.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTextureSource.cpp">
+      <Filter>Source Files\DataSource</Filter>
+    </ClCompile>
+    <ClCompile Include="VTBaseState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="LatencyTestState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
@@ -248,6 +284,9 @@
       <Filter>Source Files\GUI</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIAugTelScreenLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIMainMenu.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
   </ItemGroup>

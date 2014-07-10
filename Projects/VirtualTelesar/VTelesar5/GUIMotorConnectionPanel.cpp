@@ -130,7 +130,7 @@ void GUIMotorConnectionPanel::Draw(video::IRenderArea*vp)
 	if(!IsVisible())
 		return;
 	(GetCreator()->GetMouseOn());
-	math::rectf rc(0, vp->getSize());
+	math::rectf rc(0, vp->GetSize());
 	IGUIPanelElement::Draw(&rc);
 }
 

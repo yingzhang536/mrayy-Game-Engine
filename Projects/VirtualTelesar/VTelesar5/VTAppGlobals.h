@@ -16,6 +16,8 @@
 #define ___VTAppGlobals___
 
 
+#include "AppData.h"
+
 
 namespace mray
 {
@@ -36,33 +38,45 @@ namespace VT
 		EWebCamera,
 		EFlyCapture
 	};
-class VTAppGlobals
+class VTAppGlobals:public TBee::AppData
 {
 protected:
 
-	static script::CSettingsFile s_values;
+	script::CSettingsFile s_values;
 public:
 
-	static Application* App;
-	static bool IsDebugging;
-	static bool Physics;
-	static core::string GhostServerIP;
-	static int Camera0;
-	static int Camera1;
+	Application* App;
+	bool Physics;
+	core::string GhostServerIP;
+	int Camera0;
+	int Camera1;
 
-	static video::OculusDevice* oculusDevice;
-	static game::OculusCameraComponent* oculusComponents[2];
-	
-	static bool FlipCameras;
-	static ECameraSourceType CameraType;
+	video::OculusDevice* oculusDevice;
+	game::OculusCameraComponent* oculusComponents[2];
 
-	
-	static void SetValue(const core::string&catagory,const core::string&name,const core::string& v);
-	static core::string GetValue(const core::string&catagory,const core::string&name);
+	bool FlipCameras;
+	ECameraSourceType CameraType;
+
+	VTAppGlobals()
+	{
+		App = 0;
+		Physics = false;
+		Camera0 = Camera1 = 0;
+		oculusComponents[0] = oculusComponents[1] = 0;
+		oculusDevice = 0;
+		FlipCameras = false;
+		CameraType = EWebCamera;
+	}
+
+	void SetValue(const core::string&catagory, const core::string&name, const core::string& v);
+	core::string GetValue(const core::string&catagory, const core::string&name);
 
 
-	static void Load(const core::string& path);
-	static void Save(const core::string& path);
+	virtual void Load(const core::string& path);
+	virtual void Save(const core::string& path);
+
+
+	static VTAppGlobals* Instance(){ return (VTAppGlobals*)s_instance; }
 };
 
 }

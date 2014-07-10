@@ -212,6 +212,7 @@ video::IGPUShaderProgramPtr ShaderResourceManager::loadShaderFromFile(const core
 
 	if (!s)
 		return 0;
+	s->setResourceName(path);
 
 	s->LoadFromPath(path, entryPoint, predef);
 
@@ -249,6 +250,7 @@ video::IGPUShaderProgramPtr ShaderResourceManager::loadShaderFromProgram(const c
 	if (!s)
 		return 0;
 
+	s->setResourceName(name);
 	s->LoadShader(program, entryPoint, predef);
 
 	//addResource(s,name);

@@ -78,7 +78,7 @@ namespace video
 			}
 			CameraRef c;
 			
-			if(VT::VTAppGlobals::CameraType==VT::EWebCamera)
+			if (VT::VTAppGlobals::Instance()->CameraType == VT::EWebCamera)
 				c.m_camera=new video::DirectShowVideoGrabber();
 			else
 #ifdef FLYCAMERA_GRABBER

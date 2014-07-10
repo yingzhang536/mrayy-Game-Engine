@@ -11,6 +11,7 @@
 #include "GeomDepthRect.h"
 #include "OpenNIHandler.h"
 #include "INetwork.h"
+#include "StreamReader.h"
 
 namespace mray
 {
@@ -21,7 +22,9 @@ namespace AugTel
 	enum class EMessages
 	{
 		DepthData = 1,
-		DepthSize = 2
+		DepthSize = 2,
+		IsStereo = 3,
+		CameraConfig = 4
 	};
 	class DataCommunicatorThread :public OS::IThreadFunction
 	{
@@ -49,6 +52,7 @@ DataCommunicator::DataCommunicator()
 }
 DataCommunicator::~DataCommunicator()
 {
+	Stop();
 	delete m_client;
 }
 
@@ -88,13 +92,29 @@ int DataCommunicator::_Process()
 	{
 		TBee::GeomDepthRect rc;
 		rc.ReadFromStream(&stream);
-		ATAppGlobal::Instance()->depthProvider->GetNormalCalculator().AddDepthRect(&rc);
+		FIRE_LISTENR_METHOD(OnDepthData, (rc));
+		//ATAppGlobal::Instance()->depthProvider->GetNormalCalculator().AddDepthRect(&rc);
 	}break;
 	case (int)EMessages::DepthSize:
 	{
 		math::vector2di sz;
 		stream.read(&sz,sizeof(sz));
-		ATAppGlobal::Instance()->depthProvider->CreateDepthFrame(sz.x, sz.y);
+		FIRE_LISTENR_METHOD(OnDepthSize, (sz));
+		//ATAppGlobal::Instance()->depthProvider->CreateDepthFrame(sz.x, sz.y);
+	}break;
+	case (int)EMessages::IsStereo:
+	{
+		bool stereo;
+		stream.read(&stereo, sizeof(stereo));
+		FIRE_LISTENR_METHOD(OnIsStereoImages, (stereo));
+		//ATAppGlobal::Instance();
+	}break;
+	case (int)EMessages::CameraConfig:
+	{
+		OS::StreamReader rdr(&stream);
+		core::string profile= rdr.binReadString();
+		FIRE_LISTENR_METHOD(OnCameraConfig, (profile));
+		//ATAppGlobal::Instance();
 	}break;
 	default:
 		break;

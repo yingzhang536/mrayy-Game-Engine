@@ -47,6 +47,13 @@ void LocalCameraVideoSource::Open()
 	m_cameraSource[0].camera->InitDevice(m_cameraSource[0].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 	if (m_cameraSource[1].camera)
 		m_cameraSource[1].camera->InitDevice(m_cameraSource[1].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
+
+	for (int i = 0; i < 2; ++i)
+	{
+	//	if (m_cameraSource[i].camera)
+	//		m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0.4");
+	}
+
 }
 void LocalCameraVideoSource::Close()
 {

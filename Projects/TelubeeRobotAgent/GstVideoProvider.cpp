@@ -59,8 +59,11 @@ public:
 	int m_frames;
 	int m_wasted;
 	int m_sentBytes;
+	math::vector2di m_resolution;
 
 	int sourceid;
+
+	int m_cam0, m_cam1;
 
 	GstVideoGrabber* src;
 
@@ -291,6 +294,9 @@ public:
 		m_isLocal = false;
 		m_streamAudio = true;
 
+		m_cam0 = 0;
+		m_cam1 = 1;
+		m_resolution.set(1280, 720);
 	}
 	virtual~GstVideoProviderImpl()
 	{
@@ -298,9 +304,19 @@ public:
 		delete[]pixels;
 	}
 
+	void SetCameras(int cam0, int cam1)
+	{
+		m_cam0 = cam0;
+		m_cam1 = cam1;
+	}
+	void SetTargetResolution(const math::vector2di& res)
+	{
+		m_resolution = res;
+	}
+
 	bool NeedData(GstBuffer** b)
 	{
-		double t = gTimer.getSeconds();
+		double t = gEngine.getTimer()->getSeconds();
 		double ms = t-m_time;
 		if (ms < 1000.0 / (m_frameRate))
 		{
@@ -318,9 +334,14 @@ public:
 			src->Unlock();
 			return false;
 		}
-		m_lastBufferID = src->GetGrabber()->GetBufferID();
 		const video::ImageInfo* image = src->GetGrabber()->GetLastFrame();
 #if GST_VERSION_MAJOR ==0
+		if (!image->imageDataSize)
+		{
+			src->Unlock();
+			return false;
+		}
+		m_lastBufferID = src->GetGrabber()->GetBufferID();
 		if (image->imageDataSize != pixelsCount)
 		{
 			pixelsCount = image->imageDataSize;
@@ -495,49 +516,46 @@ public:
 		gstString = "mysrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc profile=baseline pass=qual quantizer=10 speed-preset=ultrafast bitrate=6144 sliced-threads=true ! rtph264pay mtu=1400 ! fakesink name=sink1 sync=false";
 		//gstString = "appsrc name=src !  video/x-raw-rgb, width=1408,height=1152,framerate=25/1 !ffmpegcolorspace !  ffenc_h263 name=enc !  rtph263pay name=pay ! rtph263depay ! ffdec_h263! autovideosink name=sink ";//bitrate=1024  
 		// 
-		core::string pass="pass1";
+		core::string pass = "pass1";
 		float quanizer = 20;
-		int bitrate=2048;
+		int bitrate = 2048;
 		int mu = 1400;
 		switch (quality)
 		{
 		case EStreamingQuality::UltraLow:
 			pass = "pass1";
-			quanizer = 40;
-			bitrate = 2000;
+			bitrate = 500;
 			m_frameRate = 25;
 
-			quanizer = 15;
+			quanizer = 1;
 			break;
 		case EStreamingQuality::Low:
 			pass = "pass1";
-			quanizer = 30;
-			bitrate = 3000;
+			bitrate = 1000;
 			m_frameRate = 25;
 
-			quanizer = 15;
+			quanizer = 10;
 
 			break;
 		case EStreamingQuality::Medium:
 			pass = "qual";
 			quanizer = 20;
-			bitrate = 3000;
+			bitrate = 1500;
 			m_frameRate = 25;
 
-			quanizer = 10;
+			quanizer = 5;
 
 			break;
 		case EStreamingQuality::High:
 			pass = "qual";
 			quanizer = 10;
-			bitrate = 3000;
+			bitrate = 2000;
 			m_frameRate = 30;
-			
-			quanizer = 5;
+
 
 			break;
 		case EStreamingQuality::UltraHigh:
-			pass = "pass1"; 
+			pass = "qual";
 			quanizer = 5;
 			bitrate = 4000;
 			m_frameRate = 30;
@@ -548,21 +566,24 @@ public:
 		default:
 			break;
 		}
+		pass = "pass1";
+		quanizer = 1;
+
 		if (m_isLocal)
-			mu = 1400*5;
-// 		pass = "pass1";
+			mu = 1400 * 5;
+		// 		pass = "pass1";
 		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate !   x264enc  name=enc rc-lookahead=1 cabac=true pass=" + pass +
 			" quantizer=" + core::StringConverter::toString(quanizer) +
 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
-			"  ! rtph264pay mtu=1400 ! mysink name=sink sync=false " ;
+			"  ! rtph264pay mtu=1400 ! mysink name=sink sync=false ";
 
 		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode
 		gstString = "appsrc name=src  ! ffmpegcolorspace! videorate!   x264enc  name=enc "// rc - lookahead = 1 cabac = true pass = " + pass +
 			//" quantizer=" + core::StringConverter::toString(quanizer) +
 			"   speed-preset=ultrafast  sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
-			"  ! rtph264pay mtu=1400 ! tee name=videoTee " 
+			"  ! rtph264pay mtu=1400 ! tee name=videoTee "
 			" dshowaudiosrc ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=2!  audioconvert  ! audioresample ! vorbisenc  !tee name=audioTee "  //oggmux max-delay=50 max-page-delay=50 
-			"videoTee. ! queue ! mysink name=sink sync=false " 
+			"videoTee. ! queue ! mysink name=sink sync=false "
 			"audioTee. ! queue ! mysink name=audiosink sync=false";
 
 		//profile=baseline,speed-preset=ultrafast,sliced-threads=true,tune=fastdecode, rc-lookahead=1 cabac=true
@@ -577,36 +598,92 @@ public:
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 			" ! mysink name=sink sync=false ";
 
-		
+
 		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace !    "
 			"ffenc_mpeg4   name=enc "
 			"idct-algo=14 dct-algo=3 quant-type=1 gop-size=24 flags=0x00000010 "//qmin=2 qmax=31 
-			" pass=2" 
-			"  quantizer= "+ core::StringConverter::toString(quanizer) +
-		//	"   bitrate=" + core::StringConverter::toString(bitrate*10) +
- 			"  ! rtpmp4vpay send-config=true"// mtu=" + core::StringConverter::toString(mu) + 
-// 			" ! rtpmp4vdepay ! ffdec_mpeg4 ! autovideosink";
+			" pass=2"
+			"  quantizer= " + core::StringConverter::toString(quanizer) +
+			//	"   bitrate=" + core::StringConverter::toString(bitrate*10) +
+			"  ! rtpmp4vpay send-config=true"// mtu=" + core::StringConverter::toString(mu) + 
+			// 			" ! rtpmp4vdepay ! ffdec_mpeg4 ! autovideosink";
 			" ! mysink name=sink sync=false ";/**/
 
 
-		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace !    "
+		gstString = "appsrc name=src ! queue  ! ffmpegcolorspace ! video/x-raw-yuv!     "
 			"x264enc  name=enc"
 			" pass=" + pass +
 			"  quantizer=" + core::StringConverter::toString(quanizer) +
 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			" tune=zerolatency"
 			//" rc-lookahead=1"
-<<<<<<< HEAD
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
-		//	" !gdppay" 
+			//" !gdppay" 
 			" ! mysink name=sink sync=false ";
-#else
 
-		gstString = "appsrc name=src ! "
-=======
+
+		if (m_cam0 == m_cam1)
+		{
+
+			gstString = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0) +
+				" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace !  videoflip method=4 !";  // videoflip method=1 !   ";
+
+				/*
+				"x264enc  name=enc"
+				" pass=" + pass +
+				"  quantizer=" + core::StringConverter::toString(quanizer) +
+				" bitrate=" + core::StringConverter::toString(bitrate) +
+				"   speed-preset=ultrafast sliced-threads=false"
+				" tune=zerolatency"
+				//" rc-lookahead=1"
+				"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+				//" !gdppay" 
+				" ! mysink name=sink sync=false ";*/
+
+		}
+		else
+		{
+
+			int halfW = m_resolution.x / 2;
+			gstString = "videomixer name=mix sink_0::xpos=0   sink_0::ypos=0  sink_0::alpha=1  sink_0::zorder=0  sink_1::xpos=0   sink_1::ypos=0  sink_1::zorder=1     sink_2::xpos=" + core::StringConverter::toString(halfW) + "   sink_2::ypos=0  sink_2::zorder=1  ";
+				/*"x264enc  name=enc"
+				" pass=" + pass +
+				"  quantizer=" + core::StringConverter::toString(quanizer) +
+				"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+				" tune=zerolatency"
+				//" rc-lookahead=1"
+				"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+				//" !gdppay" 
+				" ! mysink name=sink sync=false ";*/
+
+			gstString += "videotestsrc pattern=\"black\" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
+
+			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
+			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
+
+			gstString += " mix. ! ";
+		}
+
+		gstString +=
+			" x264enc  name=enc"
+			" pass=" + pass +
+			//" qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
+			"  quantizer=" + core::StringConverter::toString(quanizer) +
+			"   speed-preset=ultrafast sliced-threads=true bitrate=" + core::StringConverter::toString(bitrate) +
+			" tune=zerolatency"
+			//" rc-lookahead=1"
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
-			" !gdppay" 
+			//" !gdppay" 
 			" ! mysink name=sink sync=false ";
+
+	//	gstString += "tp. ! queue ! autovideosink sync=false";
+		/*
+		gstString += "ksvideosrc name=src1 device-index=0 typefind=true ! typefind ! ffmpegcolorspace !  videoscale ! video/x-raw-yuv,width=640,height=720 ! mix.sink_1 ";
+		gstString += "ksvideosrc name=src2 device-index=1 typefind=true ! typefind ! ffmpegcolorspace ! videoscale ! video/x-raw-yuv,width=640,height=720! mix.sink_2 ";
+		*/
+
 #else
 
 		gstString = "appsrc name=src ! "
@@ -623,7 +700,7 @@ public:
 			" ! mysink name=sink sync=false ";
 #endif
 		if (m_streamAudio)
-			gstString+=" dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert   !audioresample ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+			gstString+=" dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert   !audioresample ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 		//audio/x-raw-int, endianness=1234, signed=true, width=16, depth=16, rate=22000, channels=1
 		//vorbisenc  !
 
@@ -766,7 +843,6 @@ public:
 		m_udpClient[1] = 0;
 
 	}
-
 
 	bool setPipelineWithSink(GstElement * pipeline, GstElement * sink, bool isStream_){
 		startGstMainLoop();
@@ -1104,5 +1180,18 @@ bool GstVideoProvider::IsConnected()
 {
 	return m_connected;
 }
+void GstVideoProvider::SetCameras(int cam0, int cam1)
+{
+	m_impl->SetCameras(cam0, cam1);
+}
 
+void GstVideoProvider::SetTargetResolution(const math::vector2di& res)
+{
+	m_impl->SetTargetResolution(res);
+}
+
+bool GstVideoProvider::IsStereoCameras()
+{
+	return m_impl->m_cam0 != m_impl->m_cam1;
+}
 }

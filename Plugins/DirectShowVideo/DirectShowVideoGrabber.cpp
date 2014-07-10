@@ -215,6 +215,10 @@ void DirectShowVideoGrabber::SetParameter(const core::string& name,const core::s
 	{
 		s_videoInput->setVideoSettingCameraPct(m_device,s_videoInput->propFocus,v);
 	}
+	else  if (name.equals_ignore_case(Param_Gain))
+	{
+		s_videoInput->setVideoSettingCameraPct(m_device, s_videoInput->propGain, v);
+	}
 }
 
 core::string DirectShowVideoGrabber::GetParameter(const core::string& name)

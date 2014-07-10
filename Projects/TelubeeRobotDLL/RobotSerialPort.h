@@ -16,16 +16,19 @@
 #ifndef __RobotSerialPort__
 #define __RobotSerialPort__
 
-	struct RobotStatus;
+#include <string>
+#include "IRobotController.h"
+
 	class RobotSerialPortImpl;
-	class ITelubeeRobotListener;
-class RobotSerialPort
+class RobotSerialPort:public IRobotController
 {
 protected:
 
 	RobotSerialPortImpl* m_impl;
 	float robotX, robotY, robotZ;
+	int robot_vx, robot_vy, robot_rot;
 	float pan, tilt, roll;
+	bool baseConnected;
 	int omni_control(int velocity_x, int velocity_y, int rotation, int control);
 	int yamahaInitialize();
 	int yamahaXY_control(float pos_x, float pos_y, int control);

@@ -17,32 +17,33 @@ class StateMachine;
 namespace TBee
 {
 
-	class CAppOnDoneCondition:public ICondition
+class CAppOnDoneCondition :public ICondition
+{
+protected:
+	int m_code;
+	StateMachine* m_machine;
+public:
+	CAppOnDoneCondition(StateMachine*m, const core::string&name, int code) :ICondition(name)
 	{
-	protected:
-		int m_code;
-		StateMachine* m_machine;
-	public:
-		CAppOnDoneCondition(StateMachine*m,const core::string&name,int code):ICondition(name)
-		{
-			m_machine=m;
-			m_code=code;
-		}
-		virtual ~CAppOnDoneCondition(){
+		m_machine = m;
+		m_code = code;
+	}
+	virtual ~CAppOnDoneCondition(){
 
-		}
-		virtual bool checkCondition()
-		{
-			BaseAppState* s=(BaseAppState*)m_machine->getActiveState();
-			if(s && s->GetState())
-				return s->GetState()->GetExitCode()==m_code;
-			return false;
-		}
-	};
+	}
+	virtual bool checkCondition()
+	{
+		BaseAppState* s = (BaseAppState*)m_machine->getActiveState();
+		if (s && s->GetState())
+			return s->GetState()->GetExitCode() == m_code;
+		return false;
+	}
+};
 
 ApplicationStateManager::ApplicationStateManager()
 {
-	m_stateMachine=new StateMachine();
+	m_stateMachine = new StateMachine();
+	m_stateMachine->AddListener(this);
 }
 
 ApplicationStateManager::~ApplicationStateManager()
@@ -50,6 +51,10 @@ ApplicationStateManager::~ApplicationStateManager()
 	delete m_stateMachine;
 }
 
+void ApplicationStateManager::OnStateChanged(StateMachine*, IState* oldS, IState* newS)
+{
+	FIRE_LISTENR_METHOD(OnChangeState, ((IApplicationState*)newS));
+}
 
 void ApplicationStateManager::AddState(IApplicationState* st,const core::string&name)
 {

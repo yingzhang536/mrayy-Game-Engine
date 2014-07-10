@@ -99,9 +99,11 @@
     <ClInclude Include="BaseAppState.h" />
     <ClInclude Include="BaseRenderState.h" />
     <ClInclude Include="AppData.h" />
+    <ClInclude Include="CameraConfigurationManager.h" />
     <ClInclude Include="FlyingTelubeeRobotCommunicator.h" />
     <ClInclude Include="GstSingleNetVideoSource.h" />
     <ClInclude Include="GstStereoStreamVideoSource.h" />
+    <ClInclude Include="IDepthProvider.h" />
     <ClInclude Include="KeyboardHeadController.h" />
     <ClInclude Include="LocalCameraRenderingState.h" />
     <ClInclude Include="CRobotConnector.h" />
@@ -109,6 +111,7 @@
     <ClInclude Include="DepthVisualizer.h" />
     <ClInclude Include="GeomDepthCalculator.h" />
     <ClInclude Include="GeomDepthRect.h" />
+    <ClInclude Include="LocalSingleCameraVideoSource.h" />
     <ClInclude Include="NodeHeadController.h" />
     <ClInclude Include="RemoteCameraRenderingState.h" />
     <ClInclude Include="GstFileVideoSource.h" />
@@ -154,6 +157,7 @@
     <ClCompile Include="ApplicationStateManager.cpp" />
     <ClCompile Include="BaseAppState.cpp" />
     <ClCompile Include="BaseRenderState.cpp" />
+    <ClCompile Include="CameraConfigurationManager.cpp" />
     <ClCompile Include="FlyingTelubeeRobotCommunicator.cpp" />
     <ClCompile Include="GstSingleNetVideoSource.cpp" />
     <ClCompile Include="GstStereoStreamVideoSource.cpp" />
@@ -164,6 +168,7 @@
     <ClCompile Include="DepthVisualizer.cpp" />
     <ClCompile Include="GeomDepthCalculator.cpp" />
     <ClCompile Include="GeomDepthRect.cpp" />
+    <ClCompile Include="LocalSingleCameraVideoSource.cpp" />
     <ClCompile Include="NodeHeadController.cpp" />
     <ClCompile Include="RemoteCameraRenderingState.cpp" />
     <ClCompile Include="GstFileVideoSource.cpp" />

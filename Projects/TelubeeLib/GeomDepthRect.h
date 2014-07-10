@@ -37,9 +37,9 @@ public:
 	GeomDepthRect();
 	virtual~GeomDepthRect();
 
-	DepthFrame* GetFrame(){ return &m_frame; }
+	const DepthFrame* GetFrame()const { return &m_frame; }
 
-	const math::rectf& GetRect(){ return m_rect; }
+	const math::rectf& GetRect()const { return m_rect; }
 	void SetFrame(DepthFrame* src, math::rectf& rc);
 
 	int WriteToStream(OS::IStream*stream);

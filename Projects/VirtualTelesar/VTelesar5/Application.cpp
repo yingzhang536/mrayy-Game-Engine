@@ -25,6 +25,9 @@
 #include "CameraTextureSource.h"
 
 #include "mrayOIS.h"
+#include "DynamicFontGenerator.h"
+#include "VTelesarRenderingState.h"
+#include "NullRenderState.h"
 
 namespace mray
 {
@@ -34,7 +37,8 @@ namespace VT
 
 Application::Application():BenchmarkItem("Application")
 {
-	VT::VTAppGlobals::App=this;
+	new VTAppGlobals();
+	VTAppGlobals::Instance()->App = this;
 	m_renderBenchMark=new BenchmarkItem("Render");
 	m_updateBenchMark=new BenchmarkItem("Update");
 	addSubItem(m_renderBenchMark);
@@ -42,11 +46,14 @@ Application::Application():BenchmarkItem("Application")
 	m_flipEyes=false;
 
 	m_limitFps=true;
+	m_tbRenderer = 0;
+
 }
 Application::~Application()
 {
 	m_videoManager=0;
-	m_soundManager=0;
+	m_soundManager = 0;
+	delete m_tbRenderer;
 }
 
 void Application::_InitResources()
@@ -54,16 +61,23 @@ void Application::_InitResources()
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
 
-	gImageSetResourceManager.loadImageSet(mT("VistaCG.imageset"));
-	GCPtr<OS::IStream> themeStream=gFileSystem.createBinaryFileReader(mT("VistaCG.xml"));
+	gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
+	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 	GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
-	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG"));
+	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::IFont>font=gFontResourceManager.loadFont(mT("TEKTONPRO_font.fnt"));
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	font->SetFontName(L"Arial");
+	font->SetTextureSize(1024);
+	font->SetFontResolution(24);
+	font->Init();
+
+	//GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
+	//gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
 	gFontResourceManager.setDefaultFont(font);
 
-	gLogManager.log("Resources Loaded",ELL_SUCCESS);
+	gLogManager.log("Resources Loaded", ELL_SUCCESS);
 }
 void Application::onEvent(Event* event)
 {
@@ -77,8 +91,15 @@ void Application::onEvent(Event* event)
 			e->pos.x=event->GetOwnerRenderWindow()->GetSize().x- e->pos.x;
 		}
 	}
-	if(m_renderingStateManager)
-		m_renderingStateManager->OnEvent(event);
+	if (m_tbRenderer)
+	{
+		for (int i = 0; i < m_tbRenderer->GetViewportCount(); ++i)
+		{
+			if (m_renderingStateManager->OnEvent(event, m_tbRenderer->GetViewport(i)->getAbsRenderingViewPort()))
+				break;
+		}
+	}
+
 
 
 	if(event->getType()==ET_Keyboard)
@@ -86,7 +107,7 @@ void Application::onEvent(Event* event)
 		KeyboardEvent* e=(KeyboardEvent*)event;
 		if(e->press && e->key==KEY_F9)
 		{
-			VT::VTAppGlobals::IsDebugging = !VT::VTAppGlobals::IsDebugging;
+			VTAppGlobals::Instance()->IsDebugging = !VTAppGlobals::Instance()->IsDebugging;
 		}else if(e->press && e->key==KEY_F10)
 		{
 			m_horizontalFlip=!m_horizontalFlip;
@@ -110,47 +131,51 @@ void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
 
+	VTAppGlobals::Instance()->Init();
 
 	m_2ndWnd=0;
 
-	VT::VTAppGlobals::Load("VTSettings.conf");
+	VT::VTAppGlobals::Instance()->Load("VTSettings.conf");
 	{
 
 		core::string v=extraOptions.GetOptionValue("Debugging");
 		if(v=="Yes")
-			VT::VTAppGlobals::IsDebugging=true;
+			VT::VTAppGlobals::Instance()->IsDebugging = true;
 		else
-			VT::VTAppGlobals::IsDebugging=false;
+			VT::VTAppGlobals::Instance()->IsDebugging = false;
 	}
 	{
 
 		// 		core::string v=extraOptions.GetOptionValue("Camera");
 		// 		if(v=="USB")
-		VT::VTAppGlobals::CameraType = EWebCamera;
+		VT::VTAppGlobals::Instance()->CameraType = EWebCamera;
 		// 		else
-		//			VT::VTAppGlobals::CameraType=EFlyCapture;
+		//			VTVT::VTAppGlobals::Instance()->CameraType=EFlyCapture;
 	}
 	{
+		m_tbRenderer = new TBee::TBeeRenderer();
+		m_tbRenderer->AddListener(this);
+		m_tbRenderer->Init(GetRenderWindow(0));
 	}
 	{
 
 		core::string v=extraOptions.GetOptionValue("Physics");
 		if(v=="Yes")
-			VT::VTAppGlobals::Physics=true;
+			VT::VTAppGlobals::Instance()->Physics = true;
 		else
-			VT::VTAppGlobals::Physics=false;
+			VT::VTAppGlobals::Instance()->Physics = false;
 	}
 	{
 
 		core::string v=extraOptions.GetOptionValue("FlipCameras");
 		if(v=="Yes")
-			VT::VTAppGlobals::FlipCameras=true;
+			VT::VTAppGlobals::Instance()->FlipCameras = true;
 		else
-			VT::VTAppGlobals::FlipCameras=false;
+			VT::VTAppGlobals::Instance()->FlipCameras = false;
 	}
 	{
 
-		VT::VTAppGlobals::GhostServerIP=core::StringUtil::Trim(extraOptions.GetOptionValue("GhostServer"));
+		VT::VTAppGlobals::Instance()->GhostServerIP = core::StringUtil::Trim(extraOptions.GetOptionValue("GhostServer"));
 	}
 	{
 		core::string v=extraOptions.GetOptionValue("HorizontalFlip");
@@ -185,13 +210,9 @@ void Application::init(const OptionContainer &extraOptions)
 	m_screenShot->setMipmapsFilter(false);
 	m_screenShot->createTexture(math::vector3d(GetRenderWindow()->GetSize().x,GetRenderWindow()->GetSize().y,1),video::EPixel_B8G8R8A8);
 
-	m_mainVP[0]=GetRenderWindow()->CreateViewport(mT("Main"),0,0,math::rectf(0,0,1,1),0);
-	m_mainVP[1]=0;
-	m_stereoVP[0]=m_stereoVP[1]=0;
-
 
 	{
-		m_stereoVP[0]=new scene::ViewPort(mT("Left"),0,0,GetRenderWindow(0),math::rectf(0,0,1,1),0);
+	//	m_stereoVP[0]=new scene::ViewPort(mT("Left"),0,0,GetRenderWindow(0),math::rectf(0,0,1,1),0);
 		core::string v=extraOptions.GetOptionValue("Stereoscopic");
 		if(v=="DVI")
 		{
@@ -200,11 +221,14 @@ void Application::init(const OptionContainer &extraOptions)
 			opt["title"].value="Second Window";
 			m_2ndWnd= getDevice()->CreateRenderWindow(mT("Secondary"),GetRenderWindow()->GetSize(),GetRenderWindow()->IsFullScreen(),opt,0);
 			AddRenderWindow(m_2ndWnd);
-
+			/*
 			m_mainVP[1]=GetRenderWindow(1)->CreateViewport(mT("2nd"),0,0,math::rectf(0,0,1,1),0);
 			m_stereoVP[1]=new scene::ViewPort(mT("Right"),0,0,GetRenderWindow(1),math::rectf(0,0,1,1),0);//GetRenderWindow(1)->CreateViewport(mT("Right"),0,0,math::rectf(0,0,1,1),0);
+			*/
 			GetRenderWindow(0)->SetActive(true);
-		}else
+			VTAppGlobals::Instance()->stereoMode = TBee::ERenderStereoMode::SideBySide;
+		}
+		/*else
 		{
 			m_stereoVP[1]=new scene::ViewPort(mT("Right"),0,0,GetRenderWindow(0),math::rectf(0,0,1,1),0);//GetRenderWindow(0)->CreateViewport(mT("Right"),0,0,math::rectf(0,0,1,1),0);
 			m_stereoVP[1]->SetClearColor(video::DefaultColors::Green);
@@ -218,43 +242,68 @@ void Application::init(const OptionContainer &extraOptions)
 			m_stereoRenderer->SetMode(scene::EStereo_TopDown);
 		else if(v=="SideBySide")
 			m_stereoRenderer->SetMode(scene::EStereo_SideBySide);
-
 		getDevice()->setClearColor(video::SColor(0.6,0.8,0.9,0));
+		*/
 	}
-
-	m_renderingStateManager=new VT::RenderingStateManager(this);
-	m_renderingStateManager->AddListener(this);
-
+#if 0
 	{
-		int c=IsStereo()?2:1;
-		for(int i=0;i<c;++i)
+		int c = IsStereo() ? 2 : 1;
+		for (int i = 0; i < c; ++i)
 		{
 
-			m_rtTexture[i]=getDevice()->createEmptyTexture2D(true);
+			m_rtTexture[i] = getDevice()->createEmptyTexture2D(true);
 			m_rtTexture[i]->setMipmapsFilter(false);
 
-			m_renderTarget[i]=getDevice()->createRenderTarget("",m_rtTexture[i],0,0,0);
+			m_renderTarget[i] = getDevice()->createRenderTarget("", m_rtTexture[i], 0, 0, 0);
 		}
+	}
+	m_mainVP[0]=GetRenderWindow()->CreateViewport(mT("Main"),0,0,math::rectf(0,0,1,1),0);
+	m_mainVP[1]=0;
+	m_stereoVP[0]=m_stereoVP[1]=0;
+
+
+#endif
+
+	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
+
+	m_renderingStateManager = new TBee::RenderingStateManager();
+
+	{
+		VTelesarRenderingState* vtRS = new VTelesarRenderingState("TelesarState");
+		TBee::IRenderingState* nullSt = new TBee::NullRenderState();
+		m_renderingStateManager->AddState(nullSt);
+		m_renderingStateManager->AddState(vtRS);
+		m_renderingStateManager->AddTransition(nullSt, vtRS, 0);
+		m_renderingStateManager->SetInitialState(nullSt);
+
+		nullSt->InitState();
+		vtRS->InitState();
 	}
 	{
-		m_previewWnd=0;
-		if(extraOptions.GetOptionValue("Preview")=="Yes")
+		m_previewWnd = 0;
+		if (extraOptions.GetOptionValue("Preview") == "Yes")
 		{
 			OptionContainer opt;
-			opt["title"].value="Preview";
-			opt["VSync"].value="false";
-			m_previewWnd=getDevice()->CreateRenderWindow("Preview",math::vector2di(640,480),false,opt,0);
-			m_previewWnd->CreateViewport(mT("Main"),0,0,math::rectf(0,0,1,1),0);
+			opt["title"].value = "Preview";
+			opt["VSync"].value = "false";
+			opt["Monitor"].value = "0";
+			m_previewWnd = getDevice()->CreateRenderWindow("Preview", math::vector2di(1280, 720), false, opt, 0);
+			m_previewWnd->CreateViewport(mT("Main"), 0, 0, math::rectf(0, 0, 1, 1), 0);
 			AddRenderWindow(m_previewWnd);
 			InputCreationPack pack(m_previewWnd);
-			pack.WinSize=m_previewWnd->GetSize();
-			pack.exclusiveMouse=false;
-			m_inputManager=0;
-			m_inputManager=CreateOISInputManager(pack);
+			pack.WinSize = m_previewWnd->GetSize();
+			pack.exclusiveMouse = false;
+			m_inputManager = CreateOISInputManager(pack);
+			VTAppGlobals::Instance()->inputMngr = m_inputManager;
+
+
+			video::ITexturePtr t = gEngine.getDevice()->createEmptyTexture2D(false);
+			t->setMipmapsFilter(false);
+			m_previewRT = gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0);
+
 		}
 
 	}
-
 }
 
 int Application::getEyeIndex(bool left)
@@ -289,7 +338,7 @@ void Application::RenderUI(const math::rectf& rc)
 			attr.wrap=0;
 			attr.RightToLeft=0;
 			core::string msg=mT("FPS= ");
-			msg+=core::StringConverter::toString((int)core::CFPS::getInstance().getFPS());
+			msg+=core::StringConverter::toString((int)gEngine.getFPS()->getFPS());
 			font->print(math::rectf(rc.BRPoint.x-250,rc.BRPoint.y-50,10,10),&attr,0,msg,m_guiRender);
 			yoffset+=attr.fontSize;
 
@@ -318,6 +367,34 @@ void Application::RenderUI(const math::rectf& rc)
 void Application::WindowPostRender(video::RenderWindow* wnd)
 {
 	_AUTO_BENCHMARK(m_renderBenchMark);
+
+	getDevice()->set2DMode();
+
+	if (wnd == m_previewWnd)
+	{
+		math::rectf rc(0, wnd->GetSize());
+		video::TextureUnit tex;
+
+		if (m_previewRT->GetSize() != wnd->GetSize())
+		{
+			m_previewRT->GetColorTexture()->createTexture(math::vector3d(wnd->GetSize().x, wnd->GetSize().y, 1), video::EPixel_R8G8B8);
+		}
+		m_renderingStateManager->OnDraw(rc, m_previewRT, TBee::Eye_Right);
+		RenderUI(rc);
+		getDevice()->setRenderTarget(0);
+		//	tex.SetTexture(m_tbRenderer->GetEyeImage(0)->GetColorTexture());
+		tex.SetTexture(m_previewRT->GetColorTexture());
+		getDevice()->useTexture(0, &tex);
+
+		math::rectf trc;
+		getDevice()->draw2DImage(rc, 1);
+		return;
+	}
+	getDevice()->setViewport(m_mainVP);
+	m_tbRenderer->Render(m_mainVP);
+	return;
+
+#if 0
 	if(wnd==m_previewWnd)
 	{
 		getDevice()->set2DMode();
@@ -364,7 +441,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 	int c= IsStereo()&&singleWindow ? 2:1;
 
-	math::vector2d szOffset=viewpt->getSize()/c;
+	math::vector2d szOffset=viewpt->GetSize()/c;
 	
 	for(int i=0;i<c;++i)
 	{
@@ -379,7 +456,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		getDevice()->set2DMode();
 		getDevice()->setRenderTarget(m_rtTexture[index],true,true,video::SColor(1,1,1,0));
 			
-		m_renderingStateManager->OnDraw(index==0,rc,m_renderTarget[index]);
+		m_renderingStateManager->OnDraw(rc, m_renderTarget[index], index == 0?TBee::Eye_Left:TBee::Eye_Right);
 //			getDevice()->draw2DRectangle(rc,video::SColor(index,1,0,1));
 
 	}
@@ -424,7 +501,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 		//getDevice()->useShader(0);
 
 	}
-
+#endif
 }
 void Application::update(float dt)
 {
@@ -444,21 +521,30 @@ void Application::update(float dt)
 }
 void Application::onDone()
 {
-	//VT::VTAppGlobals::Save("VTSettings.conf");
+	//VT::VTAppGlobals::Instance()->Save("VTSettings.conf");
 
 }
 
+void Application::OnRendererDraw(TBee::TBeeRenderer* r, const math::rectf& vp, video::IRenderTarget* rt, TBee::ETargetEye eye)
+{
+
+	m_renderingStateManager->OnDraw(vp, rt, eye);
+	RenderUI(vp);
+
+}
+/*
 scene::ViewPort* Application::GetViewport(bool left)
 {
 	return m_stereoVP[getEyeIndex(left)];
-}
+}*/
 
 bool Application::IsStereo()
 {
-	return m_stereoRenderer->GetMode()!=scene::SCT_NONE;
+	return m_tbRenderer->GetViewportCount() == 2;
+//	return m_stereoRenderer->GetMode()!=scene::SCT_NONE;
 }
 
-void Application::OnStateChanged(IRenderingState* old,IRenderingState* state)
+void Application::OnStateChanged(TBee::IRenderingState* old, TBee::IRenderingState* state)
 {
 	m_renderBenchMark->reset();
 	m_updateBenchMark->reset();

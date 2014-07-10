@@ -12,7 +12,7 @@
 #ifndef ___VTSharedMemory___
 #define ___VTSharedMemory___
 
-#include "CompileConfig.h"
+#include "VTShCompileConfig.h"
 
 
 #include "ICommunicationLayer.h"

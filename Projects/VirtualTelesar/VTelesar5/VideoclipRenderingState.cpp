@@ -4,6 +4,7 @@
 #include "VideoclipRenderingState.h"
 
 #include "Application.h"
+#include "VTAppGlobals.h"
 
 
 namespace mray
@@ -12,7 +13,8 @@ namespace VT
 {
 
 
-VideoclipRenderingState::VideoclipRenderingState()
+VideoclipRenderingState::VideoclipRenderingState(const core::string& n)
+:IRenderingState(n)
 {
 	m_video[0]=new video::VideoGrabberTexture();
 	m_video[1]=new video::VideoGrabberTexture();
@@ -23,16 +25,18 @@ VideoclipRenderingState::~VideoclipRenderingState()
 	delete m_video[1];
 }
 
-void VideoclipRenderingState::InitState(Application* app)
+void VideoclipRenderingState::InitState()
 {
-	IRenderingState::InitState(app);
-	int c=m_stereo?2:1;
+	IRenderingState::InitState();
+	int c = 1;
+	if (TBee::AppData::Instance()->stereoMode != TBee::ERenderStereoMode::None)
+		c = 2;
 	for(int i=0;i<c;++i)
 	{
 		if(m_fileName[i]!="")
 		{
-			video::IVideoSourcePtr vdo=app->GetVideoManager()->CreateVideoFromFile(m_fileName[i],video::EVideo_RGB);
-			video::ITexturePtr tex=app->getDevice()->createEmptyTexture2D(true);
+			video::IVideoSourcePtr vdo=VTAppGlobals::Instance()->App->GetVideoManager()->CreateVideoFromFile(m_fileName[i],video::EVideo_RGB);
+			video::ITexturePtr tex = VTAppGlobals::Instance()->App->getDevice()->createEmptyTexture2D(true);
 
 			m_video[i]->Set(vdo,tex);
 		}
@@ -45,7 +49,9 @@ void VideoclipRenderingState::OnEvent(Event* e)
 }
 void VideoclipRenderingState::OnEnter(IRenderingState*prev)
 {
-	int c=m_stereo?2:1;
+	int c = 1;
+	if (TBee::AppData::Instance()->stereoMode != TBee::ERenderStereoMode::None)
+		c = 2;
 	for(int i=0;i<c;++i)
 	{
 		video::IVideoSource* v=(video::IVideoSource*)m_video[i]->GetGrabber().pointer();
@@ -60,7 +66,9 @@ void VideoclipRenderingState::OnEnter(IRenderingState*prev)
 void VideoclipRenderingState::OnExit()
 {
 	IRenderingState::OnExit();
-	int c=m_stereo?2:1;
+	int c = 1;
+	if (TBee::AppData::Instance()->stereoMode != TBee::ERenderStereoMode::None)
+		c = 2;
 	for(int i=0;i<c;++i)
 	{
 		video::IVideoSource* v=(video::IVideoSource*)m_video[i]->GetGrabber().pointer();
@@ -71,12 +79,12 @@ void VideoclipRenderingState::OnExit()
 		}
 	}
 }
-video::IRenderTarget* VideoclipRenderingState::Render(bool left,const math::rectf& rc)
+video::IRenderTarget* VideoclipRenderingState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
-	int index=left?0:1;
-	if(!m_stereo)
-		index=0;
-	video::IRenderTarget*rt= IRenderingState::Render(left,rc);
+	int index=eye==TBee::Eye_Left?0:1;
+// 	if(!m_stereo)
+// 		index=0;
+	video::IRenderTarget*rt= IRenderingState::Render(rc,eye);
 	video::IVideoDevice* dev=Engine::getInstance().getDevice();
 	dev->setRenderTarget(rt);
 

@@ -3,8 +3,8 @@
 /********************************************************************
 	created:	2012/10/10
 	created:	10:10:2012   10:55
-	filename: 	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5\ApplicationStateManager.h
-	file path:	d:\Development\mrayEngine\Projects\VirtualTelesar\VTelesar5
+	filename: 	d:\Development\mrayEngine\Projects\TelubeeLib\ApplicationStateManager.h
+	file path:	d:\Development\mrayEngine\Projects\TelubeeLib
 	file base:	ApplicationStateManager
 	file ext:	h
 	author:		MHD YAMEN SARAIJI
@@ -15,21 +15,31 @@
 #define ___ApplicationStateManager___
 
 #include "IRenderingState.h"
+#include "StateMachine.h"
 
 
 namespace mray
 {
-	class StateMachine;
 
 namespace TBee
 {
 
 	class IApplicationState;
 
-class ApplicationStateManager
+	class IApplicationStateManagerListener
+	{
+	public:
+		virtual void OnChangeState(IApplicationState*state){}
+	};
+
+class ApplicationStateManager:public ListenerContainer<IApplicationStateManagerListener*>,public IStateMachineListener
 {
 protected:
 	StateMachine* m_stateMachine;
+
+	DECLARE_FIRE_METHOD(OnChangeState, (IApplicationState*state), (state));
+
+	virtual void OnStateChanged(StateMachine*, IState* oldS, IState* newS);
 public:
 	ApplicationStateManager();
 	virtual~ApplicationStateManager();

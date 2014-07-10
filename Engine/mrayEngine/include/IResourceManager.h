@@ -51,6 +51,8 @@ protected:
 
 	
 	virtual core::string getDefaultGroup()=0;
+
+	void _removeResource(const IResourcePtr& resource);
 public:
 
 	IResourceManager(const mchar*resourceType);

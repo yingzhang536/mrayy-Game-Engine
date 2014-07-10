@@ -45,7 +45,7 @@ namespace mray
 	}
 	const math::vector2di& CombineVideoGrabber::GetFrameSize()
 	{
-		return m_targetSize;
+		return m_g1->GetFrameSize();
 	}
 
 	void CombineVideoGrabber::SetImageFormat(video::EPixelFormat fmt)
@@ -96,6 +96,7 @@ namespace mray
 		ret = a | b;
 		if (!ret)
 			return false;
+		return true;
 		m_newFrame = true;
 
 		m_bufferID++;
@@ -258,13 +259,13 @@ namespace mray
 	}
 	bool CombineVideoGrabber::HasNewFrame()
 	{
-		return m_newFrame;
+		return m_g1->HasNewFrame();
 	}
 
 
 	const video::ImageInfo* CombineVideoGrabber::GetLastFrame()
 	{
-		return &m_lastImage;
+		return m_g1->GetLastFrame();
 	}
 
 }

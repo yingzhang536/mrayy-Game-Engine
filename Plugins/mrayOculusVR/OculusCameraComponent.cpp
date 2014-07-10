@@ -41,7 +41,7 @@ void OculusCameraComponent::Update(float dt)
 	if (!m_device || !m_device->IsConnected() || !m_vp)
 		return;
 	const video::OculusDeviceData& data= m_device->GetDeviceInfo();
-	math::vector2d vpSize=math::vector2d(m_vp->getSize().x,m_vp->getSize().y);
+	math::vector2d vpSize = math::vector2d(m_vp->GetSize().x, m_vp->GetSize().y);
 	float fov=m_device->GetVerticalFOV(vpSize);
 
 	float distOffset;

@@ -22,7 +22,7 @@ namespace GUI
 
 	GUITweetItem::GUITweetItem(IGUIManager* m) :IGUIElement(ElementType, m)
 	{
-		m_tweet = 0;
+		m_Tweet = 0;
 	}
 	GUITweetItem::~GUITweetItem()
 	{
@@ -31,7 +31,7 @@ namespace GUI
 
 	void GUITweetItem::SetTweet(ted::TwitterTweet* t)
 	{
-		m_tweet = t;
+		m_Tweet = t;
 	}
 
 
@@ -64,7 +64,7 @@ namespace GUI
 		dev->useTexture(0, &tex1);
 		dev->draw2DImage(bgR, 1);
 
-		if (font && m_tweet)
+		if (font && m_Tweet)
 		{
 			math::rectf tmpRc;
 
@@ -83,7 +83,7 @@ namespace GUI
 			m_fontAttrs.lineSpacing = 10;
 			m_fontAttrs.wrap = true;
 			m_fontAttrs.fontSize = 18;
-			font->print(tmpRc, &m_fontAttrs, &clip, m_tweet->text, creator->GetRenderQueue());
+			font->print(tmpRc, &m_fontAttrs, &clip, m_Tweet->text, creator->GetRenderQueue());
 
 		}
 		GetCreator()->GetRenderQueue()->Flush();

@@ -26,6 +26,8 @@ namespace TBee
 class JoystickInputController:public IInputController
 {
 protected:
+	math::vector2d m_currentSpeed;
+	float m_currentRotation;
 public:
 	JoystickInputController();
 	virtual~JoystickInputController();

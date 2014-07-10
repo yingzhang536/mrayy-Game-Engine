@@ -16,6 +16,7 @@ GstStereoNetVideoSource::GstStereoNetVideoSource(const core::string& ip )
 {
 	m_providers = new GStreamVideoProvider();
 	SetIP(ip);
+	m_isStereo = true;
 }
 
 GstStereoNetVideoSource::~GstStereoNetVideoSource()
@@ -57,15 +58,32 @@ bool GstStereoNetVideoSource::Blit()
 	return false;
 }
 
+math::vector2d GstStereoNetVideoSource::GetEyeScalingFactor(int i)
+{
+	return math::vector2d(m_isStereo?2:1, 1); 
+}
 math::vector2d GstStereoNetVideoSource::GetEyeResolution(int i)
 {
 	math::vector3di sz = m_remoteTex->getSize();
-	return math::vector2d(sz.x / 2, sz.y);
+	return math::vector2d(sz.x / (m_isStereo?2:1), sz.y);
 }
 video::ITexturePtr GstStereoNetVideoSource::GetEyeTexture(int i)
 {
 	return m_remoteTex;
 }
+math::rectf GstStereoNetVideoSource::GetEyeTexCoords(int i)
+{ 
+	if (m_isStereo)
+		return math::rectf(i*0.5, 0, 0.5 + i*0.5, 1);
+	else 
+		return math::rectf(0, 0, 1, 1);
+}
+
+void GstStereoNetVideoSource::SetIsStereo(bool stereo)
+{
+	m_isStereo = stereo;
+}
+
 
 }
 }

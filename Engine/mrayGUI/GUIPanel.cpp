@@ -51,15 +51,17 @@ void GUIPanel::Draw(const math::rectf*vp)
 
 	if(m_drawBackground)
 	{
+		video::SColor clr(GetColor());
+		clr.A = GetDerivedAlpha();
 		math::rectf oldScissor=creator->GetDevice()->getScissorRect();
 		creator->GetDevice()->setScissorRect(clipRect);
 		if(skin)
 		{
-			skin->drawSizableBox(creator->GetRenderQueue(), clipRect, 0, mT("Frame"), GetColor());
+			skin->drawSizableBox(creator->GetRenderQueue(), clipRect, 0, mT("Frame"), clr);
 			creator->GetRenderQueue()->Flush();
 		}else
 		{
-			creator->GetDevice()->draw2DRectangle(clipRect,GetColor());
+			creator->GetDevice()->draw2DRectangle(clipRect, clr);
 
 		}
 		creator->GetDevice()->setScissorRect(oldScissor);

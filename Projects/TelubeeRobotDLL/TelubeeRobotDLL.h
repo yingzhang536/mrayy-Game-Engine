@@ -46,6 +46,7 @@ struct RobotStatus
 		X = Y = Z = 0;
 	}
 };
+class IRobotController;
 
 class ITelubeeRobotListener
 {
@@ -59,16 +60,17 @@ class RobotSerialPort;
 class TELUBEEROBOTDLL_API CTelubeeRobotDLL 
 {
 protected:
-	RobotSerialPort* m_impl;
+	IRobotController* m_impl;
 public:
 	CTelubeeRobotDLL(void);
 	// TODO: add your methods here.
 
 	virtual~CTelubeeRobotDLL();
 
-	void SetListener(ITelubeeRobotListener* l);
-
-	void OnRobotStatus(const RobotStatus& st);
+	IRobotController* GetRobotController()
+	{
+		return m_impl;
+	}
 	
 };
 

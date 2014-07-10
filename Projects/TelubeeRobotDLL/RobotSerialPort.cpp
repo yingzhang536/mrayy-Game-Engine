@@ -20,7 +20,7 @@ float testPosy = 100.00;
 
 #define ROBOT_CENTER 325
 
-bool debug_print = false;
+bool debug_print = true;
 bool threadStart = false;
 bool isDone = false;
 bool upCount = true;
@@ -31,7 +31,7 @@ DWORD RobotSerialPort::timerThreadHead(RobotSerialPort *robot, LPVOID pdata){
 	while (!isDone){
 		if (threadStart){
 			//printf("thread h: %d \r", count++);	
-			robot->head_control(-robot->pan, -robot->tilt, -robot->roll);
+			robot->head_control(-robot->pan, robot->tilt, -robot->roll);
 /*
 			if(upCount)
 				robot->head_control(count+=1, 0, 0);
@@ -46,7 +46,7 @@ DWORD RobotSerialPort::timerThreadHead(RobotSerialPort *robot, LPVOID pdata){
 		}
 
 		
-		Sleep(3);
+		Sleep(1);
 	}
 	return 0;
 }
@@ -56,11 +56,12 @@ DWORD RobotSerialPort::timerThreadBase(RobotSerialPort *robot, LPVOID pdata){
 	int count = 0;
 	while (true){
 		if (threadStart){
+			robot->omni_control(-robot->robot_vx, -robot->robot_vy,-robot->robot_rot, robot->baseConnected ? RUN:STOP);
 			//printf("thread b: %d \r", count++);
 			//robot->yamahaXY_control(robot->robotX, robot->robotY, RUN);
 		}
 
-		Sleep(40);
+		Sleep(20);
 	}
 }
 
@@ -155,6 +156,7 @@ RobotSerialPort::RobotSerialPort()
 
 	m_impl = new RobotSerialPortImpl();
 	m_impl->listener = 0;
+	baseConnected = 0;
 	load_parameters();
 
 	for (int i = 0; i < 3; i++){
@@ -191,6 +193,7 @@ std::string RobotSerialPort::ScanePorts()
 		}
 		evt.disconnect();
 	}
+	return "";
 }
 void RobotSerialPort::ConnectRobot()
 {
@@ -342,8 +345,8 @@ int RobotSerialPort::head_control(float pan, float tilt, float roll){
 	packet_size = strlen(sCommand);
 	if (m_impl->comHEAD)
 		m_impl->comHEAD->sendData(sCommand, packet_size);
-	if (debug_print)
-		printf(sCommand);
+//	if (debug_print)
+	//	printf(sCommand);
 
 	return true;
 
@@ -353,6 +356,8 @@ int RobotSerialPort::head_control(float pan, float tilt, float roll){
 
 void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 {
+	if (!IsConnected())
+		return;
 	if (IsConnected() && !st.connected)
 	{
 		DisconnectRobot();
@@ -371,23 +376,24 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 		return;
 
 	//todo: send the data to control the robot
-	int robot_vx, robot_vy, robot_rot;
 
 	int v_scale = 500;
 	int r_scale = 400;
 
 	float v_size;
 
-	//robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speedX*v_scale);
-	//robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speedY*v_scale);
-	//robot_rot = m_impl->mvRobot[BASE][2]->getNext(st.rotation*r_scale);
+	robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speedX*v_scale);
+	robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speedY*v_scale);
+	robot_rot = m_impl->mvRobot[BASE][2]->getNext(st.rotation*r_scale);
 
-	robotX = m_impl->mvRobot[BASE][0]->getNext(st.X * 1000);
-	robotY = m_impl->mvRobot[BASE][1]->getNext(st.Z * 1000);
+//	robotX = m_impl->mvRobot[BASE][0]->getNext(st.X * 1000);
+//	robotY = m_impl->mvRobot[BASE][1]->getNext(st.Z * 1000);
 
 	pan = m_impl->mvRobot[HEAD][0]->getNext(st.yaw);
 	tilt = m_impl->mvRobot[HEAD][1]->getNext(st.tilt);
 	roll = m_impl->mvRobot[HEAD][2]->getNext(st.roll);
+
+	baseConnected = st.connected;
 
 	robotX = ROBOT_CENTER - robotX;
 
@@ -398,7 +404,7 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 
 	//v_size = sqrt(static_cast<double>(robot_vx)*static_cast<double>(robot_vx)+static_cast<double>(robot_vy)*static_cast<double>(robot_vy));
 
-	if (debug_print){
+	if (debug_print && false){
 		//printf("Robot Speed / Rot = %3.2f,%3.2f,%3.2f\n", st.speedX, st.speedY, st.rotation);
 		printf("Head Position = %3.2f,%3.2f\n", robotX, robotY);
 		printf("Head Orientation = %3.2f,%3.2f,%3.2f\n", st.yaw, st.tilt, st.roll);

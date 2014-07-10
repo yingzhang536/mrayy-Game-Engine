@@ -24,14 +24,4 @@ CTelubeeRobotDLL::~CTelubeeRobotDLL(void)
 
 
 
-void CTelubeeRobotDLL::SetListener(ITelubeeRobotListener* l)
-{
-	m_impl->SetListener(l);
-}
-
-
-void CTelubeeRobotDLL::OnRobotStatus(const RobotStatus& st)
-{
-	m_impl->UpdateRobotStatus(st);
-}
 

@@ -9,7 +9,7 @@
 #include "Application.h"
 #include "VTAppGlobals.h"
 #include <IThreadManager.h>
-
+#include "AppData.h"
 
 namespace mray
 {
@@ -18,7 +18,9 @@ namespace VT
 
 	//typedef video::DirectShowVideoGrabber VCameraType ;
 
-CameraRenderingState::CameraRenderingState()
+
+CameraRenderingState::CameraRenderingState(const core::string&name)
+:IRenderingState(name)
 {
 	m_exitCode=0;
 
@@ -41,11 +43,10 @@ CameraRenderingState::~CameraRenderingState()
 
 
 
-void CameraRenderingState::InitState(Application* app)
+void CameraRenderingState::InitState()
 {
-	IRenderingState::InitState(app);
+	IRenderingState::InitState();
 	m_texCoordRectSize=1;
-	int c=m_stereo?2:1;
 
 }
 
@@ -78,7 +79,9 @@ void CameraRenderingState::OnEvent(Event* e)
 
 void CameraRenderingState::OnEnter(IRenderingState*prev)
 {
-	int c=m_stereo?2:1;
+	int c = 1;
+	if (TBee::AppData::Instance()->stereoMode != TBee::ERenderStereoMode::None)
+		c = 2;
 	for(int i=0;i<c;++i)
 	{
 		m_cams[i]->Load();
@@ -89,22 +92,24 @@ void CameraRenderingState::OnEnter(IRenderingState*prev)
 void CameraRenderingState::OnExit()
 {
 	IRenderingState::OnExit();
-	int c=m_stereo?2:1;
+	int c = 1;
+	if (TBee::AppData::Instance()->stereoMode != TBee::ERenderStereoMode::None)
+		c = 2;
 	for(int i=0;i<c;++i)
 	{
 		m_cams[i]->Unload();
 	}
 }
-video::IRenderTarget* CameraRenderingState::Render(bool left,const math::rectf& rc)
+video::IRenderTarget* CameraRenderingState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
-	video::IRenderTarget* rt=IRenderingState::Render(left,rc);
-	int index=left?0:1;
+	video::IRenderTarget* rt=IRenderingState::Render(rc,eye);
+	int index=eye==TBee::Eye_Left?0:1;
 	float shift=(float)m_VerticalShift*0.5f;
 
 	math::rectf texCoord(1-m_texCoordRectSize,m_texCoordRectSize,m_texCoordRectSize,1-m_texCoordRectSize);
 
-	if(!m_stereo)
-		index=0;
+// 	if(!m_stereo)
+// 		index=0;
 	if(index==1)
 		shift=-shift;
 
@@ -140,8 +145,6 @@ void CameraRenderingState::Update(float dt)
 void CameraRenderingState::LoadFromXML(xml::XMLElement* e)
 {
 	IRenderingState::LoadFromXML(e);
-	xml::XMLAttribute* attr;
-
 
 	xml::XMLElement* elem=e->getSubElement("LeftCamera");
 	if(elem)

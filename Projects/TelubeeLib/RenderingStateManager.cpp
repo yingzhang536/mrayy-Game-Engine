@@ -63,6 +63,8 @@ void RenderingStateManager::OnStateChanged(StateMachine*,IState* oldS,IState* ne
 		m_oldState->OnExit();
 	m_oldState = dynamic_cast<IRenderingState*>(oldS);
 	m_blender->Reset();
+
+	FIRE_LISTENR_METHOD(OnStateChanged, (m_oldState, dynamic_cast<IRenderingState*>(newS)))
 }
 
 void RenderingStateManager::AddState(IRenderingState* st)
@@ -95,7 +97,7 @@ bool RenderingStateManager::OnEvent(Event* event, const math::rectf& rc)
 		{
 			if(e->key==KEY_F8)
 			{
-				s->ForceExit();
+				//s->ForceExit();
 			}
 		}
 	}

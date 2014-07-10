@@ -8,7 +8,6 @@
 //#include "PoolMemoryAllocator.h"
 #include "HeapAllocator.h"
 //#include "CMemory.h"
-#include "CompileConfig.h"
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>

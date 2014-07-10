@@ -108,8 +108,8 @@ public:
 	void SetRawData(ushort* d, int w, int h);
 	ushort* GetRawData();
 
-	math::recti  GetCroppedFrame(const math::recti& src, DepthFrame* f);
-	void AddFrame(const math::recti& src, DepthFrame* f);
+	math::recti  GetCroppedFrame(const math::recti& src, const DepthFrame* f);
+	void AddFrame(const math::recti& src, const  DepthFrame* f);
 };
 
 }

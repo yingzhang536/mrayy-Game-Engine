@@ -57,6 +57,7 @@ public:
 	const std::vector<MotorConnection*>& GetMotorConnections(){ return m_motorConnections; }
 	RobotCommunicator* GetRobotCommunicator(){ return m_communicator; }
 
+	virtual bool SetEnabled(bool enabled);
 
 	bool SetUseKinematics(bool k){m_controlSource=k?EControl_Kinematic:EControl_Realtime;return true;}
 	bool GetUseKinematics(){return m_controlSource==EControl_Kinematic;}

@@ -734,6 +734,8 @@ void GLDev::draw2DRectangle(const math::rect<float> &src,const video::SColor& co
 // 	glLoadIdentity();
 	
 	disableTexture(0);
+	disableTexture(1);
+	disableTexture(2);
 	if(fill)
 		glBegin(GL_QUADS);
 	else

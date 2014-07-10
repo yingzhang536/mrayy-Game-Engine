@@ -16,11 +16,7 @@
 
 #include "OptiTrackClient.h"
 
-#include "VTLib.h"
-#include "RobotCommunicator.h"
-#include "UDPCommunicationLayer.h"
-#include "VTSharedMemory.h"
-#include "CommunicationManager.h"
+#include "VTBaseState.h"
 #include "OptiTrackDataSource.h"
 
 #include "HeadCameraComponent.h"
@@ -59,14 +55,19 @@
 
 #include "GUIOverlayManager.h"
 #include "GUIOverlay.h"
+#include "SceneComponent.h"
+
+#include "CameraConfigurationManager.h"
+
+#include "LocalCameraVideoSource.h"
+#include "ICameraVideoGrabber.h"
+#include "RobotCommunicatorComponent.h"
 
 
-#define VT_USING_SHAREDMEM
 #define VIDEO_PORT 5000
 #define AUDIO_PORT 5002
 #define COMMUNICATION_PORT 5003
 
-#define DEPTH_LOCAL
 namespace mray
 {
 namespace AugTel
@@ -74,9 +75,31 @@ namespace AugTel
 
 	class AugCameraStateImpl
 	{
+
+	protected:
+
+		void GenerateBRDF()
+		{
+			BRDFTexture = gEngine.getDevice()->createEmptyTexture2D(false);
+			BRDFTexture->setMipmapsFilter(false);
+			BRDFTexture->createTexture(math::vector3d(512, 512, 1), video::EPixel_Float16_R);
+			video::IRenderTargetPtr rt = gEngine.getDevice()->createRenderTarget("", BRDFTexture, 0, 0, 0);
+
+			video::IGPUShaderProgramPtr BRDF_FP = gShaderResourceManager.loadShaderFromFile("BRDF_PreComp.cg", video::EShader_FragmentProgram, "main_fp_PHBeckmann", video::ShaderPredefList(), "cg");
+			gEngine.getDevice()->set2DMode();
+			gEngine.getDevice()->setRenderTarget(rt);
+			gEngine.getDevice()->setFragmentShader(BRDF_FP);
+			gEngine.getDevice()->draw2DImage(math::rectf(0, 0, 512, 512), 1);
+			gEngine.getDevice()->setRenderTarget(0);
+			gEngine.getDevice()->setFragmentShader(0);
+			rt = 0;
+		}
 	public:
 		HeadMount* headMount;
 
+		video::ITexturePtr BRDFTexture;
+
+		VT::RobotCommunicatorComponent* robotCommunicator;
 	public:
 		AugCameraStateImpl()
 		{
@@ -86,84 +109,25 @@ namespace AugTel
 		{
 		}
 
+		void Init()
+		{
+			GenerateBRDF();
+		}
+
+
 
 	};
-
-	class TelesarCommunicationHandler
-	{
-		static int _refCount;
-		static TelesarCommunicationHandler* _instance;
-	public:
-
-		VT::ICommunicationLayer* commLayer;
-
-	protected:
-
-		TelesarCommunicationHandler()
-		{
-			commLayer = 0;
-		}
-		~TelesarCommunicationHandler()
-		{
-			delete commLayer;
-		}
-		void _init()
-		{
-
-
-#ifdef VT_USING_SHAREDMEM
-			commLayer = new VT::VTSharedMemory(mT("TelesarV"));
-#else
-			commLayer = new VT::UDPCommunicationLayer(1234);
-#endif
-			VT::CommunicationManager::getInstance().AddCommunicationLayer(mT("TelesarV"), commLayer);
-
-
-			commLayer->Start();
-
-			game::GameComponentCreator::getInstance().AddAlias("KinematicJointDOF6Component", "PhysicalJointComponent");
-			game::GameComponentCreator::getInstance().AddAlias("NullPhysicsComponent", "RigidBodyComponent");
-		}
-
-	public:
-		static void Ref()
-		{
-			_refCount++;
-			if (_refCount == 1)
-			{
-				_instance = new TelesarCommunicationHandler();
-				_instance->_init();
-			}
-		}
-		static void Unref()
-		{
-			_refCount--;
-			if (_refCount == 0)
-			{
-				delete _instance;
-				_instance = 0;
-			}
-		}
-		static TelesarCommunicationHandler* Instance(){ return _instance; }
-
-		void Update(float dt)
-		{
-			commLayer->Update(dt);
-		}
-	};
-	int TelesarCommunicationHandler::_refCount=0;
-	TelesarCommunicationHandler* TelesarCommunicationHandler::_instance=0;
 
 	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src , TBee::IRobotCommunicator* comm, const core::string& name)
 		:IEyesRenderingBaseState(name)
 {
 	m_data = new AugCameraStateImpl();
 
-	m_eyes[0].flip90 = 0;
-	m_eyes[1].flip90 = 0;
-
-	m_eyes[0].cw = 0;
-	m_eyes[1].cw = 1;
+// 	m_eyes[0].flip90 = 0;
+// 	m_eyes[1].flip90 = 0;
+// 
+// 	m_eyes[0].cw = 0;
+// 	m_eyes[1].cw = 1;
 
 	m_camVideoSrc = src;
 
@@ -178,15 +142,19 @@ namespace AugTel
 
 	m_viewDepth = false;
 
+	m_lightMapTimer = 0;
+
+	m_showDebug = false;
+	m_vtState = new VTBaseState();
 }
 AugCameraRenderState::~AugCameraRenderState()
 {
+	delete m_vtState;
 	delete m_data;
 	delete m_camVideoSrc;
 	m_gameManager = 0;
 	m_sceneManager = 0;
 	m_phManager = 0;
-	TelesarCommunicationHandler::Unref();
 	delete m_openNiHandler;
 	delete m_depthVisualizer;
 }
@@ -214,7 +182,14 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			else
 			if ( evt->key == KEY_R)
 			{
-				m_data->headMount->SetDisabled(!m_data->headMount->IsDisabled());
+				if (evt->ctrl)
+				{
+					math::vector3d pos = m_data->headMount->getAbsolutePosition();
+					math::vector3d ang;
+					m_data->headMount->getAbsoluteOrintation().toEulerAngles(ang);
+					printf("%2.3f,%2.3f,%2.3f   %2.3f,%2.3f,%2.3f\n", pos.x, pos.y, pos.z,ang.x,ang.y,ang.z);
+				}else
+					m_data->headMount->SetDisabled(!m_data->headMount->IsDisabled());
 				ok = true;
 			}
 			else if ( evt->key == KEY_F10)
@@ -226,13 +201,18 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 
 				ok = true;
 			}
-			else if (evt->key == KEY_D)//show/hide depth
+			else if (evt->key == KEY_D && evt->ctrl)//show/hide depth
 			{
 				m_viewDepth = !m_viewDepth;
 				ok = true;
 			}
+			else if (evt->key == KEY_F && evt->ctrl)//show/hide depth
+			{
+				m_showDebug = !m_showDebug;
+				ok = true;
+			}
 			else
-			if (evt->key == KEY_A)//Show/Hide arms
+			if (evt->key == KEY_H && evt->ctrl)//Show/Hide arms
 			{
 				m_showScene = !m_showScene;
 				ok = true;
@@ -246,7 +226,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				}
 				else
 				{
-					TelesarCommunicationHandler::Instance()->commLayer->InjectCommand("calib", "");
+					m_vtState->CalibratePosition();
 
 					m_robotConnector->GetHeadController()->Recalibrate();
 					m_robotConnector->StartUpdate();
@@ -262,10 +242,16 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			else
 			if (evt->key == KEY_C)
 			{
-				TelesarCommunicationHandler::Instance()->commLayer->InjectCommand("calib", "");
+				m_vtState->CalibratePosition();
 
 				m_robotConnector->GetHeadController()->Recalibrate();
 				ok = true;
+			}else if (evt->press && evt->key == KEY_F12 && evt->ctrl)
+			{
+				m_takeScreenShot = true;
+
+				ok = true;
+
 			}
 		}
 	}
@@ -307,11 +293,6 @@ void AugCameraRenderState::InitState()
 {
 	Parent::InitState();
 
-	//init Virtual Telesar Library
-	if (true)
-	{
-		TelesarCommunicationHandler::Ref();
-	}
 	{
 		_CreatePhysicsSystem();
 		m_gameManager = new game::GameEntityManager();
@@ -351,10 +332,30 @@ void AugCameraRenderState::InitState()
 		m_blurShader = pp;
 
 	}
-
+	{
+		m_data->Init();
+	}
 	{
 		std::vector<game::GameEntity*> entLst;
 		m_gameManager->loadFromFile(m_model, &entLst);
+		game::SceneComponent* modelComp = game::IGameComponent::RetriveComponent<game::SceneComponent>(entLst[0], "SkinnedArms");
+		if (modelComp)
+		{
+			for (int i = 0; i < modelComp->GetSceneNode()->GetAttachedNodesCount(); ++i)
+			{
+				scene::IRenderable* r = modelComp->GetSceneNode()->GetAttachedNode(i);
+				r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_blurShader->getOutput()->GetColorTexture(0), 3);
+				//r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->BRDFTexture, 3);
+			}
+		}
+		m_data->robotCommunicator = 0;
+		const std::list<IObjectComponent*>& compLst= entLst[0]->GetComponent(VT::RobotCommunicatorComponent::getClassRTTI());
+		if (compLst.size() != 0)
+		{
+			m_data->robotCommunicator = dynamic_cast<VT::RobotCommunicatorComponent*>(*compLst.begin());
+			m_data->robotCommunicator->SetEnabled(false);
+		}
+
 
 		HeadMount* hm = new HeadMount(m_sceneManager, 1);
 		scene::CameraNode* cam[2];
@@ -366,7 +367,7 @@ void AugCameraRenderState::InitState()
 
 			cam[i] = m_sceneManager->createCamera();
 			m_viewport[i] = new scene::ViewPort("", cam[i], 0, 0, math::rectf(0, 0, 1, 1), 0);
-			m_viewport[i]->SetClearColor(video::SColor(0,0,0,0));
+			m_viewport[i]->SetClearColor(video::SColor(0, 0, 0, 0));
 
 			video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), pf, true);
 			renderTargetTex->setBilinearFilter(false);
@@ -406,9 +407,10 @@ void AugCameraRenderState::InitState()
 			cam[i]->setZFar(10);
 
 			//if (gAppData.oculusDevice)
-			cam[i]->setFovY(m_cameraFov);
-			cam[i]->setPosition(math::vector3d(0.03 - 0.06*i,0.07,0));
+			cam[i]->setFovY(m_cameraConfiguration->fov);
+			cam[i]->setPosition(math::vector3d(0.03 - 0.06*i, 0.07, 0));
 			m_camera[i] = cam[i];
+
 		}
 
 		game::GameEntity* ent = entLst[0];
@@ -417,7 +419,7 @@ void AugCameraRenderState::InitState()
 		m_data->headMount = hm;
 		m_data->headMount->SetCamera(m_camera[0], m_camera[1]);
 		AugTel::HeadCameraComponent* eyes = ent->RetriveComponent<AugTel::HeadCameraComponent>(ent, "Head");
-		VT::CameraComponent* cameraComponent = ent->RetriveComponent<VT::CameraComponent>(ent,"stereoCamera");
+		VT::CameraComponent* cameraComponent = ent->RetriveComponent<VT::CameraComponent>(ent, "stereoCamera");
 
 		if (eyes)
 		{
@@ -436,17 +438,28 @@ void AugCameraRenderState::InitState()
 			c->SetInitialOrientation(hm->getAbsoluteOrintation());
 		}
 
+		if (true)
+		{
+			m_lightSrc = m_sceneManager->createLightNode();
+			m_lightSrc->setPosition(math::vector3d(0, 50, 0));
+			m_lightSrc->setCastShadows(true);
 
-		scene::LightNode* lightSrc= m_sceneManager->createLightNode();
-		lightSrc->setPosition(math::vector3d(50, 50, 50));
+			video::ITexturePtr t = gEngine.getDevice()->createEmptyTexture2D(false);
+			t->setMipmapsFilter(false);
+			t->createTexture(math::vector3di(2048, 2048, 1), video::EPixel_Float16_R);
+			m_lightSrc->setShadowMap(gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0));
+		}
 	}
 
 	{
-#ifdef DEPTH_LOCAL
-		m_openNiHandler->Init();
-#else
-		m_openNiHandler->CreateDepthFrame(320, 240);
-#endif
+		if (m_videoSource->IsLocal())
+		{
+			m_openNiHandler->Init();
+		}
+		else
+		{
+			m_openNiHandler->CreateDepthFrame(320, 240);
+		}
 		m_openNiHandler->GetNormalCalculator().SetCalculateNormals(true);
 		math::vector2di sz = m_openNiHandler->GetSize();
 
@@ -489,24 +502,30 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 {
 	Parent::OnEnter(prev);
 	gAppData.optiDataSource->Connect(m_optiProvider);
-#ifdef DEPTH_LOCAL
-	m_openNiHandler->Start(320, 240);
-#endif
+
+	if (m_videoSource->IsLocal())
+	{
+		m_openNiHandler->Start(320, 240);
+	}
+
 	gAppData.headObject = m_data->headMount;
 	gAppData.depthProvider = m_openNiHandler;
 	gAppData.cameraProvider = m_videoSource;
 
 	m_camVideoSrc->Open();
-
+	
+	gAppData.dataCommunicator->AddListener(this);
 	gAppData.dataCommunicator->Start(COMMUNICATION_PORT);
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	if(ifo)
-		m_robotConnector->ConnectRobotIP(ifo->IP, VIDEO_PORT, AUDIO_PORT, COMMUNICATION_PORT);
+		m_robotConnector->ConnectRobotIP(ifo->IP, VIDEO_PORT,  AUDIO_PORT, COMMUNICATION_PORT);
 	m_robotConnector->SetData("depthSize", "", false);
 	//m_robotConnector->EndUpdate();
 
 	m_screenLayout->OnDisconnected();
+
+	m_data->robotCommunicator->SetEnabled(true);
 }
 
 void AugCameraRenderState::OnExit()
@@ -518,9 +537,10 @@ void AugCameraRenderState::OnExit()
 	m_openNiHandler->Close();
 
 	gAppData.dataCommunicator->Stop();
+	gAppData.dataCommunicator->RemoveListener(this);
 
 	gAppData.cameraProvider = 0;
-
+	m_data->robotCommunicator->SetEnabled(false);
 }
 void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 {
@@ -623,6 +643,45 @@ public:
 	virtual void Resize(int x, int y) {}
 };
 
+void AugCameraRenderState::_GenerateLightMap()
+{
+	ulong currTime = gEngine.getTimer()->getMilliseconds();
+
+	if (m_takeScreenShot)
+	{
+
+		core::string name = gFileSystem.getAppPath() + "screenShots/Image_";
+		name += core::StringConverter::toString(currTime);
+		name += ".png";
+		gTextureResourceManager.writeResourceToDist(m_camVideoSrc->GetEyeTexture(0), name);
+	}
+	video::IRenderTarget* prevRT = gEngine.getDevice()->getRenderTarget();
+	video::ITexture* t = m_videoSource->GetEyeTexture(0);
+	for (int i = 0; i < 10; ++i)
+	{
+		m_blurShader->GetParam("Offset")->SetValue((i + 1) * 4);
+		m_blurShader->render(&TextureRTWrap(t));
+		t = m_blurShader->getOutput()->GetColorTexture();
+
+
+		if (m_takeScreenShot)
+		{
+			time_t rawtime;
+			struct tm  timeinfo;
+
+			ulong currTime = gEngine.getTimer()->getMilliseconds();
+
+			core::string name = gFileSystem.getAppPath() + "screenShots/ImageDownSample"+core::StringConverter::toString(i)+"_";
+			name += core::StringConverter::toString(currTime);
+			name += ".png";
+			gTextureResourceManager.writeResourceToDist(m_blurShader->getOutput()->GetColorTexture(0), name);
+
+		}
+	}
+
+	gEngine.getDevice()->setRenderTarget(prevRT, 0, 0);
+}
+
 void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 {
 	Parent::_RenderUI(rc,pos);
@@ -634,18 +693,11 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 	AppData* app = AppData::Instance();
 
-	m_blurShader->Setup(rc);
-
-	video::IRenderTarget* prevRT = gEngine.getDevice()->getRenderTarget();
-
-	m_blurShader->render(&TextureRTWrap(m_videoSource->GetEyeTexture(0)));
-
-	gEngine.getDevice()->setRenderTarget(prevRT, 0, 0);
 
 	video::TextureUnit tu;
-	tu.SetTexture(m_blurShader->getOutput()->GetColorTexture(0));
+	tu.SetTexture(m_lightSrc->getShadowMap()->GetColorTexture()); //m_data->BRDFTexture);//
 	dev->useTexture(0, &tu);
-	dev->draw2DImage(rc, 1);
+	dev->draw2DImage(math::rectf(0,0,200,200), 1);
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -680,6 +732,12 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 		m_depthTime = 0;
 		m_robotConnector->SetData("depth#1", core::StringConverter::toString(math::recti(0, 0, 320, 240)), false);
 	}
+	if (gEngine.getTimer()->getSeconds() - m_lightMapTimer > 200)
+	{
+		m_blurShader->Setup(math::rectf(0, 0, 128, 128));
+		_GenerateLightMap();
+		m_lightMapTimer = gEngine.getTimer()->getSeconds();
+	}
 
 	_CalculateDepthGeom();
 
@@ -689,7 +747,7 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 	int index = GetEyeIndex(eye);
 	m_camVideoSrc->Blit();
 
-	if (AppData::Instance()->IsDebugging )
+	if (AppData::Instance()->IsDebugging || m_showDebug)
 	{
 		m_gameManager->DebugRender(m_debugRenderer);
 		if (DRAW_GRID)
@@ -737,6 +795,17 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 		math::rectf tc = math::rectf(0, 0, 1, 1);
 		device->draw2DImage(vprect, 1, 0, &tc);
 	}
+
+	if (m_takeScreenShot)
+	{
+		ulong currTime = gEngine.getTimer()->getMilliseconds();
+
+		core::string name = gFileSystem.getAppPath() + "screenShots/Final_";
+		name += core::StringConverter::toString(currTime);
+		name += ".png";
+		gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->GetColorTexture(0), name);
+		m_takeScreenShot = false;
+	}
 	math::rectf vp(0, m_renderTarget[index]->GetSize());
 	m_guiManager->DrawAll(&vp);
 	return m_renderTarget[index];
@@ -767,9 +836,20 @@ void AugCameraRenderState::Update(float dt)
 	m_openNiHandler->SetScale(s);
 	m_openNiHandler->SetCenter(c);
 
-	TelesarCommunicationHandler::Instance()->Update(dt);
+	m_vtState->Update(dt);
 
 	m_depthTime += dt;
+
+	float f = m_focus;
+	m_focus += (gAppData.inputMngr->getKeyboard()->getKeyState(KEY_ADD) - gAppData.inputMngr->getKeyboard()->getKeyState(KEY_MINUS))*0.5*dt;
+	m_focus = math::clamp(m_focus, 0.0f, 1.0f);
+	if (m_videoSource->IsLocal() && f != m_focus)
+	{
+		TBee::LocalCameraVideoSource* src = dynamic_cast<TBee::LocalCameraVideoSource*>(m_videoSource);
+	//	src->GetCamera(0)->SetParameter(video::ICameraVideoGrabber::Param_Focus, core::StringConverter::toString(m_focus));
+	}
+
+
 }
 void AugCameraRenderState::LoadFromXML(xml::XMLElement* e)
 {
@@ -782,6 +862,29 @@ void AugCameraRenderState::LoadFromXML(xml::XMLElement* e)
 	m_depthParams = core::StringConverter::toVector4d(e->getValueString("DepthParams"));
 	m_openNiHandler->SetCenter(math::vector2d(m_depthParams.x, m_depthParams.y));
 	m_openNiHandler->SetScale(math::vector2d(m_depthParams.z, m_depthParams.w));
+}
+
+
+void AugCameraRenderState::OnDepthData(const TBee::GeomDepthRect& dpRect)
+{
+	m_openNiHandler->GetNormalCalculator().AddDepthRect(&dpRect);
+}
+void AugCameraRenderState::OnDepthSize(const math::vector2di &sz)
+{
+	ATAppGlobal::Instance()->depthProvider->CreateDepthFrame(sz.x, sz.y);
+}
+void AugCameraRenderState::OnIsStereoImages(bool isStereo)
+{
+	m_videoSource->SetIsStereo(isStereo);
+}
+
+void AugCameraRenderState::OnCameraConfig(const core::string& cameraProfile)
+{
+	TelubeeCameraConfiguration* config = AppData::Instance()->camConfig->GetCameraConfiguration(cameraProfile);
+	if (!config)
+		return;
+	m_cameraConfiguration = config;
+	m_camConfigDirty = true;
 }
 
 }

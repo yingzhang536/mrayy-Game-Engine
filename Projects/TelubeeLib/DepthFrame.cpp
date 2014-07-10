@@ -466,7 +466,7 @@ public:
 		return m_depthData.Data();
 	}
 
-	math::recti  GetCroppedFrame(const math::recti& src, DepthFrame* f)
+	math::recti  GetCroppedFrame(const math::recti& src, const DepthFrame* f)
 	{
 		math::recti rc = src;
 		rc.ULPoint.x = math::clamp<int>(rc.ULPoint.x, 0, m_size.x);
@@ -494,7 +494,7 @@ public:
 		}
 		return rc;
 	}
-	void  AddFrame(const math::recti& src, DepthFrame* f)
+	void  AddFrame(const math::recti& src, const DepthFrame* f)
 	{
 		math::recti rc = src;
 		rc.ULPoint.x = math::clamp<int>(rc.ULPoint.x, 0, m_size.x);
@@ -643,11 +643,11 @@ ushort* DepthFrame::GetRawData()
 	return m_impl->GetRawData();
 }
 
-math::recti DepthFrame::GetCroppedFrame(const math::recti& src, DepthFrame* f)
+math::recti DepthFrame::GetCroppedFrame(const math::recti& src, const DepthFrame* f)
 {
 	return m_impl->GetCroppedFrame(src, f);
 }
-void DepthFrame::AddFrame(const math::recti& src, DepthFrame* f)
+void DepthFrame::AddFrame(const math::recti& src, const DepthFrame* f)
 {
 	 m_impl->AddFrame(src, f);
 

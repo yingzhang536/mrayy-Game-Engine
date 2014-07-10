@@ -33,6 +33,7 @@ protected:
 	GStreamVideoProvider* m_providers;
 	video::ITexturePtr m_remoteTex;
 	core::string m_ip;
+	bool m_isStereo;
 public:
 	GstStereoNetVideoSource(const core::string& ip = "127.0.0.1");
 	virtual~GstStereoNetVideoSource();
@@ -44,10 +45,14 @@ public:
 	void Close();
 	bool Blit();
 
-	virtual math::vector2d GetEyeScalingFactor(int i){ return math::vector2d(0.5, 1); }
+	virtual math::vector2d GetEyeScalingFactor(int i);
 	virtual math::vector2d GetEyeResolution(int i);
 	virtual video::ITexturePtr GetEyeTexture(int i);
-	virtual math::rectf GetEyeTexCoords(int i) { return math::rectf(i*0.5, 0, 0.5 + i*0.5, 1); }
+	virtual math::rectf GetEyeTexCoords(int i);
+
+	virtual bool IsLocal(){ return false; }
+	virtual void SetIsStereo(bool stereo);
+	virtual bool IsStereo(){ return m_isStereo; }
 
 };
 

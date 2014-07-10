@@ -18,7 +18,7 @@ namespace ted
 	class ITwitterProviderListener
 	{
 	public:
-		virtual void OnTweetsLoaded(const std::vector<TwitterTweet*>& tweets){}
+		virtual void OnTweetsLoaded(const std::vector<TwitterTweet*>& Tweets){}
 	};
 
 class TwitterProvider
@@ -33,7 +33,7 @@ public:
 	TwitterUserProfile* GetUserByID(IDType id);
 	TwitterTweet* GetTweetByID(IDType ID);
 	void GetTweetsSynced(const core::stringw& keyword, IDType since, uint count,
-		std::vector<TwitterTweet*>& tweets) ;
+		std::vector<TwitterTweet*>& Tweets) ;
 
 	void GetTweetsAsynced(const core::stringw& keyword, IDType since, uint count,
 		ITwitterProviderListener* callback);

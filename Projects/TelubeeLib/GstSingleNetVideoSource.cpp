@@ -32,7 +32,7 @@ void GstSingleNetVideoSource::Init()
 }
 void GstSingleNetVideoSource::Open()
 {
-	m_providers->ConnectToCameras(m_ip, m_port, 0, 0);
+	m_providers->ConnectToCameras(m_ip, 5000, 5002, 5001);
 }
 void GstSingleNetVideoSource::Close()
 {

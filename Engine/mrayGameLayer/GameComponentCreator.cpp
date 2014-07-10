@@ -7,6 +7,7 @@
 
 #include "AIComponent.h"
 #include "SceneComponent.h"
+#include "LightComponent.h"
 #include "ModelCollisionComponent.h"
 #include "ModelComponent.h"
 #include "SphereModelComponent.h"
@@ -37,6 +38,7 @@ GameComponentCreator::GameComponentCreator()
 {
 	REGISTER_COMPONENT_FACTORY(AIComponent);
 	REGISTER_COMPONENT_FACTORY(SceneComponent);
+	REGISTER_COMPONENT_FACTORY(LightComponent);
 	REGISTER_COMPONENT_FACTORY(ModelCollisionComponent);
 	REGISTER_COMPONENT_FACTORY(ModelComponent);
 	REGISTER_COMPONENT_FACTORY(PhysicsComponent);

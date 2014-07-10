@@ -3,6 +3,7 @@
 #include "LocalRobotCommunicator.h"
 
 #include "TelubeeRobotDLL.h"
+#include "IRobotController.h"
 #include "StringUtil.h"
 
 
@@ -51,6 +52,10 @@ public:
 	virtual void ConnectRobot(bool c)
 	{
 		m_robotStatus.connected = c;
+		if (m_robotStatus.connected)
+			m_robot->GetRobotController()->ConnectRobot();
+		else
+			m_robot->GetRobotController()->DisconnectRobot();
 	}
 
 	virtual void Update(float dt)
@@ -108,7 +113,7 @@ public:
 			m_robotStatus.connected = false;
 		}
 
-		m_robot->OnRobotStatus(m_robotStatus);
+		m_robot->GetRobotController()-> UpdateRobotStatus(m_robotStatus);
 	}
 	void RemoveData(const core::string &key)
 	{

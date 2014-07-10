@@ -6,6 +6,7 @@
 #include "XMLTree.h"
 #include "XMLWriter.h"
 #include "OptiTrackDataSource.h"
+#include "CameraConfigurationManager.h"
 
 namespace mray
 {
@@ -25,12 +26,16 @@ AppData::AppData()
 	robotInfoManager = 0;
 	stereoMode = ERenderStereoMode::None;
 	optiDataSource = new OptiTrackDataSource();
-
-
+	camConfig = new CameraConfigurationManager();
 }
 AppData::~AppData()
 {
 	delete optiDataSource;
+}
+
+void AppData::Init()
+{
+	camConfig->LoadConfigurations("CameraConfigurations.xml");
 }
 
 core::string AppData::GetVersion()

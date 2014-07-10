@@ -15,16 +15,6 @@ namespace VT
 {
 
 
-Application* VTAppGlobals::App=0;
-script::CSettingsFile VTAppGlobals::s_values;
-bool VTAppGlobals::IsDebugging=false;
-bool VTAppGlobals::Physics=false;
-bool VTAppGlobals::FlipCameras=false;
-core::string VTAppGlobals::GhostServerIP="";
-ECameraSourceType VTAppGlobals::CameraType=EWebCamera;
-
-video::OculusDevice* VTAppGlobals::oculusDevice;
-game::OculusCameraComponent* VTAppGlobals::oculusComponents[2];
 
 void VTAppGlobals::SetValue(const core::string&catagory,const core::string&name,const core::string& v)
 {

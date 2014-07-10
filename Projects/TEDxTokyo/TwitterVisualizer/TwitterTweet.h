@@ -36,7 +36,7 @@ public:
 	static TwitterTweet* GetTweetByID(IDType id,bool localOnly);
 
 public:
-	TwitterTweet() :ID(0), user(0), retweets(0), replyToTweet(0), replyToUser(0)
+	TwitterTweet() :ID(0), user(0), reTweets(0), replyToTweet(0), replyToUser(0)
 	{}
 	virtual~TwitterTweet(){}
 
@@ -44,7 +44,7 @@ public:
 	TwitterUserProfile* user;
 	core::stringw text;
 	core::DateTime date;
-	int retweets;
+	int reTweets;
 
 	TwitterTweet* replyToTweet;
 	TwitterUserProfile* replyToUser;

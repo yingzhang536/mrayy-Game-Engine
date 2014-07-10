@@ -33,6 +33,7 @@ namespace AugTel
 #define ToLocalCamera_CODE 0x101
 #define ToRemoteCamera_CODE 0x102
 #define ToDepthView_CODE 0x103
+#define ToTelesarSim_CODE 0x104
 
 class LoginScreenState:public TBee::IRenderingState,public IDelegateContainer
 {

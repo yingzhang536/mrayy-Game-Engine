@@ -62,7 +62,7 @@ public:
 	virtual bool GrabFrame();
 	virtual bool HasNewFrame();
 
-	virtual ulong GetBufferID(){ return m_bufferID; }
+	virtual ulong GetBufferID(){ return m_g1->GetBufferID(); }
 	virtual const video::ImageInfo* GetLastFrame();
 };
 

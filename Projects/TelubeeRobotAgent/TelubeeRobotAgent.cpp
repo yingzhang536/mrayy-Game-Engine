@@ -21,7 +21,7 @@ EntryPoint
 {
 
 	GCPtr<TRApplication> app = new TRApplication();
-
+	app->LoadCameraProfiles("CameraProfiles.xml");
 	core::string resFileName = mT("plugins.stg");
 
 #ifdef UNICODE
@@ -60,6 +60,28 @@ EntryPoint
 	{
 		op.name = "VideoPort";
 		op.value = "5000";
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
+		op.name = "StreamResolution";
+		op.value = "HD";
+		op.valueSet.insert("HD");
+		op.valueSet.insert("FullHD");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
+		op.name = "CameraProfile";
+
+		CameraProfileManager* cprof= app->GetCameraProfileManager();
+		const std::map<core::string, CameraProfile*>& profiles=cprof->GetProfiles();
+		std::map<core::string, CameraProfile*>::const_iterator it = profiles.begin();
+		for (; it != profiles.end();++it)
+		{
+			op.valueSet.insert(it->first);
+		}
+		op.value = "";
 		extraOptions.push_back(op);
 		op.valueSet.clear();
 	}

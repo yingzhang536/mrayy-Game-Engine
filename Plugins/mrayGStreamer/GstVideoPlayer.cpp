@@ -635,6 +635,10 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 		" avdec_h264 name=dec max-threads=0 ! videoconvert   ! appsink name=sink sync=false " ;//"appsink name=sink sync=false";
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 #endif
+
+	//Audio
+	gstString+=" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=44100! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+
 #if 0 
 	gstPipeline = gst_pipeline_new("pipeline0");
 	src = gst_element_factory_make("appsrc", "src");

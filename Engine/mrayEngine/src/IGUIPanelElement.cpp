@@ -164,8 +164,9 @@ bool IGUIPanelElement::MoveElementToTop(IGUIElement* elem)
 	{
 		if((*it).pointer()==elem)
 		{
+			IGUIElementPtr e = *it;
 			m_elements.erase(it);
-			m_elements.push_back(elem);
+			m_elements.push_back(e);
 			return true;
 		}
 	}
@@ -178,8 +179,9 @@ bool IGUIPanelElement::MoveElementToBottom(IGUIElement* elem)
 	{
 		if((*it).pointer()==elem)
 		{
+			IGUIElementPtr e = *it;
 			m_elements.erase(it);
-			m_elements.push_front(elem);
+			m_elements.push_front(e);
 			return true;
 		}
 	}

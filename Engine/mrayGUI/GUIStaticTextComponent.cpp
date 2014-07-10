@@ -30,15 +30,21 @@ void GUIStaticTextComponent::Draw()
 
 	IFont*font=gFontResourceManager.getFontByName(fAttrs->fontName);
 
+	float a = owner->GetDerivedAlpha();
 
-	if(m_background && skin)
-		skin->drawBox(creator->GetRenderQueue(),rc,mT("Panel"),0,m_backColor);
-	if(m_border)
-		creator->GetDevice()->draw2DRectangle(rc,m_borderColor,0);
+	if (m_background)
+	{
+		if (skin)
+			skin->drawBox(creator->GetRenderQueue(), rc, mT("Panel"), 0, video::SColor(m_backColor.R, m_backColor.G, m_backColor.B, a));
+		else
+			creator->GetDevice()->draw2DRectangle(rc, video::SColor(m_backColor.R, m_backColor.G, m_backColor.B, a));
+	}
+	if (m_border)
+		creator->GetDevice()->draw2DRectangle(rc, video::SColor(m_borderColor.R, m_borderColor.G, m_borderColor.B, a), 0);
 
 	if(font)
 	{
-		fAttrs->fontColor.A=owner->GetDerivedAlpha();
+		fAttrs->fontColor.A=a;
 		fAttrs->shadowColor.A=fAttrs->fontColor.A;
 		video::SColor oldColor=fAttrs->fontColor;
 		if(!enabled)

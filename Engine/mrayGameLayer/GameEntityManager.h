@@ -59,12 +59,14 @@ class MRAY_GAME_DLL GameEntityManager:public ListenerContainer<IGameEntityManage
 {
 private:
 protected:
-	typedef std::map<uint,uint> SceneIDEntID;
+	typedef std::map<uint, uint> SceneIDEntID;
+	typedef std::map<core::string, uint> GameEntityNameMap;
 
 	std::list<GameEntity*> m_deleteList;
 
 	IDGenerator<GameEntity*> m_entitiesID;
 	EntityList m_entities;
+	GameEntityNameMap m_nameMap;
 	SceneIDEntID m_sceneToEntity;
 
 	sound::ISoundManager* m_sndManager;
@@ -107,7 +109,8 @@ public:
 	virtual void AddGameEntity(GameEntity* ent);
 	virtual GameEntity* CreateGameEntity(const core::string&name);
 	virtual void RemoveGameEntity(uint id);
-	virtual GameEntity* GetGameEntity(uint id);
+	virtual GameEntity* GetGameEntityByID(uint id);
+	virtual GameEntity* GetGameEntityByName(const core::string& name);
 
 	void SetSceneNodeEntID(uint node,uint ent);
 	void RemoveSceneNodeID(uint node);

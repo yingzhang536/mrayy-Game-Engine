@@ -186,14 +186,7 @@ public:
 
 	void appendChar(T c)
 	{
-		if(length()<=1)
-		{
-			resize(length()+2);
-		}
-		else
-			resize(length()+1);
-		(*this)[length()-2]=c;
-		(*this)[length()-1]=0;
+		append(0, c);
 
 	}
 	

@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FBA8A6DD-7D25-4D1A-B249-B130161B2477}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>KMDCommentVisualizer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\Engine\BuildRules\overlay.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\Bin\$(Configuration)\</OutDir>
+    <IntDir>..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\Bin\$(Configuration)\</OutDir>
+    <IntDir>..\..\Obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Engine\mrayGUI;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\..\plugins\mySqlDBConnection;..\..\Engine\mrayOIS;..\..\Plugins\mrayParticles;..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex_d.lib;mrayParticles.lib;mySqlDBConnection.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Engine\mrayGUI;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\..\plugins\mySqlDBConnection;..\..\Engine\mrayOIS;..\..\Plugins\mrayParticles;..\..\Dependencies\SQLAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\lib\$(Configuration);$(MRAY_ENGINE)\Dependencies\SQLAPI\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mrayOIS.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;regex.lib;mrayParticles.lib;mySqlDBConnection.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppData.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="GenericRenderLayer.h" />
+    <ClInclude Include="ConnectionLineRenderer.h" />
+    <ClInclude Include="CProfessor.h" />
+    <ClInclude Include="CSubProject.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="GUICommentsLayer.h" />
+    <ClInclude Include="GUIDockedElement.h" />
+    <ClInclude Include="GUIFacultyList.h" />
+    <ClInclude Include="GUIFacultyListLayout.h" />
+    <ClInclude Include="GUIFadingText.h" />
+    <ClInclude Include="GUILayersContainer.h" />
+    <ClInclude Include="GUIProfilePicture.h" />
+    <ClInclude Include="GUIProjectStatus.h" />
+    <ClInclude Include="GUIProjectStatusLayout.h" />
+    <ClInclude Include="GUIScenePanelLayout.h" />
+    <ClInclude Include="GUISceneSpacePanel.h" />
+    <ClInclude Include="GUIScreenLayoutImplV1.h" />
+    <ClInclude Include="GUIScreenLayoutImplV2.h" />
+    <ClInclude Include="GUIScreenLayout_V2.h" />
+    <ClInclude Include="GUISessionSidePanel.h" />
+    <ClInclude Include="GUISessionSidePanelLayout.h" />
+    <ClInclude Include="GUISpeakerDetailsPanel.h" />
+    <ClInclude Include="GUISpeakerDetailsPanelLayout.h" />
+    <ClInclude Include="GUIStatusLayer.h" />
+    <ClInclude Include="GUIStatusLayerLayout.h" />
+    <ClInclude Include="GUISweepingText.h" />
+    <ClInclude Include="GUICommentDetailsPanel.h" />
+    <ClInclude Include="GUICommentDetailsPanelLayout.h" />
+    <ClInclude Include="GUICommentItem.h" />
+    <ClInclude Include="GUIUserProfile.h" />
+    <ClInclude Include="IDBHandler.h" />
+    <ClInclude Include="IRenderingLayer.h" />
+    <ClInclude Include="IRenderingScene.h" />
+    <ClInclude Include="IKMDNode.h" />
+    <ClInclude Include="msaPhysics\msacore-mray.h" />
+    <ClInclude Include="msaPhysics\MSACore.h" />
+    <ClInclude Include="msaPhysics\MSACoreCommon.h" />
+    <ClInclude Include="msaPhysics\MSACoreMath.h" />
+    <ClInclude Include="msaPhysics\MSAObjCPointer.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics2D.h" />
+    <ClInclude Include="msaPhysics\MSAPhysics3D.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsAttraction.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsCallbacks.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsConstraint.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsDataRecorder.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParams.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticle.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleDrawer.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleUpdater.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsSector.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsSpring.h" />
+    <ClInclude Include="msaPhysics\MSAPhysicsWorld.h" />
+    <ClInclude Include="NodeRenderer.h" />
+    <ClInclude Include="PhNode.h" />
+    <ClInclude Include="PointerNode.h" />
+    <ClInclude Include="SceneCamera.h" />
+    <ClInclude Include="SessionContainer.h" />
+    <ClInclude Include="SessionDetails.h" />
+    <ClInclude Include="SessionRenderer.h" />
+    <ClInclude Include="SessionScene.h" />
+    <ClInclude Include="ProjectNode.h" />
+    <ClInclude Include="SQLDBHandler.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="CommentNode.h" />
+    <ClInclude Include="TwitterProfileListItem.h" />
+    <ClInclude Include="KMDComment.h" />
+    <ClInclude Include="KMDUser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppData.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GenericRenderLayer.cpp" />
+    <ClCompile Include="ConnectionLineRenderer.cpp" />
+    <ClCompile Include="CProfessor.cpp" />
+    <ClCompile Include="CSubProject.cpp" />
+    <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="GUICommentsLayer.cpp" />
+    <ClCompile Include="GUIFacultyList.cpp" />
+    <ClCompile Include="GUIFadingText.cpp" />
+    <ClCompile Include="GUILayersContainer.cpp" />
+    <ClCompile Include="GUIProfilePicture.cpp" />
+    <ClCompile Include="GUIProjectStatus.cpp" />
+    <ClCompile Include="GUISceneSpacePanel.cpp" />
+    <ClCompile Include="GUISessionSidePanel.cpp" />
+    <ClCompile Include="GUISpeakerDetailsPanel.cpp" />
+    <ClCompile Include="GUIStatusLayer.cpp" />
+    <ClCompile Include="GUISweepingText.cpp" />
+    <ClCompile Include="GUICommentDetailsPanel.cpp" />
+    <ClCompile Include="GUICommentItem.cpp" />
+    <ClCompile Include="GUIUserProfile.cpp" />
+    <ClCompile Include="IRenderingScene.cpp" />
+    <ClCompile Include="KMDCommentVisualizer.cpp" />
+    <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="NodeRenderer.cpp" />
+    <ClCompile Include="PointerNode.cpp" />
+    <ClCompile Include="SceneCamera.cpp" />
+    <ClCompile Include="SessionContainer.cpp" />
+    <ClCompile Include="SessionDetails.cpp" />
+    <ClCompile Include="SessionRenderer.cpp" />
+    <ClCompile Include="SessionScene.cpp" />
+    <ClCompile Include="ProjectNode.cpp" />
+    <ClCompile Include="SQLDBHandler.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="CommentNode.cpp" />
+    <ClCompile Include="TwitterProfileListItem.cpp" />
+    <ClCompile Include="KMDComment.cpp" />
+    <ClCompile Include="KMDUser.cpp" />
+    <ClCompile Include="GUIDockedElement.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentsLayerLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIFacultyListLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIProjectStatusLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentDetailsPanelLayout.gui">
+      <FileType>Document</FileType>
+    </Overlay>
+    <None Include="Configure.stg" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIStatusLayerLayout.gui" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\Engine\BuildRules\overlay.targets" />
+  </ImportGroup>
+</Project>

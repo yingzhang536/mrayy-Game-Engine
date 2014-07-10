@@ -26,7 +26,7 @@ namespace mray
 namespace VT
 {
 
-class CameraRenderingState:public IRenderingState
+class CameraRenderingState:public TBee::IRenderingState
 {
 protected:
 
@@ -48,10 +48,10 @@ protected:
 	float m_texCoordRectSize;
 
 public:
-	CameraRenderingState();
+	CameraRenderingState(const core::string&name);
 	virtual~CameraRenderingState();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 	video::CameraTextureSource* GetLeftCamera(){return m_cams[0];}
 	video::CameraTextureSource* GetRightCamera(){return m_cams[1];}
 
@@ -59,7 +59,7 @@ public:
 	virtual void OnEnter(IRenderingState*prev);
 	virtual void OnExit();
 	virtual void Update(float dt);
-	virtual video::IRenderTarget* Render(bool left,const math::rectf& rc);
+	virtual video::IRenderTarget* Render(const math::rectf& rc, TBee::ETargetEye eye);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 	virtual bool CanSleep(){return false;}

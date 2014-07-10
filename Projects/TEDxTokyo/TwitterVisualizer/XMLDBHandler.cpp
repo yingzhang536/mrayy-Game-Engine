@@ -15,10 +15,10 @@ namespace ted
 
 
 
-XMLDBHandler::XMLDBHandler(const core::string& usersXML, const core::string& tweetsXML)
+XMLDBHandler::XMLDBHandler(const core::string& usersXML, const core::string& TweetsXML)
 {
 	m_usersPath = usersXML;
-	m_tweetsPath = tweetsXML;
+	m_TweetsPath = TweetsXML;
 }
 
 XMLDBHandler::~XMLDBHandler()
@@ -60,7 +60,7 @@ void XMLDBHandler::_loadUsers()
 void XMLDBHandler::_loadTweets()
 {
 	xml::XMLTree tree;
-	if (!tree.load(m_tweetsPath))
+	if (!tree.load(m_TweetsPath))
 		return;
 
 	xml::XMLElement* e = tree.getSubElement("Tweets");
@@ -108,7 +108,7 @@ void XMLDBHandler::_saveTweets()
 	xml::XMLWriter w;
 	w.addElement(root);
 	core::string str = w.flush();
-	OS::IStreamPtr stream = gFileSystem.openFile(m_tweetsPath, OS::TXT_WRITE);
+	OS::IStreamPtr stream = gFileSystem.openFile(m_TweetsPath, OS::TXT_WRITE);
 	if (!stream)
 		return;
 	OS::StreamWriter ww(stream);

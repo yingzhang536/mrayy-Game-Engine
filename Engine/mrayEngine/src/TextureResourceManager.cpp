@@ -446,7 +446,7 @@ void TextureResourceManager::writeResourceToDist(const IResourcePtr& resource,co
 			resource->getResourceName()+mT("\""),ELL_ERROR);
 		return;
 	}
-	OS::IStreamPtr file=gFileResourceManager.getFile(fileName,OS::BIN_WRITE);
+	OS::IStreamPtr file=gFileSystem.openFile(fileName,OS::BIN_WRITE);
 	if(!file){
 		gLogManager.log(mT("Couldn't open file for writing:\"")+
 			fileName+mT("\""),ELL_ERROR);

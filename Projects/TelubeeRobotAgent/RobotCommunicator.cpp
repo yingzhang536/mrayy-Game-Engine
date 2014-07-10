@@ -7,6 +7,7 @@
 
 #include "tinyxml2.h"
 #include "StringUtil.h"
+#include "IRobotController.h"
 
 namespace mray
 {
@@ -131,7 +132,13 @@ void RobotCommunicator::SetRobotData(const RobotStatus &st)
 
 void RobotCommunicator::_RobotStatus(const RobotStatus& st)
 {
-	m_robotController->OnRobotStatus(st);
+	if ((st.connected || m_localControl) && !m_robotController->GetRobotController()->IsConnected())
+		m_robotController->GetRobotController()->ConnectRobot();
+	
+	if ((!st.connected && !m_localControl) && m_robotController->GetRobotController()->IsConnected())
+		m_robotController->GetRobotController()->DisconnectRobot();
+
+	m_robotController->GetRobotController()->UpdateRobotStatus(st);
 	if (m_listener)
 		m_listener->OnRobotStatus(this, st);
 }

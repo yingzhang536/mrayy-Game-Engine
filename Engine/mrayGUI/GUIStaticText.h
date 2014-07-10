@@ -24,7 +24,8 @@ protected:
 	FontAttributes m_FontAttributs;
 	GUIStaticTextComponent* m_component;
 public:
-	DECLARE_PROPERTY_TYPE(Background,bool,MRAYGUI_API);
+	DECLARE_PROPERTY_TYPE(Background, bool, MRAYGUI_API);
+	DECLARE_PROPERTY_TYPE(Borders, bool, MRAYGUI_API);
 
 	GUIStaticText(IGUIManager* creator);
 	virtual~GUIStaticText();

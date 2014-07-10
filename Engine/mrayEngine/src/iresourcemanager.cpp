@@ -37,6 +37,7 @@ ResourceHandle IResourceManager::getNextHandle(){
 }
 
 void IResourceManager::removeInternal(const IResourcePtr& res){
+	/*
 	m_resMutex->lock();
 	ResourceHandleMap::iterator hIt=m_resourceHandleMap.find(res->getResourceHandle().ID());
 	if(hIt!=m_resourceHandleMap.end()){
@@ -48,7 +49,7 @@ void IResourceManager::removeInternal(const IResourcePtr& res){
 		nIt->second=0;
 		m_resourceMap.erase(nIt);
 	}
-	m_resMutex->unlock();
+	m_resMutex->unlock();*/
 }
 bool IResourceManager::addInternal(const IResourcePtr& resource,const core::string& name){
 	core::string shortName=name;//=gFileSystem.getShortFileName(name);
@@ -213,12 +214,14 @@ void IResourceManager::remove(const core::string&name){
 		return;
 	}
 	removeInternal(res);
+	_removeResource(res);
 }
 void IResourceManager::remove(const IResourcePtr& resource){
 	if(!resource){
 		return;
 	}
 	removeInternal(resource);
+	_removeResource(resource);
 }
 void IResourceManager::remove(ResourceHandle resource){
 	IResourcePtr res=getResourceByHandle(resource);
@@ -226,17 +229,36 @@ void IResourceManager::remove(ResourceHandle resource){
 		return;
 	}
 	removeInternal(res);
+	_removeResource(res);
+}
+
+void IResourceManager::_removeResource(const IResourcePtr& res)
+{
+
+	m_resMutex->lock();
+	ResourceHandleMap::iterator hIt = m_resourceHandleMap.find(res->getResourceHandle().ID());
+	if (hIt != m_resourceHandleMap.end()){
+		hIt->second = 0;
+		m_resourceHandleMap.erase(hIt);
+	}
+	ResourceMap::iterator nIt = m_resourceMap.find(res->getResourceName());
+	if (nIt != m_resourceMap.end()){
+		nIt->second = 0;
+		m_resourceMap.erase(nIt);
+	}
+	m_resMutex->unlock();
 }
 void IResourceManager::removeAll(){
-	ResourceMap::iterator it2,it=m_resourceMap.begin();
+	m_resMutex->lock();
+	ResourceMap::iterator it=m_resourceMap.begin();
 	ResourceMap::iterator end=m_resourceMap.end();
-	while(it!=end){
-		it2=it;
-		it2++;
+	for (; it != end;++it)
+	{
 		removeInternal(it->second);
-		it=it2;
 	}
 	m_resourceMap.clear();
+	m_resourceHandleMap.clear();
+	m_resMutex->unlock();
 }
 
 

@@ -346,7 +346,7 @@ void CMRayApplication::draw(scene::ViewPort* vp){
 
 	if (m_enableGUIManager && getGUIManager())
 	{
-		math::rectf rc(0, vp->getSize());
+		math::rectf rc(0, vp->GetSize());
 		getGUIManager()->DrawAll(&rc);
 	}
 

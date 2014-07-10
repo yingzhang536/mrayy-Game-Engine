@@ -31,8 +31,8 @@ RemoteCameraRenderingState::RemoteCameraRenderingState(const core::string& name)
 	m_cameraSource = new GstStereoNetVideoSource();
 // 	m_eyes[0].flip90 = true;
 // 	m_eyes[1].flip90 = true;
- 	m_eyes[0].cw = true;
- 	m_eyes[1].cw = false;
+//  	m_eyes[0].cw = true;
+//  	m_eyes[1].cw = false;
 
 	SetVideoSource(m_cameraSource);
 

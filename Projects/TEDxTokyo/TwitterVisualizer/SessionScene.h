@@ -32,7 +32,6 @@ protected:
 
 	scene::ISceneManager* m_sceneManager;
 
-	scene::CameraNode* m_camera;
 	scene::ViewPort* m_vp;
 
 	scene::SessionRenderer* m_sessionRenderer;

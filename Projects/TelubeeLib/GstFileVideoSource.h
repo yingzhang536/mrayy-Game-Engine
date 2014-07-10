@@ -54,6 +54,8 @@ public:
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 
+	virtual bool IsLocal(){ return true; }
+
 };
 
 }

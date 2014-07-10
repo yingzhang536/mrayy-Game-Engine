@@ -16,8 +16,8 @@ namespace ted
 namespace scene
 {
 
-TweetParticle::TweetParticle(TweetsEmitter* e, ted::TwitterTweet* tweet)
-:IBaseParticle(e), m_tweet(tweet)
+TweetParticle::TweetParticle(TweetsEmitter* e, ted::TwitterTweet* Tweet)
+:IBaseParticle(e), m_Tweet(Tweet)
 {
 	m_levelID = 0;
 	m_randomAxis = math::quaternion(math::Randomizer::rand01() * 360, math::Randomizer::rand01() * 360, math::Randomizer::rand01() * 360)*math::vector3d::ZAxis;

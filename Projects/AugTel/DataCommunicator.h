@@ -23,15 +23,33 @@
 
 namespace mray
 {
+	namespace TBee
+	{
+		class GeomDepthRect;
+	}
 namespace AugTel
 {
 
-class DataCommunicator
+	class IDataCommunicatorListener
+	{
+	public:
+		virtual void OnDepthData(const TBee::GeomDepthRect& dpRect){}
+		virtual void OnDepthSize(const math::vector2di &sz){}
+		virtual void OnIsStereoImages(bool isStereo){}
+		virtual void OnCameraConfig(const core::string& cameraProfile){}
+	};
+
+class DataCommunicator:public ListenerContainer<IDataCommunicatorListener*>
 {
 protected:
 
 	network::IUDPClient* m_client;
 	OS::IThread* m_thread;
+
+	DECLARE_FIRE_METHOD(OnDepthData, (const TBee::GeomDepthRect& dpRect), (dpRect));
+	DECLARE_FIRE_METHOD(OnDepthSize, (const math::vector2di &sz), (sz));
+	DECLARE_FIRE_METHOD(OnIsStereoImages, (bool isStereo), (isStereo));
+	DECLARE_FIRE_METHOD(OnCameraConfig, (const core::string& cameraProfile), (cameraProfile));
 public:
 	DataCommunicator();
 	virtual~DataCommunicator();

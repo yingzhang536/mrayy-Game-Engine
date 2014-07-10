@@ -178,7 +178,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 	getDevice()->set2DMode();
 
-	tex.SetTexture(m_scene->GetRenderTarget()->getColorTexture());
+	tex.SetTexture(m_scene->GetRenderTarget()->GetColorTexture());
 	getDevice()->useTexture(0, &tex);
 	getDevice()->draw2DImage(m_mainVP->getAbsRenderingViewPort(), 1);
 

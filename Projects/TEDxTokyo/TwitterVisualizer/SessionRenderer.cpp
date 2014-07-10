@@ -35,7 +35,7 @@ SessionRenderer::SessionRenderer()
 	m_camera = new SceneCamera;
 
 	m_speakerDistance = 400;
-	m_tweetsDistance = 80;
+	m_TweetsDistance = 80;
 	gAppData.SpeakerChange.AddListener(this);
 }
 
@@ -106,22 +106,22 @@ void SessionRenderer::SetSessions(ted::SessionContainer*sessions)
 
 }
 
-void SessionRenderer::AddTweets(const std::vector<ted::TwitterTweet*> &tweets)
+void SessionRenderer::AddTweets(const std::vector<ted::TwitterTweet*> &Tweets)
 {
-	for (int i = 0; i < tweets.size(); ++i)
+	for (int i = 0; i < Tweets.size(); ++i)
 	{
 		bool found = false;
-		if (tweets[i]->replyToTweet != 0)
+		if (Tweets[i]->replyToTweet != 0)
 		{
-			TweetMap::iterator it = m_tweets.find(tweets[i]->replyToTweet->ID);
-			if (it != m_tweets.end())
+			TweetMap::iterator it = m_Tweets.find(Tweets[i]->replyToTweet->ID);
+			if (it != m_Tweets.end())
 			{
 
 				for (int j = 0; j < m_speakersSeq.size(); ++j)
 				{
 					if (it->second->GetSpeaker() == m_speakersSeq[j]->GetSpeaker())
 					{
-						_AddTweetNode(tweets[i], m_speakersSeq[j]);
+						_AddTweetNode(Tweets[i], m_speakersSeq[j]);
 						found = true;
 						break;;
 					}
@@ -131,38 +131,38 @@ void SessionRenderer::AddTweets(const std::vector<ted::TwitterTweet*> &tweets)
 		}
 		else
 		{
-			core::stringw txt = tweets[i]->text;
+			core::stringw txt = Tweets[i]->text;
 			txt.make_lower();
 
 			for (int j = 0; j < m_speakersSeq.size(); ++j)
 			{
-				//if (tweets[i]->HasHashtag(m_speakersSeq[j]->GetSpeaker()->GetTwitterID()))
+				//if (Tweets[i]->HasHashtag(m_speakersSeq[j]->GetSpeaker()->GetTwitterID()))
 				core::stringw id = core::string_to_wchar(  m_speakersSeq[j]->GetSpeaker()->GetTwitterID());
 				id.make_lower();
 				if (txt.find(id)!=-1)
 				{
-					_AddTweetNode(tweets[i], m_speakersSeq[j]);
+					_AddTweetNode(Tweets[i], m_speakersSeq[j]);
 					found = true;
 					break;
 				}
 			}
 		}
 // 		if (!found)
-// 			delete tweets[i];
+// 			delete Tweets[i];
 	}
 }
 
 void SessionRenderer::_AddTweetNode(ted::TwitterTweet* t, SpeakerNode*speaker)
 {
 	m_dataMutex->lock();
-	if (m_tweets.find(t->ID) != m_tweets.end())
+	if (m_Tweets.find(t->ID) != m_Tweets.end())
 	{
 		m_dataMutex->unlock();
 		return;
 	}
 	TweetNode* node = new TweetNode(speaker->GetSpeaker(),t);
 
-	m_tweets[node->GetTweetID()] = node;
+	m_Tweets[node->GetTweetID()] = node;
 
 	float sz = 25;
 	msa::physics::Particle2D* n = new msa::physics::Particle2D();
@@ -175,8 +175,8 @@ void SessionRenderer::_AddTweetNode(ted::TwitterTweet* t, SpeakerNode*speaker)
 	ITedNode* target = 0;
 	if (replyTweet)
 	{
-		TweetMap::iterator it = m_tweets.find(replyTweet->ID);
-		if (it != m_tweets.end())
+		TweetMap::iterator it = m_Tweets.find(replyTweet->ID);
+		if (it != m_Tweets.end())
 		{
 			it->second->AddTweet(node);
 			target = it->second;
@@ -212,7 +212,7 @@ void SessionRenderer::_AddTweetsNodes(const std::vector<TweetNode*> &nodes)
 	for (int i = 0; i < nodes.size(); ++i)
 	{
 		
-		m_tweets[nodes[i]->GetTweetID()] = nodes[i];
+		m_Tweets[nodes[i]->GetTweetID()] = nodes[i];
 
 		float sz = 25;
 		msa::physics::Particle2D* n = new msa::physics::Particle2D();
@@ -228,8 +228,8 @@ void SessionRenderer::_AddTweetsNodes(const std::vector<TweetNode*> &nodes)
 		 ITedNode* target = 0;
 		 if (t)
 		 {
-			 TweetMap::iterator it= m_tweets.find(t->ID);
-			 if (it != m_tweets.end())
+			 TweetMap::iterator it= m_Tweets.find(t->ID);
+			 if (it != m_Tweets.end())
 			 {
 				 it->second->AddTweet(nodes[i]);
 				 target = it->second;

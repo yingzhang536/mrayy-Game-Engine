@@ -53,11 +53,11 @@ protected:
 
 
 	float m_speakerDistance;
-	float m_tweetsDistance;
+	float m_TweetsDistance;
 
 	std::vector<SpeakerNode*> m_speakersSeq;
 	SpeakerMap m_speakers;
-	TweetMap m_tweets;
+	TweetMap m_Tweets;
 
 	msa::physics::World2D* m_physics;
 	OS::IMutex* m_dataMutex;
@@ -88,7 +88,7 @@ public:
 
 	SpeakerNode* GetCurrentSpeaker(){ return m_activeSpeaker; }
 
-	void AddTweets(const std::vector<ted::TwitterTweet*> &tweets);
+	void AddTweets(const std::vector<ted::TwitterTweet*> &Tweets);
 
 	ITedNode* GetNodeFromPosition(const math::vector2d& pos);
 

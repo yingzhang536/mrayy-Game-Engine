@@ -17,7 +17,10 @@ IMPLEMENT_ELEMENT_FACTORY(GUIStaticText);
 //////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_PROPERTY_TYPE_HEADER(Background,GUIStaticText,bool,mT("Background"),EPBT_Basic,mT("Draw background"),true);
-IMPLEMENT_PROPERTY_TYPE_GENERIC(Background,GUIStaticText,bool,SetBackground,GetBackground,core::StringConverter::toString,core::StringConverter::toBool,false)
+IMPLEMENT_PROPERTY_TYPE_GENERIC(Background, GUIStaticText, bool, SetBackground, GetBackground, core::StringConverter::toString, core::StringConverter::toBool, false)
+
+IMPLEMENT_PROPERTY_TYPE_HEADER(Borders, GUIStaticText, bool, mT("Borders"), EPBT_Basic, mT("Draw borders"), true);
+IMPLEMENT_PROPERTY_TYPE_GENERIC(Borders, GUIStaticText, bool, SetBorder, GetBorder, core::StringConverter::toString, core::StringConverter::toBool, false)
 
 GUIStaticText::GUIStaticText(IGUIManager* creator)
 :IGUIStaticText(creator)
@@ -27,7 +30,8 @@ GUIStaticText::GUIStaticText(IGUIManager* creator)
 	CPropertieDictionary *dic=0;
 	if(CreateDictionary(&dic))
 	{
-		dic->addPropertie(&PropertyTypeBackground::instance,mT("Apperance"));
+		dic->addPropertie(&PropertyTypeBackground::instance, mT("Apperance"));
+		dic->addPropertie(&PropertyTypeBorders::instance, mT("Apperance"));
 	}
 }
 GUIStaticText::~GUIStaticText()

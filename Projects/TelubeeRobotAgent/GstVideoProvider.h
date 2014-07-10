@@ -48,6 +48,11 @@ public:
 	GstVideoProvider();
 	virtual~GstVideoProvider();
 
+	void SetCameras(int cam0, int cam1);
+	void SetTargetResolution(const math::vector2di& res);
+
+	bool IsStereoCameras();
+
 	void SetDataSource(GstVideoGrabber* src);
 	void StreamDataTo(const network::NetAddress& target,int videoPort,int audioPort);
 

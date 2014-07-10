@@ -67,7 +67,7 @@ public:
 	DepthFrame* GetDepthFrame(){ return m_frame; }
 
 	void CreateDepthFrame(int w, int h);
-	void AddDepthRect(GeomDepthRect* rc);
+	void AddDepthRect(const GeomDepthRect* rc);
 
 	//returns the intersection distance, ret>0 intersection happened
 	//p is defined in depth camera space coordinates

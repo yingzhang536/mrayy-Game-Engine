@@ -26,6 +26,7 @@
 #include "GeomDepthRect.h"
 #include "IUDPClient.h"
 #include "OpenNIManager.h"
+#include "CameraProfile.h"
 
 namespace mray
 {
@@ -48,6 +49,8 @@ protected:
 	{
 		DepthData = 1,
 		DepthSize = 2,
+		IsStereo = 3,
+		CameraConfig = 4,
 	};
 
 	EController m_controller;
@@ -76,6 +79,9 @@ protected:
 
 	TBee::GeomDepthRect m_depthRect;
 
+	CameraProfileManager* m_cameraProfileManager;
+	core::string m_cameraProfile;
+
 	network::NetAddress m_remoteAddr;
 	network::IUDPClient* m_commChannel;
 	GCPtr<OpenNIManager> m_openNIMngr;
@@ -84,6 +90,9 @@ protected:
 	bool m_depthSend;
 
 	int m_videoPort;
+
+	math::vector2di m_resolution;
+
 
 	core::string m_ip;
 
@@ -135,6 +144,8 @@ public:
 
 	void OnMessage(network::NetAddress* addr,const core::string& msg, const core::string& value);
 
+	CameraProfileManager* LoadCameraProfiles(const core::string& path);
+	CameraProfileManager* GetCameraProfileManager(){ return m_cameraProfileManager; }
 };
 
 }

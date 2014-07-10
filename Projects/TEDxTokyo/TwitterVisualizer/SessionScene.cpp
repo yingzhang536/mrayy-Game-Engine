@@ -162,7 +162,7 @@ void SessionScene::Init()
 
 	{
 		video::IRenderTargetPtr rt = dev->createRenderTarget("", dev->createTexture2D(1, video::EPixel_R8G8B8A8, false), 0, 0, 0);
-		m_vp = new scene::ViewPort("", m_camera, rt, 0, math::rectf(0, 0, 1, 1), 0);
+		m_vp = new scene::ViewPort("", 0, rt, 0, math::rectf(0, 0, 1, 1), 0);
 		m_vp->enablePostProcessing(true);
 
 		video::ParsedShaderPP* pp = new video::ParsedShaderPP(dev);
@@ -228,7 +228,7 @@ void SessionScene::OnExit()
 bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 {
 
-	if (e->getType() == ET_Mouse && false)
+	if (e->getType() == ET_Mouse )
 	{
 		MouseEvent *evt = (MouseEvent *)e;
 		if (evt->event == MET_MOVED)
@@ -439,12 +439,12 @@ void SessionScene::OnHands(nui::LeapDevice* d, Leap::HandList hands)
 	for (Leap::HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) {
 		// Get the first hand
 		const Leap::Hand& hand = *hl;
-		if (hand.isRight())
+		//if (hand.isRight())
 		{
 			m_grasping = true;
 			for (int i = 0; i < hand.fingers().count(); ++i)
 			{
-				if (hand.fingers()[i].isExtended())
+			//	if (hand.fingers()[i].isExtended())
 				{
 					m_grasping = false;
 					break;;

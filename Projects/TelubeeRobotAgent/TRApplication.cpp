@@ -20,6 +20,7 @@
 
 #include "DirectSoundInputStream.h"
 #include "CMemoryStream.h"
+#include "DynamicFontGenerator.h"
 
 #define COMMUNICATION_PORT 6000
 #define VIDEO_PORT 5000
@@ -109,6 +110,8 @@ TRApplication::TRApplication()
 
 	this->m_limitFps = true;
 	this->m_limitFpsCount = 30;
+
+	m_cameraProfileManager = new CameraProfileManager();
 }
 
 TRApplication::~TRApplication()
@@ -122,6 +125,7 @@ TRApplication::~TRApplication()
 	delete m_msgSink;
 	delete m_openNi;
 	delete m_commChannel;
+	delete m_cameraProfileManager;
 }
 
 
@@ -137,8 +141,14 @@ void TRApplication::_InitResources()
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
-	gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	font->SetFontName(L"Arial");
+	font->SetTextureSize(1024);
+	font->SetFontResolution(24);
+	font->Init();
+
+	//GCPtr<GUI::IFont>font = gFontResourceManager.loadFont(mT("Calibrib_font.fnt"));
+	//gFontResourceManager.loadFont(mT("OCRAStd.fnt"));
 	gFontResourceManager.setDefaultFont(font);
 
 	gLogManager.log("Resources Loaded", ELL_SUCCESS);
@@ -180,12 +190,21 @@ void TRApplication::init(const OptionContainer &extraOptions)
 
 		m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox"? EController::XBox : EController::Logicool;
 
+		m_cameraProfile = extraOptions.GetOptionValue("CameraProfile");
+
 		core::string quality = extraOptions.GetOptionByName("Quality")->getValue();
 		if (quality == "Ultra Low")m_quality = EStreamingQuality::UltraLow;
 		if (quality == "Low")m_quality = EStreamingQuality::Low;
 		if (quality == "Medium")m_quality = EStreamingQuality::Medium;
 		if (quality == "High")m_quality = EStreamingQuality::High;
 		if (quality == "Ultra High")m_quality = EStreamingQuality::UltraHigh;
+
+		m_resolution.set(1280, 720);
+		core::string res = extraOptions.GetOptionByName("StreamResolution")->getValue();
+		if (res == "HD")
+			m_resolution.set(1280, 720);
+		else if (res == "FullHD")
+			m_resolution.set(1920, 1080);
 
 		m_streamAudio = extraOptions.GetOptionByName("Audio")->getValue() == "Yes";
 		m_isLocal = extraOptions.GetOptionByName("Network")->getValue() == "Local";
@@ -228,19 +247,46 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	}else
 		this->GetRenderWindow(0)->Hide();
 
-	//create cameras
-	for (int i = 0; i < 2; ++i)
 	{
-		video::DirectShowVideoGrabber * grabber=new video::DirectShowVideoGrabber();
-		m_cameras[i] = grabber;
-		if (m_cameraIfo[i].id >= 0)
-			grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
-		if (!m_debugData.debug)
+		core::string camParams[] = {
+			video::ICameraVideoGrabber::Param_Brightness,
+			video::ICameraVideoGrabber::Param_Contrast,
+			video::ICameraVideoGrabber::Param_Hue,
+			video::ICameraVideoGrabber::Param_Saturation,
+			video::ICameraVideoGrabber::Param_Sharpness,
+			video::ICameraVideoGrabber::Param_ColorEnable,
+			video::ICameraVideoGrabber::Param_WhiteBalance,
+			video::ICameraVideoGrabber::Param_Gain,
+			video::ICameraVideoGrabber::Param_BacklightCompensation,
+			video::ICameraVideoGrabber::Param_Exposure,
+			video::ICameraVideoGrabber::Param_Iris,
+			video::ICameraVideoGrabber::Param_Focus
+		};
+		int count = sizeof(camParams) / sizeof(core::string);
+		//init cameras
+		CameraProfile* prof = m_cameraProfileManager->GetProfile(m_cameraProfile);
+			for (int i = 0; i < 2; ++i)
 		{
-			m_cameras[i]->Stop();
-		}
-		m_cameraTextures[i].Set(m_cameras[i], getDevice()->createEmptyTexture2D(true));
+			video::DirectShowVideoGrabber * grabber = new video::DirectShowVideoGrabber();
+			m_cameras[i] = grabber;
+			if (m_cameraIfo[i].id >= 0)
+				grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
+			if (prof)
+			{
+				for (int j = 0; j < count; ++j)
+				{
+					core::string v;
+					if(prof->GetValue(camParams[j],v))
+						grabber->SetParameter(camParams[j],v);
+				}
+			}
+			//	if (!m_debugData.debug)
+			{
+				m_cameras[i]->Stop();
+			}
+			m_cameraTextures[i].Set(m_cameras[i], getDevice()->createEmptyTexture2D(true));
 
+		}
 	}
 
 	m_combinedCameras = new CombineVideoGrabber();
@@ -259,6 +305,8 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
 
 	m_videoProvider = new GstVideoProvider();
+	m_videoProvider->SetCameras(m_cameraIfo[0].id, m_cameraIfo[1].id);
+	m_videoProvider->SetTargetResolution(m_resolution);
 	m_videoProvider->SetNetworkType(m_isLocal);
 	m_videoProvider->EnableAudio(m_streamAudio);
 	m_videoProvider->SetDataSource(m_videoGrabber);
@@ -288,20 +336,24 @@ void TRApplication::WindowPostRender(video::RenderWindow* wnd)
 void TRApplication::update(float dt)
 {
 	CMRayApplication::update(dt);
+
 	if (m_startVideo || m_debugData.debug)
 	{
 		//m_cameraTextures[2].Blit();
  		m_videoGrabber->Lock();
 	//	m_videoGrabber->GetGrabber()->GrabFrame();
-		if (m_debugData.debug)
+		
+	/*	if (m_debugData.debug)
 			m_cameraTextures[2].Blit();
 		else
 			m_cameraTextures[2].GetGrabber()->GrabFrame();
- 		m_videoGrabber->Unlock();
+ 		*/
+		m_videoGrabber->Unlock();
 
 
 		if (m_startVideo && !m_videoProvider->IsConnected())
 		{
+			/*
 			if (!m_debugData.debug )
 			{
 				for (int i = 0; i < 2; ++i)
@@ -310,7 +362,7 @@ void TRApplication::update(float dt)
 					if (m_cameraIfo[i].id >= 0)
 						grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
 				}
-			}
+			}*/
 			m_videoProvider->Start(m_quality);
 			//m_openNi->Start(320,240);
 		}
@@ -363,12 +415,12 @@ void TRApplication::onDone()
 void TRApplication::onRenderDone(scene::ViewPort*vp)
 {
 	getDevice()->set2DMode();
-	video::TextureUnit tex;
+/*	video::TextureUnit tex;
 	tex.SetTexture(m_cameraTextures[2].GetTexture());
 	getDevice()->useTexture(0, &tex);
 	math::rectf texCoords(0,1,1,0);
 	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
-
+	*/
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 	if (font){
 		m_guiRender->Prepare();
@@ -444,6 +496,28 @@ void TRApplication::OnUserConnected(const network::NetAddress& address, int vide
 	m_debugData.userConnected = true;
 
 	m_startVideo = true;
+
+	const int BufferLen = 128;
+	uchar buffer[BufferLen];
+	//tell the client if we are sending stereo or single video images
+	OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
+	OS::StreamWriter wrtr(&stream);
+	{
+		int reply = (int)EMessages::IsStereo;
+		int len = stream.write(&reply, sizeof(reply));
+		bool stereo = m_videoProvider->IsStereoCameras();
+		len += stream.write(&stereo, sizeof(stereo));
+		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+	}
+
+
+	{
+		stream.seek(0,OS::ESeek_Set);
+		int reply = (int)EMessages::CameraConfig;
+		int len = stream.write(&reply, sizeof(reply));
+		len+= wrtr.binWriteString(m_cameraProfile);
+		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+	}
 }
 void TRApplication::OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
 {
@@ -496,6 +570,11 @@ void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg
 		len+=m_depthRect.WriteToStream(&stream);
 		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
 	}
+}
+CameraProfileManager* TRApplication::LoadCameraProfiles(const core::string& path)
+{
+	m_cameraProfileManager->LoadFromXML(path);
+	return m_cameraProfileManager;
 }
 
 }

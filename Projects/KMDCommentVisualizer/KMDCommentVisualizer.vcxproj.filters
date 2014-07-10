@@ -1,0 +1,420 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{2f65214b-caa6-499a-ad74-54d5dcd83e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DB">
+      <UniqueIdentifier>{95dd5328-f82b-418b-ad87-61e16f436ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{7091004d-85fc-4875-9497-faac0af7f26f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{ec50b638-9ef7-4c94-b08f-5d1f7e9c1000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{a0be61e1-1952-406c-86b8-b1c1b7125342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{14bd8ae8-4315-4e63-9f5d-f77db455fc5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{f3a0ddfc-57bc-4ebd-bf01-cf6c03f4ee73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{5d14c164-0875-4506-8611-df15456d7f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics\msa">
+      <UniqueIdentifier>{b933957a-bb89-44b8-b404-c4c402df0fe8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFadingText.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIProfilePicture.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScenePanelLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISceneSpacePanel.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayout_V2.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV1.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScreenLayoutImplV2.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionSidePanel.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISessionSidePanelLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanel.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeakerDetailsPanelLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISweepingText.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIUserProfile.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionScene.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLDBHandler.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionRenderer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCamera.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="PointerNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionLineRenderer.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="AppData.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="TwitterProfileListItem.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PhNode.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionContainer.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionDetails.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="KMDComment.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="KMDUser.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CSubProject.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CProfessor.h">
+      <Filter>Source Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CommentNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IKMDNode.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICommentDetailsPanelLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICommentItem.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICommentDetailsPanel.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACore.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreCommon.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSACoreMath.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\msacore-mray.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAObjCPointer.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics2D.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysics3D.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsAttraction.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsCallbacks.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsConstraint.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsDataRecorder.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParams.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticle.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleDrawer.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsParticleUpdater.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSector.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsSpring.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="msaPhysics\MSAPhysicsWorld.h">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeRenderer.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFacultyList.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFacultyListLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingLayer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICommentsLayer.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIDockedElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericRenderLayer.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIStatusLayer.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIStatusLayerLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILayersContainer.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIProjectStatus.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIProjectStatusLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KMDCommentVisualizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIFadingText.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIProfilePicture.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISceneSpacePanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISessionSidePanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISpeakerDetailsPanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUISweepingText.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIUserProfile.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderingScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionScene.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLDBHandler.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionRenderer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCamera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PointerNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionLineRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="AppData.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="TwitterProfileListItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionContainer.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="KMDComment.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="KMDUser.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="CommentNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectNode.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICommentItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICommentDetailsPanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
+      <Filter>Source Files\Physics\msa</Filter>
+    </ClCompile>
+    <ClCompile Include="CProfessor.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="CSubProject.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIFacultyList.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUICommentsLayer.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIDockedElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericRenderLayer.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIStatusLayer.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILayersContainer.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIProjectStatus.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionDetails.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configure.stg">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUITweetDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>Source Files\DB</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIFacultyListLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentsLayerLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIStatusLayerLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIProjectStatusLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+  </ItemGroup>
+</Project>

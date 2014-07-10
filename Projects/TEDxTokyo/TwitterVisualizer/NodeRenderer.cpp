@@ -47,7 +47,7 @@ NodeRenderer::NodeRenderer()
 	m_speakerNodeShader = gShaderResourceManager.loadShaderFromProgram("SpeakerNodeShader", SpeakerNodeShader, video::EShader_FragmentProgram, "main_fp",video::ShaderPredefList(), mT("cg"));
 	gShaderResourceManager.addResource(m_speakerNodeShader, "SpeakerNodeShader");
 
-	m_tweetNodeShader = gShaderResourceManager.loadShaderFromProgram("TweetNodeShader", TweetNodeShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
+	m_TweetNodeShader = gShaderResourceManager.loadShaderFromProgram("TweetNodeShader", TweetNodeShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
 	gShaderResourceManager.addResource(m_speakerNodeShader, "TweetNodeShader");
 
 	m_connectionShader = gShaderResourceManager.loadShaderFromProgram("ConnectionLineShader",ConnectionLineShader, video::EShader_FragmentProgram, "main_fp", video::ShaderPredefList(), mT("cg"));
@@ -63,8 +63,8 @@ NodeRenderer::~NodeRenderer()
 void NodeRenderer::Clear()
 {
 	m_speakerConn.clear();
-	m_tweetsConn.clear();
-	m_tweets.clear();
+	m_TweetsConn.clear();
+	m_Tweets.clear();
 	m_speakers.clear();
 	m_connRenderer->Reset();
 }
@@ -82,10 +82,10 @@ void NodeRenderer::_renderConnections(SessionRenderer *r)
 	}
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 	math::vector2d points[2];
-	for (int i = 0; i < m_tweetsConn.size(); ++i)
+	for (int i = 0; i < m_TweetsConn.size(); ++i)
 	{
-		points[0]=(m_tweetsConn[i].a->GetPosition());
-		points[1] = (m_tweetsConn[i].b->GetPosition());
+		points[0]=(m_TweetsConn[i].a->GetPosition());
+		points[1] = (m_TweetsConn[i].b->GetPosition());
 		dev->draw2DLine(points, 2, video::SColor(1, 1, 1, 1));
 	}
 	Engine::getInstance().getDevice()->setLineWidth(5);
@@ -137,26 +137,26 @@ void NodeRenderer::_renderSpeakers(SessionRenderer *r)
 void NodeRenderer::_renderTweets(SessionRenderer *r)
 {
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
-	dev->setFragmentShader(m_tweetNodeShader);
+	dev->setFragmentShader(m_TweetNodeShader);
 	math::vector2d pos;
 
-	for (int i = 0; i < m_tweets.size(); ++i)
+	for (int i = 0; i < m_Tweets.size(); ++i)
 	{
-		scene::TweetNode* tweet = m_tweets[i].node;
+		scene::TweetNode* Tweet = m_Tweets[i].node;
 
-		pos = tweet->GetPosition();
+		pos = Tweet->GetPosition();
 
-		float g = 1-tweet->GetHoverValue();
-		float a = tweet->GetAlpha();
-		m_tweetNodeShader->setConstant("Gray", &g, 1);
-		m_tweetNodeShader->setConstant("Alpha", &a, 1);
+		float g = 1-Tweet->GetHoverValue();
+		float a = Tweet->GetAlpha();
+		m_TweetNodeShader->setConstant("Gray", &g, 1);
+		m_TweetNodeShader->setConstant("Alpha", &a, 1);
 
-		float scale = tweet->GetSize()*m_tweets[i].scale;
-		math::rectf rc(tweet->GetPosition(), tweet->GetPosition());
+		float scale = Tweet->GetSize()*m_Tweets[i].scale;
+		math::rectf rc(Tweet->GetPosition(), Tweet->GetPosition());
 		rc.ULPoint -= scale*0.5;
 		rc.BRPoint += scale*0.5;
 
-		dev->useTexture(0, &tweet->GetImage());
+		dev->useTexture(0, &Tweet->GetImage());
 		dev->draw2DImage(rc, 1);
 	}
 
@@ -195,7 +195,7 @@ void NodeRenderer::AddSpeakerTweetNode(SpeakerNode*a, TweetNode* b)
 	NodeConnectionInfo c;
 	c.a = a;
 	c.b = b;
-	m_tweetsConn.push_back(c);
+	m_TweetsConn.push_back(c);
 
 	math::vector2d pa = a->GetPosition();
 	math::vector2d pb = b->GetPosition();
@@ -210,7 +210,7 @@ void NodeRenderer::AddTweetTweet(TweetNode*a, TweetNode* b)
 	NodeConnectionInfo c;
 	c.a = a;
 	c.b = b;
-	m_tweetsConn.push_back(c);
+	m_TweetsConn.push_back(c);
 
 	math::vector2d pa = a->GetPosition();
 	math::vector2d pb = b->GetPosition();
@@ -223,7 +223,7 @@ void NodeRenderer::AddTweet(TweetNode* node,float scale)
 	TweetNodeInfo ifo;
 	ifo.node = node;
 	ifo.scale= scale;
-	m_tweets.push_back(ifo);
+	m_Tweets.push_back(ifo);
 }
 
 void NodeRenderer::AddSpeaker(SpeakerNode* node,float glow)

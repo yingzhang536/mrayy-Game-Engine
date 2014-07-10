@@ -24,7 +24,7 @@ namespace mray
 namespace VT
 {
 
-class VideoclipRenderingState:public IRenderingState
+class VideoclipRenderingState:public TBee::IRenderingState
 {
 protected:
 
@@ -32,18 +32,18 @@ protected:
 	video::VideoGrabberTexture* m_video[2];
 
 public:
-	VideoclipRenderingState();
+	VideoclipRenderingState(const core::string& n);
 	virtual~VideoclipRenderingState();
 	
 	void SetFileName(bool left,const core::string&name){m_fileName[left?0:1]=name;}
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	virtual void OnEvent(Event* e);
 	virtual void OnEnter(IRenderingState*prev);
 	virtual void OnExit();
 	virtual void Update(float dt);
-	virtual video::IRenderTarget* Render(bool left,const math::rectf& rc);
+	virtual video::IRenderTarget* Render(const math::rectf& rc, TBee::ETargetEye eye);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 

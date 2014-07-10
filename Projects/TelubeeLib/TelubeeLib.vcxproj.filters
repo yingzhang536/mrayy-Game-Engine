@@ -55,6 +55,9 @@
     <Filter Include="Source Files\Depth">
       <UniqueIdentifier>{6311bbfa-4f16-4127-9429-508cff415469}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Configurations">
+      <UniqueIdentifier>{1b979eee-35c5-495c-8193-b2141bb07f80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,6 +216,15 @@
     <ClInclude Include="NodeHeadController.h">
       <Filter>Source Files\Input Controller\Head</Filter>
     </ClInclude>
+    <ClInclude Include="CameraConfigurationManager.h">
+      <Filter>Source Files\Configurations</Filter>
+    </ClInclude>
+    <ClInclude Include="IDepthProvider.h">
+      <Filter>Source Files\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalSingleCameraVideoSource.h">
+      <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -328,6 +340,12 @@
     </ClCompile>
     <ClCompile Include="NodeHeadController.cpp">
       <Filter>Source Files\Input Controller\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraConfigurationManager.cpp">
+      <Filter>Source Files\Configurations</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalSingleCameraVideoSource.cpp">
+      <Filter>Source Files\VideoSource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

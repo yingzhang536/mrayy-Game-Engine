@@ -171,17 +171,14 @@ core::tstring<T> StringUtilT<T>::Trim(const core::tstring<T>& str, const core::t
 		if(chars.find(str[i])==-1 || found)
 		{
 			found=true;
-			ret.appendChar(str[i]);
+			ret.append(1,str[i]);
 		}
 	}
 	for(int i=ret.length()-1;i>=0;--i)
 	{
 		if(chars.find(ret[i])==-1)
 		{
-			if(i<ret.length()-1)
-			{
-				ret[i+1]=0;
-			}
+			ret = ret.substr(0, i+1);
 			break;
 		}
 	}

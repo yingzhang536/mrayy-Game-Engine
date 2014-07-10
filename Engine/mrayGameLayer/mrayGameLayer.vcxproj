@@ -233,6 +233,7 @@
     <ClInclude Include="IPhysicsComponent.h" />
     <ClInclude Include="IPhysicsControl.h" />
     <ClInclude Include="KinematicJointDOF6Component.h" />
+    <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LineRendererComponent.h" />
     <ClInclude Include="NullPhysicsComponent.h" />
     <ClInclude Include="PhysicalMaterialComponent.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="IGhostInterface.cpp" />
     <ClCompile Include="KinematicJointDOF6Component.cpp" />
     <ClCompile Include="IPhysicsComponent.cpp" />
+    <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LineRendererComponent.cpp" />
     <ClCompile Include="NullPhysicsComponent.cpp" />
     <ClCompile Include="PhysicalMaterialComponent.cpp" />

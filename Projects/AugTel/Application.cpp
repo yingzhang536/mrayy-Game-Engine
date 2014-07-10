@@ -39,6 +39,8 @@
 #include "LoginScreenState.h"
 #include "LocalCameraRenderingState.h"
 #include "RemoteCameraRenderingState.h"
+#include "VTelesarRenderingState.h"
+#include "LatencyTestState.h"
 
 #include "LocalRobotCommunicator.h"
 #include "RemoteRobotCommunicator.h"
@@ -46,7 +48,9 @@
 
 #include "JoystickDefinitions.h"
 #include "LocalCameraVideoSource.h"
+#include "LocalSingleCameraVideoSource.h"
 #include "GstStereoNetVideoSource.h"
+#include "GstSingleNetVideoSource.h"
 #include "DataCommunicator.h"
 
 #include "TBRobotInfo.h"
@@ -108,9 +112,8 @@ namespace AugTel
 
 Application::Application()
 {
-	new ATAppGlobal();
-	ATAppGlobal::Instance()->App = this;
 	m_drawUI = false;
+	new ATAppGlobal();
 
 	this->m_limitFps = true;
 }
@@ -119,6 +122,8 @@ Application::~Application()
 
 	delete m_tbRenderer;
 	m_appStateManager = 0;
+	delete ATAppGlobal::Instance()->dataCommunicator;
+	ATAppGlobal::Instance()->dataCommunicator = 0;
 	delete ATAppGlobal::Instance()->sqlManager;
 	m_videoManager = 0;
 	m_soundManager = 0;
@@ -201,7 +206,7 @@ void Application::onEvent(Event* event)
 
 void Application::_initStates()
 {
-	IRenderingState *nullState, *intro, *login, *camera, *depth, *remote=0;
+	IRenderingState *nullState, *intro, *login, *camera, *depth, *vtRs, *remote = 0;
 	nullState = new NullRenderState();
 	nullState->InitState();
 	m_renderingState->AddState(nullState);
@@ -218,46 +223,43 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-// 	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip));
-// 	m_renderingState->AddState(remote, "CameraRemote");
+ 	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource
+ 	m_renderingState->AddState(remote);
 
-	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2),new TBee::LocalRobotCommunicator(), "AugCam");
- 	m_renderingState->AddState(camera);
+//	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), new TBee::LocalRobotCommunicator(), "AugCam");
+ //	m_renderingState->AddState(camera);
 
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
 
-	//m_renderingState->AddTransition(nullState, login, STATE_EXIT_CODE);
-	m_renderingState->AddTransition(nullState, camera, STATE_EXIT_CODE);
-	//m_renderingState->AddTransition("Login", "CameraRemote", ToRemoteCamera_CODE);//Camera
-	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
+	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStereoNetVideoSource(ip));
+	m_renderingState->AddState(latency);
+
+// 	vtRs = new VTelesarRenderingState("Telesar");
+// 	m_renderingState->AddState(vtRs);
+
+	m_renderingState->AddTransition(nullState, login, STATE_EXIT_CODE);
+	//m_renderingState->AddTransition(nullState, camera, STATE_EXIT_CODE);
+	m_renderingState->AddTransition(login, remote, ToRemoteCamera_CODE);//Camera
+//	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
 	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
-	m_renderingState->AddTransition(login, depth, ToDepthView_CODE);
+	//m_renderingState->AddTransition(login, vtRs, ToDepthView_CODE);//Camera
+	//m_renderingState->AddTransition(login, depth, ToDepthView_CODE);
 	m_renderingState->AddTransition(remote, login, STATE_EXIT_CODE);
-	//m_renderingState->AddTransition(camera, login, STATE_EXIT_CODE);
+	m_renderingState->AddTransition(login, latency, ToDepthView_CODE);
+//	m_renderingState->AddTransition(camera, login, STATE_EXIT_CODE);
 	m_renderingState->AddTransition(depth, login, STATE_EXIT_CODE);
+	//	m_renderingState->AddTransition(vtRs, login, STATE_EXIT_CODE);
 	m_renderingState->SetInitialState(nullState);
 
-	xml::XMLElement* root = new xml::XMLElement("Root");
-	root->addAttribute("AttrA", "Test & bad");
-	root->addAttribute("AttrB", "Test < bad");
-	root->addAttribute("AttrC", "Test > bad");
-	root->addAttribute("AttrD", "Test \" bad");
-	root->addAttribute("AttrE", "Test \' bad");
-
-	xml::XMLWriter w;
-	w.addElement(root);
-	OS::StreamWriter ww;
-	OS::IStreamPtr s = gFileSystem.openFile("test.xml", OS::TXT_WRITE);
-	ww.setStream(s);
-	ww.writeString(w.flush());
-	s->close();
 }
 
 void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
 
+	ATAppGlobal::Instance()->Init();
+	ATAppGlobal::Instance()->App = this;
 	ATAppGlobal::Instance()->Load("TBSettings.conf");
 	{
 		core::string v = extraOptions.GetOptionValue("Debugging");
@@ -274,7 +276,7 @@ void Application::init(const OptionContainer &extraOptions)
 		else if (v == "Side-by-side")
 			AppData::Instance()->stereoMode = ERenderStereoMode::SideBySide;
 		else if (v == "Up-bottom")
-			AppData::Instance()->stereoMode = ERenderStereoMode::TopDown;
+			AppData::Instance()->stereoMode = ERenderStereoMode::TopDown; 
 		else if (v == "StereoTV")
 			AppData::Instance()->stereoMode = ERenderStereoMode::StereoTV;
 		else if (v == "Oculus")
@@ -285,7 +287,19 @@ void Application::init(const OptionContainer &extraOptions)
 			ATAppGlobal::Instance()->headController = TBee::EHeadControllerType::SceneNode;
 		else
 			ATAppGlobal::Instance()->headController = TBee::EHeadControllerType::Oculus;
+	
+		ATAppGlobal::Instance()->m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
 
+		if (ATAppGlobal::Instance()->m_controller == EController::XBox)
+		{
+			JOYSTICK_SelectButton = 6;
+			JOYSTICK_StartButton = 7;
+
+			JOYSTICK_Axis0 = 2;
+			JOYSTICK_Axis1 = 3;
+			JOYSTICK_Axis2 = 1;
+			JOYSTICK_Axis3 = 0;
+		}
 
 		v = extraOptions.GetOptionValue("Robot");
 		if (v == "Keyboard")
@@ -398,6 +412,12 @@ void Application::init(const OptionContainer &extraOptions)
 			pack.exclusiveMouse = false;
 			m_inputManager = CreateOISInputManager(pack);
 			ATAppGlobal::Instance()->inputMngr = m_inputManager;
+
+
+			video::ITexturePtr t = gEngine.getDevice()->createEmptyTexture2D(false);
+			t->setMipmapsFilter(false);
+			m_previewRT = gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0);
+
 		}
 
 	}
@@ -462,15 +482,22 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 	{
 		math::rectf rc(0, wnd->GetSize());
 		video::TextureUnit tex;
-		
-		tex.SetTexture(m_tbRenderer->GetEyeImage(0)->GetColorTexture());
+
+		if (m_previewRT->GetSize() != wnd->GetSize())
+		{
+			m_previewRT->GetColorTexture()->createTexture(math::vector3d(wnd->GetSize().x, wnd->GetSize().y, 1), video::EPixel_R8G8B8);
+		}
+		m_appStateManager->Draw(rc, m_previewRT, TBee::Eye_Right);
+		RenderUI(rc);
+		getDevice()->setRenderTarget(0);
+		//	tex.SetTexture(m_tbRenderer->GetEyeImage(0)->GetColorTexture());
+		tex.SetTexture(m_previewRT->GetColorTexture());
 		getDevice()->useTexture(0, &tex);
 
 		math::rectf trc;
 		getDevice()->draw2DImage(rc, 1);
 		return;
 	}
-
 	getDevice()->setViewport(m_mainVP);
 	m_tbRenderer->Render(m_mainVP);
 }

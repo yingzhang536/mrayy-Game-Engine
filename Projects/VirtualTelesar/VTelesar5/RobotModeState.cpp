@@ -12,7 +12,7 @@ namespace VT
 {
 
 
-RobotModeState::RobotModeState()
+RobotModeState::RobotModeState(const core::string&name) :IRenderingState(name)
 {
 }
 
@@ -21,9 +21,9 @@ RobotModeState::~RobotModeState()
 }
 
 
-void RobotModeState::InitState(Application* app)
+void RobotModeState::InitState()
 {
-	IRenderingState::InitState(app);
+	IRenderingState::InitState();
 }
 
 void RobotModeState::OnEvent(Event* e)
@@ -42,9 +42,9 @@ void RobotModeState::Update(float dt)
 {
 }
 
-video::IRenderTarget* RobotModeState::Render(bool left,const math::rectf& rc)
+video::IRenderTarget* RobotModeState::Render(const math::rectf& rc,TBee::ETargetEye eye)
 {
-	return IRenderingState::Render(left,rc);
+	return IRenderingState::Render(rc,eye);
 }
 
 

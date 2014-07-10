@@ -309,6 +309,8 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Dependencies\include\huffman\huffman.h" />
+    <ClInclude Include="HuffmanCompression.h" />
     <ClInclude Include="include\AImpSceneLoader.h" />
     <ClInclude Include="include\AtlasPacker.h" />
     <ClInclude Include="include\BatchRenderer.h" />
@@ -387,6 +389,7 @@
     <ClInclude Include="include\TangentCalculater.h" />
     <ClInclude Include="include\ITextureSource.h" />
     <ClInclude Include="include\TextureSourceFactory.h" />
+    <ClInclude Include="include\UniqueIDGenerator.h" />
     <ClInclude Include="include\ValueControllerManager.h" />
     <ClInclude Include="include\VideoResourceManager.h" />
     <ClInclude Include="include\VideoTextureSource.h" />
@@ -418,6 +421,11 @@
     <ClInclude Include="include\SSkyDomeNode.h" />
     <ClInclude Include="include\SSkyPlaneNode.h" />
     <ClInclude Include="include\STerrain.h" />
+    <ClCompile Include="..\..\Dependencies\include\huffman\huffman.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="HuffmanCompression.cpp" />
     <ClCompile Include="ICameraVideoGrabber.cpp" />
     <ClCompile Include="src\AImpSceneLoader.cpp" />
     <ClCompile Include="src\AtlasPacker.cpp" />

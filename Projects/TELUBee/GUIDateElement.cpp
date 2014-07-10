@@ -52,7 +52,7 @@ void GUIDateElement::Draw(video::IRenderArea*vp)
 	GetCreator()->GetRenderQueue()->Flush();
 	GetCreator()->GetDevice()->setScissorRect(oldScissor);
 
-	math::rectf rc(0, vp->getSize());
+	math::rectf rc(0, vp->GetSize());
 	IGUIElement::Draw(&rc);// vp);
 }
 

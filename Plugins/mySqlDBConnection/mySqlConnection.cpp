@@ -200,6 +200,7 @@ bool mySqlConnectionImpl::Connect(const SQLConnectData& data)
 	bool ret=mysql_real_connect(m_connection,data.host.c_str(),data.user.c_str(),data.passwd.c_str(),data.db.c_str(),data.port,0,flags)!=0;
 	if(!ret)
 		return false;
+	mysql_set_character_set(m_connection, "utf8");
 	m_owner->__FIRE_OnConnected(m_owner,&data);
 	return ret;
 }

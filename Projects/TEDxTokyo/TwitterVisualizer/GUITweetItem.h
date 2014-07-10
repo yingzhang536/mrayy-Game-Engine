@@ -34,14 +34,14 @@ class GUITweetItem:public IGUIElement
 public: 
 	static const GUID ElementType;
 protected:
-	ted::TwitterTweet* m_tweet;
+	ted::TwitterTweet* m_Tweet;
 	GUI::FontAttributes m_fontAttrs;
 public:
 	GUITweetItem(IGUIManager* m);
 	virtual~GUITweetItem();
 
 	void SetTweet(ted::TwitterTweet* t);
-	ted::TwitterTweet* GetTweet(){ return m_tweet; }
+	ted::TwitterTweet* GetTweet(){ return m_Tweet; }
 
 
 	virtual void Update(float dt);

@@ -28,6 +28,8 @@ namespace TBee
 	class IRobotCommunicator;
 	class CRobotConnector;
 	class ICameraVideoSource;
+	class TelubeeCameraConfiguration;
+
 
 class IEyesRenderingBaseState :public IRenderingState
 {
@@ -35,11 +37,9 @@ protected:
 
 	struct EyeInfo
 	{
-		EyeInfo() :ratio(1), flip90(false), cw(false)
+		EyeInfo() :ratio(1)
 		{
 		}
-		bool flip90;
-		bool cw;
 
 		math::vector2d cropping;
 		math::vector2d scale;
@@ -48,8 +48,6 @@ protected:
 	EyeInfo m_eyes[2];
 
 	float m_targetAspectRatio;
-	float m_hmdDistance;
-	float m_cameraFov;
 	float m_hmdFov;
 	math::vector2d m_hmdSize;
 	float m_panningScale;//used to give some freedom to look around using Oculus in a scaled up mode
@@ -58,13 +56,12 @@ protected:
 	bool m_enablePanning;
 
 	bool m_useLensCorrection;
-	math::vector4d m_correctionParamsU;
-	math::vector4d m_correctionParamsV;
+	TelubeeCameraConfiguration *m_cameraConfiguration;
+	bool m_camConfigDirty;
 
 	GUI::IGUIRenderer* m_guiRenderer;
 
 	GCPtr<video::ParsedShaderPP> m_lensCorrectionPP;
-	video::ParsedShaderPP::PassValue* m_correctionValue[2];
 	CRobotConnector* m_robotConnector;
 	ICameraVideoSource* m_videoSource;
 
@@ -77,7 +74,7 @@ public:
 	virtual~IEyesRenderingBaseState();
 
 	virtual void InitState();
-	void SetParameters(float targetAspectRatio, float hmdDistance, float cameraFov, float hmdFov);
+	void SetHMDParameters(float targetAspectRatio, float hmdFov);
 
 	void SetVideoSource(ICameraVideoSource* src){ m_videoSource = src; }
 	ICameraVideoSource* GetVideoSource(){ return m_videoSource; }

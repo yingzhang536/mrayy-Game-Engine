@@ -47,6 +47,11 @@ class HeadMount;
 class TBRobotInfo;
 class DataCommunicator;
 
+enum class EController
+{
+	XBox,
+	Logicool
+};
 class ATAppGlobal :public AppData
 {
 protected:
@@ -66,6 +71,7 @@ public:
 
 
 	core::string DVIPort;
+	EController m_controller;
 
 	sound::ISoundManager* soundManager;
 	TBRobotInfo* selectedRobot;

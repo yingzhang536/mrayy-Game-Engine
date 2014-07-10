@@ -136,7 +136,7 @@ void GUIUserProfile::Draw(const math::rectf*vp)
 			textRc.BRPoint = textRc.ULPoint + math::vector2d(bgR.getWidth()*0.75, bgR.getHeight() / 2);
 			font->print(textRc, &m_fontAttrs, &clip, m_user->displayName, creator->GetRenderQueue());
 
-			//draw tweets
+			//draw Tweets
 			tex1.SetTexture(gTextureResourceManager.loadTexture2D("twitter.png"));
 			tmpRc.ULPoint.x = textRc.BRPoint.x;
 			tmpRc.ULPoint.y = textRc.ULPoint.y + 10;
@@ -144,7 +144,7 @@ void GUIUserProfile::Draw(const math::rectf*vp)
 			dev->useTexture(0, &tex1);
 			dev->draw2DImage(tmpRc, 1);
 
-			//tweets count
+			//Tweets count
 			m_fontAttrs.fontSize = 14;
 			m_fontAttrs.fontAligment = GUI::EFA_MiddleLeft;
 			textRc.ULPoint.x = tmpRc.BRPoint.x;
@@ -152,7 +152,7 @@ void GUIUserProfile::Draw(const math::rectf*vp)
 			textRc.BRPoint.x = rect.BRPoint.x;
 			textRc.BRPoint.y = tmpRc.BRPoint.y;
 			textRc.BRPoint = textRc.ULPoint + math::vector2d(bgR.getWidth(), bgR.getHeight() / 2);
-			font->print(textRc, &m_fontAttrs, &clip, core::StringConverter::toString(m_user->tweets.size()), creator->GetRenderQueue());
+			font->print(textRc, &m_fontAttrs, &clip, core::StringConverter::toString(m_user->Tweets.size()), creator->GetRenderQueue());
 
 			m_fontAttrs.fontSize = 18;
 			textRc = bgR;		//URL

@@ -4,6 +4,7 @@
 #include "AIComponent.h"
 #include "PhysicsComponent.h"
 #include "SceneComponent.h"
+#include "LightComponent.h"
 #include "BoneComponent.h"
 #include "ScriptComponent.h"
 #include "SoundComponent.h"
@@ -37,7 +38,8 @@ IMPLEMENT_RTTI(IMovableComponent,IGameComponent)
 IMPLEMENT_RTTI(NullPhysicsComponent,IPhysicsComponent);
 IMPLEMENT_RTTI(AIComponent,IGameComponent)
 IMPLEMENT_RTTI(IPhysicsComponent,IGameComponent)
-IMPLEMENT_RTTI(SceneComponent,IMovableComponent)
+IMPLEMENT_RTTI(SceneComponent, IMovableComponent)
+IMPLEMENT_RTTI(LightComponent, IMovableComponent)
 IMPLEMENT_RTTI(BoneComponent,IMovableComponent)
 IMPLEMENT_RTTI(PhysicsComponent,IPhysicsComponent)
 IMPLEMENT_RTTI(IPhysicalJointComponent,IGameComponent)
@@ -68,6 +70,7 @@ IMPLEMENT_RTTI(ModelCollisionComponent,ICollisionComponent)
 
 IMPLEMENT_GAMECOMPONENT_FACTORY(AIComponent);
 IMPLEMENT_GAMECOMPONENT_FACTORY(SceneComponent);
+IMPLEMENT_GAMECOMPONENT_FACTORY(LightComponent);
 IMPLEMENT_GAMECOMPONENT_FACTORY(BoneComponent);
 IMPLEMENT_GAMECOMPONENT_FACTORY(PhysicsComponent);
 IMPLEMENT_GAMECOMPONENT_FACTORY(ScriptComponent);

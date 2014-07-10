@@ -24,7 +24,7 @@ namespace VT
 {
 
 
-class RobotModeState:public IRenderingState
+class RobotModeState:public TBee::IRenderingState
 {
 protected:
 
@@ -32,16 +32,16 @@ protected:
 	video::VideoGrabberTexture* m_video;
 
 public:
-	RobotModeState();
+	RobotModeState(const core::string&name);
 	virtual~RobotModeState();
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	virtual void OnEvent(Event* e);
 	virtual void OnEnter(IRenderingState*prev);
 	virtual void OnExit();
 	virtual void Update(float dt);
-	virtual video::IRenderTarget* Render(bool left,const math::rectf& rc);
+	virtual video::IRenderTarget* Render(const math::rectf& rc, TBee::ETargetEye eye);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 };

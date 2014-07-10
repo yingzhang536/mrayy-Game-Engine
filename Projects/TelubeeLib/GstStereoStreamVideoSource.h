@@ -47,6 +47,8 @@ public:
 	virtual math::vector2d GetEyeResolution(int i);
 	virtual video::ITexturePtr GetEyeTexture(int i);
 	virtual math::rectf GetEyeTexCoords(int i) { return math::rectf(0.5*i, 0, 0.5+0.5*i, 1); }
+
+	virtual bool IsLocal(){ return false; }
 };
 
 }

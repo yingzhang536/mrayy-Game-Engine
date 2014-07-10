@@ -104,13 +104,13 @@ public:
 	virtual void attachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
 	virtual void deattachRenderTarget(const video::ITexturePtr& tex, uint index = 0) {}
 
-	virtual const video::ITexturePtr& getColorTexture(int i = 0) { return m_tex; }
-	virtual const video::IHardwarePixelBufferPtr& getDepthBuffer() { return video::IHardwarePixelBufferPtr::Null; }
-	virtual const video::IHardwarePixelBufferPtr& getStencilBuffer() { return video::IHardwarePixelBufferPtr::Null; }
+	virtual const video::ITexturePtr& GetColorTexture(int i = 0) { return m_tex; }
+	virtual const video::IHardwarePixelBufferPtr& GetDepthBuffer() { return video::IHardwarePixelBufferPtr::Null; }
+	virtual const video::IHardwarePixelBufferPtr& GetStencilBuffer() { return video::IHardwarePixelBufferPtr::Null; }
 
 	virtual int GetColorTextureCount() { return 1; }
 	virtual void Resize(int x, int y) {}
-	virtual math::vector2di getSize()
+	virtual math::vector2di GetSize()
 	{
 		return math::vector2di(m_tex->getSize().x, m_tex->getSize().y);
 	}
@@ -128,16 +128,16 @@ void CameraCorrectionGrabber::Update(float dt)
 		math::vector2d size(cameraTex->getSize().x, cameraTex->getSize().y);
 		m_lensCorrectionPP->Setup(math::rectf(0, size));
 		m_lensCorrectionPP->render(&TextureRenderTarget(cameraTex));
-		cameraTex = m_lensCorrectionPP->getOutput()->getColorTexture();
+		cameraTex = m_lensCorrectionPP->getOutput()->GetColorTexture();
 	}
 	dev->setRenderTarget(m_rt,1,1,video::SColor(0,0,0,1));
 	dev->set2DMode();
 
-	if (VT::VTAppGlobals::oculusDevice->IsConnected())
+	if (VT::VTAppGlobals::Instance()->oculusDevice->IsConnected())
 	{
 		math::matrix4x4 m, pm;
 		dev->getTransformationState(video::TS_PROJECTION, m);
-		pm.f14 = VT::VTAppGlobals::oculusComponents[m_index]->GetPerspectiveOffset();
+		pm.f14 = VT::VTAppGlobals::Instance()->oculusComponents[m_index]->GetPerspectiveOffset();
 		pm = pm*m;
 		dev->setTransformationState(video::TS_PROJECTION, pm);
 	}
@@ -171,7 +171,7 @@ void CameraCorrectionGrabber::Update(float dt)
 	math::rectf targetRect;
 	math::vector2d margin = (m_target- m_scale) / 2;
 	targetRect.ULPoint =  margin;
-	targetRect.BRPoint = m_rt->getSize() - margin;
+	targetRect.BRPoint = m_rt->GetSize() - margin;
 	math::vector2d tcSz = tc.getSize();
 	tc.ULPoint += eyeTc.ULPoint;
 	tc.BRPoint = tc.ULPoint + tcSz*eyeTc.getSize();

@@ -210,6 +210,9 @@
     <ClInclude Include="SkyBoxComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameComponentCreator.cpp">
@@ -333,6 +336,9 @@
       <Filter>Source Files\Components\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="SkyBoxComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LightComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>

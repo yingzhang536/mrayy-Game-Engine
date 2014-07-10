@@ -24,7 +24,7 @@ ApplicationMenuState::ApplicationMenuState()
 {
 
 	ADD_DELEGATE(ApplicationMenuState,StartDemoEvent);
-	m_guiManager=new GUI::GUIManager(VTAppGlobals::App->getDevice());
+	m_guiManager = new GUI::GUIManager(VTAppGlobals::Instance()->App->getDevice());
 	m_guiManager->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
 
 	m_mainMenu=new GUIMainMenu();

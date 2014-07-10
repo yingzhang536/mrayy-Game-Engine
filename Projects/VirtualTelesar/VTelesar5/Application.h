@@ -32,38 +32,36 @@
 #include "RenderingStateManager.h"
 
 #include "BenchmarkItem.h"
+#include "TBeeRenderer.h"
 
 namespace mray
 {
 namespace VT
 {
 
-class Application:public CMRayApplication,public BenchmarkItem,public VT::IRenderStateManagerListener
+class Application :public CMRayApplication, public BenchmarkItem, public TBee::IRenderStateManagerListener, public TBee::ITBeeRendererListener
 {
 protected:
 	scene::ViewPort* m_viewPort;
 
 	GCPtr<GUI::GUIBatchRenderer> m_guiRender;
 
-	GCPtr<scene::StereoRenderer> m_stereoRenderer;
-
 	GCPtr<sound::ISoundManager> m_soundManager;
 	GCPtr<video::IVideoClipManager> m_videoManager;
 
 	video::ITexturePtr m_screenShot;
 
+	TBee::TBeeRenderer* m_tbRenderer;
 
-	scene::ViewPort* m_mainVP[2];
-	scene::ViewPort* m_stereoVP[2];
+	scene::ViewPort* m_mainVP;
+	//scene::ViewPort* m_stereoVP[2];
 	video::RenderWindow* m_2ndWnd;
 
 	video::RenderWindow* m_previewWnd;
+	video::IRenderTargetPtr m_previewRT;
 	bool m_drawUI;
 	bool m_flipEyes;
-	GCPtr<VT::RenderingStateManager> m_renderingStateManager;
-
-	video::ITexturePtr m_rtTexture[2];
-	video::IRenderTargetPtr m_renderTarget[2];;
+	GCPtr<TBee::RenderingStateManager> m_renderingStateManager;
 
 	bool m_horizontalFlip;
 
@@ -84,15 +82,13 @@ public:
 
 	int getEyeIndex(bool left);
 
-	scene::StereoRenderer* GetStereoRenderer(){return m_stereoRenderer;}
-
 
 	//virtual void draw(scene::ViewPort* vp);
 	virtual void WindowPostRender(video::RenderWindow* wnd);
 	virtual void update(float dt);
 	virtual void onDone();
 
-	scene::ViewPort* GetViewport(bool left);
+	//scene::ViewPort* GetViewport(bool left);
 
 
 	bool IsStereo();
@@ -100,8 +96,9 @@ public:
 	GCPtr<video::IVideoClipManager> GetVideoManager(){return m_videoManager;}
 	video::RenderWindow* Get2ndRenderWindow(){return m_2ndWnd;}
 
+	virtual void OnRendererDraw(TBee::TBeeRenderer* r, const math::rectf& vp, video::IRenderTarget* rt, TBee::ETargetEye eye);
 
-	void OnStateChanged(IRenderingState* old,IRenderingState* state);
+	void OnStateChanged(TBee::IRenderingState* old, TBee::IRenderingState* state);
 
 };
 

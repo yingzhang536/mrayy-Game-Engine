@@ -105,6 +105,7 @@
     <ClInclude Include="ATAppGlobal.h" />
     <ClInclude Include="ATGameComponents.h" />
     <ClInclude Include="AugCameraRenderState.h" />
+    <ClInclude Include="CameraTextureSource.h" />
     <ClInclude Include="CompositeBoneComponent.h" />
     <ClInclude Include="DataCommunicator.h" />
     <ClInclude Include="DepthRequesterComponent.h" />
@@ -117,14 +118,17 @@
     <ClInclude Include="GUICalibrationItemLayout.h" />
     <ClInclude Include="GUIConnectingScreen.h" />
     <ClInclude Include="GUIConnectingScreenImpl.h" />
+    <ClInclude Include="GUIGraphPlotElement.h" />
     <ClInclude Include="GUILoadingElement.h" />
     <ClInclude Include="GUILoginMenu.h" />
+    <ClInclude Include="GUIMotorConnectionPanel.h" />
     <ClInclude Include="GUIRegisterer.h" />
     <ClInclude Include="GUITypingTextBox.h" />
     <ClInclude Include="HeadCameraComponent.h" />
     <ClInclude Include="HeadMount.h" />
     <ClInclude Include="IFingerDataProvider.h" />
     <ClInclude Include="ConnectingState.h" />
+    <ClInclude Include="LatencyTestState.h" />
     <ClInclude Include="LoginScreenState.h" />
     <ClInclude Include="PenComponent.h" />
     <ClInclude Include="RobotSpaceComponent.h" />
@@ -133,6 +137,8 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TriggerObjectComponent.h" />
     <ClInclude Include="VisItemDescComponent.h" />
+    <ClInclude Include="VTBaseState.h" />
+    <ClInclude Include="VTelesarRenderingState.h" />
     <ClInclude Include="WaitCheckState.h" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +150,7 @@
     <ClCompile Include="ATGameComponents.cpp" />
     <ClCompile Include="AugTel.cpp" />
     <ClCompile Include="AugCameraRenderState.cpp" />
+    <ClCompile Include="CameraTextureSource.cpp" />
     <ClCompile Include="CompositeBoneComponent.cpp" />
     <ClCompile Include="DataCommunicator.cpp" />
     <ClCompile Include="FingerTipComponent.cpp" />
@@ -152,11 +159,14 @@
     <ClCompile Include="GUIAugTelScreen.cpp" />
     <ClCompile Include="GUICalibrationItem.cpp" />
     <ClCompile Include="GUIConnectingScreenImpl.cpp" />
+    <ClCompile Include="GUIGraphPlotElement.cpp" />
     <ClCompile Include="GUILoadingElement.cpp" />
+    <ClCompile Include="GUIMotorConnectionPanel.cpp" />
     <ClCompile Include="GUIRegisterer.cpp" />
     <ClCompile Include="GUITypingTextBox.cpp" />
     <ClCompile Include="HeadCameraComponent.cpp" />
     <ClCompile Include="ConnectingState.cpp" />
+    <ClCompile Include="LatencyTestState.cpp" />
     <ClCompile Include="LoginScreenState.cpp" />
     <ClCompile Include="PenComponent.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
@@ -169,6 +179,8 @@
     <ClCompile Include="SurfaceWrapper.cpp" />
     <ClCompile Include="TriggerObjectComponent.cpp" />
     <ClCompile Include="VisItemDescComponent.cpp" />
+    <ClCompile Include="VTBaseState.cpp" />
+    <ClCompile Include="VTelesarRenderingState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIAugTelScreenLayout.gui">
@@ -184,6 +196,7 @@
       <FileType>Document</FileType>
       <SubType>Designer</SubType>
     </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIMainMenu.gui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -90,7 +90,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\Plugins\mrayOculusVR;..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Plugins\mrayTheora;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mrayPhysx;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\..\Plugins\mrayFSM;..\..\..\Plugins\DirectShowVideo;..\..\..\Plugins\FlyCaptureLibrary;..\..\..\plugins\mrayTrackIR5;..\..\..\Engine\mrayOIS;..\..\..\Dependencies\include\LibOVR\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Plugins\mrayOculusVR;..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Plugins\mrayTheora;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mrayPhysx;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\..\Plugins\mrayFSM;..\..\..\Plugins\DirectShowVideo;..\..\..\Plugins\FlyCaptureLibrary;..\..\..\plugins\mrayTrackIR5;..\..\..\Engine\mrayOIS;..\..\..\Dependencies\include\LibOVR\include;..\..\TelubeeLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -101,7 +101,7 @@
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mrayOculusVR.lib;mrayOIS.lib;FlyCaptureLibrary.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;regex_d.lib;mrayPhysX.lib;mrayGameLayer.lib;mrayNet.lib;VTLib.lib;mraySound.lib;mrayFSM.lib;VLD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mrayOptiTrack.lib;TelubeeLib.lib;mrayOculusVR.lib;mrayOIS.lib;FlyCaptureLibrary.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;regex_d.lib;mrayPhysX.lib;mrayGameLayer.lib;mrayNet.lib;VTLib.lib;mrayFSM.lib;DirectShowVideo.lib;mrayTheora.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCD.lib;atlthunk.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -113,7 +113,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\Plugins\mrayOculusVR;..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Plugins\mrayTheora;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mrayPhysx;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\..\Plugins\mrayFSM;..\..\..\Plugins\DirectShowVideo;..\..\..\Plugins\FlyCaptureLibrary;..\..\..\plugins\mrayTrackIR5;..\..\..\Engine\mrayOIS;..\..\..\Dependencies\include\LibOVR\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Plugins\mrayOculusVR;..\..\..\Engine\mrayEngine\include;..\..\..\Engine\mrayWinApp\;..\..\..\Engine\mrayMath;..\..\..\Plugins\mrayTheora;..\..\..\Engine\mrayGUI;..\..\..\Plugins\mrayPhysx;..\..\..\Plugins\mraySound;..\..\..\ENgine\mrayGameLayer\;..\..\..\Engine\regex;..\..\..\Engine\mrayNet;..\..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\..\Plugins\mrayFSM;..\..\..\Plugins\DirectShowVideo;..\..\..\Plugins\FlyCaptureLibrary;..\..\..\plugins\mrayTrackIR5;..\..\..\Engine\mrayOIS;..\..\..\Dependencies\include\LibOVR\include;..\..\TelubeeLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;SOUND_STATIC_LIB_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -122,7 +122,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mrayOculusVR.lib;mrayOIS.lib;FlyCaptureLibrary.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;regex.lib;mrayPhysX.lib;mrayGameLayer.lib;mrayNet.lib;VTLib.lib;mrayFSM.lib;DirectShowVideo.lib;mrayTheora.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mrayOptiTrack.lib;TelubeeLib.lib;mrayOculusVR.lib;mrayOIS.lib;FlyCaptureLibrary.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;regex.lib;mrayPhysX.lib;mrayGameLayer.lib;mrayNet.lib;VTLib.lib;mrayFSM.lib;DirectShowVideo.lib;mrayTheora.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Configuration);;..\..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -203,31 +203,23 @@
     </ClCompile>
     <ClCompile Include="VTDebugManager.cpp" />
     <ClCompile Include="VTelesar5.cpp" />
-    <ClCompile Include="BaseRenderState.cpp" />
     <ClCompile Include="CameraRenderingState.cpp" />
-    <ClCompile Include="IRenderingState.cpp" />
     <ClCompile Include="RenderBlender.cpp" />
     <ClCompile Include="VideoclipRenderingState.cpp" />
     <ClCompile Include="VTelesarRenderingState.cpp" />
-    <ClCompile Include="ApplicationStateManager.cpp" />
     <ClCompile Include="ApplicationMenuState.cpp" />
-    <ClCompile Include="BaseAppState.cpp" />
-    <ClCompile Include="RenderingStateManager.cpp" />
     <ClCompile Include="VTAppGlobals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="BallCreator.h" />
-    <ClInclude Include="BaseRenderState.h" />
     <ClInclude Include="CameraCorrectionGrabber.h" />
     <ClInclude Include="CameraRenderingState.h" />
     <ClInclude Include="CameraTextureSource.h" />
     <ClInclude Include="DemoCamera.h" />
     <ClInclude Include="DVISwitcherController.h" />
     <ClInclude Include="GUIMotorConnectionPanel.h" />
-    <ClInclude Include="IRenderingState.h" />
     <ClInclude Include="ISerialPort.h" />
-    <ClInclude Include="NullRenderState.h" />
     <ClInclude Include="OculusLensParams.h" />
     <ClInclude Include="ofSerial.h" />
     <ClInclude Include="OFSerialPort.h" />
@@ -239,11 +231,7 @@
     <ClInclude Include="VideoclipRenderingState.h" />
     <ClInclude Include="VTDebugManager.h" />
     <ClInclude Include="VTelesarRenderingState.h" />
-    <ClInclude Include="ApplicationStateManager.h" />
     <ClInclude Include="ApplicationMenuState.h" />
-    <ClInclude Include="BaseAppState.h" />
-    <ClInclude Include="IApplicationState.h" />
-    <ClInclude Include="RenderingStateManager.h" />
     <ClInclude Include="VTAppGlobals.h" />
     <ClInclude Include="GUIMainMenu.h" />
     <ClInclude Include="stdafx.h" />

@@ -1,6 +1,6 @@
 #pragma once
 
-// uncomment only ONE of the below #defines
+// unTweet only ONE of the below #defines
 // better to do this via project settings, but AFAIK neither openFrameworks or Cinder have a global #define
 
 #define MSA_HOST_OPENFRAMEWORKS

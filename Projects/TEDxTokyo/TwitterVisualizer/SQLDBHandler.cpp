@@ -197,10 +197,10 @@ void SQLDBHandler::LoadTweet(SACommand& cmd, TwitterTweet& tw)
 	d = cmd.Field("Date");
 	tw.text = ted::ConvertToStringW(t.GetMultiByteChars(), t.GetMultiByteCharsLength());
 	tw.date.GetDate().SetDate(d.GetYear(), d.GetMonth(), d.GetDay());
-	tw.retweets = cmd.Field("Retweets").asLong();
+	tw.reTweets = cmd.Field("ReTweets").asLong();
 	tw.user = TwitterUserProfile::GetUserByID(userid,true);
 	if (tw.user)
-		tw.user->tweets.push_back(&tw);
+		tw.user->Tweets.push_back(&tw);
 }
 
 }

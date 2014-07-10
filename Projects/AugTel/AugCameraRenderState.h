@@ -24,6 +24,7 @@
 #include "GUIManager.h"
 #include "GUIAugTelScreen.h"
 #include "IGUISliderBar.h"
+#include "DataCommunicator.h"
 
 
 namespace mray
@@ -38,7 +39,8 @@ namespace AugTel
 {
 
 	class AugCameraStateImpl;
-class AugCameraRenderState :public TBee::IEyesRenderingBaseState,public scene::IViewportListener
+	class VTBaseState;
+class AugCameraRenderState :public TBee::IEyesRenderingBaseState,public scene::IViewportListener,public IDataCommunicatorListener
 {
 	typedef TBee::IEyesRenderingBaseState Parent;
 protected:
@@ -51,6 +53,8 @@ protected:
 	GCPtr<GUI::IGUIManager> m_guiManager;
 	GCPtr<GUI::IGUIPanelElement> m_guiroot;
 	scene::CameraNode* m_camera[2];
+
+	VTBaseState* m_vtState;
 	
 	AugCameraStateImpl* m_data;
 
@@ -69,14 +73,26 @@ protected:
 
 	TBee::DepthVisualizer* m_depthVisualizer;
 
-	video::IPostProcessing* m_blurShader;
+	video::ParsedShaderPP* m_blurShader;
+
 	bool m_viewDepth;
+
+	bool m_takeScreenShot;
 
 	float m_depthTime;
 	bool m_showScene;
 
+	float m_focus;
+
+	bool m_showDebug;
+
+	float m_lightMapTimer;
+	scene::LightNode* m_lightSrc;
+
 	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();
+
+	void _GenerateLightMap();
 	virtual void _RenderUI(const math::rectf& rc, math::vector2d& pos);
 public:
 	AugCameraRenderState(TBee::ICameraVideoSource* src, TBee::IRobotCommunicator* comm, const core::string& name);
@@ -96,6 +112,10 @@ public:
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 
+	virtual void OnDepthData(const TBee::GeomDepthRect& dpRect);
+	virtual void OnDepthSize(const math::vector2di &sz);
+	virtual void OnIsStereoImages(bool isStereo);
+	virtual void OnCameraConfig(const core::string& cameraProfile);
 
 };
 

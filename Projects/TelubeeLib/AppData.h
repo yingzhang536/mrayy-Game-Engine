@@ -28,6 +28,7 @@ namespace TBee
 {
 	class OptiTrackDataSource;
 	class RobotInfoManager;
+	class CameraConfigurationManager;
 
 
 class AppData
@@ -38,7 +39,7 @@ protected:
 public:
 	AppData();
 	virtual~AppData();
-
+	void Init();
 	bool IsDebugging;
 
 	int MajorVer;
@@ -52,6 +53,8 @@ public:
 	OptiTrackDataSource* optiDataSource;
 	InputManager* inputMngr;
 	RobotInfoManager* robotInfoManager;
+
+	CameraConfigurationManager* camConfig;
 
 	core::string GetVersion();
 	core::string GetBuild();

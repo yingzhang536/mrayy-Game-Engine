@@ -40,6 +40,11 @@ public:
 	virtual math::rectf GetEyeTexCoords(int i) = 0;
 	virtual void LoadFromXML(xml::XMLElement* e){}
 
+	virtual bool IsLocal() = 0;
+
+	virtual void SetIsStereo(bool stereo){}
+	virtual bool IsStereo(){ return false; }
+
 };
 
 }

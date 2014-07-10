@@ -35,6 +35,13 @@ void GameEntityManager::AddGameEntity(GameEntity* ent)
 	ent->SetID(id);
 	ent->_SetCreator(this);
 	m_entities.push_back(ent);
+/*
+
+	GameEntityNameMap::iterator it= m_nameMap.find(ent->GetName());
+	if (it != m_nameMap.end())
+	{
+
+	}*/
 	FIRE_LISTENR_METHOD(OnAddGameEntity, (this, ent));
 }
 
@@ -110,10 +117,15 @@ sound::ISoundManager* GameEntityManager::GetSoundManager()
 	return m_sndManager;
 }
 
-GameEntity* GameEntityManager::GetGameEntity(uint id)
+GameEntity* GameEntityManager::GetGameEntityByID(uint id)
 {
 	GameEntity* res=0;
 	m_entitiesID.GetObjectByID(id,res);
+	return res;
+}
+GameEntity* GameEntityManager::GetGameEntityByName(const core::string& name)
+{
+	GameEntity* res = 0;
 	return res;
 }
 
@@ -125,6 +137,7 @@ void GameEntityManager::RemoveGameEntity(uint id)
 	{
 		if((*it)->GetID()==id)
 		{
+			m_nameMap.erase((*it)->GetName());
 // 			if((*it)->GetShape())
 // 				RemoveSceneNodeID((*it)->GetShape()->getID());
 			FIRE_LISTENR_METHOD(OnRemoveGameEntity, (this, *it));
@@ -214,7 +227,10 @@ bool GameEntityManager::loadFromFile(const core::string& path, std::vector<game:
 	xml::XMLTree tree;
 	if(!tree.load(path))
 		return false;
-	loadXMLSettings(&tree,ents);
+	xml::XMLElement *e= tree.getSubElement("GameEntities");
+	if (!e)
+		return false;
+	loadXMLSettings(e,ents);
 	return true;
 }
 

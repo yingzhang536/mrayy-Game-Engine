@@ -32,7 +32,7 @@ LocalCameraRenderingState::LocalCameraRenderingState(const core::string& name)
 	m_exitCode=0;
 
 	m_VerticalShift=0;
-	m_eyes[1].cw = true;
+//	m_eyes[1].cw = true;
 	m_cameraSource = new LocalCameraVideoSource();
 	m_robotConnector->SetCommunicator(new LocalRobotCommunicator());
 

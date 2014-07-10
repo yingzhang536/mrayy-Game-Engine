@@ -59,10 +59,10 @@ protected:
 	};
 	ConnectionLineRenderer *m_connRenderer;
 	std::vector<SpeakerConnectionInfo> m_speakerConn;
-	std::vector<NodeConnectionInfo> m_tweetsConn;
+	std::vector<NodeConnectionInfo> m_TweetsConn;
 
 	std::vector<SpeakerNodeInfo> m_speakers;
-	std::vector<TweetNodeInfo> m_tweets;
+	std::vector<TweetNodeInfo> m_Tweets;
 	math::rectf m_clipRect;
 
 	void _renderConnections(SessionRenderer *r);
@@ -70,7 +70,7 @@ protected:
 	void _renderTweets(SessionRenderer *r);
 
 	video::IGPUShaderProgramPtr m_speakerNodeShader;
-	video::IGPUShaderProgramPtr m_tweetNodeShader;
+	video::IGPUShaderProgramPtr m_TweetNodeShader;
 	video::IGPUShaderProgramPtr m_connectionShader;
 public:
 	NodeRenderer();

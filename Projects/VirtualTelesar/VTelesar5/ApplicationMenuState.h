@@ -22,16 +22,19 @@
 
 namespace mray
 {
+	namespace TBee
+	{
+		class RenderingStateManager;
+	}
 
 	class GUIMainMenu;
 namespace VT
 {
-class RenderingStateManager;
 
-class ApplicationMenuState:public IApplicationState,public IDelegateContainer
+class ApplicationMenuState :public TBee::IApplicationState, public IDelegateContainer
 {
 protected:
-	RenderingStateManager* m_renderingManager; 
+	TBee::RenderingStateManager* m_renderingManager;
 	GCPtr<GUI::IGUIManager> m_guiManager;
 
 
@@ -46,7 +49,7 @@ protected:
 	void LoadScenarioFile(const core::string& fname);
 
 	void OnEvent(Event* e);
-	void OnEnter(IApplicationState* prev);
+	void OnEnter(TBee::IApplicationState* prev);
 	void OnExit();
 
 	void OnUpdate(float dt);

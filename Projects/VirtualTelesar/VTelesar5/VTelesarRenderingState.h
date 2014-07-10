@@ -17,7 +17,6 @@
 #include "IRenderingState.h"
 #include "IRenderTarget.h"
 
-#include "VTSharedMemory.h"
 #include "CommunicationDataRecorder.h"
 #include "RobotCommunicatorComponent.h"
 #include "StereoRenderer.h"
@@ -42,8 +41,9 @@ namespace mray
 {
 namespace VT
 {
+	class Application;
 
-class VTelesarRenderingState:public IRenderingState,public scene::IViewportListener
+class VTelesarRenderingState:public TBee::IRenderingState,public scene::IViewportListener
 {
 protected:
 
@@ -114,11 +114,6 @@ protected:
 	std::vector<scene::IMovable*> m_viewObjects;
 	int m_selectedObject;
 
-	GCPtr<video::OculusManager> m_oculusManager;
-	video::OculusDevice* m_oculusDevice;
-	GCPtr<video::ParsedShaderPP> m_oculusRenderer[2];
-	game::OculusCameraComponent* m_oculusComponents[2];
-
 	bool m_seeThrough;
 
 
@@ -145,7 +140,7 @@ protected:
 
 	void _SwitchCamera(scene::IMovable* m, ECameraMode mode);
 	void _CreateGUI();
-	video::ITexture* _RenderRobotVision(bool left);
+	video::ITexture* _RenderRobotVision(TBee::ETargetEye eye);
 
 	void LoadEnvironment(const core::string& path);
 	void _Reload(const core::string& scene);
@@ -153,17 +148,17 @@ protected:
 
 	void _calculateFocalPoint(float dt);
 public:
-	VTelesarRenderingState();
+	VTelesarRenderingState(const core::string& name);
 	virtual~VTelesarRenderingState();
 
 	bool IsClosed(){return m_closed;}
 
-	virtual void InitState(Application* app);
+	virtual void InitState();
 
 	virtual void OnEvent(Event* e);
 	virtual void OnEnter(IRenderingState*prev);
 	virtual void OnExit();
-	virtual video::IRenderTarget* Render(bool left,const math::rectf& rc);
+	virtual video::IRenderTarget* Render(const math::rectf& rc, TBee::ETargetEye eye);
 	virtual video::IRenderTarget* GetLastFrame(bool left);
 	void Update(float dt);
 	void _Update(float dt);

@@ -299,9 +299,9 @@ public:
 	GUI::IGUIPanelElement* m_guiroot;
 	GUI::GUIScreenLayoutImplV1* m_screenLayout;
 
-	std::vector<GUI::GUITweetItem*> m_tweetItems;
+	std::vector<GUI::GUITweetItem*> m_TweetItems;
 
-	scene::TweetsEmitter* m_tweetEmitter;
+	scene::TweetsEmitter* m_TweetEmitter;
 	std::vector<scene::TweetParticle*> m_loadedParticles;
 
 	math::vector3d m_speedVec;
@@ -398,7 +398,7 @@ void TweetsVisualizeSceneImpl::Init()
 	}
 	{
 		scene::TweetsEmitter* e = new scene::TweetsEmitter();
-		m_tweetEmitter = e;
+		m_TweetEmitter = e;
 
 		m_particleSystem->AddEmitter(e);
 
@@ -461,8 +461,8 @@ void TweetsVisualizeSceneImpl::_OnUserNameChange(IObject* sender, PVOID param)
 	if (str == L"")
 	{
 		m_screenLayout->UserProfile->SetUser(0);
-		for (int i = 0; i < m_tweetItems.size(); ++i)
-			m_tweetItems[i]->SetVisible(false);
+		for (int i = 0; i < m_TweetItems.size(); ++i)
+			m_TweetItems[i]->SetVisible(false);
 		gTextureResourceManager.unloadAll(true);
 		return;
 	}
@@ -514,9 +514,9 @@ void TweetsVisualizeSceneImpl::_OnSelectUserChange(IObject* sender, PVOID param)
 	}
 	m_loadedParticles.clear();
 	m_screenLayout->UserProfile->SetUser(u);
-	for (int i = 0; i < u->tweets.size(); ++i)
+	for (int i = 0; i < u->Tweets.size(); ++i)
 	{
-		scene::TweetParticle* p = m_tweetEmitter->GetTweetParticle(u->tweets[i]->ID);
+		scene::TweetParticle* p = m_TweetEmitter->GetTweetParticle(u->Tweets[i]->ID);
 		if (!p)
 			continue;;
 		p->color.Set(1, 0, 0, 1);
@@ -524,14 +524,14 @@ void TweetsVisualizeSceneImpl::_OnSelectUserChange(IObject* sender, PVOID param)
 		m_loadedParticles.push_back(p);
 	}
 
-	for (int i = 0; i < m_tweetItems.size(); ++i)
-		m_tweetItems[i]->SetVisible(false);
-	for (int i = 0; i < u->tweets.size(); ++i)
+	for (int i = 0; i < m_TweetItems.size(); ++i)
+		m_TweetItems[i]->SetVisible(false);
+	for (int i = 0; i < u->Tweets.size(); ++i)
 	{
 		GUI::GUITweetItem *item = 0;
-		if (m_tweetItems.size()>i)
+		if (m_TweetItems.size()>i)
 		{
-			item = m_tweetItems[i];
+			item = m_TweetItems[i];
 			item->SetVisible(true);
 		}
 		else
@@ -539,13 +539,13 @@ void TweetsVisualizeSceneImpl::_OnSelectUserChange(IObject* sender, PVOID param)
 			item = new GUI::GUITweetItem(m_guiMngr);
 			m_screenLayout->TweetsList->AddElement(item);
 			item->SetSize(math::vector2d(500, 150));
-			m_tweetItems.push_back(item);
+			m_TweetItems.push_back(item);
 		}
-		item->SetTweet(u->tweets[i]);
+		item->SetTweet(u->Tweets[i]);
 
 	}
 	m_screenLayout->TweetsList->SetScrollOffset(0);
-	printf("Tweets count: %d\n", item->GetUser()->tweets.size());
+	printf("Tweets count: %d\n", item->GetUser()->Tweets.size());
 }
 
 void TweetsVisualizeSceneImpl::OnEnter()

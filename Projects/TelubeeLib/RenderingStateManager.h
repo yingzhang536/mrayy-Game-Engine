@@ -26,7 +26,14 @@ namespace TBee
 	class Application;
 	class IRenderingState;
 
-class RenderingStateManager:public IApplicationState,public IStateMachineListener
+	class IRenderStateManagerListener
+	{
+	public:
+		virtual void OnStateChanged(TBee::IRenderingState* old, TBee::IRenderingState* state){};
+
+	};
+
+	class RenderingStateManager :public IApplicationState, public IStateMachineListener, public ListenerContainer<IRenderStateManagerListener*>
 {
 protected:
 	StateMachine* m_stateMachine;
@@ -34,7 +41,7 @@ protected:
 	GCPtr<ITransitionBlender> m_blender;
 
 	void OnStateChanged(StateMachine*,IState* oldS,IState* newS);
-
+	DECLARE_FIRE_METHOD(OnStateChanged, (TBee::IRenderingState* old, TBee::IRenderingState* state), (old, state))
 public:
 	RenderingStateManager();
 	virtual~RenderingStateManager();

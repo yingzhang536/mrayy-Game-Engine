@@ -171,7 +171,7 @@ void GeomDepthCalculator::CreateDepthFrame(int w, int h)
 {
 	m_frame->CreateRawData(w, h);
 }
-void GeomDepthCalculator::AddDepthRect(GeomDepthRect* rc)
+void GeomDepthCalculator::AddDepthRect(const GeomDepthRect* rc)
 {
 	m_frame->AddFrame(rc->GetRect(), rc->GetFrame());
 	m_frame->CalculateDepth();

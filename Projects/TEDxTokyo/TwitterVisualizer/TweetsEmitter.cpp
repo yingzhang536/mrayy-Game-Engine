@@ -72,15 +72,15 @@ void TweetsEmitter::reSpawn(IParticle* p)
 	setupParticle(part);
 
 	part->position = m_system->getOwner()->getAbsoluteTransformation()*(part->position);
-	m_tweetParticleMap[part->GetTweet()->ID] = part;
+	m_TweetParticleMap[part->GetTweet()->ID] = part;
 }
 void TweetsEmitter::AddTweet(ted::TwitterTweet* t)
 {
 }
 TweetParticle* TweetsEmitter::GetTweetParticle(ulong id)
 {
-	std::map<ulong, TweetParticle*>::iterator it= m_tweetParticleMap.find(id);
-	if (it == m_tweetParticleMap.end())
+	std::map<ulong, TweetParticle*>::iterator it= m_TweetParticleMap.find(id);
+	if (it == m_TweetParticleMap.end())
 		return 0;
 	return it->second;
 }

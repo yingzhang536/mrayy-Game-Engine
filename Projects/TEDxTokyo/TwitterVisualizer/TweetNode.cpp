@@ -20,14 +20,14 @@ TweetNode::TweetNode(ted::CSpeaker* speaker, ted::TwitterTweet* t)
 {
 	m_hoverValue = 0;
 	m_targetSpeaker = speaker;
-	m_tweet = t;
-	video::ITexturePtr tex = gTextureResourceManager.getResource(m_tweet->user->imageUrl);
+	m_Tweet = t;
+	video::ITexturePtr tex = gTextureResourceManager.getResource(m_Tweet->user->imageUrl);
 	if (tex.isNull())
 	{
-		OS::IStreamPtr s = network::InternetCacheManager::getInstance().GetOrCreateItem(m_tweet->user->imageUrl);
+		OS::IStreamPtr s = network::InternetCacheManager::getInstance().GetOrCreateItem(m_Tweet->user->imageUrl);
 		if (s)
 		{
-			tex = gTextureResourceManager.loadTexture2D(m_tweet->user->imageUrl, s);
+			tex = gTextureResourceManager.loadTexture2D(m_Tweet->user->imageUrl, s);
 			tex->load(false);
 		}
 	}
@@ -44,7 +44,7 @@ TweetNode::~TweetNode()
 
 ted::IDType TweetNode::GetTweetID()
 {
-	return m_tweet->ID;
+	return m_Tweet->ID;
 }
 ted::IDType TweetNode::GetSpeakerID()
 {

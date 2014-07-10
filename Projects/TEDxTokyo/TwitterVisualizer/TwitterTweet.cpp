@@ -56,7 +56,7 @@ void TwitterTweet::LoadXML(xml::XMLElement* e)
 	ID = core::StringConverter::toUInt(e->getValueString("ID"));
 	text = ConvertToUtf16(e->getValueString("text"));
 	core::DateTime::Parse(e->getValueString("date"), date);
-	retweets = core::StringConverter::toUInt(e->getValueString("retweets"));
+	reTweets = core::StringConverter::toUInt(e->getValueString("reTweets"));
 	user = TwitterUserProfile::GetUserByID(core::StringConverter::toUInt(e->getValueString("user")),false);
 
 	IDType rtt = core::StringConverter::toUInt(e->getValueString("replyToTweet"));
@@ -80,7 +80,7 @@ void TwitterTweet::SaveXML(xml::XMLElement* e)
 	elem->addAttribute("user", core::StringConverter::toString(user->ID));
 	elem->addAttribute("text", ConvertToUtf8(text));
 	elem->addAttribute("date", core::DateTime::ToString(date));
-	elem->addAttribute("retweets", core::StringConverter::toString(retweets));
+	elem->addAttribute("reTweets", core::StringConverter::toString(reTweets));
 	if (replyToTweet)
 		elem->addAttribute("replyToTweet", core::StringConverter::toString(replyToTweet->ID));
 	else elem->addAttribute("replyToTweet", core::StringConverter::toString(0));

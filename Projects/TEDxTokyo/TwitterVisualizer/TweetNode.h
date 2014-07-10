@@ -20,7 +20,7 @@ class TweetNode:public ITedNode
 {
 protected:
 	ted::CSpeaker* m_targetSpeaker;
-	ted::TwitterTweet* m_tweet;
+	ted::TwitterTweet* m_Tweet;
 	video::TextureUnit m_texture;
 	std::vector<TweetNode*> m_subTweets;
 
@@ -34,7 +34,7 @@ public:
 	ted::IDType GetSpeakerID();
 
 	ted::CSpeaker* GetSpeaker(){ return m_targetSpeaker; }
-	ted::TwitterTweet* GetTweet(){ return m_tweet; }
+	ted::TwitterTweet* GetTweet(){ return m_Tweet; }
 
 	video::TextureUnit& GetImage(){ return m_texture; }
 

@@ -32,17 +32,17 @@ namespace scene
 class TweetParticle:public IBaseParticle
 {
 protected:
-	ted::TwitterTweet* m_tweet;
+	ted::TwitterTweet* m_Tweet;
 	float m_targetRadius;
 
 	int m_levelID;
 
 	math::vector3d m_randomAxis;
 public:
-	TweetParticle(TweetsEmitter* e,ted::TwitterTweet* tweet);
+	TweetParticle(TweetsEmitter* e,ted::TwitterTweet* Tweet);
 	virtual~TweetParticle();
 
-	ted::TwitterTweet* GetTweet(){ return m_tweet; }
+	ted::TwitterTweet* GetTweet(){ return m_Tweet; }
 
 	int GetLevelID(){ return m_levelID; }
 

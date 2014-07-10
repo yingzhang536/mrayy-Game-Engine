@@ -51,13 +51,7 @@
     <ClCompile Include="VTelesar5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BaseRenderState.cpp">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClCompile>
     <ClCompile Include="CameraRenderingState.cpp">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClCompile>
-    <ClCompile Include="IRenderingState.cpp">
       <Filter>Source Files\RenderingStates</Filter>
     </ClCompile>
     <ClCompile Include="RenderBlender.cpp">
@@ -69,16 +63,7 @@
     <ClCompile Include="VTelesarRenderingState.cpp">
       <Filter>Source Files\RenderingStates</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationStateManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationMenuState.cpp">
-      <Filter>Source Files\Application States</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseAppState.cpp">
-      <Filter>Source Files\Application States</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingStateManager.cpp">
       <Filter>Source Files\Application States</Filter>
     </ClCompile>
     <ClCompile Include="VTAppGlobals.cpp">
@@ -122,13 +107,7 @@
     <ClInclude Include="Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseRenderState.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
     <ClInclude Include="CameraRenderingState.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderingState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
     <ClInclude Include="RenderBlender.h">
@@ -140,19 +119,7 @@
     <ClInclude Include="VTelesarRenderingState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationStateManager.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="ApplicationMenuState.h">
-      <Filter>Source Files\Application States</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseAppState.h">
-      <Filter>Source Files\Application States</Filter>
-    </ClInclude>
-    <ClInclude Include="IApplicationState.h">
-      <Filter>Source Files\Application States</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingStateManager.h">
       <Filter>Source Files\Application States</Filter>
     </ClInclude>
     <ClInclude Include="VTAppGlobals.h">
@@ -198,9 +165,6 @@
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="RobotModeState.h">
-      <Filter>Source Files\RenderingStates</Filter>
-    </ClInclude>
-    <ClInclude Include="NullRenderState.h">
       <Filter>Source Files\RenderingStates</Filter>
     </ClInclude>
     <ClInclude Include="VTDebugManager.h">
