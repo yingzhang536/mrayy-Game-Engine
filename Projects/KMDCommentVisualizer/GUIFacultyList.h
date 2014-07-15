@@ -24,7 +24,7 @@ protected:
 	std::vector<GUI::GUIProfilePicture*> m_committee;
 
 
-	void _ProcessList(const std::vector<kmd::CProfessor*>& p, std::vector<GUI::GUIProfilePicture*> &target,GUIStackPanel* o);
+	void _ProcessList(const std::vector<kmd::KMDUser*>& p, std::vector<GUI::GUIProfilePicture*> &target, GUIStackPanel* o);
 
 public:
 	GUIFacultyList(IGUIManager* m);

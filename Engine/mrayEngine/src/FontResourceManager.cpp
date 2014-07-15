@@ -127,8 +127,9 @@ public:
 		italic = attrs->getValueBool("italic");
 		underline = attrs->getValueBool("underline");
 
-		GUI::DynamicFontGenerator* font = new GUI::DynamicFontGenerator();
-		font->SetFontName(core::string_to_wchar(a->value));
+		GUI::DynamicFontGenerator* font = new GUI::DynamicFontGenerator(a->value);
+		font->SetFontName(core::string_to_wchar(attrs->getValueString("Font")));
+		font->setResourceName(a->value);
 		font->SetTextureSize(size);
 		font->SetBold(bold);
 		font->SetItalic(italic);

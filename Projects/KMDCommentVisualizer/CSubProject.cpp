@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "CSubProject.h"
+#include "StringUtil.h"
 
 
 

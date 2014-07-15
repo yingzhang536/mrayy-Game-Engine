@@ -26,8 +26,8 @@ SessionRenderer::SessionRenderer()
 	m_sessions = 0;
 	m_activeSpeaker = 0;
 	{
-		m_physics = new msa::physics::World2D();
-		m_physics->setGravity(0);
+		m_physics = new physics::PhManager;// msa::physics::World2D();
+		//m_physics->setGravity(0);
 	}
 	m_hoverItem = 0;
 	m_nodeRenderer = new NodeRenderer();
@@ -83,13 +83,16 @@ void SessionRenderer::SetSessions(kmd::SessionContainer*sessions)
 		ProjectNode* s = new ProjectNode(slist[i]);
 
 
-		msa::physics::Particle2D* n = new msa::physics::Particle2D(pos);
-		m_physics->addParticle(n);
-		n->makeFixed();
-		//msa::physics::Spring2D* spr = m_physics->makeSpring(root, n,  0.005, rad);
+		//msa::physics::Particle2D* n = new msa::physics::Particle2D(pos);
+		//m_physics->addParticle(n);
+		//n->makeFixed();
 
-		s->SetSize(40);
-		n->setRadius(s->GetSize());
+		physics::PhNode* n = m_physics->CreateNode();
+		n->SetPosition(pos);
+		n->SetFixed(true);
+		//msa::physics::Spring2D* spr = m_physics->makeSpring(root, n,  0.005, rad);
+		n->SetRadius(20);
+		s->SetSize(n->GetRadius()*2);
 
 		s->SetPhysics(n);
 		m_projects[s->GetProject()] = s;
@@ -136,26 +139,30 @@ void SessionRenderer::_AddCommentNode(kmd::KMDComment* t, ProjectNode*speaker)
 
 	m_Comments[node->GetCommentID()] = node;
 
-	float sz = 25;
-	msa::physics::Particle2D* n = new msa::physics::Particle2D();
-	n->setRadius(sz);
-	m_physics->addParticle(n);
-	node->SetPhysics(n);
+	float sz = 15;
+	//msa::physics::Particle2D* n = new msa::physics::Particle2D();
+	physics::PhNode* n = m_physics->CreateNode();
+	n->SetRadius(sz);
 
+	//n->SetPosition(pos);
+	n->SetFixed(false);
+	//m_physics->addParticle(n);
+	node->SetPhysics(n);
+	node->SetSize(n->GetRadius() * 2);
 
 	speaker->AddComment(node);
 
-	msa::physics::Particle2D *ph = speaker->GetPhysics();
-	math::vector2d pos = ph->getPosition();
+	physics::PhNode *ph = speaker->GetPhysics();
+	math::vector2d pos = ph->GetPosition();
 	float a = math::Randomizer::rand01() * 360;
-	msa::physics::Particle2D* nph = node->GetPhysics();
-	float r = math::Randomizer::rand01() * 50 + 50 + nph->getRadius() + ph->getRadius();
+	physics::PhNode* nph = node->GetPhysics();
+	float r = math::Randomizer::rand01() * 50 + 50 + nph->GetRadius() + ph->GetRadius();
 	float r2 = r + 300;
 	pos.x += math::cosd(a) * r2;
 	pos.y += math::sind(a) * r2;
-	nph->moveTo(pos, true);
-	msa::physics::Spring2D* spr = m_physics->makeSpring(ph, nph, 0.0001, r);
-
+	nph->SetPosition(pos);
+	//msa::physics::Spring2D* spr = m_physics->makeSpring(ph, nph, 0.0001, r);
+	m_physics->CreateSpring(ph, nph, 1, r);
 
 	m_dataMutex->unlock();
 }
@@ -172,9 +179,10 @@ void SessionRenderer::_AddCommentsNodes(const std::vector<CommentNode*> &nodes)
 		m_Comments[nodes[i]->GetCommentID()] = nodes[i];
 
 		float sz = 25;
-		msa::physics::Particle2D* n = new msa::physics::Particle2D();
-		n->setRadius(sz );
-		m_physics->addParticle(n);
+		//msa::physics::Particle2D* n = new msa::physics::Particle2D();
+		physics::PhNode* n = m_physics->CreateNode();
+		n->SetRadius(sz );
+		//m_physics->addParticle(n);
 		nodes[i]->SetPhysics(n);
 		//m_projects.find(nodes[i]->GetSubProjectID());
 	}
@@ -191,16 +199,17 @@ void SessionRenderer::_AddCommentsNodes(const std::vector<CommentNode*> &nodes)
 			target = it->second;
 		}
 
-		 msa::physics::Particle2D *ph = target->GetPhysics();
-		 math::vector2d pos = ph->getPosition();
+		 physics::PhNode *ph = target->GetPhysics();
+		 math::vector2d pos = ph->GetPosition();
 		 float a = math::Randomizer::rand01() * 360;
-		 msa::physics::Particle2D* nph= nodes[i]->GetPhysics();
-		 float r = math::Randomizer::rand01() * 50 + 50 + nph->getRadius() + ph->getRadius();
+		 physics::PhNode* nph = nodes[i]->GetPhysics();
+		 float r = math::Randomizer::rand01() * 50 + 50 + nph->GetRadius() + ph->GetRadius();
 		 float r2 = r + 300;
 		 pos.x += math::cosd(a) * r2;
 		 pos.y += math::sind(a) * r2;
-		 nph->moveTo(pos, true);
-		 msa::physics::Spring2D* spr = m_physics->makeSpring(ph, nph, 0.0001, r );
+		 nph->SetPosition(pos);
+		 //msa::physics::Spring2D* spr = m_physics->makeSpring(ph, nph, 0.0001, r );
+		 m_physics->CreateSpring(ph, nph, 0.01, r);
 
 
 	}
@@ -241,7 +250,7 @@ IKMDNode* SessionRenderer::GetNodeFromPosition(const math::vector2d& pos)
 void SessionRenderer::Update(float dt)
 {
 	m_dataMutex->lock();
-	m_physics->update(1);
+	m_physics->Update(dt);
 	ProjectMap::iterator  it = m_projects.begin();
 
 	for (; it != m_projects.end(); ++it)

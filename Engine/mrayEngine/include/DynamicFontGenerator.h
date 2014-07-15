@@ -42,7 +42,7 @@ protected:
 	bool m_underline;
 	bool m_italic;
 public:
-	DynamicFontGenerator();
+	DynamicFontGenerator(const core::string& name);
 	virtual~DynamicFontGenerator();
 
 	void Init();

@@ -6,6 +6,7 @@
 #include "DataTypes.h"
 #include "IDBHandler.h"
 #include "StringUtil.h"
+#include "TextureResourceManager.h"
 
 namespace mray
 {
@@ -46,6 +47,17 @@ void KMDUser::LoadXML(xml::XMLElement* e)
 //	ID = core::StringConverter::toUInt(e->getValueString("ID"));
 	imageUrl = e->getValueString("imageUrl");
 	name = e->getValueString("name");
+	title = e->getValueString("Title");
+
+
+	m_imgTexture = 0;
+	if (imageUrl != "")
+		m_imgTexture = gTextureResourceManager.loadTexture2D(imageUrl);
+
+	if (m_imgTexture.isNull())
+		m_imgTexture = gTextureResourceManager.loadTexture2D("DefaultPicture.png");
+	if (m_imgTexture)
+		m_imgTexture->setMipmapsFilter(false);
 }
 void KMDUser::SaveXML(xml::XMLElement* e)
 {

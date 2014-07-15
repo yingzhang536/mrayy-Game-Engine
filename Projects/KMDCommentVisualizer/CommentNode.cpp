@@ -29,7 +29,7 @@ CommentNode::CommentNode(kmd::SessionDetails* speaker, kmd::KMDComment* t)
 	m_texture.SetTexture(tex);
 
 	m_alpha = 0;
-	m_sizeScaler = 0.5;
+	m_sizeScaler = 1;
 
 }
 CommentNode::~CommentNode()
@@ -73,6 +73,8 @@ void CommentNode::Update(float dt)
 		if (m_alpha > 1)
 			m_alpha = 1;
 	}
+
+	m_phNode->SetRadius(m_sizeScaler*GetSize()*0.5);
 }
 void CommentNode::Draw(NodeRenderer *r, const math::rectf& rc)
 {

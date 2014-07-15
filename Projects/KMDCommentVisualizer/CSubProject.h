@@ -6,7 +6,6 @@
 
 #include "TextureResourceManager.h"
 #include "XMLTextNode.h"
-#include "CProfessor.h"
 
 
 namespace mray
@@ -15,7 +14,6 @@ namespace kmd
 {
 
 	class KMDUser;
-	class CProfessor;
 	class SessionDetails;
 	class KMDComment;
 class CSubProject

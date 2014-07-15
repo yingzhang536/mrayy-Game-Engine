@@ -21,6 +21,7 @@
 
 #include "AppData.h"
 #include "DataTypes.h"
+#include "PhManager.h"
 
 namespace mray
 {
@@ -62,7 +63,8 @@ protected:
 	ProjectMap m_projects;
 	CommentMap m_Comments;
 
-	msa::physics::World2D* m_physics;
+	//msa::physics::World2D* m_physics;
+	physics::PhManager* m_physics;
 	OS::IMutex* m_dataMutex;
 	IKMDNode* m_hoverItem;
 	IKMDNode* m_selectedItem;

@@ -94,11 +94,6 @@ void Application::init(const OptionContainer &extraOptions)
 		gAppData.Debugging = extraOptions.GetOptionValue("Debugging")=="Yes";
 	}
 	{
-
-		gAppData.sessions = new kmd::SessionContainer();
-		gAppData.sessions->LoadFromXML("Sessions.xml");
-	}
-	{
 		//Load users
 		xml::XMLTree tree;
 		if (tree.load("KMDUsers.xml"))
@@ -116,6 +111,11 @@ void Application::init(const OptionContainer &extraOptions)
 
 		kmd::KMDUser::studentUser = kmd::KMDUser::GetUserByName("Student");
 		kmd::KMDUser::facultyUser = kmd::KMDUser::GetUserByName("Faculty");
+	}
+	{
+
+		gAppData.sessions = new kmd::SessionContainer();
+		gAppData.sessions->LoadFromXML("Sessions.xml");
 	}
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
@@ -135,7 +135,7 @@ void Application::init(const OptionContainer &extraOptions)
 		gImageSetResourceManager.loadImageSet("TedxTokyo.imageset");
 		gImageSetResourceManager.loadImageSet("leapGestures.imageset");
 
-		GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+		GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator("Arial");
 		font->SetFontName(L"Arial");
 		font->SetTextureSize(1024);
 		font->SetFontResolution(24);

@@ -22,6 +22,7 @@
 #include "XMLElement.h"
 #include "XMLTextNode.h"
 #include "CSubProject.h"
+#include "KMDUser.h"
 
 namespace mray
 {
@@ -48,8 +49,8 @@ protected:
 	core::CTime m_sessionStartTime;
 	core::CTime m_sessionEndTime;
 
-	std::vector<CProfessor*> m_projectProf;
-	std::vector<CProfessor*> m_commiteeProf;
+	std::vector<KMDUser*> m_projectProf;
+	std::vector<KMDUser*> m_commiteeProf;
 
 	std::vector<KMDComment*> m_comments;
 public:
@@ -74,8 +75,8 @@ public:
 	const core::string& GetPicture(){ return m_picture; }
 	video::ITexturePtr GetTexture(){ return m_imgTexture; }
 
-	const std::vector<CProfessor*>& GetProjectProfessors(){ return m_projectProf; }
-	const std::vector<CProfessor*>& GetComitteeProfessors(){ return m_commiteeProf; }
+	const std::vector<KMDUser*>& GetProjectProfessors(){ return m_projectProf; }
+	const std::vector<KMDUser*>& GetComitteeProfessors(){ return m_commiteeProf; }
 
 	void AddComment(KMDComment* c){ m_comments.push_back(c); }
 	const std::vector<KMDComment*>& GetComments()const{ return m_comments; }
@@ -107,7 +108,7 @@ public:
 		elem = e->getSubElement("Adviser");
 		while (elem)
 		{
-			CProfessor* p = CProfessor::GetProfessor(elem->getValueString("Name"));
+			KMDUser* p = KMDUser::GetUserByName(elem->getValueString("Name"));
 			if (p)
 				m_projectProf.push_back(p);
 			elem = elem->nextSiblingElement("Adviser");
@@ -117,7 +118,7 @@ public:
 		while (elem)
 		{
 
-			CProfessor* p = CProfessor::GetProfessor(elem->getValueString("Name"));
+			KMDUser* p = KMDUser::GetUserByName(elem->getValueString("Name"));
 			if (p)
 				m_commiteeProf.push_back(p);
 			elem = elem->nextSiblingElement("Committee");

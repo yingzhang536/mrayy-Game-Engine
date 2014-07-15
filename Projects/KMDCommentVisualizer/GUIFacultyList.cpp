@@ -36,7 +36,7 @@ GUIFacultyList::~GUIFacultyList()
 }
 
 
-void GUIFacultyList::_ProcessList(const std::vector<kmd::CProfessor*>& p, std::vector<GUI::GUIProfilePicture*> &target, GUIStackPanel* o)
+void GUIFacultyList::_ProcessList(const std::vector<kmd::KMDUser*>& p, std::vector<GUI::GUIProfilePicture*> &target, GUIStackPanel* o)
 {
 	float w = o->GetOffset();
 	float h = o->GetDefaultRegion()->GetRect().getHeight();
@@ -71,8 +71,8 @@ void GUIFacultyList::_ProcessList(const std::vector<kmd::CProfessor*>& p, std::v
 
 void GUIFacultyList::SetSubProject(kmd::CSubProject* p)
 {
-	const std::vector<kmd::CProfessor*>& adv = p->GetSession()->GetProjectProfessors();
-	const std::vector<kmd::CProfessor*>& com = p->GetSession()->GetComitteeProfessors();
+	const std::vector<kmd::KMDUser*>& adv = p->GetSession()->GetProjectProfessors();
+	const std::vector<kmd::KMDUser*>& com = p->GetSession()->GetComitteeProfessors();
 
 	_ProcessList(adv, m_advisers, Advisers);
 	_ProcessList(com, m_committee, Committee);

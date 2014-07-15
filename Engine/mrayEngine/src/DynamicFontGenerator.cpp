@@ -56,8 +56,8 @@ namespace GUI
 		}
 	};
 
-DynamicFontGenerator::DynamicFontGenerator()
-:BaseFont("DynamicFont")
+DynamicFontGenerator::DynamicFontGenerator(const core::string& name)
+:BaseFont(name)
 {
 	m_data = new DynamicFontGeneratorImpl;
 	m_dirty = false;
@@ -98,7 +98,7 @@ void DynamicFontGenerator::SetFontName(const core::stringw& name)
 {
 	
 	m_fontName = name;
-	m_name = core::wchar_to_string(name.c_str());
+	//m_name = core::wchar_to_string(name.c_str());
 	m_dirty = true;
 	m_data->fontDirty = true;
 }

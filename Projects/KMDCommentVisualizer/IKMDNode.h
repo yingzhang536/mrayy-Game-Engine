@@ -18,7 +18,7 @@
 #define __IKMDNode__
 
 
-
+#include "PhNode.h"
 
 namespace mray
 {
@@ -28,7 +28,8 @@ namespace scene
 class IKMDNode
 {
 protected:
-	msa::physics::Particle2D* m_phNode;
+	//msa::physics::Particle2D* m_phNode;
+	physics::PhNode* m_phNode;
 	float m_sz;
 	bool m_hovered, m_selected;
 	IKMDNode* m_parent;
@@ -44,15 +45,15 @@ public:
 	float GetSize(){ return m_sz; }
 	virtual math::vector2d GetPosition()
 	{
-		return m_phNode ? m_phNode->getPosition() : math::vector2d(0);
+		return m_phNode ? m_phNode->GetPosition() : math::vector2d(0);
 	}
 
 	void SetParent(IKMDNode* p)
 	{
 		m_parent = p;
 	}
-	void SetPhysics(msa::physics::Particle2D* n){ m_phNode = n; }
-	msa::physics::Particle2D* GetPhysics(){ return m_phNode ; }
+	void SetPhysics(physics::PhNode* n){ m_phNode = n; }
+	physics::PhNode* GetPhysics(){ return m_phNode; }
 	virtual void Update(float dt){}
 	virtual void Draw(NodeRenderer *r, const math::rectf& rc){}
 
@@ -74,7 +75,7 @@ public:
 	{
 		if (!m_phNode)
 			return math::rectf(-m_sz*0.5f, m_sz*0.5f);
-		return math::rectf (m_phNode->getPosition() - math::vector2d(m_sz / 2), m_phNode->getPosition() + m_sz / 2);
+		return math::rectf (m_phNode->GetPosition() - math::vector2d(m_sz / 2), m_phNode->GetPosition() + m_sz / 2);
 	}
 
 

@@ -30,29 +30,36 @@ class PhNode
 protected:
 	math::vector2d m_position;
 	math::vector2d m_velocity;
+	math::vector2d m_acc;
 	math::vector2d m_force;
 
 	float m_mass;
 
 	float m_radius;
+	float m_drag;
+
+	bool m_fixed;
 public:
 	PhNode();
 	virtual ~PhNode();
 
-	void SetRadius(float r);
-	float GetRadius()const;
+	void SetFixed(bool f){ m_fixed = f; }
+	bool IsFixed(){ return m_fixed; }
 
-	void SetMass(float mass);
-	float GetMass()const;
+	void SetRadius(float r){ m_radius = r; }
+	float GetRadius()const{ return m_radius; }
 
-	void SetPosition(const math::vector2d& pos);
-	const math::vector2d&  GetPosition()const;
+	void SetMass(float mass){ m_mass = mass; }
+	float GetMass()const{ return m_mass; }
 
-	void SetVelocity(const math::vector2d& v);
-	const math::vector2d&  GetVelocity()const;
+	void SetPosition(const math::vector2d& pos){ m_position = pos; }
+	const math::vector2d&  GetPosition()const{ return m_position; }
 
-	void SetAcceleration(const math::vector2d& a);
-	const math::vector2d&  GetAcceleration()const;
+	void SetVelocity(const math::vector2d& v){ m_velocity = v; }
+	const math::vector2d&  GetVelocity()const{ return m_fixed ? math::vector2d::Zero : m_velocity; }
+
+	void SetAcceleration(const math::vector2d& a){ m_acc = a; }
+	const math::vector2d&  GetAcceleration()const{ return m_fixed ? math::vector2d::Zero : m_acc; }
 
 	void AddForce(const math::vector2d& v);
 

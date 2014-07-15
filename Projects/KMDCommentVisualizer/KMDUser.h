@@ -38,6 +38,9 @@ public:
 	//IDType ID;
 	core::string name;
 	core::string imageUrl;
+	core::string title;
+	video::ITexturePtr m_imgTexture;
+	video::ITexturePtr GetTexture(){ return m_imgTexture; }
 
 	KMDUser() {}
 	virtual~KMDUser(){}

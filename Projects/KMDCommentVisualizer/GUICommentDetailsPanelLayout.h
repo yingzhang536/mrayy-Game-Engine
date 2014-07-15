@@ -12,19 +12,19 @@ public:
 	GUIPanel* Root;
 	GUIProfilePicture* TwitterImage;
 	GUIStaticText* TwitterID;
-	GUIStaticText* ProjectID;
 	GUIStaticText* Details;
+	GUIStaticText* ProjectID;
 	GUIStaticText* CommentTime;
 
 public:
 
-	GUICommentDetailsPanelLayout():Root(0),TwitterImage(0),TwitterID(0),ProjectID(0),Details(0),CommentTime(0)
+	GUICommentDetailsPanelLayout():Root(0),TwitterImage(0),TwitterID(0),Details(0),ProjectID(0),CommentTime(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
 		m_elementsMap["TwitterImage"]=(IGUIElement**)&TwitterImage;
 		m_elementsMap["TwitterID"]=(IGUIElement**)&TwitterID;
-		m_elementsMap["ProjectID"]=(IGUIElement**)&ProjectID;
 		m_elementsMap["Details"]=(IGUIElement**)&Details;
+		m_elementsMap["ProjectID"]=(IGUIElement**)&ProjectID;
 		m_elementsMap["CommentTime"]=(IGUIElement**)&CommentTime;
 
 	}

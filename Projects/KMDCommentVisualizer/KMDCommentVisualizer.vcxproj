@@ -92,7 +92,6 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="GenericRenderLayer.h" />
     <ClInclude Include="ConnectionLineRenderer.h" />
-    <ClInclude Include="CProfessor.h" />
     <ClInclude Include="CSubProject.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="GUICommentsLayer.h" />
@@ -144,7 +143,9 @@
     <ClInclude Include="msaPhysics\MSAPhysicsSpring.h" />
     <ClInclude Include="msaPhysics\MSAPhysicsWorld.h" />
     <ClInclude Include="NodeRenderer.h" />
+    <ClInclude Include="PhManager.h" />
     <ClInclude Include="PhNode.h" />
+    <ClInclude Include="PhSpring.h" />
     <ClInclude Include="PointerNode.h" />
     <ClInclude Include="SceneCamera.h" />
     <ClInclude Include="SessionContainer.h" />
@@ -165,7 +166,6 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="GenericRenderLayer.cpp" />
     <ClCompile Include="ConnectionLineRenderer.cpp" />
-    <ClCompile Include="CProfessor.cpp" />
     <ClCompile Include="CSubProject.cpp" />
     <ClCompile Include="DataTypes.cpp" />
     <ClCompile Include="GUICommentsLayer.cpp" />
@@ -189,6 +189,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="NodeRenderer.cpp" />
+    <ClCompile Include="PhManager.cpp" />
+    <ClCompile Include="PhNode.cpp" />
+    <ClCompile Include="PhSpring.cpp" />
     <ClCompile Include="PointerNode.cpp" />
     <ClCompile Include="SceneCamera.cpp" />
     <ClCompile Include="SessionContainer.cpp" />

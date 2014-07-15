@@ -60,18 +60,6 @@ void SessionContainer::LoadFromXML(const core::string& path)
 
 
 
-	//first load professors
-	xml::XMLElement* elem = e->getSubElement("Professors");
-	if (elem)
-	{
-		elem = elem->getSubElement("Professor");
-		while (elem)
-		{
-			CProfessor::LoadProfessor(elem);
-			elem = elem->nextSiblingElement("Professor");
-		}
-	}
-
 	e=e->getSubElement("Session");
 	while (e)
 	{

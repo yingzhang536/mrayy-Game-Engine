@@ -141,9 +141,6 @@
     <ClInclude Include="CSubProject.h">
       <Filter>Source Files\Data</Filter>
     </ClInclude>
-    <ClInclude Include="CProfessor.h">
-      <Filter>Source Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="CommentNode.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
@@ -255,6 +252,12 @@
     <ClInclude Include="GUIProjectStatusLayout.h">
       <Filter>Source Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="PhSpring.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhManager.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -341,9 +344,6 @@
     <ClCompile Include="msaPhysics\MSAObjCPointer.cpp">
       <Filter>Source Files\Physics\msa</Filter>
     </ClCompile>
-    <ClCompile Include="CProfessor.cpp">
-      <Filter>Source Files\Data</Filter>
-    </ClCompile>
     <ClCompile Include="CSubProject.cpp">
       <Filter>Source Files\Data</Filter>
     </ClCompile>
@@ -373,6 +373,15 @@
     </ClCompile>
     <ClCompile Include="SessionDetails.cpp">
       <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="PhSpring.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhManager.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhNode.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

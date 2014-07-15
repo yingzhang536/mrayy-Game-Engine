@@ -222,6 +222,8 @@ void SessionScene::Init()
 		m_layerOrder.push_back(m_statusLayer);
 		m_layerOrder.push_back(m_sceneLayer);
 		m_layerOrder.push_front(m_commentsLayer);
+		
+		m_statusLayer->SetVisible(false);
 	}
 	{
 		m_bgm = gAppData.soundManager->loadSound("sounds//TedXTokyoBGM.mp3",true,sound::ESNDT_2D);

@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "SessionDetails.h"
+#include "StringUtil.h"
 
 
 

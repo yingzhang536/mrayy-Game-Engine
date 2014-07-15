@@ -8,6 +8,7 @@
 #include "ISQLResult.h"
 #include "KMDComment.h"
 #include "KMDUser.h"
+#include "StringUtil.h"
 #include "SessionDetails.h"
 
 namespace mray
