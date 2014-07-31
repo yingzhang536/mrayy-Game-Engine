@@ -41,6 +41,8 @@ void GUIStatusLayer::SetProjects(kmd::SessionContainer* sessions)
 	float h = 80;
 	for (; it != lst.end();++it)
 	{
+		if (!(*it)->IsSession())
+			continue;
 		GUIProjectStatus* p = new GUIProjectStatus(GetCreator());
 		p->SetPosition(math::vector2d(20, y));
 		p->SetSize(math::vector2d(0, h));

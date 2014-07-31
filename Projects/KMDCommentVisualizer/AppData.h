@@ -56,8 +56,9 @@ public:
 
 	SessionContainer* sessions;
 
+#if 0
 	sound::ISoundManager* soundManager;
-
+#endif
 	class SubProjectChangeCallback :public ListenerContainer<ISubProjectChangeListener*>
 	{
 		DECLARE_FIRE_METHOD(_OnSubProjectChange, (CSubProject* sp), (sp));

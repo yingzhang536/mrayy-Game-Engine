@@ -28,7 +28,9 @@ protected:
 	kmd::IRenderingScene* m_scene;
 	scene::ViewPort* m_mainVP;
 
+#if 0
 	GCPtr<sound::ISoundManager> m_soundManager;
+#endif
 public:
 	Application();
 	virtual~Application();

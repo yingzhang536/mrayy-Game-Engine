@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "RobotCameraState.h"
 #include "LocalCameraVideoSource.h"
-#include "LocalRobotCommunicator.h"
+#include "NissanRobotCommunicator.h"
 #include "CRobotConnector.h"
 
 #include "MeshBufferData.h"
@@ -11,7 +11,7 @@
 #include "RenderPass.h"
 #include "GUIBatchRenderer.h"
 #include "FontResourceManager.h"
-#include "AppData.h"
+#include "NCAppGlobals.h"
 #include "OptiTrackHeadController.h"
 #include "CalibHeadController.h"
 
@@ -51,10 +51,11 @@ RobotCameraState::RobotCameraState()
 
 	m_robotConnector = new TBee::CRobotConnector();
 	m_videoSource = new TBee::LocalCameraVideoSource();
-	m_robotConnector->SetCommunicator(new TBee::LocalRobotCommunicator());
+	m_robotComm = new NCam::NissanRobotCommunicator();
+	m_robotConnector->SetCommunicator(m_robotComm);
 
-	//m_headController = new TBee::CalibHeadController(new TBee::OptiTrackHeadController(1));
-	m_headController = new TBee::CalibHeadController(new TestController());
+	m_headController = new TBee::CalibHeadController(new TBee::OptiTrackHeadController(1));
+	//m_headController = new TBee::CalibHeadController(new TestController());
 
 	m_robotConnector->SetHeadController(m_headController);
 	m_hmdFov = 80;
@@ -65,6 +66,10 @@ RobotCameraState::RobotCameraState()
 	m_lockAxis[0] = true;
 	m_lockAxis[1] = false;
 	m_lockAxis[2] = true;
+	m_camConfigDirty = true;
+	m_useLensCorrection = false;
+	m_cameraConfiguration = 0;
+
 }
 
 RobotCameraState::~RobotCameraState()
@@ -88,6 +93,9 @@ void RobotCameraState::InitState()
 	float cameraScreenDistance = 1.0f;
 	m_videoSource->Init();
 
+	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
+	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
+
 	{
 		scene::CameraNode* cam[2];
 		video::EPixelFormat pf = video::EPixel_R8G8B8A8;//video::EPixel_R8G8B8A8;//
@@ -98,7 +106,7 @@ void RobotCameraState::InitState()
 		{
 			cam[i] = m_sceneManager->createCamera();
 			m_viewport[i] = new scene::ViewPort("", cam[i], 0, 0, math::rectf(0, 0, 1, 1), 0);
-			m_viewport[i]->SetClearColor(video::SColor(1, 1, 1, 1));
+			m_viewport[i]->SetClearColor(video::SColor(0, 0, 0, 1));
 
 			video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), pf, true);
 			renderTargetTex->setBilinearFilter(false);
@@ -152,9 +160,25 @@ void RobotCameraState::InitState()
 		};
 
 		math::matrix3x3 rotMat;
+
+
+		if (m_cameraConfiguration->cameraRotation[i] != TBee::TelubeeCameraConfiguration::None)
+		{
+			if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CW)
+				rotMat.setAngle(90);
+			else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CCW)
+				rotMat.setAngle(-90);
+			else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::Flipped)
+				rotMat.setAngle(180);
+			//     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
+			//     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+
+		}
+		/*
 		if (i == 0)
 			rotMat.setAngle(90);
 		else rotMat.setAngle(-90);
+		*/
 		for (int j = 0; j < 4; ++j)
 			tcPtr[j] = (rotMat*(tcPtr[j] * 2 - 1))*0.5 - 0.5f;
 		ushort idxPtr[6] = { 0, 1, 2, 0, 2, 3 };
@@ -197,7 +221,11 @@ bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 				if (m_robotConnector->IsRobotConnected())
 					m_robotConnector->EndUpdate();
 				else
+				{
+					if (!m_robotConnector->IsRobotConnected())
+						m_robotConnector->ConnectRobot();
 					m_robotConnector->StartUpdate();
+				}
 				ok = true;
 			}
 			else if (evt->key == KEY_X)
@@ -220,6 +248,11 @@ bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 				m_headController->Calibrate();
 				ok = true;
 			}
+			else if (evt->key == KEY_H)
+			{
+				m_robotConnector->SetData("Homing", "", false);
+				ok = true;
+			}
 		}
 	}
 	return ok;
@@ -228,7 +261,7 @@ void RobotCameraState::OnEnter(TBee::IRenderingState*prev)
 {
 	Parent::OnEnter(prev);
 	m_videoSource->Open();
-	m_robotConnector->ConnectRobot();
+	//m_robotConnector->ConnectRobot();
 
 }
 
@@ -245,13 +278,15 @@ void RobotCameraState::Update(float dt)
 	Parent::Update(dt);
 	m_videoSource->Blit();
 	m_robotConnector->UpdateStatus();
-	math::vector3d rot = m_robotConnector->GetHeadRotation();
+	math::vector3d r = m_robotConnector->GetHeadRotation();
 	math::vector3d pos = m_robotConnector->GetHeadPosition();
 
-	rot.x = 20 * sin(time);
-	time += dt;
-	rot.y = -rot.y;
-	rot.z = -rot.z;
+	math::vector3d rot = r;
+	rot.x = r.y;
+	rot.z = r.x;
+	rot.y = r.z;
+// 	rot.x = -rot.x;
+// 	rot.z = -rot.z;
 	if (m_lockAxis[0])
 		rot.x = 0;
 	if (m_lockAxis[1])
@@ -263,26 +298,77 @@ void RobotCameraState::Update(float dt)
 	m_headNode->setPosition(pos);
 }
 
+
+class TextureRenderTarget :public video::IRenderArea
+{
+protected:
+	video::ITexturePtr m_tex;
+public:
+	TextureRenderTarget(video::ITexturePtr tex){ m_tex = tex; }
+	virtual~TextureRenderTarget()
+	{
+	}
+	virtual const video::ITexturePtr& GetColorTexture(int i = 0) { return m_tex; }
+	virtual int GetColorTextureCount() { return 1; }
+	virtual void Resize(int x, int y) {}
+	virtual math::vector2di GetSize()
+	{
+		return math::vector2di(m_tex->getSize().x, m_tex->getSize().y);
+	}
+
+};
+
+
 video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
 	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);
+
+
+
 	math::vector3d scale;
 	scale.x = (float)camTex->getSize().x / (float)camTex->getSize().y;
 	scale.y = 1;
 	scale.z = 1;
+	if (m_useLensCorrection )
+	{
+		math::vector2d size(rc.getSize());
+		video::ParsedShaderPP::MappedParams* texRect = m_lensCorrectionPP->GetParam("texRect");
+
+		if (texRect)
+		{
+			math::rectf r = m_videoSource->GetEyeTexCoords(index);
+			texRect->SetValue(math::vector4d(r.ULPoint.x, r.ULPoint.y, r.BRPoint.x, r.BRPoint.y));
+		}
+		if (m_camConfigDirty)
+		{
+			video::ParsedShaderPP::MappedParams* OpticalCenter = m_lensCorrectionPP->GetParam("OpticalCenter");
+			video::ParsedShaderPP::MappedParams* FocalCoeff = m_lensCorrectionPP->GetParam("FCoff");
+			video::ParsedShaderPP::MappedParams* KPCoeff = m_lensCorrectionPP->GetParam("KCoff");
+
+			if (OpticalCenter)
+				OpticalCenter->SetValue(m_cameraConfiguration->OpticalCenter);
+			if (FocalCoeff)
+				FocalCoeff->SetValue(m_cameraConfiguration->FocalCoeff);
+			if (KPCoeff)
+				KPCoeff->SetValue(m_cameraConfiguration->KPCoeff);
+		}
+
+		m_lensCorrectionPP->Setup(math::rectf(0, size));
+		m_lensCorrectionPP->render(&TextureRenderTarget(camTex));
+		camTex = m_lensCorrectionPP->getOutput()->GetColorTexture();
+	}
 	m_screenNode[index]->setVisible(true);
 	m_screenNode[index]->setScale(scale);
 	m_screenMtrl[index]->setTexture(camTex, 0);
 	m_viewport[index]->setAbsViewPort(rc);
 	m_viewport[index]->draw();
 	Parent::Render(rc, eye);
-	device->setRenderTarget(m_renderTarget[index]);
 	video::TextureUnit tex;
 
-
-	tex.SetTexture(m_viewport[index]->getRenderOutput()->getColorTexture());
+	device->setRenderTarget(m_renderTarget[index]);
+	tex.SetTexture(m_viewport[index]->getRenderTarget()->GetColorTexture());
 	device->useTexture(0, &tex);
 	math::rectf tc = math::rectf(0, 0, 1, 1);
 	device->draw2DImage(rc, 1, 0, &tc);
@@ -363,7 +449,15 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 			msg = mT("Robot Rotation: ") + core::StringConverter::toString(rot);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
+
+
 		}
+
+
+		core::string msg = mT("Is Homing: ");
+		msg += m_robotComm->IsHoming() ? "Yes" : "No";
+		font->print(r, &attr, 0, msg, m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
 		m_guiRenderer->Flush();
 	}
 
@@ -376,6 +470,16 @@ void RobotCameraState::LoadFromXML(xml::XMLElement* e)
 	xml::XMLElement* c = e->getSubElement("Calibration");
 	if (c)
 		m_headController->LoadFromXML(c);
+
+
+	core::string camConfigName = e->getValueString("CameraConfiguration");
+
+	m_useLensCorrection = e->getValueBool("UseLensCorrection");
+
+	m_cameraConfiguration = NCAppGlobals::Instance()->camConfig->GetCameraConfiguration(camConfigName);
+
+
+	m_camConfigDirty = true;
 }
 xml::XMLElement* RobotCameraState::WriteToXML(xml::XMLElement* e)
 {

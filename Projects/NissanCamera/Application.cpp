@@ -31,7 +31,6 @@
 #include "JoystickDefinitions.h"
 #include "OptiTrackDataSource.h"
 
-#include "LocalCameraRenderingState.h"
 #include "RemoteCameraRenderingState.h"
 #include "RobotCameraState.h"
 #include "NullRenderState.h"
@@ -91,7 +90,7 @@ void Application::_InitResources()
 
 	//load font
 
-	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator("Arial");
 	font->SetFontName(L"Arial");
 	font->SetTextureSize(1024);
 	font->SetFontResolution(24);
@@ -156,7 +155,6 @@ void Application::_initStates()
 	cameraState = new RobotCameraState();//TBee::LocalCameraRenderingState();
 	((RobotCameraState*)cameraState)->SetCameraInfo(Eye_Left, m_cameraID[Eye_Left]);
 	((RobotCameraState*)cameraState)->SetCameraInfo(Eye_Right, m_cameraID[Eye_Right]);
-	cameraState->InitState();
 	m_renderingState->AddState(cameraState);
 
 	// 	ls = new TBee::LoginScreenState();
@@ -173,6 +171,7 @@ void Application::init(const OptionContainer &extraOptions)
 {
 	CMRayApplication::init(extraOptions);
 
+	NCAppGlobals::Instance()->Init();
 
 	NCAppGlobals::Instance()->Load("NCSettings.conf");
 	{
@@ -235,9 +234,9 @@ void Application::init(const OptionContainer &extraOptions)
 	_initStates();
 	m_appStateManager->AddState(m_renderingState,"Rendering");
 	m_appStateManager->SetInitialState("Rendering");
-	
-	_createViewports();
 	LoadSettingsXML("States.xml");
+	m_renderingState->InitStates();
+	_createViewports();
 
 	if (NCAppGlobals::Instance()->headController == EHeadControllerType::OptiTrack)
 		AppData::Instance()->optiDataSource->ConnectLocal();
@@ -333,7 +332,7 @@ void Application::update(float dt)
 void Application::onDone()
 {
 	//NCAppGlobals::Instance()->Save("VTSettings.conf");
-	WriteSettingsXML();
+	//WriteSettingsXML();
 }
 
 void Application::WriteSettingsXML()

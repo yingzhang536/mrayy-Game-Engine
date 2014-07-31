@@ -70,6 +70,8 @@
 
 #include "mrayOIS.h"
 
+#include "TelubeeRobotDLL.h"
+
 
 namespace mray
 {
@@ -143,7 +145,7 @@ void Application::_InitResources()
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator("Arial24");
 	font->SetFontName(L"Arial");
 	font->SetTextureSize(1024);
 	font->SetFontResolution(24);
@@ -226,8 +228,8 @@ void Application::_initStates()
  	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource
  	m_renderingState->AddState(remote);
 
-//	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), new TBee::LocalRobotCommunicator(), "AugCam");
- //	m_renderingState->AddState(camera);
+	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), new TBee::LocalRobotCommunicator(), "AugCam");
+ 	m_renderingState->AddState(camera);
 
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
@@ -241,7 +243,7 @@ void Application::_initStates()
 	m_renderingState->AddTransition(nullState, login, STATE_EXIT_CODE);
 	//m_renderingState->AddTransition(nullState, camera, STATE_EXIT_CODE);
 	m_renderingState->AddTransition(login, remote, ToRemoteCamera_CODE);//Camera
-//	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
+	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
 	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
 	//m_renderingState->AddTransition(login, vtRs, ToDepthView_CODE);//Camera
 	//m_renderingState->AddTransition(login, depth, ToDepthView_CODE);

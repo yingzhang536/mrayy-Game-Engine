@@ -141,10 +141,6 @@ void CRobotConnector::HandleController()
 }
 void CRobotConnector::UpdateStatus()
 {
-	if (!m_communicator)
-		return;
-	if (!m_status || !m_connected)
-		return;
 	HandleController();
 	if (m_headController)
 	{
@@ -153,6 +149,10 @@ void CRobotConnector::UpdateStatus()
 // 		math::Swap(m_headRotation.x, m_headRotation.y); // REMOVE
 		m_headPosition = m_headController->GetHeadPosition();
 	}
+	if (!m_communicator)
+		return;
+	if (!m_status || !m_connected)
+		return;
 	m_communicator->SetData("HeadRotation", core::StringConverter::toString(m_headRotation), false);
 	m_communicator->SetData("HeadPosition", core::StringConverter::toString(m_headPosition), false);
 	m_communicator->SetData("Speed", core::StringConverter::toString(m_speed), false);

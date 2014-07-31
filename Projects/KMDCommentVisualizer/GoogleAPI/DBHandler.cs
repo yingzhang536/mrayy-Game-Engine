@@ -161,6 +161,7 @@ namespace GoogleAPI
                 if (need)
                     query += ",";
                 need = true;
+                c.text=c.text.Replace("\'","- ");
                 query += "(" + c.id.ToString() + ", '" + c.publisher + "','" + c.project + "','" + c.text + "','" + c.timestamp.ToString("yyyy-MM-dd HH:mm:ss") + "')";
                 m_lastID = Math.Max(m_lastID, c.id);
                 count++;

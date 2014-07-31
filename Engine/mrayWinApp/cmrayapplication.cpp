@@ -276,7 +276,7 @@ void CMRayApplication::doFrame()
 void CMRayApplication::drawFrame()
 {
 	float t=gEngine.getTimer()->getSeconds();
-	if(m_limitFps && m_limitFpsCount>0 && (t-m_drawTimeCounter)<1000.0f/m_limitFpsCount)
+	if(m_limitFps && m_limitFpsCount>0 && fabs(t-m_drawTimeCounter)<1000.0f/m_limitFpsCount)
 	{
 		return;
 	}

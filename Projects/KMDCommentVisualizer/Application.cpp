@@ -28,6 +28,7 @@
 #include "GUIStatusLayer.h"
 #include "GUILayersContainer.h"
 #include "GUIProjectStatus.h"
+#include "GUITransitionBars.h"
 
 
 
@@ -75,6 +76,23 @@ void Application::onEvent(Event* event)
 	{
 		m_scene->OnEvent(event, rc);
 	}
+
+	if (event->getType() == ET_Keyboard)
+	{
+
+		KeyboardEvent* evt = dynamic_cast<KeyboardEvent*>(event);
+		if (evt->press)
+		{
+			if (evt->key == KEY_L  && evt->ctrl)
+			{
+				m_limitFps = !m_limitFps;
+			}
+			if (evt->key == KEY_F9 && evt->ctrl)
+			{
+				gAppData.Debugging = !gAppData.Debugging;
+			}
+		}
+	}
 }
 
 void Application::init(const OptionContainer &extraOptions)
@@ -84,7 +102,7 @@ void Application::init(const OptionContainer &extraOptions)
 	{
 		new kmd::AppData;
 		gAppData.app = this;
-		gAppData.Load("tedSettings.cfg");
+		gAppData.Load("kmdSettings.cfg");
 		kmd::SQLDBHandler* db=new kmd::SQLDBHandler();
 
 	}
@@ -121,10 +139,12 @@ void Application::init(const OptionContainer &extraOptions)
 
 	network::createWin32Network();
 
+#if 0
 	{
 		m_soundManager = new sound::SFModSoundManager();
 		gAppData.soundManager = m_soundManager;
 	}
+#endif
 	{
 		//gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
 // 		GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
@@ -162,6 +182,7 @@ void Application::init(const OptionContainer &extraOptions)
 		REGISTER_GUIElement_FACTORY(GUICommentsLayer);
 		REGISTER_GUIElement_FACTORY(GUIStatusLayer);
 		REGISTER_GUIElement_FACTORY(GUIFacultyList);
+		REGISTER_GUIElement_FACTORY(GUITransitionBars);
 		REGISTER_GUIElement_FACTORY(GUILayersContainer);
 		REGISTER_GUIElement_FACTORY(GUIProjectStatus);
 	}
@@ -239,7 +260,9 @@ void Application::update(float dt)
 {
 	dt = math::clamp(dt, 0.001f, 0.1f);
 	CMRayApplication::update(dt);
+#if 0
 	m_soundManager->runSounds(dt);
+#endif
 }
 
 void Application::onDone()

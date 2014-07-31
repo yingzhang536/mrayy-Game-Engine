@@ -102,8 +102,8 @@ void GUISpeakerDetailsPanel::_OnSubProjectChange(kmd::CSubProject* sp)
 
 	kmd::SessionDetails* session = sp->GetSession();
 	SessionName->SetText(core::StringUtil::ToUpper(session->GetSessionName()));
-	core::string txt = core::string("SUB-PROJECT ") + core::StringConverter::toString(sp->GetOrder() + 1);
-	SpeakerID->SetText(txt);
+	//core::string txt = core::string("Time Slot ") + core::StringConverter::toString(sp->GetOrder() + 1);
+	SpeakerID->SetText(session->GetTheme());
 	SpeakerName->SetText(core::StringUtil::ToUpper(sp->GetName()));
 	SpeakerTitle->SetText(core::StringUtil::ToUpper(sp->GetTitle()));
 	SpeakerImage->SetSourceImage(sp->GetSession()->GetPicture());

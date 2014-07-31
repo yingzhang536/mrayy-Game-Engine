@@ -27,7 +27,7 @@
 #ifndef __TelubeeRobotDLL__
 #define __TelubeeRobotDLL__
 
-
+#include "IRobotController.h"
 
 struct RobotStatus
 {
@@ -54,6 +54,7 @@ public:
 
 	virtual void OnCollisionData(float left, float right){}
 };
+
 
 class RobotSerialPort;
 // This class is exported from the TelubeeRobotDLL.dll

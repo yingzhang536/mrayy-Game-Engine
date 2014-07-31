@@ -734,7 +734,7 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 	}
 	if (gEngine.getTimer()->getSeconds() - m_lightMapTimer > 200)
 	{
-		m_blurShader->Setup(math::rectf(0, 0, 128, 128));
+		m_blurShader->Setup(math::rectf(0, 0, 256, 256));
 		_GenerateLightMap();
 		m_lightMapTimer = gEngine.getTimer()->getSeconds();
 	}

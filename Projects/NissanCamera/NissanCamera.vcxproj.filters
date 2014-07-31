@@ -45,6 +45,9 @@
     <ClInclude Include="CalibHeadController.h">
       <Filter>Source Files\Control</Filter>
     </ClInclude>
+    <ClInclude Include="NissanRobotCommunicator.h">
+      <Filter>Source Files\Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files\states</Filter>
     </ClCompile>
     <ClCompile Include="CalibHeadController.cpp">
+      <Filter>Source Files\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="NissanRobotCommunicator.cpp">
       <Filter>Source Files\Control</Filter>
     </ClCompile>
   </ItemGroup>

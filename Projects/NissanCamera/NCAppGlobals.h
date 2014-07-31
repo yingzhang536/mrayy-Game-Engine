@@ -17,7 +17,7 @@ purpose:
 
 
 #include "AppData.h"
-
+#include "CameraConfigurationManager.h"
 namespace mray
 {
 namespace NCam

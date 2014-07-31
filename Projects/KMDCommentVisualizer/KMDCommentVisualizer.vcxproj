@@ -118,6 +118,7 @@
     <ClInclude Include="GUICommentDetailsPanel.h" />
     <ClInclude Include="GUICommentDetailsPanelLayout.h" />
     <ClInclude Include="GUICommentItem.h" />
+    <ClInclude Include="GUITransitionBars.h" />
     <ClInclude Include="GUIUserProfile.h" />
     <ClInclude Include="IDBHandler.h" />
     <ClInclude Include="IRenderingLayer.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="GUISweepingText.cpp" />
     <ClCompile Include="GUICommentDetailsPanel.cpp" />
     <ClCompile Include="GUICommentItem.cpp" />
+    <ClCompile Include="GUITransitionBars.cpp" />
     <ClCompile Include="GUIUserProfile.cpp" />
     <ClCompile Include="IRenderingScene.cpp" />
     <ClCompile Include="KMDCommentVisualizer.cpp" />
@@ -231,9 +233,13 @@
     </Overlay>
     <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentDetailsPanelLayout.gui">
       <FileType>Document</FileType>
+      <SubType>Designer</SubType>
     </Overlay>
     <None Include="Configure.stg" />
     <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIStatusLayerLayout.gui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Bin\Data\KMDPlenary\Sessions.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

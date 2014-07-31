@@ -46,7 +46,7 @@ namespace GUI
 			e = new GUICommentDetailsPanel(GetCreator());
 			e->SetAnchorPosition(math::vector2d(0, 0));
 			e->SetPosition(math::vector2d(0, 0));
-			e->SetSize(math::vector2d(100, 75));
+			e->SetSize(math::vector2d(100, GetSize().y/3.0f));
 			e->SetAnchorLeft(true);
 			e->SetAnchorRight(true);
 			e->SetAnchorTop(true);

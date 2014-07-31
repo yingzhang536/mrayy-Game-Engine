@@ -29,9 +29,11 @@ protected:
 	core::string m_name;
 	core::string m_title;
 
+	int m_length;
+
 
 public:
-	CSubProject(SessionDetails*s) : m_session(s), m_order(0)
+	CSubProject(SessionDetails*s) : m_session(s), m_order(0), m_length(5)
 	{}
 	virtual~CSubProject(){}
 
@@ -41,10 +43,13 @@ public:
 	const core::string& GetName(){ return m_name; }
 	const core::string& GetTitle(){ return m_title; }
 
+	int GetLength(){ return m_length; }
+
 	void LoadFromXML(xml::XMLElement* e)
 	{
 		m_name = e->getValueString("Name");
 		m_title = e->getValueString("Title");
+		m_length = e->getValueInt("Length");
 	}
 };
 

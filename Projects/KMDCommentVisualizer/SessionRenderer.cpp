@@ -40,6 +40,7 @@ SessionRenderer::SessionRenderer()
 	m_speakerDistance = 400;
 	m_CommentsDistance = 80;
 	gAppData.subProjectChange.AddListener(this);
+
 }
 
 SessionRenderer::~SessionRenderer()
@@ -171,7 +172,9 @@ void SessionRenderer::_AddCommentsNodes(const std::vector<CommentNode*> &nodes)
 {
 	if (!nodes.size())
 		return;
+#if 0
 	gAppData.soundManager->playSound("sounds//CommentArrived.mp3", 0, true, 100, false, sound::ESNDT_2D);
+#endif
 	m_dataMutex->lock();
 	for (int i = 0; i < nodes.size(); ++i)
 	{

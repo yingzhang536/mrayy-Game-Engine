@@ -168,6 +168,12 @@
     <ClInclude Include="LatencyTestState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="LocalRobotCommunicator.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalCameraRenderingState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -270,6 +276,12 @@
       <Filter>Source Files\States</Filter>
     </ClCompile>
     <ClCompile Include="LatencyTestState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalCameraRenderingState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalRobotCommunicator.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>

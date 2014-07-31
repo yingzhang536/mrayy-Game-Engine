@@ -40,19 +40,27 @@ protected:
 	TwitterProviderListener* m_providerListener;
 	scene::PointerNode* m_pointer;
 
+#if 0
 	sound::ISoundPtr m_bgm;
-
+#endif
 	std::vector<kmd::CSubProject*> m_subProjects;
 	int m_activeSubProject;
+
+	bool m_isTimeBased;
+	float m_timerStart;
+
 
 	GenericRenderLayer* m_commentsLayer;
 	GenericRenderLayer* m_sceneLayer;
 	GenericRenderLayer* m_statusLayer;
 	std::list<GenericRenderLayer*> m_layerOrder;
 
+
 	void MakeLayerTop(GenericRenderLayer* layer);
 	void MakeLayerBottom(GenericRenderLayer* layer);
 	void RefreshLayerAlpha();
+
+	void SetTimerBased(bool timer);
 public:
 	SessionScene();
 	virtual~SessionScene();
@@ -66,6 +74,9 @@ public:
 	virtual bool OnEvent(Event* e, const math::rectf& rc) ;
 	virtual void Update(float dt) ;
 	virtual video::IRenderTarget* Draw(const math::rectf& rc);
+
+	void SetNextProject();
+	void SetPrevProject();
 
 	void SetCurrentSubProject(int p);
 	virtual void _OnSubProjectChange(CSubProject* sp);

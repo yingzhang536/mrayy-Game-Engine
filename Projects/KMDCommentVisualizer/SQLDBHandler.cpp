@@ -10,6 +10,7 @@
 #include "KMDUser.h"
 #include "StringUtil.h"
 #include "SessionDetails.h"
+#include "AppData.h"
 
 namespace mray
 {
@@ -22,7 +23,8 @@ void SQLDBHandler::_LoadComments()
 
 	try
 	{
-		db::ISQLResult* res= m_connection->ExecBlockingCmdWithRet("select  id,Publisher pub,Project p,Text txt,Time tm from kmd.commentstb",false);
+
+		db::ISQLResult* res= m_connection->ExecBlockingCmdWithRet("select  id,Publisher pub,Project p,Text txt,Time tm from "+m_tb,false);
 		if (!res)
 			return;
 		
@@ -62,7 +64,12 @@ bool SQLDBHandler::_connect()
 		return true;;
 	try
 	{
-		m_connection->Connect("127.0.0.1", "root", "admin", "kmd", 3306, 0);
+		core::string host = gAppData.GetValue("DB", "Host");
+		m_db = gAppData.GetValue("DB", "DB");
+		m_tb = gAppData.GetValue("DB", "Table");
+		core::string user = gAppData.GetValue("DB", "User");
+		core::string pwd = gAppData.GetValue("DB", "PWD");
+		m_connection->Connect(host, user, pwd, m_db, 3306, 0);
 
 		return m_connection->IsConnected();
 	}
@@ -107,7 +114,7 @@ KMDComment* SQLDBHandler::RequestComment(IDType id)
 
 	try
 	{
-		core::string cstr = "select id,Publisher pub,Project p,Text txt,Time tm from commentsTB where id=" + core::StringConverter::toString(id);
+		core::string cstr = "select id,Publisher pub,Project p,Text txt,Time tm from " + m_tb+" where id=" + core::StringConverter::toString(id);
 
 		db::ISQLResult* res= m_connection->ExecBlockingCmdWithRet(cstr, false);
 
@@ -129,7 +136,7 @@ std::vector<KMDComment*> SQLDBHandler::LoadComments(IDType sinceID)
 
 	try
 	{
-		core::string cstr = "select id,Publisher pub,Project p,Text txt,Time tm from commentsTB where id>" + core::StringConverter::toString(sinceID);
+		core::string cstr = "select id,Publisher pub,Project p,Text txt,Time tm from " + m_tb + " where id>" + core::StringConverter::toString(sinceID);
 
 		db::ISQLResult* res = m_connection->ExecBlockingCmdWithRet(cstr, false);
 
@@ -184,6 +191,7 @@ void SQLDBHandler::LoadComment(db::ISQLResult* res, KMDComment* c)
 	if (c->project)
 		c->project->AddComment(c);
 	c->text = ConvertToUtf16((*res)[3]);
+	c->text.replaceChar('\n', ' ');
 	ParseDBDate((*res)[4], c->date);
 }
 

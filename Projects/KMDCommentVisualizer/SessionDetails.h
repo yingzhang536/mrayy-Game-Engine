@@ -53,8 +53,10 @@ protected:
 	std::vector<KMDUser*> m_commiteeProf;
 
 	std::vector<KMDComment*> m_comments;
+
+	bool m_isSession;
 public:
-	SessionDetails(){}
+	SessionDetails() :m_isSession(true){}
 	virtual ~SessionDetails()
 	{
 		for (int i = 0; i < m_projects.size(); ++i)
@@ -81,12 +83,17 @@ public:
 	void AddComment(KMDComment* c){ m_comments.push_back(c); }
 	const std::vector<KMDComment*>& GetComments()const{ return m_comments; }
 
+	bool IsSession(){ return m_isSession; }
+
 	void LoadFromXML(xml::XMLElement* e)
 	{
 		m_sessionName = e->getValueString("SessionName");
 		m_theme = e->getValueString("Theme");
 		m_sessionStartTime = core::CTime::Parse(e->getValueString("SessionStartTime"));
 		m_sessionEndTime = core::CTime::Parse(e->getValueString("SessionEndTime"));
+
+		if (e->getAttribute("IsSession"))
+			m_isSession = e->getValueBool("IsSession");
 
 		math::vector3d clr = core::StringConverter::toVector3d(e->getValueString("Color"))/255.0f;
 		m_color.Set(clr.x, clr.y, clr.z, 1);

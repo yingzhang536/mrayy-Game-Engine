@@ -15,6 +15,7 @@ public:
 	GUIStaticText* SessionName;
 	GUIStaticText* SessionStartTime;
 	GUIStaticText* SessionEndTime;
+	GUIStaticText* Time;
 	GUIStaticText* SpeakerID;
 	GUIProfilePicture* SpeakerImage;
 	GUIStaticText* SpeakerTitle;
@@ -23,13 +24,14 @@ public:
 
 public:
 
-	GUISpeakerDetailsPanelLayout():Root(0),Contents(0),SessionName(0),SessionStartTime(0),SessionEndTime(0),SpeakerID(0),SpeakerImage(0),SpeakerTitle(0),SpeakerName(0),PlenaryLogo(0)
+	GUISpeakerDetailsPanelLayout():Root(0),Contents(0),SessionName(0),SessionStartTime(0),SessionEndTime(0),Time(0),SpeakerID(0),SpeakerImage(0),SpeakerTitle(0),SpeakerName(0),PlenaryLogo(0)
 	{		
 		m_elementsMap["Root"]=(IGUIElement**)&Root;
 		m_elementsMap["Contents"]=(IGUIElement**)&Contents;
 		m_elementsMap["SessionName"]=(IGUIElement**)&SessionName;
 		m_elementsMap["SessionStartTime"]=(IGUIElement**)&SessionStartTime;
 		m_elementsMap["SessionEndTime"]=(IGUIElement**)&SessionEndTime;
+		m_elementsMap["Time"]=(IGUIElement**)&Time;
 		m_elementsMap["SpeakerID"]=(IGUIElement**)&SpeakerID;
 		m_elementsMap["SpeakerImage"]=(IGUIElement**)&SpeakerImage;
 		m_elementsMap["SpeakerTitle"]=(IGUIElement**)&SpeakerTitle;

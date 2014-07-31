@@ -79,6 +79,7 @@ protected:
 	void _AddCommentsNodes(const std::vector<CommentNode*> &nodes);
 	void _AddCommentNode(kmd::KMDComment* t, ProjectNode*speaker);
 
+
 public:
 	SessionRenderer();
 	virtual ~SessionRenderer();

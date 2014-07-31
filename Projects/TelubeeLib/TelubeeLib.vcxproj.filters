@@ -189,13 +189,7 @@
     <ClInclude Include="GstFileVideoSource.h">
       <Filter>Source Files\VideoSource</Filter>
     </ClInclude>
-    <ClInclude Include="LocalRobotCommunicator.h">
-      <Filter>Source Files\Robot</Filter>
-    </ClInclude>
     <ClInclude Include="RemoteCameraRenderingState.h">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalCameraRenderingState.h">
       <Filter>Source Files\States\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardHeadController.h">
@@ -224,6 +218,12 @@
     </ClInclude>
     <ClInclude Include="LocalSingleCameraVideoSource.h">
       <Filter>Source Files\VideoSource</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotControllerDLL.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotController.h">
+      <Filter>Source Files\Robot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,13 +314,7 @@
     <ClCompile Include="GstFileVideoSource.cpp">
       <Filter>Source Files\VideoSource</Filter>
     </ClCompile>
-    <ClCompile Include="LocalRobotCommunicator.cpp">
-      <Filter>Source Files\Robot</Filter>
-    </ClCompile>
     <ClCompile Include="RemoteCameraRenderingState.cpp">
-      <Filter>Source Files\States\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="LocalCameraRenderingState.cpp">
       <Filter>Source Files\States\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardHeadController.cpp">

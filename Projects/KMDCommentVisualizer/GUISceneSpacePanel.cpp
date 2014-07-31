@@ -42,7 +42,8 @@ void GUISceneSpacePanel::_OnSubProjectChange(kmd::CSubProject* sp)
 	if (!m_currentSub || sp->GetSession() != m_currentSub->GetSession())
 	{
 		m_targetColor = sp->GetSession()->GetColor();
-		Theme->SetText(sp->GetSession()->GetTheme());
+		Transition->Start(m_targetColor);
+		Theme->SetText(sp->GetSession()->GetSessionName());
 		Info->SetText(sp->GetSession()->GetDescription());
 	}
 	Speaker->SetText(sp->GetName());

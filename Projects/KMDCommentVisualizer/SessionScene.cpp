@@ -143,10 +143,11 @@ SessionScene::SessionScene()
 
 	m_activeSubProject = 0;
 
-
+	m_screenLayout = 0;
 	m_sceneLayer = new GenericRenderLayer();
 	m_commentsLayer = new GenericRenderLayer();
 	m_statusLayer = new GenericRenderLayer();
+	m_isTimeBased = false;
 }
 
 SessionScene::~SessionScene()
@@ -225,17 +226,22 @@ void SessionScene::Init()
 		
 		m_statusLayer->SetVisible(false);
 	}
+#if 0
 	{
 		m_bgm = gAppData.soundManager->loadSound("sounds//TedXTokyoBGM.mp3",true,sound::ESNDT_2D);
 		m_bgm->setLooping(true);
 	}
+#endif 
 	m_providerListener->r = m_sessionRenderer;
+	SetTimerBased(false);
 
 }
 
 void SessionScene::OnEnter()
 {
+#if 0
 	m_bgm->play();
+#endif
 	
 	gAppData.commentsCallback.AddListener(m_sessionRenderer);
 	gAppData.commentsCallback.AddListener(this);
@@ -244,7 +250,9 @@ void SessionScene::OnEnter()
 
 void SessionScene::OnExit()
 {
+#if 0
 	m_bgm->stop();
+#endif
 
 	m_providerListener->Stop();
 	gAppData.commentsCallback.RemoveListener(m_sessionRenderer);
@@ -290,12 +298,43 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 		{
 			if (evt->key == KEY_DOWN)
 			{
-				SetCurrentSubProject(m_activeSubProject + 1);
+
+				//	if (!m_isTimeBased)
+					SetCurrentSubProject(m_activeSubProject + 1);
 			}
 			if (evt->key == KEY_UP)
 			{
-				SetCurrentSubProject(m_activeSubProject - 1);
-			}/*
+			//	if (!m_isTimeBased)
+					SetCurrentSubProject(m_activeSubProject - 1);
+			}
+			if (evt->key == KEY_PGUP)
+			{
+
+				//	if (!m_isTimeBased)
+					SetPrevProject();
+			}
+			if (evt->key == KEY_PGDOWN)
+			{
+
+				//if (!m_isTimeBased)
+					SetNextProject();
+			}
+			if (evt->key == KEY_T)
+			{
+				SetTimerBased(!m_isTimeBased);
+			}
+			if (evt->key == KEY_HOME)
+			{
+
+				//	if (!m_isTimeBased)
+					SetCurrentSubProject(0);
+			}
+			if (evt->key == KEY_R)
+			{
+				m_timerStart = gEngine.getTimer()->getSeconds();
+			}
+			
+			/*
 			if (evt->key == KEY_C)
 			{
 				m_commentsLayer->SetVisible(!m_commentsLayer->IsVisible());
@@ -313,11 +352,8 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 			}*/
 			if (evt->key == KEY_1)
 			{
+				m_commentsLayer->SetVisible(!m_commentsLayer->IsVisible());
 				MakeLayerTop(m_commentsLayer);
-			}
-			if (evt->key == KEY_2)
-			{
-				MakeLayerTop(m_sceneLayer);
 			}
 			if (evt->key == KEY_3)
 			{
@@ -340,7 +376,14 @@ bool SessionScene::OnEvent(Event* e, const math::rectf& rc)
 
 	return false;
 }
+void SessionScene::SetTimerBased(bool timer)
+{
+	m_isTimeBased = timer;
+	if (!m_screenLayout)
+		return;
+	m_screenLayout->ScenePanel->TimerIco->SetVisible(m_isTimeBased);
 
+}
 void SessionScene::MakeLayerTop(GenericRenderLayer* layer)
 {
 	if (!layer->GetPanelElement())
@@ -393,6 +436,34 @@ void SessionScene::RefreshLayerAlpha()
 		}
 	}
 }
+
+
+void SessionScene::SetNextProject()
+{
+	SessionDetails* s= m_subProjects[m_activeSubProject]->GetSession();
+	for (int i = m_activeSubProject; i < m_subProjects.size(); ++i)
+	{
+		if (m_subProjects[i]->GetSession() != s)
+		{
+			SetCurrentSubProject(i);
+			break;;
+		}
+	}
+}
+void SessionScene::SetPrevProject()
+{
+
+	SessionDetails* s = m_subProjects[m_activeSubProject]->GetSession();
+	for (int i = m_activeSubProject; i >=0; --i)
+	{
+		if (m_subProjects[i]->GetSession() != s)
+		{
+			SetCurrentSubProject(i);
+			break;;
+		}
+	}
+}
+
 void SessionScene::SetCurrentSubProject(int i)
 {
 	if (i < 0)
@@ -429,6 +500,58 @@ void SessionScene::Update(float dt)
 	m_statusLayer->UpdateLayer(dt);
 	m_commentsLayer->UpdateLayer(dt);
 	m_sceneLayer->UpdateLayer(dt);
+
+	core::CTime t = core::CTime::Now();
+	m_screenLayout->SessionDetails->Time->SetText(core::CTime::ToString(t,true));
+
+	if (m_activeSubProject < m_subProjects.size())
+	{
+		CSubProject* sp = m_subProjects[m_activeSubProject];
+		SessionDetails* s = sp->GetSession();
+
+	}
+	if (m_isTimeBased)
+	{
+
+		float time = gEngine.getTimer()->getSeconds();
+		int span = (time - m_timerStart) / 1000;;
+		int hours = floor((span) / (3600.0f));
+		int mins = floor((span - hours * 3600.0f)/60.0f);
+		int sec = floor(span % 60);
+		core::CTime timeLeft(hours, mins, sec);
+		m_screenLayout->ScenePanel->Time->SetText(core::CTime::ToString(timeLeft, true));
+
+		if (false && m_activeSubProject < m_subProjects.size())
+		{
+			CSubProject* sp = m_subProjects[m_activeSubProject];
+			SessionDetails* s = sp->GetSession();
+			int totalLength = 0;
+			for (int i = 0; i<s->GetProjects().size(); ++i)
+			{
+				if (s->GetProjects()[i]==sp)
+					break;;
+				totalLength += s->GetProjects()[i]->GetLength();
+			}
+			core::CTime start = s->GetSessionStartTime();
+			int m = start.GetMinute() + totalLength;
+			if (m>60)
+			{
+				start.SetHour(start.GetHour() + 1);
+				m -= 60;
+			}
+			start.SetMinute(m);
+			core::CTime end = start;
+			m = start.GetMinute() + sp->GetLength();
+			if (m > 60)
+			{
+				end.SetHour(start.GetHour() + 1);
+				m -= 60;
+			}
+			end.SetMinute(m);
+			if (t>start && t<end)
+				SetCurrentSubProject(m_activeSubProject + 1);
+		}
+	}
 }
 
 video::IRenderTarget* SessionScene::Draw(const math::rectf& rc)

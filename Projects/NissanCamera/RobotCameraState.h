@@ -18,6 +18,8 @@
 #include "IRenderingState.h"
 #include "SceneManager.h"
 #include "ViewPort.h"
+#include "ParsedShaderPP.h"
+
 
 namespace mray
 {
@@ -26,9 +28,12 @@ namespace mray
 		class CRobotConnector;
 		class ICameraVideoSource;
 		class CalibHeadController;
+		class TelubeeCameraConfiguration;
 	}
 namespace NCam
 {
+	class NissanRobotCommunicator;
+
 	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener
 {
 protected:
@@ -46,9 +51,14 @@ protected:
 	bool m_lockAxis[3];
 
 	TBee::CalibHeadController* m_headController;
+	NissanRobotCommunicator* m_robotComm;
 
 	float m_hmdFov;
 
+	bool m_useLensCorrection;
+	GCPtr<video::ParsedShaderPP> m_lensCorrectionPP;
+	TBee::TelubeeCameraConfiguration *m_cameraConfiguration;
+	bool m_camConfigDirty;
 
 	void _RenderUI(const math::rectf& rc);
 public:

@@ -223,6 +223,7 @@ void OptiTrackClient::_PreHandleData()
 {
 
 	// same system latency test
+
 	float fThisTick = (float)gEngine.getTimer()->getSeconds();
 	//	float fDiff = fThisTick - data->fLatency;
 	//	double dDuration = fDiff;

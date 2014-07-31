@@ -43,10 +43,12 @@ namespace GoogleAPI
 
             gdocHandlerStd = new GDocHandler();
             gdocHandlerFac = new GDocHandler();
-            string url = ConfigurationManager.AppSettings["DocURL"];
-            string url2 = ConfigurationManager.AppSettings["DocURL2"];
-            gdocHandlerStd.Init(@"mrayyamen@gmail.com", @"H0wL0vely!2", url);
-            gdocHandlerFac.Init(@"mrayyamen@gmail.com", @"H0wL0vely!2", url2);
+            string url = ConfigurationManager.AppSettings["DocStd"];
+            string url2 = ConfigurationManager.AppSettings["DocStaff"];
+            string guser = ConfigurationManager.AppSettings["GUser"];
+            string gpwd = ConfigurationManager.AppSettings["GPWD"];
+            gdocHandlerStd.Init(guser, gpwd, url);
+            gdocHandlerFac.Init(guser, gpwd, url2);
 
             gdocHandlerStd.OnDataArrived += gdocHandler_OnDataArrived;
             gdocHandlerFac.OnDataArrived += gdocHandler_OnDataArrived;
@@ -87,6 +89,12 @@ namespace GoogleAPI
         void UpdateListData(List<RowComment> comments)
         {
 
+            foreach (RowComment c in comments)
+            {
+                c.id = m_id;
+                m_id++;
+            }
+            dbHandler.AddComments(comments);
 
             foreach (RowComment c in comments)
             {
@@ -103,13 +111,7 @@ namespace GoogleAPI
 
         void gdocHandler_OnDataArrived(GDocHandler h, List<RowComment> comments)
         {
-            foreach (RowComment c in comments)
-            {
-                c.id = m_id;
-                m_id++;
-            }
             this.Invoke(new updateListDataDel(UpdateListData), comments);
-            dbHandler.AddComments(comments);
         }
 
         void Init(string user,string pwd,string URI)
@@ -147,6 +149,7 @@ namespace GoogleAPI
             dbHandler.ClearDBTables();
             gdocHandlerFac.Reset();
             gdocHandlerStd.Reset();
+            listListView.Items.Clear();
         }
 
         private void button3_Click(object sender, EventArgs e)

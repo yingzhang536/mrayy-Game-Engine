@@ -258,6 +258,9 @@
     <ClInclude Include="PhManager.h">
       <Filter>Source Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="GUITransitionBars.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -383,28 +386,13 @@
     <ClCompile Include="PhNode.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="GUITransitionBars.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Configure.stg">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui">
-      <Filter>Source Files\GUI</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui">
-      <Filter>Source Files\GUI</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui">
-      <Filter>Source Files\GUI</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui">
-      <Filter>Source Files\GUI</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui">
-      <Filter>Source Files\GUI</Filter>
-    </None>
-    <None Include="..\..\Bin\Data\KMDPlenary\GUI\GUITweetDetailsPanelLayout.gui">
-      <Filter>Source Files\GUI</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -425,5 +413,14 @@
     <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIProjectStatusLayout.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentDetailsPanelLayout.gui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Bin\Data\KMDPlenary\Sessions.xml" />
   </ItemGroup>
 </Project>

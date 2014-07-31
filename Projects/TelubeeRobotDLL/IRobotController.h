@@ -13,12 +13,12 @@ public:
 	IRobotController(){}
 	virtual ~IRobotController(){}
 
-	virtual void SetListener(ITelubeeRobotListener* l)=0;
+	virtual void SetListener(ITelubeeRobotListener* l) = 0;
 	virtual void ConnectRobot() = 0;
 	virtual void DisconnectRobot() = 0;
 	virtual bool IsConnected() = 0;
-	virtual void UpdateRobotStatus(const RobotStatus& st)=0;
-	
+	virtual void UpdateRobotStatus(const RobotStatus& st) = 0;
+
 };
 
 

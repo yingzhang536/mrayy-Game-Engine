@@ -30,6 +30,9 @@ protected:
 	db::ISQLManager* m_sqlManager;
 	GCPtr<db::ISQLConnection> m_connection;
 
+	core::string m_db;
+	core::string m_tb;
+
 	void _LoadComments();
 
 	bool _connect();

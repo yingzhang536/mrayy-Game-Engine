@@ -61,7 +61,7 @@ void GUIProjectStatus::Update(float dt)
 		{
 			if (lst[i]->user == kmd::KMDUser::studentUser)
 				s++;
-			else if (lst[i]->user == kmd::KMDUser::facultyUser)
+			else 
 				f++;
 		}
 		TotalComments->SetText(core::StringConverter::toString(m_project->GetComments().size()));
