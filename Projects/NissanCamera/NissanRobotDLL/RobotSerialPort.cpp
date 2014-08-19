@@ -19,7 +19,7 @@ float testPosy = 100.00;
 #define BASE	0
 #define HEAD	1
 
-#define ROBOT_CENTER 330
+#define ROBOT_CENTER 200
 #define ROBOT_Y_SOFTLIMIT 175
 
 bool debug_print = false;
