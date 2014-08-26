@@ -24,6 +24,7 @@ namespace network{
 	class ISocket;
 	class IWebRequest;
 	class IUDPClient;
+	class IReliableSocket;
 
 class MRAY_DLL INetwork:public ISingleton<INetwork>
 {
@@ -36,6 +37,7 @@ public:
 	virtual ISocket* createSocket(const core::string&name,bool isHost,bool Reliable)=0;
 
 	virtual IUDPClient* createUDPClient()=0;
+	virtual IReliableSocket* createTCPSocket()=0;
 
 	virtual bool getHostAddress(const char*name,NetAddress &addr)=0;
 

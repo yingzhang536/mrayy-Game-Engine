@@ -1,0 +1,21 @@
+<ComplexTestObject>
+	<Father>
+		<Age>52</Age>
+		<Name>Moneer</Name>
+		<Surname>Saraiji</Surname>
+	</Father>
+	<Mother>
+		<Age>42</Age>
+		<Name>Sawsan</Name>
+		<Surname>Saraiji</Surname>
+	</Mother>
+	<Node>
+		<DrawBoundingBox>0</DrawBoundingBox>
+		<ID>0</ID>
+		<Name>Node</Name>
+		<Orintation>1,0,0,0</Orintation>
+		<Position>10,5,20.299999</Position>
+		<Scale>1,1,1</Scale>
+		<Visible>1</Visible>
+	</Node>
+</ComplexTestObject>

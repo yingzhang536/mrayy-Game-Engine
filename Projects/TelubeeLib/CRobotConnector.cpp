@@ -144,7 +144,7 @@ void CRobotConnector::UpdateStatus()
 	HandleController();
 	if (m_headController)
 	{
-		m_headController->GetHeadOrientation().toEulerAngles(m_headRotation);
+		m_headRotation=m_headController->GetHeadOrientation();
 // 		m_headRotation.y = -m_headRotation.y;// REMOVE
 // 		math::Swap(m_headRotation.x, m_headRotation.y); // REMOVE
 		m_headPosition = m_headController->GetHeadPosition();

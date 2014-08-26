@@ -1,0 +1,55 @@
+<Program EntryPoint="Main" Type="Vertex">
+	<Depend Name="shadow"/>
+	<Depend Name="math"/>
+	<Depend Name="operators"/>
+	<Uniform Const="0" Index="0" Name="weight" Type="sampler1D" ValueType="Variable" VariableUsage="Normal">
+		<Description>Weight of the vertex</Description>
+	</Uniform>
+	<Function Name="Main">
+		<ReturnValue Type="float4" ValueType="Value">
+			<Value Type="float" Value="0" ValueType="DirectValue"/>
+			<Value Type="float" Value="0" ValueType="DirectValue"/>
+			<Value Type="float" Value="1" ValueType="DirectValue"/>
+			<Value Type="float" Value="1" ValueType="DirectValue"/>
+		</ReturnValue>
+		<Input Const="0" Index="0" Name="Pos" Type="float4" ValueType="Variable" VariableUsage="Input"/>
+		<Input Const="0" Index="0" Name="normal" Type="float3" ValueType="Variable" VariableUsage="Input"/>
+		<Input Const="0" Index="0" Name="texCoord" Type="float2" ValueType="Variable" VariableUsage="Input"/>
+		<Input Const="0" Index="0" Name="WorldMat" Type="float4x4" ValueType="Variable" VariableUsage="Uniform"/>
+		<Input Const="0" Index="0" Name="WorldViewProjMat" Type="float4x4" ValueType="Variable" VariableUsage="Uniform"/>
+		<Input Const="0" Index="0" Name="LightViewProj" Type="float4x4" ValueType="Variable" VariableUsage="Uniform"/>
+		<Output Const="0" Index="0" Name="oPos" Type="float4" ValueType="Variable" VariableUsage="Output"/>
+		<Output Const="0" Index="0" Name="oTexCoord" Type="float2" ValueType="Variable" VariableUsage="Output"/>
+		<Output Const="0" Index="1" Name="oNormal" Type="float3" ValueType="Variable" VariableUsage="Output"/>
+		<Output Const="0" Index="2" Name="viewDir" Type="float3" ValueType="Variable" VariableUsage="Output"/>
+		<Output Const="0" Index="3" Name="lightPos" Type="float4" ValueType="Variable" VariableUsage="Output"/>
+		<Body>
+			<Variable Const="0" Index="0" Name="worldPos" Type="float4" ValueType="Variable" VariableUsage="Normal">
+				<Description>World position of the vertex</Description>
+			</Variable>
+			<Statements>
+				<Operation OpType="Assign" ValueType="Operation">
+					<Input>
+						<Call Name="mul">
+							<Input Const="0" Index="0" Name="WorldViewProjMat" Type="float4x4" ValueType="Variable" VariableUsage="Uniform"/>
+							<Input Const="0" Index="0" Name="Pos" Type="float4" ValueType="Variable" VariableUsage="Input"/>
+						</Call>
+					</Input>
+					<Output Const="0" Index="0" Name="worldPos" Type="float4" ValueType="Variable" VariableUsage="Normal">
+						<Description>World position of the vertex</Description>
+					</Output>
+				</Operation>
+				<Operation OpType="Assign" ValueType="Operation">
+					<Input Const="0" Index="0" Name="LightViewProj" Type="float4x4" ValueType="Variable" VariableUsage="Uniform"/>
+					<Output Const="0" Index="0" Name="worldPos" Type="float4" ValueType="Variable" VariableUsage="Normal">
+						<Description>World position of the vertex</Description>
+					</Output>
+				</Operation>
+				<Call Name="diffuse">
+					<Input Const="0" Index="0" Name="normal" Type="float3" ValueType="Variable" VariableUsage="Input"/>
+					<Input Const="0" Index="0" Name="Pos" Type="float4" ValueType="Variable" VariableUsage="Input"/>
+				</Call>
+			</Statements>
+		</Body>
+	</Function>
+</Program>

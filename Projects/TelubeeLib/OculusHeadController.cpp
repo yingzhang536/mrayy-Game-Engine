@@ -26,7 +26,12 @@ math::quaternion OculusHeadController::GetHeadOrientation()
 }
 math::vector3d OculusHeadController::GetHeadPosition()
 {
-	 return math::vector3d::Zero;
+#ifdef OCULUS_DK1
+	return math::vector3d::Zero;
+#else
+	return AppData::Instance()->oculusDevice->GetPosition();
+
+#endif
 }
 
 void OculusHeadController::Recalibrate()

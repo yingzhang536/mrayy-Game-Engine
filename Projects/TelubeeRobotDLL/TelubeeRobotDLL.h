@@ -6,11 +6,6 @@
 // defined with this macro as being exported.
 
 
-#ifdef TELUBEEROBOTDLL_EXPORTS
-#define TELUBEEROBOTDLL_API __declspec(dllexport)
-#else
-#define TELUBEEROBOTDLL_API __declspec(dllimport)
-#endif
 
 /********************************************************************
 	created:	2013/12/05
@@ -27,55 +22,21 @@
 #ifndef __TelubeeRobotDLL__
 #define __TelubeeRobotDLL__
 
-#include "IRobotController.h"
 
-struct RobotStatus
-{
-	bool connected;
-	float speedX, speedY;
-	float rotation;
-	float tilt, yaw, roll;	//head rotation
-	float X, Y, Z;			//head position
-
-	RobotStatus()
-	{
-		connected = false;
-		speedX = speedY = 0;
-		rotation = 0;
-		tilt = yaw = roll = 0;
-		X = Y = Z = 0;
-	}
-};
 class IRobotController;
 
-class ITelubeeRobotListener
+#ifdef TELUBEEROBOTDLL_EXPORTS
+#define TELUBEEROBOTDLL_API extern "C" __declspec(dllexport)
+#else
+#define TELUBEEROBOTDLL_API __declspec(dllimport)
+#endif
+
+
+namespace mray
 {
-public:
-
-	virtual void OnCollisionData(float left, float right){}
-};
-
-
-class RobotSerialPort;
-// This class is exported from the TelubeeRobotDLL.dll
-class TELUBEEROBOTDLL_API CTelubeeRobotDLL 
-{
-protected:
-	IRobotController* m_impl;
-public:
-	CTelubeeRobotDLL(void);
-	// TODO: add your methods here.
-
-	virtual~CTelubeeRobotDLL();
-
-	IRobotController* GetRobotController()
-	{
-		return m_impl;
-	}
-	
-};
-
-
-
+TELUBEEROBOTDLL_API void  DLL_RobotInit();
+TELUBEEROBOTDLL_API IRobotController*  DLL_GetRobotController();
+TELUBEEROBOTDLL_API void  DLL_RobotDestroy();
+}
 
 #endif

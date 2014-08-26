@@ -666,14 +666,17 @@ public:
 			gstString += " mix. ! ";
 		}
 
+		//http://mewiki.project357.com/wiki/X264_Encoding_Suggestions#Encoder_latency
 		gstString +=
 			" x264enc  name=enc"
 			" pass=" + pass +
 			//" qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
 			"  quantizer=" + core::StringConverter::toString(quanizer) +
-			"   speed-preset=ultrafast sliced-threads=true bitrate=" + core::StringConverter::toString(bitrate) +
+			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
 			" tune=zerolatency"
-			//" rc-lookahead=1"
+			" rc-lookahead=0"
+			" sync-lookahead=0 "
+			//" option-string=\"slices = 2\" "
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 			//" !gdppay" 
 			" ! mysink name=sink sync=false ";

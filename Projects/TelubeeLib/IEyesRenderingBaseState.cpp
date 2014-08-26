@@ -265,7 +265,7 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc, math::vector2d& p
 		if (m_robotConnector->GetHeadController())
 		{
 			math::vector3d head;
-			head=m_robotConnector->GetHeadRotation();
+			m_robotConnector->GetHeadRotation().toEulerAngles(head);
 			core::string msg = mT("Head Rotation: ")+core::StringConverter::toString(head);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
@@ -486,7 +486,9 @@ void IEyesRenderingBaseState::Update(float dt)
 	{
 		if (AppData::Instance()->oculusDevice)
 		{
-			math::quaternion ori = AppData::Instance()->oculusDevice->GetOrientation();
+			math::quaternion ori;
+			ori= AppData::Instance()->oculusDevice->GetOrientation();
+
 			math::vector3d angles;
 			ori.toEulerAngles(angles);
 

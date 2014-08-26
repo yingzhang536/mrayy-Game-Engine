@@ -8,6 +8,9 @@
 #include "tinyxml2.h"
 #include "StringUtil.h"
 #include "IRobotController.h"
+#include "IDllManager.h"
+#include "ILogManager.h"
+
 
 namespace mray
 {
@@ -34,6 +37,9 @@ namespace mray
 
 	};
 
+	typedef void(*dllFunctionPtr)();
+	typedef IRobotController*(*dllLoadRobotFunctionPtr)();
+
 RobotCommunicator::RobotCommunicator()
 {
 	m_listener = 0;
@@ -42,7 +48,20 @@ RobotCommunicator::RobotCommunicator()
 	
 
 	m_localControl = 0;
-	m_robotController = new CTelubeeRobotDLL();
+	m_robotLib = OS::IDllManager::getInstance().getLibrary("Robot.dll");
+	if (!m_robotLib)
+	{
+		gLogManager.log("Failed to load Robot.dll!! Please make sure Robot.dll is placed next to application.", ELL_ERROR);
+	}
+	dllFunctionPtr libInitPtr;
+	dllLoadRobotFunctionPtr robotLoadPtr;
+	libInitPtr = (dllFunctionPtr)m_robotLib->getSymbolName("DLL_RobotInit");
+	robotLoadPtr = (dllLoadRobotFunctionPtr)m_robotLib->getSymbolName("DLL_GetRobotController");
+
+	libInitPtr();
+
+
+	m_robotController = robotLoadPtr();
 
 	m_msgSink = 0;
 		
@@ -50,9 +69,12 @@ RobotCommunicator::RobotCommunicator()
 
 RobotCommunicator::~RobotCommunicator()
 {
+	dllFunctionPtr libDestroyPtr;
+	libDestroyPtr = (dllFunctionPtr)m_robotLib->getSymbolName("DLL_RobotDestroy");
 	StopServer();
 	delete m_client;
 	delete m_robotController;
+	libDestroyPtr();
 }
 
 void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string& name, const core::string& value)
@@ -63,28 +85,29 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 
 	if (name == "Speed" && vals.size() == 2)
 	{
-		m_robotStatus.speedX = atof(vals[0].c_str());
-		m_robotStatus.speedY = atof(vals[1].c_str());
+		m_robotStatus.speed.x = atof(vals[0].c_str());
+		m_robotStatus.speed.y = atof(vals[1].c_str());
 		//limit the speed
-		m_robotStatus.speedX = math::clamp<float>(m_robotStatus.speedX, -1, 1);
-		m_robotStatus.speedY = math::clamp<float>(m_robotStatus.speedY, -1, 1);
+		m_robotStatus.speed.x = math::clamp<float>(m_robotStatus.speed.x, -1, 1);
+		m_robotStatus.speed.y = math::clamp<float>(m_robotStatus.speed.y, -1, 1);
 	}
 	else if (name == "HeadRotation" && vals.size() == 3)
 	{
-		m_robotStatus.tilt = atof(vals[0].c_str());
-		m_robotStatus.yaw = atof(vals[1].c_str());
-		m_robotStatus.roll = atof(vals[2].c_str());
+		m_robotStatus.headRotation.w = atof(vals[0].c_str());
+		m_robotStatus.headRotation.x = atof(vals[1].c_str());
+		m_robotStatus.headRotation.y = atof(vals[2].c_str());
+		m_robotStatus.headRotation.z = atof(vals[2].c_str());
 
 		//do head limits
-		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
-		m_robotStatus.yaw = math::clamp(m_robotStatus.yaw, -70.0f, 70.0f);
-		m_robotStatus.roll = math::clamp(m_robotStatus.roll, -40.0f, 40.0f);
+// 		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
+// 		m_robotStatus.yaw = math::clamp(m_robotStatus.yaw, -70.0f, 70.0f);
+// 		m_robotStatus.roll = math::clamp(m_robotStatus.roll, -40.0f, 40.0f);
 	}
 	else if (name == "HeadPosition" && vals.size() == 3)
 	{
-		m_robotStatus.X = atof(vals[0].c_str());
-		m_robotStatus.Y = atof(vals[1].c_str());
-		m_robotStatus.Z = atof(vals[2].c_str());
+		m_robotStatus.headPos.x = atof(vals[0].c_str());
+		m_robotStatus.headPos.y = atof(vals[1].c_str());
+		m_robotStatus.headPos.z = atof(vals[2].c_str());
 
 	}
 	else if (name == "Rotation" && vals.size() == 1)
@@ -132,13 +155,13 @@ void RobotCommunicator::SetRobotData(const RobotStatus &st)
 
 void RobotCommunicator::_RobotStatus(const RobotStatus& st)
 {
-	if ((st.connected || m_localControl) && !m_robotController->GetRobotController()->IsConnected())
-		m_robotController->GetRobotController()->ConnectRobot();
+	if ((st.connected || m_localControl) && !m_robotController->IsConnected())
+		m_robotController->ConnectRobot();
 	
-	if ((!st.connected && !m_localControl) && m_robotController->GetRobotController()->IsConnected())
-		m_robotController->GetRobotController()->DisconnectRobot();
+	if ((!st.connected && !m_localControl) && m_robotController->IsConnected())
+		m_robotController->DisconnectRobot();
 
-	m_robotController->GetRobotController()->UpdateRobotStatus(st);
+	m_robotController->UpdateRobotStatus(st);
 	if (m_listener)
 		m_listener->OnRobotStatus(this, st);
 }

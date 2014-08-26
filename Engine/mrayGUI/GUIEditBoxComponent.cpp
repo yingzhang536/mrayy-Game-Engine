@@ -32,7 +32,7 @@ bool GUIEditBoxComponent::SetText(const core::UTFString& cap)
 	if(!CheckIsValideText(cap))
 		return false;
 	text=cap;
-	//m_CursorPos=text.Length();
+	m_CursorPos = math::Min<int>(m_CursorPos,text.Length());
 	if(listener)
 		listener->OnTextChangeCallback(this);
 	return true;

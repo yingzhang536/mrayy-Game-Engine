@@ -1,0 +1,17 @@
+
+SearchPath
+{
+	data "../Data/"
+	BaseRes "../Data/BaseResources/"
+	shaders "../Data/shaders/"
+	overlays "../Data/Nissan/"
+	fonts "../Data/fonts/"
+	Themes "../Data/Themes/"
+	Effects "../Data/Effects/"
+	Models "../Data/Nissan/Models/"
+}
+
+Archive
+{
+}
+

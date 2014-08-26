@@ -1,0 +1,14 @@
+
+SearchPath
+{
+	Path "../HData/"
+	Path "../HData/shaders/"
+	Path "../HData/skeleton/"
+	Path "../HData/animations/"
+	
+}
+
+Archive
+{
+}
+

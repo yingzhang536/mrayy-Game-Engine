@@ -11,7 +11,6 @@
 #include "Viewport.h"
 #include "ParsedShaderPP.h"
 #include "ShaderResourceManager.h"
-#include <gl\gl.h>
 
 namespace mray
 {
@@ -135,8 +134,14 @@ public:
 			}
 			else
 			{
+#ifdef OCULUS_DK1
 				int w = AppData::Instance()->oculusDevice->GetDeviceInfo().deviceInfo.HResolution;
 				int h = AppData::Instance()->oculusDevice->GetDeviceInfo().deviceInfo.VResolution;
+#else
+
+				int w = AppData::Instance()->oculusDevice->GetDeviceInfo().texSize.x;
+				int h = AppData::Instance()->oculusDevice->GetDeviceInfo().texSize.y;
+#endif
 				game::OculusCameraComponent::ETargetCamera cams[2] =
 				{
 					game::OculusCameraComponent::LeftCamera,

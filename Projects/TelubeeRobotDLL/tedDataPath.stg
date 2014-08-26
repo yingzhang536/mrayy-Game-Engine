@@ -1,0 +1,16 @@
+
+SearchPath
+{
+	data "../Data/"
+	shaders "../Data/shaders/"
+	overlays "../Data/TedXTokyo/GUI/"
+	fonts "../Data/fonts/"
+	Themes "../Data/Themes/"
+	Effects "../Data/Effects/"
+	TedxTokyo "../Data/TedXTokyo/"
+}
+
+Archive
+{
+}
+

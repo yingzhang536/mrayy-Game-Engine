@@ -1,0 +1,10 @@
+
+
+Materials
+{
+	Path "SimpleMtrl.material"
+}
+Plugins
+{
+	Path "mrayGL.dll"
+}

@@ -1,0 +1,13 @@
+<Materials>
+	<Material Alpha="1" Ambient="0.588,0.588,0.588,1" Diffuse="1,1,1,1" Emissive="0,0,0,1" Name="buggy001FBXASC046tga" Shininess="2.5599999" Specular="0,0,0,1">
+		<TexUnits>
+			<Unit AddressU="Wrap" AddressV="Wrap" ID="0" Rotate="0,0,0" Scale="1,1,0" Texture="buggy001.tga" TextureType="2D" Translate="0,0,0"/>
+		</TexUnits>
+	</Material>
+	<Material Alpha="1" Ambient="0.588,0.588,0.588,1" Diffuse="1,1,1,1" Emissive="0,0,0,1" Name="ammo_boxFBXASC046tga" Shininess="2.5599999" Specular="0,0,0,1">
+		<TexUnits>
+			<Unit AddressU="Wrap" AddressV="Wrap" ID="0" Rotate="0,0,0" Scale="1,1,0" Texture="ammo_box.tga" TextureType="2D" Translate="0,0,0"/>
+		</TexUnits>
+	</Material>
+	<Material Alpha="1" Ambient="0,0,0,1" Diffuse="0.5,0.5,0.5,1" Emissive="0,0,0,1" Name="lambert1" Shininess="1" Specular="0,0,0,1"/>
+</Materials>

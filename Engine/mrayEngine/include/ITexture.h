@@ -74,6 +74,7 @@ public:
 	virtual~ITexture();
 
 	ETextureType getType();
+	virtual uint getTextureID()=0; //render api related texture id
 
 	//Async Load Stream
 	void AddLoadStream(OS::IStream* stream);

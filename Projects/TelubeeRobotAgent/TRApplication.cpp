@@ -141,7 +141,7 @@ void TRApplication::_InitResources()
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
 
 	//load font
-	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator();
+	GCPtr<GUI::DynamicFontGenerator> font = new GUI::DynamicFontGenerator("Arial24");
 	font->SetFontName(L"Arial");
 	font->SetTextureSize(1024);
 	font->SetFontResolution(24);
@@ -299,7 +299,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	else if (m_quality == EStreamingQuality::High)
 		m_combinedCameras->SetFrameSize(1024, 576);
 	else if (m_quality == EStreamingQuality::UltraHigh)*/
-		m_combinedCameras->SetFrameSize(1280, 720);
+	m_combinedCameras->SetFrameSize(m_resolution.x, m_resolution.y);
 	((CombineVideoGrabber*)m_combinedCameras.pointer())->SetGrabbers(m_cameras[0], m_cameras[1]);
 	m_cameraTextures[2].Set(m_combinedCameras, getDevice()->createEmptyTexture2D(true));
 	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
@@ -391,12 +391,12 @@ void TRApplication::update(float dt)
 			controllers::JoysticAxis y = joystick->getAxisState(1);
 			controllers::JoysticAxis r = joystick->getAxisState(3);
 
-			st.speedX = x.abs;
-			st.speedY = y.abs;
+			st.speed.x = x.abs;
+			st.speed.y = y.abs;
 			st.rotation= r.abs;
 
 			st.connected = true;
-			st.roll = st.yaw = st.tilt = 0;
+			st.headRotation = math::quaternion::Identity;
 			m_robotCommunicator->SetRobotData(st);
 		}
 	}
@@ -463,16 +463,18 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 				LOG_OUT(msg, 50, 100);
 				if (m_debugData.robotData.connected || m_robotCommunicator->IsLocalControl())
 				{
-					msg = core::string("Speed: ") + core::StringConverter::toString(math::vector2d(m_debugData.robotData.speedX, m_debugData.robotData.speedY));
+					msg = core::string("Speed: ") + core::StringConverter::toString( m_debugData.robotData.speed);
 					LOG_OUT(msg, 100, 100);
 
 					msg = core::string("Rotation: ") + core::StringConverter::toString(m_debugData.robotData.rotation);
 					LOG_OUT(msg, 100, 100);
 
-					msg = core::string("Head Rotation: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.tilt, m_debugData.robotData.yaw, m_debugData.robotData.roll));
+					math::vector3d angles;
+					m_debugData.robotData.headRotation.toEulerAngles(angles);
+					msg = core::string("Head Rotation: ") + core::StringConverter::toString(angles);
 					LOG_OUT(msg, 100, 100);
 
-					msg = core::string("Head Position: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.X, m_debugData.robotData.Y, m_debugData.robotData.Z));
+					msg = core::string("Head Position: ") + core::StringConverter::toString(m_debugData.robotData.headPos);
 					LOG_OUT(msg, 100, 100);
 
 				}

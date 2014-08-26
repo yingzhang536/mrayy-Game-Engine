@@ -21,7 +21,7 @@
 #include "VideoGrabberTexture.h"
 #include "GstVideoProvider.h"
 #include "ViewPort.h"
-#include "TelubeeRobotDLL.h"
+#include "IRobotController.h"
 #include "OpenNIHandler.h"
 #include "GeomDepthRect.h"
 #include "IUDPClient.h"

@@ -1,0 +1,19 @@
+
+SearchPath
+{
+	data "../Data/"
+	vtdata "../Data/VTelesar/"
+	shaders "../Data/shaders/"
+	vttextures "../Data/VTelesar/Textures/"
+	Textures "../Data/Textures/"
+	overlays "../Data/VTelesar/GUI/"
+	fonts "../Data/fonts/"
+	Themes "../Data/Themes/"
+	Effects "../Data/Effects/"
+	Models "../Data/VTelesar/Models/"
+}
+
+Archive
+{
+}
+

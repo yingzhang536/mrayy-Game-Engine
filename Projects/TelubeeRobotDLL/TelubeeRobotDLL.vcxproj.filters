@@ -42,9 +42,6 @@
     <ClInclude Include="TelubeeRobotDLL.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IRobotController.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

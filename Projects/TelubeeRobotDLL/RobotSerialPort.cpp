@@ -382,16 +382,19 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 
 	float v_size;
 
-	robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speedX*v_scale);
-	robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speedY*v_scale);
+	robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speed.x*v_scale);
+	robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speed.y*v_scale);
 	robot_rot = m_impl->mvRobot[BASE][2]->getNext(st.rotation*r_scale);
 
 //	robotX = m_impl->mvRobot[BASE][0]->getNext(st.X * 1000);
 //	robotY = m_impl->mvRobot[BASE][1]->getNext(st.Z * 1000);
 
-	pan = m_impl->mvRobot[HEAD][0]->getNext(st.yaw);
-	tilt = m_impl->mvRobot[HEAD][1]->getNext(st.tilt);
-	roll = m_impl->mvRobot[HEAD][2]->getNext(st.roll);
+	mray::math::vector3d angles;
+	st.headRotation.toEulerAngles(angles);
+
+	tilt = m_impl->mvRobot[HEAD][1]->getNext(angles.x);
+	pan = m_impl->mvRobot[HEAD][0]->getNext(angles.y);
+	roll = m_impl->mvRobot[HEAD][2]->getNext(angles.z);
 
 	baseConnected = st.connected;
 
@@ -405,9 +408,9 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 	//v_size = sqrt(static_cast<double>(robot_vx)*static_cast<double>(robot_vx)+static_cast<double>(robot_vy)*static_cast<double>(robot_vy));
 
 	if (debug_print && false){
-		//printf("Robot Speed / Rot = %3.2f,%3.2f,%3.2f\n", st.speedX, st.speedY, st.rotation);
+		//printf("Robot Speed / Rot = %3.2f,%3.2f,%3.2f\n", st.speed.x, st.speed.y, st.rotation);
 		printf("Head Position = %3.2f,%3.2f\n", robotX, robotY);
-		printf("Head Orientation = %3.2f,%3.2f,%3.2f\n", st.yaw, st.tilt, st.roll);
+		printf("Head Orientation = %3.2f,%3.2f,%3.2f\n", angles.y, angles.x, angles.z);
 		printf("-------------------------------\n");
 	}
 

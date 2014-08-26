@@ -37,7 +37,7 @@ protected:
 	IHeadController* m_headController;
 	IInputController* m_robotController;
 	math::vector2d m_speed;
-	math::vector3d m_headRotation;
+	math::quaternion m_headRotation;
 	math::vector3d m_headPosition;
 	float m_rotation;
 
@@ -68,7 +68,7 @@ public:
 	void RemoveData(const core::string& key);
 
 	const math::vector2d& GetSpeed(){ return m_speed; }
-	const math::vector3d& GetHeadRotation(){ return m_headRotation; }
+	const math::quaternion& GetHeadRotation(){ return m_headRotation; }
 	const math::vector3d& GetHeadPosition(){ return m_headPosition; }
 	float GetRotation(){ return m_rotation; }
 

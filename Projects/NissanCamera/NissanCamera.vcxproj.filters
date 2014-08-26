@@ -22,6 +22,12 @@
     <Filter Include="Source Files\Control">
       <UniqueIdentifier>{f3c274e0-9e55-4269-8b7d-9079622428d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AR">
+      <UniqueIdentifier>{ac5b8c13-6acb-4fef-927c-ca32d8e7b2ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{497c1674-671f-4b65-b627-dfeccec409c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -48,6 +54,27 @@
     <ClInclude Include="NissanRobotCommunicator.h">
       <Filter>Source Files\Control</Filter>
     </ClInclude>
+    <ClInclude Include="dispObjSM.h">
+      <Filter>Source Files\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="dispObjSMParser.h">
+      <Filter>Source Files\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="ARServiceProvider.h">
+      <Filter>Source Files\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="ARDataTypes.h">
+      <Filter>Source Files\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="ARGroupManager.h">
+      <Filter>Source Files\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIConsole.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIConsoleLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -68,5 +95,22 @@
     <ClCompile Include="NissanRobotCommunicator.cpp">
       <Filter>Source Files\Control</Filter>
     </ClCompile>
+    <ClCompile Include="dispObjSMParser.cpp">
+      <Filter>Source Files\AR</Filter>
+    </ClCompile>
+    <ClCompile Include="ARServiceProvider.cpp">
+      <Filter>Source Files\AR</Filter>
+    </ClCompile>
+    <ClCompile Include="ARGroupManager.cpp">
+      <Filter>Source Files\AR</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIConsole.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Overlay Include="..\..\Bin\Data\BaseResources\GUI\GUIConsoleLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
   </ItemGroup>
 </Project>

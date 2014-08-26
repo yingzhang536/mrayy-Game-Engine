@@ -31,12 +31,15 @@ public:
 	virtual void stopSocket()=0;
 
 	virtual void closeConnection()=0;
+	virtual bool isConnected() = 0;
 
-	virtual const NetAddress *connect(const char*host,ushort port)=0;
+	virtual const NetAddress *connect(const core::string&host,ushort port)=0;
 	virtual const NetAddress *connect(const NetAddress&addr)=0;
 
 
 	virtual bool peerConnected(const NetAddress&addr)=0;
+
+	virtual void GetConnectedPeers(std::list<NetAddress>& peers)=0;
 
 	virtual const NetAddress*getAddress()=0;
 

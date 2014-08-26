@@ -116,9 +116,11 @@ public:
 			}
 
 		}
-		if (m_oculus && false)
+		if (m_oculus)
 		{
-			math::quaternion q = m_oculus->GetOrientation();
+			math::quaternion q;
+			q = AppData::Instance()->oculusDevice->GetOrientation();
+
 			// 				q.x= q.x;
 			// 				q.y= q.y;
 			// 				q.z= q.z;

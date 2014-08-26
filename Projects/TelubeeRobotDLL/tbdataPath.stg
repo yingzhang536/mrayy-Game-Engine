@@ -1,0 +1,16 @@
+
+SearchPath
+{
+	data "../Data/"
+	shaders "../Data/shaders/"
+	overlays "../Data/Telubee/"
+	fonts "../Data/fonts/"
+	Themes "../Data/Themes/"
+	Effects "../Data/Effects/"
+	Models "../Data/Telubee/Models/"
+}
+
+Archive
+{
+}
+

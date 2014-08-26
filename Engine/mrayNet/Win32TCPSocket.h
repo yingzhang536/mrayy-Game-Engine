@@ -71,11 +71,14 @@ public:
 
 	void closeConnection();
 
-	const NetAddress *connect(const char*host,ushort port);
+	bool isConnected();
+
+	const NetAddress *connect(const core::string&host,ushort port);
 	const NetAddress *connect(const NetAddress&addr);
 
 	bool peerConnected(const NetAddress&addr);
 	
+	void GetConnectedPeers(std::list<NetAddress>& peers);
 
 	const NetAddress*getAddress();
 

@@ -79,7 +79,8 @@ WinErrorDialog::~WinErrorDialog(){
 
 bool WinErrorDialog::run(const core::string&msg){
 	m_errorMsg=msg;
-	DialogBox(m_hInstance,MAKEINTRESOURCE(IDD_DIALOG_ERROR),0,DlgProc);
+	//DialogBox(m_hInstance,MAKEINTRESOURCE(IDD_DIALOG_ERROR),0,DlgProc);
+	MessageBox(0, m_errorMsg.c_str(), "Error", MB_ICONERROR | MB_OK);
 
 	return true;
 }

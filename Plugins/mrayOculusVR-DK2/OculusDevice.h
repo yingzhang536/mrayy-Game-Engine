@@ -50,6 +50,7 @@ namespace video
 		ovrFovPort eyeFov[2];
 		math::vector2di texSize;//recommended texture size to be used for rendering (1 pixel density)
 		math::vector2di eyeRenderSize[2];
+		math::vector2di hmdResolution;
 	};
 	enum class OVREye
 	{
@@ -83,11 +84,19 @@ public:
 	bool IsPositionTracking();
 	bool IsExtendedDesktop();
 
+	uint GetDisplayID(); //return the assigned monitor id for this hmd
+
 	float GetIPD();
 	float GetEyeHeight();
-	bool GetEyePos(OVREye eye, math::vector3d& pos, math::quaternion& ori);
+	//bool GetEyePos(OVREye eye, math::vector3d& pos, math::quaternion& ori);
+	math::vector3d GetCameraPosition();
+	math::quaternion GetCameraOrientation();
+	math::vector3d GetPosition();
+	math::quaternion GetOrientation();
 	math::vector3d GetAcceleration();
 	math::vector3d GetAngularVelocity();
+
+	void GetRenderScaleAndOffset(ovrFovPort fov, const math::vector2di& textureSize, const math::recti& renderVP, math::vector2d& scale, math::vector2d& offset);
 
 	void ResetOrientation();
 };

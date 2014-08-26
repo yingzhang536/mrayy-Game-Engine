@@ -6,6 +6,7 @@
 #include "Win32Socket.h"
 #include "Win32WebRequest.h"
 #include "Win32UDPClient.h"
+#include "Win32TCPSocket.h"
 //#include <stdio.h>
 
 #include <TraceManager.h>
@@ -96,6 +97,11 @@ ISocket* Win32Network::createSocket(const core::string&name,bool isHost,bool Rel
 IUDPClient* Win32Network::createUDPClient()
 {
 	return new Win32UDPClient();
+}
+
+IReliableSocket* Win32Network::createTCPSocket()
+{
+	return new Win32TCPSocket(0);
 }
 
 void Win32Network::checkForError(){

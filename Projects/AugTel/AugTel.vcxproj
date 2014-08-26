@@ -63,14 +63,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR-DK2;..\..\Dependencies\include\LibOVR2\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;TelubeeRobotDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VirtualTelesar\VTSharedMem;..\..\Plugins\mrayOpenNI\;..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;$(GST_SDK_PATH)\include;$(GST_SDK_PATH)\include\gstreamer-0.10;$(GST_SDK_PATH)\include\glib-2.0;$(GST_SDK_PATH)\include\libxml2;..\..\plugins\mrayOculusVR-DK2;..\..\Dependencies\include\LibOVR2\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\TelubeeLib;..\VirtualTelesar\VTLib;..\..\plugins\WiimoteController;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,7 +91,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>TelubeeRobotDLL.lib;TelubeeLib.lib;TelubeeRobotDLL.lib;mrayOIS.lib;VTSharedMem.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;fglove.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

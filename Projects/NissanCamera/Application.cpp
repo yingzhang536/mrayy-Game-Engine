@@ -38,6 +38,8 @@
 
 #include "IFileMonitor.h"
 #include "DynamicFontGenerator.h"
+#include "GUIElementFactory.h"
+#include "GUIConsole.h"
 
 //#include "PythonScriptManager.h"
 
@@ -209,6 +211,9 @@ void Application::init(const OptionContainer &extraOptions)
 
 	using namespace GUI;
 
+	{
+		REGISTER_GUIElement_FACTORY(GUIConsole);
+	}
 	m_guiRender=new GUI::GUIBatchRenderer();
 	m_guiRender->SetDevice(getDevice());
 

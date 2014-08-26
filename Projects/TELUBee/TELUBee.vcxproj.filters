@@ -60,7 +60,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="ClassDiagram1.cd" />
     <None Include="EngineSplash.bmp">
       <Filter>Resource Files</Filter>
@@ -376,5 +375,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="PortDesc.txt" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
 </Project>

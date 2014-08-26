@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "OculusDevice.h"
 #include "OculusManager.h"
+#include <windows.h>
 
 using namespace OVR;
 
@@ -69,6 +70,10 @@ namespace video
 			m_data.eyeRenderSize[0].set(eyeRenderSize[0].w, eyeRenderSize[0].h);
 			m_data.eyeRenderSize[1].set(eyeRenderSize[1].w, eyeRenderSize[1].h);
 
+			m_data.hmdResolution.x = m_device->Resolution.w;
+			m_data.hmdResolution.y = m_device->Resolution.h;
+
+
 			bool IsLowPersistence = true;
 			bool DynamicPrediction = false;
 			bool VsyncEnabled = false;
@@ -90,6 +95,7 @@ namespace video
 			hmdCaps |= ovrHmdCap_NoMirrorToWindow;
 
 			ovrHmd_SetEnabledCaps(m_device, hmdCaps);
+			
 
 			unsigned sensorCaps = ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection;
 			if (IsTrackingConnected())
@@ -122,6 +128,28 @@ namespace video
 			else caps &= ~ovrHmdCap_LowPersistence;
 			ovrHmd_SetEnabledCaps(m_device,caps);
 			StartTrackingCaps = caps;
+		}
+
+		uint GetDisplayID()
+		{
+
+			DISPLAY_DEVICE d;
+			d.cb = sizeof(DISPLAY_DEVICE);
+			int monitor = 0;
+			uint i = 0;
+			int result;
+
+			do
+			{
+
+				result = EnumDisplayDevices(0, i, &d, 0);
+				if (strstr(m_device->DisplayDeviceName,d.DeviceName))
+				{
+					return i;
+				}
+				++i;
+			} while (result);
+			return 0;
 		}
 
 		ovrHmd GetDevice()const { return m_device; }
@@ -159,6 +187,36 @@ namespace video
 			ori = math::quaternion(p.Orientation.w, -p.Orientation.x, -p.Orientation.y, p.Orientation.z);
 			return true;
 		}
+		math::vector3d GetCameraPosition()
+		{
+			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
+			return math::vector3d(s.CameraPose.Position.x, s.CameraPose.Position.y, s.CameraPose.Position.z);
+
+		}
+		math::quaternion GetCameraOrientation()
+		{
+
+			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
+			return math::quaternion(s.CameraPose.Orientation.w, -s.CameraPose.Orientation.x, -s.CameraPose.Orientation.y, s.CameraPose.Orientation.z);
+
+		}
+		math::vector3d GetPosition()
+		{
+
+			ovrEyeType eye = m_device->EyeRenderOrder[0];
+			ovrPosef p = ovrHmd_GetEyePose(m_device, eye);
+			return math::vector3d(p.Position.x, p.Position.y, p.Position.z);
+			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
+			return math::vector3d(s.HeadPose.ThePose.Position.x, s.HeadPose.ThePose.Position.y, -s.HeadPose.ThePose.Position.z);
+
+		}
+		math::quaternion GetOrientation()
+		{
+
+			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
+			return math::quaternion(s.HeadPose.ThePose.Orientation.w, -s.HeadPose.ThePose.Orientation.x, -s.HeadPose.ThePose.Orientation.y, s.HeadPose.ThePose.Orientation.z);
+
+		}
 
 		float GetIPD()
 		{
@@ -174,6 +232,21 @@ namespace video
 		{
 			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
 			return math::vector3d(s.HeadPose.AngularVelocity.x, s.HeadPose.AngularVelocity.y, s.HeadPose.AngularVelocity.z);
+		}
+		void GetRenderScaleAndOffset(ovrFovPort fov, const math::vector2di& textureSize, const math::recti& renderVP, math::vector2d& scale, math::vector2d& offset)
+		{
+			ovrSizei sz;
+			sz.w = textureSize.x;
+			sz.h = textureSize.y;
+			ovrRecti r;
+			r.Pos.x = renderVP.ULPoint.x;
+			r.Pos.y = renderVP.ULPoint.y;
+			r.Size.w = renderVP.getWidth();
+			r.Size.h = renderVP.getHeight();
+			ovrVector2f so[2];
+			ovrHmd_GetRenderScaleAndOffset(fov, sz, r, so);
+			scale.set(so[0].x, so[0].y);
+			offset.set(so[1].x, so[1].y);
 		}
 
 		void ResetOrientation()
@@ -231,9 +304,21 @@ float OculusDevice::GetEyeHeight()
 {
 	return m_impl->GetEyeHeight();
 }
-bool OculusDevice::GetEyePos(OVREye eye, math::vector3d& pos, math::quaternion& ori)
+math::vector3d OculusDevice::GetCameraPosition()
 {
-	return m_impl->GetEyePos( eye, pos, ori);
+	return m_impl->GetCameraPosition();
+}
+math::quaternion OculusDevice::GetCameraOrientation()
+{
+	return m_impl->GetCameraOrientation();
+}
+math::vector3d OculusDevice::GetPosition()
+{
+	return m_impl->GetPosition();
+}
+math::quaternion OculusDevice::GetOrientation()
+{
+	return m_impl->GetOrientation();
 }
 void OculusDevice::SetLowPresistenceMode(bool on)
 {
@@ -277,6 +362,14 @@ bool OculusDevice::IsExtendedDesktop()
 {
 	return m_impl->IsExtendedDesktop();
 }
+
+void OculusDevice::GetRenderScaleAndOffset(ovrFovPort fov, const math::vector2di& textureSize, const math::recti& renderVP, math::vector2d& scale, math::vector2d& offset)
+{
+	
+	return m_impl->GetRenderScaleAndOffset(fov,textureSize,renderVP,scale,offset);
+}
+
+
 }
 }
 

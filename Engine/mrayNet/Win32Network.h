@@ -35,6 +35,7 @@ public:
 	IWebRequest* CreateWebRequest();
 	ISocket* createSocket(const core::string&name,bool isHost,bool Reliable);
 	virtual IUDPClient* createUDPClient();
+	virtual IReliableSocket* createTCPSocket();
 
 	void closeSocket(SOCKET s);
 	void shutdownSocket(SOCKET s);

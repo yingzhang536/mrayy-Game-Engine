@@ -18,7 +18,7 @@
 
 #include "IUDPClient.h"
 
-#include "TelubeeRobotDLL.h"
+#include "IRobotController.h"
 
 namespace mray
 {
@@ -53,8 +53,8 @@ namespace mray
 class RobotCommunicator:public ITelubeeRobotListener
 {
 protected:
-
-	CTelubeeRobotDLL* m_robotController;
+	OS::IDynamicLibraryPtr m_robotLib;
+	IRobotController* m_robotController;
 	RobotStatus m_robotStatus;
 	UserStatus m_userStatus;
 	void HandleData(network::NetAddress* addr,const core::string& name, const core::string& value);

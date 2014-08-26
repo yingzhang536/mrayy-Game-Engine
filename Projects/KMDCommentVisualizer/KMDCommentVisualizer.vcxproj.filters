@@ -413,12 +413,24 @@
     <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIProjectStatusLayout.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui" />
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui" />
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui" />
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui" />
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui" />
-    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentDetailsPanelLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUICommentDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScenePanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUIScreenLayout_V2.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISessionSidePanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\KMDPlenary\GUI\GUISpeakerDetailsPanelLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Bin\Data\KMDPlenary\Sessions.xml" />

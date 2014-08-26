@@ -48,7 +48,6 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(GSTREAMER_SDK_ROOT_X86)\share\vs\2010\libs\gstreamer-0.10.props" />
-
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -107,7 +106,6 @@
     <None Include="EngineSplash.bmp" />
     <None Include="EngineSplash_mask.bmp" />
     <None Include="icon.ico" />
-    <None Include="ReadMe.txt" />
     <None Include="simpleLogo.bmp" />
     <None Include="stop-error.bmp" />
     <None Include="TELUBeeLogo.bmp" />
@@ -244,6 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="PortDesc.txt" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

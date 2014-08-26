@@ -58,14 +58,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR-DK2;..\..\Dependencies\include\LibOVR2\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>mrayOculusVR.lib;WiimoteController.lib</AdditionalDependencies>
+      <AdditionalDependencies>mrayOculusVR-DK2.lib;WiimoteController.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -78,7 +78,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR;..\..\Dependencies\include\LibOVR\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Engine\mrayEngine\include;..\..\Engine\mrayWinApp\;..\..\Engine\mrayMath;..\..\Plugins\mrayTheora;..\..\Engine\mrayGUI;..\..\Plugins\mrayPhysx;..\..\Plugins\mraySound;..\..\ENgine\mrayGameLayer\;..\..\Engine\regex;..\..\Engine\mrayNet;..\..\Dependencies\include;..\VTLib\;..\VTSharedMem\;..\..\Plugins\mrayFSM;..\..\Plugins\DirectShowVideo;..\..\Plugins\FlyCaptureLibrary;..\..\plugins\mrayOptiTrack;..\..\plugins\mrayBerkelium;..\..\plugins\mySqlDBConnection;..\..\plugins\mrayOculusVR-DK2;..\..\Dependencies\include\LibOVR2\include;..\..\Engine\mrayOIS;..\..\Plugins\mrayGStreamer;..\..\plugins\WiimoteController;..\..\Plugins\mrayOpenNI;..\TelubeeRobotDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -87,7 +87,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>TelubeeRobotDLL.lib;mrayOculusVR.lib;WiimoteController.lib</AdditionalDependencies>
+      <AdditionalDependencies>TelubeeRobotDLL.lib;mrayOculusVR-DK2.lib;WiimoteController.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>

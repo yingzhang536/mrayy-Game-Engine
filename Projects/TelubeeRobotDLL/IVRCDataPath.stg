@@ -1,0 +1,16 @@
+
+SearchPath
+{
+	data "../Data/"
+	vtdata "../Data/IVRCDemo/"
+	waveData "../Data/IVRCDemo/waveData/"
+	shaders "../Data/shaders/"
+	fonts "../Data/fonts/"
+	Themes "../Data/Themes/"
+	Effects "../Data/Effects/"
+}
+
+Archive
+{
+}
+

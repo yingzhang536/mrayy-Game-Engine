@@ -96,6 +96,10 @@ void Win32TCPSocket::closeConnection(){
 		delete m_thread;
 	}
 }
+bool Win32TCPSocket::isConnected()
+{
+	return m_socket != INVALID_SOCKET;
+}
 
 bool Win32TCPSocket::startSocket(int port,int maxIncomingConnection,int sleepInterval){
 	traceFunction(eNetwork);
@@ -141,7 +145,8 @@ void Win32TCPSocket::stopSocket(){
 	while(m_thread->isActive())
 		Sleep(10);
 
-	std::list<STCPPeer*>::iterator it=m_connectedPeers.begin();
+	OS::ScopedLock locker(m_peersMutex);
+	std::list<STCPPeer*>::iterator it = m_connectedPeers.begin();
 	for(;it!=m_connectedPeers.end();++it){
 		net->closeSocket((*it)->m_socket);
 		delete *it;
@@ -154,6 +159,7 @@ void Win32TCPSocket::stopSocket(){
 void Win32TCPSocket::sendPacket(void*data,uint size,const NetAddress&addr){
 	traceFunction(eNetwork);
 	int res=0;
+	OS::ScopedLock locker(m_peersMutex);
 	std::list<STCPPeer*>::iterator peerIt;
 	if(addr==NetAddress::BroadcastAddr){
 		for(peerIt=m_connectedPeers.begin();peerIt!=m_connectedPeers.end();++peerIt)
@@ -199,7 +205,8 @@ SPacket*Win32TCPSocket::popMessage(){
 	return pack;
 }
 Win32TCPSocket::STCPPeer*Win32TCPSocket::getPeer(const NetAddress&addr){
-	std::list<STCPPeer*>::iterator it=m_connectedPeers.begin();
+	OS::ScopedLock locker(m_peersMutex);
+	std::list<STCPPeer*>::iterator it = m_connectedPeers.begin();
 	for(;it!=m_connectedPeers.end();++it){
 		if((*it)->address==addr)return *it;
 	}
@@ -210,6 +217,15 @@ bool Win32TCPSocket::peerConnected(const NetAddress&addr){
 	return getPeer(addr)!=0;
 }
 
+void Win32TCPSocket::GetConnectedPeers(std::list<NetAddress>& peers)
+{
+	OS::ScopedLock locker(m_peersMutex);
+	std::list<STCPPeer*>::iterator it = m_connectedPeers.begin();
+	for (; it != m_connectedPeers.end(); ++it){
+		peers.push_back((*it)->address);
+	}
+
+}
 const NetAddress *Win32TCPSocket::connect(const NetAddress&addr){
 	if(getPeer(addr))return 0;
 	traceFunction(ePhysics);
@@ -223,8 +239,12 @@ const NetAddress *Win32TCPSocket::connect(const NetAddress&addr){
 	net->setSocketOption(sock,ESocketOption::ESO_NONBLOCK,true);
 	STCPPeer *peer=new STCPPeer();
 	peer->m_socket=sock;
-	peer->address=addr;
-	m_connectedPeers.push_back(peer);
+	peer->address = addr;
+	{
+
+		OS::ScopedLock locker(m_peersMutex);
+		m_connectedPeers.push_back(peer);
+	}
 
 
 	if(!m_thread){
@@ -236,11 +256,11 @@ const NetAddress *Win32TCPSocket::connect(const NetAddress&addr){
 	return &peer->address;
 }
 
-const NetAddress *Win32TCPSocket::connect(const char*host,ushort port){
+const NetAddress *Win32TCPSocket::connect(const core::string& host, ushort port){
 	NetAddress addr;
 
 	Win32Network*net=(Win32Network*)INetwork::getInstancePtr();
-	if(!net->getHostAddress(host,addr))
+	if(!net->getHostAddress(host.c_str(),addr))
 		return 0;
 
 	return connect(addr);
@@ -348,8 +368,9 @@ void Win32TCPSocket::update(){
 							pack->data[len]=0;
 							pack->remoteAddress=(*peerIt)->address;
 							pack->data.reset();
-							m_attachedSock->parsePacket(pack->remoteAddress,&pack->data);
-						//	m_recivedPackets.push_back(pack);
+							if (m_attachedSock)
+								m_attachedSock->parsePacket(pack->remoteAddress,&pack->data);
+							m_recivedPackets.push_back(pack);
 						}else if(len==0){
 							m_toClosePeers.push_back((*peerIt)->address);
 							deletePeer(*peerIt);

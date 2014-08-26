@@ -14,6 +14,8 @@
 #include "NCAppGlobals.h"
 #include "OptiTrackHeadController.h"
 #include "CalibHeadController.h"
+#include "GUIThemeManager.h"
+#include "GUIConsole.h"
 
 namespace mray
 {
@@ -70,6 +72,9 @@ RobotCameraState::RobotCameraState()
 	m_useLensCorrection = false;
 	m_cameraConfiguration = 0;
 
+	m_arServiceProvider = new ARServiceProvider();
+	m_arServiceProvider->AddListener(this);
+
 }
 
 RobotCameraState::~RobotCameraState()
@@ -88,6 +93,25 @@ void RobotCameraState::SetCameraInfo(TBee::ETargetEye eye, int id)
 void RobotCameraState::InitState()
 {
 	Parent::InitState();
+
+	m_guimngr = new GUI::GUIManager(gEngine.getDevice());
+	m_guimngr->SetActiveTheme(GUI::GUIThemeManager::getInstance().getActiveTheme());
+	{
+		GUI::IGUIPanelElement* m_guiroot;
+		m_guiroot = (GUI::IGUIPanelElement*)new GUI::IGUIPanelElement(core::string(""), m_guimngr);
+		m_guiroot->SetDocking(GUI::EED_Fill);
+		m_guimngr->SetRootElement(m_guiroot);
+
+		GUI::GUIConsole* console = new GUI::GUIConsole(m_guimngr);
+		m_guiroot->AddElement(console);
+		console->SetAnchorLeft(true);
+		console->SetAnchorRight(true);
+		console->SetAnchorTop(true);
+		console->SetPosition(0);
+		console->SetSize(math::vector2d(100, 300));
+
+		m_console = console;
+	}
 
 	m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
 	float cameraScreenDistance = 1.0f;
@@ -202,14 +226,19 @@ void RobotCameraState::InitState()
 
  	m_screenNode[GetEyeIndex(TBee::Eye_Left)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
  	m_screenNode[GetEyeIndex(TBee::Eye_Right)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
+
+
+	m_console->AddToHistory("System Inited.", video::DefaultColors::Green);
 }
 
 
 bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 {
-	if (Parent::OnEvent(e, rc))
+	if (Parent::OnEvent(e, rc)  || m_guimngr->OnEvent(e,&rc))
 		return true;
 	bool ok = false;
+
+
 
 	if (e->getType() == ET_Keyboard)
 	{
@@ -277,6 +306,7 @@ void RobotCameraState::Update(float dt)
 {
 	Parent::Update(dt);
 	m_videoSource->Blit();
+	m_guimngr->Update(dt);
 	m_robotConnector->UpdateStatus();
 	math::vector3d r = m_robotConnector->GetHeadRotation();
 	math::vector3d pos = m_robotConnector->GetHeadPosition();
@@ -384,8 +414,12 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 		return;
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;
+
+
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
 	TBee::AppData* app = TBee::AppData::Instance();
+	m_guimngr->DrawAll(&rc);
+	
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -489,6 +523,18 @@ xml::XMLElement* RobotCameraState::WriteToXML(xml::XMLElement* e)
 	return elem;
 }
 
+void RobotCameraState::OnARContents(ARCommandAddData* cmd)
+{
+	cmd->group->objects;
+}
+void RobotCameraState::OnVechicleData()
+{
+
+}
+void RobotCameraState::OnDeletedGroup(ARCommandDeleteGroup* cmd)
+{
+
+}
 
 }
 }

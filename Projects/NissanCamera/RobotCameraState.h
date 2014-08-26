@@ -19,7 +19,9 @@
 #include "SceneManager.h"
 #include "ViewPort.h"
 #include "ParsedShaderPP.h"
-
+#include "ARServiceProvider.h"
+#include "GUIManager.h"
+#include "GUIConsole.h"
 
 namespace mray
 {
@@ -34,10 +36,12 @@ namespace NCam
 {
 	class NissanRobotCommunicator;
 
-	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener
+	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener
 {
 protected:
 	typedef IRenderingState Parent;
+
+	GCPtr<GUI::GUIManager> m_guimngr;
 
 	GCPtr<scene::SceneManager> m_sceneManager;
 	GCPtr<scene::ViewPort> m_viewport[2];
@@ -52,6 +56,10 @@ protected:
 
 	TBee::CalibHeadController* m_headController;
 	NissanRobotCommunicator* m_robotComm;
+
+	ARServiceProvider* m_arServiceProvider;
+
+	GUI::GUIConsole* m_console;
 
 	float m_hmdFov;
 
@@ -79,6 +87,9 @@ public:
 	virtual void LoadFromXML(xml::XMLElement* e);
 	virtual xml::XMLElement* WriteToXML(xml::XMLElement* e);
 
+	virtual void OnARContents(ARCommandAddData* cmd);
+	virtual void OnVechicleData();
+	virtual void OnDeletedGroup(ARCommandDeleteGroup* cmd);
 };
 
 }
