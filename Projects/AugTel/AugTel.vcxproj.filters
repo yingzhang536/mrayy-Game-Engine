@@ -37,6 +37,9 @@
     <Filter Include="Source Files\GameComponents\Visualize">
       <UniqueIdentifier>{93e83a2e-964d-4e82-b2fb-8b93e1f83dad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Effects">
+      <UniqueIdentifier>{ec837f77-8170-4a90-92ba-99c64e59ebd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -174,6 +177,18 @@
     <ClInclude Include="LocalCameraRenderingState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="ISceneEffect.h">
+      <Filter>Source Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeSceneEffect.h">
+      <Filter>Source Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEffectManager.h">
+      <Filter>Source Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionSceneEffect.h">
+      <Filter>Source Files\Effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -283,6 +298,15 @@
     </ClCompile>
     <ClCompile Include="LocalRobotCommunicator.cpp">
       <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeSceneEffect.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneEffectManager.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionSceneEffect.cpp">
+      <Filter>Source Files\Effects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "CalibHeadController.h"
 #include "GUIThemeManager.h"
 #include "GUIConsole.h"
+#include "TextureResourceManager.h"
 
 namespace mray
 {
@@ -50,6 +51,7 @@ RobotCameraState::RobotCameraState()
 :IRenderingState("RobotState")
 {
 	m_exitCode = 0;
+	m_surface[0] = m_surface[1]= 0;
 
 	m_robotConnector = new TBee::CRobotConnector();
 	m_videoSource = new TBee::LocalCameraVideoSource();
@@ -89,6 +91,248 @@ void RobotCameraState::SetCameraInfo(TBee::ETargetEye eye, int id)
 	((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraID(GetEyeIndex(eye), id);
 }
 
+
+void RobotCameraState::GenerateSurface(bool plane, float hfov, float vfov, int segments,  float cameraScreenDistance)
+{
+	float radius = cameraScreenDistance;
+	m_surfaceParams.plane = plane;
+	m_surfaceParams.hfov = hfov;
+	m_surfaceParams.vfov = vfov;
+	m_surfaceParams.segments = segments;
+	m_surfaceParams.radius = radius;
+	m_surfaceParams.scale[0] = m_surfaceParams.scale[1] = 1;
+	int vertCount = (segments + 1)*(segments + 1);
+	int indCount = 6 * segments*segments;
+
+	for (int i = 0; i < 2; ++i)
+	{
+		if (m_surface[i])
+		{
+			m_screenNode[i]->RemoveNode(m_surface[i]);
+			m_surface[i] = 0;
+		}
+	}
+
+	if (plane)
+	{
+		//Create Screen Node
+		for (int i = 0; i < 2; ++i)
+		{
+			m_screenNode[i] = m_sceneManager->createSceneNode("ScreenNode");
+			scene::MeshRenderableNode* rnode = new scene::MeshRenderableNode(new scene::SMesh());
+			m_surface[i] = rnode;
+
+			scene::MeshBufferData* bdata = rnode->getMesh()->addNewBuffer();
+			scene::IMeshBuffer* buffer = bdata->getMeshBuffer();
+
+			video::IHardwareStreamBuffer* pos = buffer->createStream(0, video::EMST_Position, video::ESDT_Point3f, 4, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+			video::IHardwareStreamBuffer* tc = buffer->createStream(0, video::EMST_Texcoord, video::ESDT_Point2f, 4, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+			video::IHardwareIndexBuffer* idx = buffer->createIndexBuffer(video::IHardwareIndexBuffer::EIT_16Bit, 6, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+
+			math::vector3d posPtr[4] =
+			{
+				math::vector3d(-1, -1, 0),
+				math::vector3d(+1, -1, 0),
+				math::vector3d(+1, +1, 0),
+				math::vector3d(-1, +1, 0)
+			};
+			math::vector2d tcPtr[4] = {
+				math::vector2d(0, 0),
+				math::vector2d(1, 0),
+				math::vector2d(1, 1),
+				math::vector2d(0, 1),
+			};
+
+			math::matrix3x3 rotMat;
+
+
+			if (m_cameraConfiguration->cameraRotation[i] != TBee::TelubeeCameraConfiguration::None)
+			{
+				if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CW)
+					rotMat.setAngle(90);
+				else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CCW)
+					rotMat.setAngle(-90);
+				else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::Flipped)
+					rotMat.setAngle(180);
+				//     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
+				//     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+
+			}
+			/*
+			if (i == 0)
+			rotMat.setAngle(90);
+			else rotMat.setAngle(-90);
+			*/
+			for (int j = 0; j < 4; ++j)
+				tcPtr[j] = (rotMat*(tcPtr[j] * 2 - 1))*0.5 - 0.5f;
+			ushort idxPtr[6] = { 0, 1, 2, 0, 2, 3 };
+
+			pos->writeData(0, 4 * sizeof(math::vector3d), posPtr, true);
+			tc->writeData(0, 4 * sizeof(math::vector2d), tcPtr, true);
+			idx->writeData(0, 6 * sizeof(ushort), idxPtr, true);
+
+			video::RenderMaterialPtr mtrl = new video::RenderMaterial();
+			m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("Default");
+			bdata->setMaterial(mtrl);
+
+			m_screenMtrl[i]->setRenderState(video::RS_Lighting, video::ES_DontUse);
+			m_screenMtrl[i]->setRenderState(video::RS_CullFace, video::ES_DontUse);
+
+			m_screenNode[i]->AttachNode(rnode);
+			m_headNode->addChild(m_screenNode[i]);
+			m_screenNode[i]->setPosition(math::vector3d(0, 0, cameraScreenDistance));
+			m_screenNode[i]->setVisible(false);
+			m_screenNode[i]->setScale(1);
+		}
+
+	}
+	else
+	{
+		float w = 2 * math::PI32*radius*hfov / 360.0f;
+		float h = 2 * math::PI32*radius*vfov / 360.0f;
+		//Create Screen Node
+		for (int i = 0; i < 2; ++i)
+		{
+			m_screenNode[i] = m_sceneManager->createSceneNode("ScreenNode");
+			scene::MeshRenderableNode* rnode = new scene::MeshRenderableNode(new scene::SMesh());
+
+			scene::MeshBufferData* bdata = rnode->getMesh()->addNewBuffer();
+			scene::IMeshBuffer* buffer = bdata->getMeshBuffer();
+
+			m_surface[i] = rnode;
+
+			video::IHardwareStreamBuffer* pos = buffer->createStream(0, video::EMST_Position, video::ESDT_Point3f, vertCount, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+			video::IHardwareStreamBuffer* tc = buffer->createStream(0, video::EMST_Texcoord, video::ESDT_Point2f, vertCount, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+			video::IHardwareIndexBuffer* idx = buffer->createIndexBuffer(video::IHardwareIndexBuffer::EIT_16Bit, indCount, video::IHardwareBuffer::EUT_WriteOnly, false, false);
+
+			math::vector3d* posPtr = (math::vector3d*) pos->lock(0, vertCount, video::IHardwareBuffer::ELO_NoOverwrite);
+			math::vector2d* uvPtr = (math::vector2d*)tc->lock(0, vertCount, video::IHardwareBuffer::ELO_NoOverwrite);
+			ushort* indPtr = (ushort*)idx->lock(0, indCount, video::IHardwareBuffer::ELO_NoOverwrite);
+
+
+			math::matrix3x3 rotMat;
+
+
+			if (m_cameraConfiguration->cameraRotation[i] != TBee::TelubeeCameraConfiguration::None)
+			{
+				if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CW)
+					rotMat.setAngle(90);
+				else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CCW)
+					rotMat.setAngle(-90);
+				else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::Flipped)
+					rotMat.setAngle(180);
+				//     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
+				//     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
+
+			}
+			for (int x = 0; x <= segments; ++x)
+			{
+				float u = ((float)x) / (float)segments;;
+				float a1 = hfov*(x - segments / 2.0f) / (float)segments;
+				for (int y = 0; y <= segments; ++y)
+				{
+					float v = ((float)y) / (float)segments;;
+					float a2 = vfov*(y - segments / 2.0f) / (float)segments ;
+					float xp = radius*math::sind(a1) *math::sind(a2);
+					float yp = radius* radius*math::cosd(a2); //((float)y - segments / 2.0f) / (float)segments;;;//
+					float zp = radius*math::cosd(a1) *math::sind(a2);
+
+
+
+					(*posPtr++).set(xp, yp, zp);
+					(*uvPtr).set(u, v);
+					*uvPtr = (rotMat*(*uvPtr * 2 - 1))*0.5 - 0.5f;
+
+					uvPtr++;
+
+				}
+			}
+
+			for (int x = 0; x < segments; ++x)
+			{
+				for (int y = 0; y < segments; ++y)
+				{
+					*indPtr++ = y*(segments + 1) + x;
+					*indPtr++ = y*(segments + 1) + x + 1;
+					*indPtr++ = (y + 1)*(segments + 1) + (x + 1);
+
+					*indPtr++ = y*(segments + 1) + x;
+					*indPtr++ = (y + 1)*(segments + 1) + (x + 1);
+					*indPtr++ = (y + 1)*(segments + 1) + x;
+				}
+			}
+
+			pos->unlock();
+			tc->unlock();
+			idx->unlock();
+
+
+			video::RenderMaterialPtr mtrl = new video::RenderMaterial();
+			m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("Default");
+			bdata->setMaterial(mtrl);
+
+			m_screenMtrl[i]->setRenderState(video::RS_Lighting, video::ES_DontUse);
+			//m_screenMtrl[i]->setRenderState(video::RS_Points, video::ES_Use);
+			m_screenMtrl[i]->setRenderState(video::RS_CullFace, video::ES_DontUse);
+
+			m_screenNode[i]->AttachNode(rnode);
+			m_headNode->addChild(m_screenNode[i]);
+			//m_screenNode[i]->setPosition(math::vector3d(0, 0, cameraScreenDistance));
+			m_screenNode[i]->setVisible(false);
+		}
+	}
+	m_screenNode[GetEyeIndex(TBee::Eye_Left)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
+	m_screenNode[GetEyeIndex(TBee::Eye_Right)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
+
+}
+
+void RobotCameraState::RescaleMesh(int index,const math::vector3d &scaleFactor)
+{
+	m_surfaceParams.scale[index] = scaleFactor;
+	if (m_surfaceParams.plane)
+	{
+		m_screenNode[index]->setScale(scaleFactor);
+
+	}
+	else
+	{
+		float radius = m_surfaceParams.radius;
+		float hfov = m_surfaceParams.hfov*m_surfaceParams.scale[0].x;
+		float vfov = m_surfaceParams.vfov*m_surfaceParams.scale[1].y;
+		int segments = m_surfaceParams.segments;
+		int vertCount = (segments + 1)*(segments + 1);
+		int indCount = 6 * segments*segments;
+
+		float w = 2 * math::PI32*radius*hfov / 360.0f;
+		float h = 2 * math::PI32*radius*vfov / 360.0f;
+		//Create Screen Node
+		for (int i = 0; i < 2; ++i)
+		{
+
+
+			scene::IMeshBuffer* buffer = m_surface[i]->getMesh()->getBuffer(0) ;
+
+			video::IHardwareStreamBuffer* pos = buffer->getStream(0, video::EMST_Position);
+
+			math::vector3d* posPtr = (math::vector3d*) pos->lock(0, vertCount, video::IHardwareBuffer::ELO_NoOverwrite);
+			for (int x = 0; x <= segments; ++x)
+			{
+				float a1 = hfov*(x - (segments + 1) / 2.0f) / (float)(segments + 1);
+				for (int y = 0; y <= segments; ++y)
+				{
+					float a2 = vfov*(y - (segments + 1) / 2.0f) / (float)(segments + 1) + 90;
+					float xp = radius*math::sind(a1)*math::sind(a2);
+					float yp = radius*math::cosd(a2);
+					float zp = radius*math::cosd(a1)*math::sind(a2);
+
+					(*posPtr++).set(xp, yp, zp);
+
+				}
+			}
+			pos->unlock();
+		}
+	}
+}
 
 void RobotCameraState::InitState()
 {
@@ -152,81 +396,12 @@ void RobotCameraState::InitState()
 			m_camera[i] = cam[i];
 			//m_headNode->addChild(cam[i]);
 		}
+
+		GenerateSurface(true,100, 100, 20, cameraScreenDistance);
+
 		m_camera[GetEyeIndex(TBee::Eye_Left )]->setPosition(math::vector3d(-0.03, 0, 0));
 		m_camera[GetEyeIndex(TBee::Eye_Right)]->setPosition(math::vector3d(+0.03, 0, 0));
 	}
-	//Create Screen Node
-	for (int i = 0; i < 2;++i)
-	{
-		m_screenNode[i] = m_sceneManager->createSceneNode("ScreenNode");
-		scene::MeshRenderableNode* rnode = new scene::MeshRenderableNode(new scene::SMesh());
-	
-		scene::MeshBufferData* bdata= rnode->getMesh()->addNewBuffer();
-		scene::IMeshBuffer* buffer= bdata->getMeshBuffer();
-
-		video::IHardwareStreamBuffer* pos = buffer->createStream(0, video::EMST_Position, video::ESDT_Point3f, 4, video::IHardwareBuffer::EUT_WriteOnly, false, false);
-		video::IHardwareStreamBuffer* tc = buffer->createStream(0, video::EMST_Texcoord, video::ESDT_Point2f, 4, video::IHardwareBuffer::EUT_WriteOnly, false, false);
-		video::IHardwareIndexBuffer* idx = buffer->createIndexBuffer(video::IHardwareIndexBuffer::EIT_16Bit, 6, video::IHardwareBuffer::EUT_WriteOnly, false, false);
-
-		math::vector3d posPtr[4] =
-		{
-			math::vector3d(-1, -1, 0),
-			math::vector3d(+1, -1, 0),
-			math::vector3d(+1, +1, 0),
-			math::vector3d(-1, +1, 0)
-		};
-		math::vector2d tcPtr[4]={
-			 			math::vector2d(1,0),
-			 			math::vector2d(0,0),
-			 			math::vector2d(0,1),
-			 			math::vector2d(1, 1)
-
-		};
-
-		math::matrix3x3 rotMat;
-
-
-		if (m_cameraConfiguration->cameraRotation[i] != TBee::TelubeeCameraConfiguration::None)
-		{
-			if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CW)
-				rotMat.setAngle(90);
-			else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::CCW)
-				rotMat.setAngle(-90);
-			else if (m_cameraConfiguration->cameraRotation[i] == TBee::TelubeeCameraConfiguration::Flipped)
-				rotMat.setAngle(180);
-			//     		math::Swap(tc.ULPoint.x, tc.ULPoint.y);
-			//     		math::Swap(tc.BRPoint.x, tc.BRPoint.y);
-
-		}
-		/*
-		if (i == 0)
-			rotMat.setAngle(90);
-		else rotMat.setAngle(-90);
-		*/
-		for (int j = 0; j < 4; ++j)
-			tcPtr[j] = (rotMat*(tcPtr[j] * 2 - 1))*0.5 - 0.5f;
-		ushort idxPtr[6] = { 0, 1, 2, 0, 2, 3 };
-
-		pos->writeData(0, 4 * sizeof(math::vector3d), posPtr, true);
-		tc->writeData(0, 4 * sizeof(math::vector2d), tcPtr, true);
-		idx->writeData(0, 6 * sizeof(ushort), idxPtr, true);
-
-		video::RenderMaterialPtr mtrl = new video::RenderMaterial();
-		m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("Default");
-		bdata->setMaterial(mtrl);
-
-		m_screenMtrl[i]->setRenderState(video::RS_Lighting, video::ES_DontUse);
-		m_screenMtrl[i]->setRenderState(video::RS_CullFace, video::ES_DontUse);
-
-		m_screenNode[i]->AttachNode(rnode);
-		m_headNode->addChild(m_screenNode[i]);
-		m_screenNode[i]->setPosition(math::vector3d(0, 0, cameraScreenDistance));
-		m_screenNode[i]->setVisible(false);
-	}
-
- 	m_screenNode[GetEyeIndex(TBee::Eye_Left)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
- 	m_screenNode[GetEyeIndex(TBee::Eye_Right)]->setOrintation(math::quaternion(180, math::vector3d::ZAxis));
-
 
 	m_console->AddToHistory("System Inited.", video::DefaultColors::Green);
 }
@@ -282,6 +457,11 @@ bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 				m_robotConnector->SetData("Homing", "", false);
 				ok = true;
 			}
+			else if (evt->key == KEY_P)
+			{
+				GenerateSurface(!m_surfaceParams.plane, m_surfaceParams.hfov, m_surfaceParams.vfov, m_surfaceParams.segments, m_surfaceParams.radius);
+				ok = true;
+			}
 		}
 	}
 	return ok;
@@ -308,10 +488,11 @@ void RobotCameraState::Update(float dt)
 	m_videoSource->Blit();
 	m_guimngr->Update(dt);
 	m_robotConnector->UpdateStatus();
-	math::vector3d r = m_robotConnector->GetHeadRotation();
+	math::quaternion q = m_robotConnector->GetHeadRotation();
 	math::vector3d pos = m_robotConnector->GetHeadPosition();
 
-	math::vector3d rot = r;
+	math::vector3d rot,r ;
+	q.toEulerAngles(r);
 	rot.x = r.y;
 	rot.z = r.x;
 	rot.y = r.z;
@@ -353,9 +534,9 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 {
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
-	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);
+	video::ITexture* camTex =   gTextureResourceManager.loadTexture2D("Checker.png");//m_videoSource->GetEyeTexture(index); //
 
-
+	video::ShaderSemanticTable::getInstance().setRenderPass(0);
 
 	math::vector3d scale;
 	scale.x = (float)camTex->getSize().x / (float)camTex->getSize().y;
@@ -389,9 +570,14 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 		m_lensCorrectionPP->render(&TextureRenderTarget(camTex));
 		camTex = m_lensCorrectionPP->getOutput()->GetColorTexture();
 	}
+	if (scale != m_surfaceParams.scale[index])
+	{
+		RescaleMesh(index,scale);
+	}
 	m_screenNode[index]->setVisible(true);
-	m_screenNode[index]->setScale(scale);
+	//m_screenNode[index]->setScale(scale);
 	m_screenMtrl[index]->setTexture(camTex, 0);
+	//m_screenMtrl[index]->setTexture(gTextureResourceManager.loadTexture2D("Checker.png"), 0);
 	m_viewport[index]->setAbsViewPort(rc);
 	m_viewport[index]->draw();
 	Parent::Render(rc, eye);
@@ -454,7 +640,7 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 		if (m_robotConnector->GetHeadController())
 		{
 			math::vector3d head;
-			head = m_robotConnector->GetHeadRotation();
+			 m_robotConnector->GetHeadRotation().toEulerAngles(head);
 			core::string msg = mT("Head Rotation: ") + core::StringConverter::toString(head);
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;

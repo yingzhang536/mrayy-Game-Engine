@@ -39,6 +39,18 @@ namespace NCam
 	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener
 {
 protected:
+
+	struct SurfaceMeshParams
+	{
+		bool plane;
+		float hfov,vfov;
+		int segments;
+		float radius;
+		math::vector3d scale[2];
+	};
+	scene::MeshRenderableNode* m_surface[2];
+	SurfaceMeshParams m_surfaceParams;
+
 	typedef IRenderingState Parent;
 
 	GCPtr<GUI::GUIManager> m_guimngr;
@@ -68,7 +80,9 @@ protected:
 	TBee::TelubeeCameraConfiguration *m_cameraConfiguration;
 	bool m_camConfigDirty;
 
+	void GenerateSurface(bool plane,float hfov, float vfov, int segments,  float cameraScreenDistance);
 	void _RenderUI(const math::rectf& rc);
+	void RescaleMesh(int index,const math::vector3d &scaleFactor);
 public:
 	RobotCameraState();
 	virtual~RobotCameraState();

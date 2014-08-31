@@ -94,18 +94,18 @@ public:
 		vals = core::StringUtil::Split(value, ",");
 		if (name == "Speed" && vals.size() == 2)
 		{
-			m_robotStatus.speed.x = atof(vals[0].c_str());
-			m_robotStatus.speed.y = atof(vals[1].c_str());
+			m_robotStatus.speed[0] = atof(vals[0].c_str());
+			m_robotStatus.speed[1] = atof(vals[1].c_str());
 			//limit the speed
-			m_robotStatus.speed.x = math::clamp<float>(m_robotStatus.speed.x, -1, 1);
-			m_robotStatus.speed.y = math::clamp<float>(m_robotStatus.speed.y, -1, 1);
+			m_robotStatus.speed[0] = math::clamp<float>(m_robotStatus.speed[0], -1, 1);
+			m_robotStatus.speed[1] = math::clamp<float>(m_robotStatus.speed[1], -1, 1);
 		}
 		else if (name == "HeadRotation" && vals.size() == 3)
 		{
-			m_robotStatus.headRotation.w = atof(vals[0].c_str());
-			m_robotStatus.headRotation.x = atof(vals[1].c_str());
-			m_robotStatus.headRotation.y = atof(vals[2].c_str());
-			m_robotStatus.headRotation.z = atof(vals[2].c_str());
+			m_robotStatus.headRotation[0] = atof(vals[0].c_str());
+			m_robotStatus.headRotation[1] = atof(vals[1].c_str());
+			m_robotStatus.headRotation[2] = atof(vals[2].c_str());
+			m_robotStatus.headRotation[3] = atof(vals[2].c_str());
 
 			//do head limits
 			// 		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
@@ -114,9 +114,9 @@ public:
 		}
 		else if (name == "HeadPosition" && vals.size() == 3)
 		{
-			m_robotStatus.headPos.x = atof(vals[0].c_str());
-			m_robotStatus.headPos.y = atof(vals[1].c_str());
-			m_robotStatus.headPos.z = atof(vals[2].c_str());
+			m_robotStatus.headPos[0] = atof(vals[0].c_str());
+			m_robotStatus.headPos[1] = atof(vals[1].c_str());
+			m_robotStatus.headPos[2] = atof(vals[2].c_str());
 
 		}
 		else if (name == "Rotation" && vals.size() == 1)

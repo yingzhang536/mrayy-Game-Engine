@@ -53,6 +53,8 @@ protected:
 		CameraConfig = 4,
 	};
 
+	bool m_robotInited;
+
 	EController m_controller;
 	scene::ViewPort* m_viewPort;
 
@@ -96,9 +98,9 @@ protected:
 
 	core::string m_ip;
 
-	struct CameraInfo
+	struct _CameraInfo
 	{
-		int id;
+		CameraInfo ifo;
 		int w, h, fps;
 	}m_cameraIfo[2];
 

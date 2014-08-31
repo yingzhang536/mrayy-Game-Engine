@@ -151,7 +151,7 @@ void CRobotConnector::UpdateStatus()
 	}
 	if (!m_communicator)
 		return;
-	if (!m_status || !m_connected)
+	if (/*!m_status ||*/ !m_connected)
 		return;
 	m_communicator->SetData("HeadRotation", core::StringConverter::toString(m_headRotation), false);
 	m_communicator->SetData("HeadPosition", core::StringConverter::toString(m_headPosition), false);

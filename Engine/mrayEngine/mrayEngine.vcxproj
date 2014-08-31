@@ -388,6 +388,7 @@
     <ClInclude Include="include\StringUtil.hpp" />
     <ClInclude Include="include\TangentCalculater.h" />
     <ClInclude Include="include\ITextureSource.h" />
+    <ClInclude Include="include\TextureRTWrap.h" />
     <ClInclude Include="include\TextureSourceFactory.h" />
     <ClInclude Include="include\UniqueIDGenerator.h" />
     <ClInclude Include="include\ValueControllerManager.h" />

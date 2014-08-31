@@ -2321,6 +2321,9 @@
     <ClInclude Include="..\..\Dependencies\include\huffman\huffman.h">
       <Filter>Source Files\librarys\huffman</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureRTWrap.h">
+      <Filter>Source Files\video</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">

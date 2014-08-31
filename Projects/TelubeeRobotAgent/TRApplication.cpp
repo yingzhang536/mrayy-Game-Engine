@@ -110,6 +110,7 @@ TRApplication::TRApplication()
 
 	this->m_limitFps = true;
 	this->m_limitFpsCount = 30;
+	m_robotInited = false;
 
 	m_cameraProfileManager = new CameraProfileManager();
 }
@@ -178,8 +179,8 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	CMRayApplication::init(extraOptions);
 	{
 		m_ip = extraOptions.GetOptionValue("TargetIP");
-		m_cameraIfo[0].id = extraOptions.GetOptionByName("Camera0")->getValueIndex();
-		m_cameraIfo[1].id = extraOptions.GetOptionByName("Camera1")->getValueIndex();
+		m_cameraIfo[0].ifo.index = extraOptions.GetOptionByName("Camera0")->getValueIndex();
+		m_cameraIfo[1].ifo.index = extraOptions.GetOptionByName("Camera1")->getValueIndex();
 
 		m_cameraIfo[0].w = m_cameraIfo[1].w = 1280;
 		m_cameraIfo[0].h = m_cameraIfo[1].h = 720;
@@ -265,27 +266,36 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		int count = sizeof(camParams) / sizeof(core::string);
 		//init cameras
 		CameraProfile* prof = m_cameraProfileManager->GetProfile(m_cameraProfile);
-			for (int i = 0; i < 2; ++i)
 		{
-			video::DirectShowVideoGrabber * grabber = new video::DirectShowVideoGrabber();
-			m_cameras[i] = grabber;
-			if (m_cameraIfo[i].id >= 0)
-				grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
-			if (prof)
-			{
-				for (int j = 0; j < count; ++j)
-				{
-					core::string v;
-					if(prof->GetValue(camParams[j],v))
-						grabber->SetParameter(camParams[j],v);
-				}
-			}
-			//	if (!m_debugData.debug)
-			{
-				m_cameras[i]->Stop();
-			}
-			m_cameraTextures[i].Set(m_cameras[i], getDevice()->createEmptyTexture2D(true));
+			for (int i = 0; i < 2; ++i)
 
+			{
+				video::DirectShowVideoGrabber * grabber = new video::DirectShowVideoGrabber();
+				m_cameras[i] = grabber;
+
+				if (m_cameraIfo[i].ifo.index >= 0)
+				{
+					grabber->InitDevice(m_cameraIfo[i].ifo.index, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
+					m_cameraIfo[i].ifo.guidPath = grabber->GetDevicePath(m_cameraIfo[i].ifo.index);
+				}
+
+					
+				if (prof )
+				{
+					for (int j = 0; j < count; ++j)
+					{
+						core::string v;
+						if (prof->GetValue(camParams[j], v))
+							grabber->SetParameter(camParams[j], v);
+					}
+				}
+				//	if (!m_debugData.debug)
+				{
+					m_cameras[i]->Stop();
+				}
+				m_cameraTextures[i].Set(m_cameras[i], getDevice()->createEmptyTexture2D(true));
+
+			}
 		}
 	}
 
@@ -305,7 +315,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
 
 	m_videoProvider = new GstVideoProvider();
-	m_videoProvider->SetCameras(m_cameraIfo[0].id, m_cameraIfo[1].id);
+	m_videoProvider->SetCameras(m_cameraIfo[0].ifo, m_cameraIfo[1].ifo);
 	m_videoProvider->SetTargetResolution(m_resolution);
 	m_videoProvider->SetNetworkType(m_isLocal);
 	m_videoProvider->EnableAudio(m_streamAudio);
@@ -317,6 +327,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
 	m_robotCommunicator->SetListener(m_communicatorListener);
 	m_robotCommunicator->SetMessageSink(m_msgSink);
+
 
 	m_commChannel = network::INetwork::getInstance().createUDPClient();
 	m_commChannel->Open();
@@ -336,6 +347,12 @@ void TRApplication::WindowPostRender(video::RenderWindow* wnd)
 void TRApplication::update(float dt)
 {
 	CMRayApplication::update(dt);
+
+	if (m_debugData.userConnected && !m_robotInited)
+	{
+		m_robotCommunicator->Initialize();
+		m_robotInited = true;
+	}
 
 	if (m_startVideo || m_debugData.debug)
 	{
@@ -391,12 +408,15 @@ void TRApplication::update(float dt)
 			controllers::JoysticAxis y = joystick->getAxisState(1);
 			controllers::JoysticAxis r = joystick->getAxisState(3);
 
-			st.speed.x = x.abs;
-			st.speed.y = y.abs;
+			st.speed[0] = x.abs;
+			st.speed[1] = y.abs;
 			st.rotation= r.abs;
 
 			st.connected = true;
-			st.headRotation = math::quaternion::Identity;
+			st.headRotation[0] = 1;
+			st.headRotation[1] = 0;
+			st.headRotation[2] = 0;
+			st.headRotation[3] = 0;
 			m_robotCommunicator->SetRobotData(st);
 		}
 	}
@@ -463,18 +483,20 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 				LOG_OUT(msg, 50, 100);
 				if (m_debugData.robotData.connected || m_robotCommunicator->IsLocalControl())
 				{
-					msg = core::string("Speed: ") + core::StringConverter::toString( m_debugData.robotData.speed);
+					msg = core::string("Speed: ") + core::StringConverter::toString(math::vector2d(m_debugData.robotData.speed[0], m_debugData.robotData.speed[1]));
 					LOG_OUT(msg, 100, 100);
 
 					msg = core::string("Rotation: ") + core::StringConverter::toString(m_debugData.robotData.rotation);
 					LOG_OUT(msg, 100, 100);
 
 					math::vector3d angles;
-					m_debugData.robotData.headRotation.toEulerAngles(angles);
+					math::quaternion q(m_debugData.robotData.headRotation[0], m_debugData.robotData.headRotation[1],
+						m_debugData.robotData.headRotation[2], m_debugData.robotData.headRotation[3]);
+					q.toEulerAngles(angles);
 					msg = core::string("Head Rotation: ") + core::StringConverter::toString(angles);
 					LOG_OUT(msg, 100, 100);
 
-					msg = core::string("Head Position: ") + core::StringConverter::toString(m_debugData.robotData.headPos);
+					msg = core::string("Head Position: ") + core::StringConverter::toString(math::vector3d(m_debugData.robotData.headPos[0], m_debugData.robotData.headPos[1], m_debugData.robotData.headPos[2]));
 					LOG_OUT(msg, 100, 100);
 
 				}
@@ -520,6 +542,8 @@ void TRApplication::OnUserConnected(const network::NetAddress& address, int vide
 		len+= wrtr.binWriteString(m_cameraProfile);
 		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
 	}
+
+
 }
 void TRApplication::OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
 {

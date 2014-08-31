@@ -98,8 +98,9 @@ namespace video
 			
 
 			unsigned sensorCaps = ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection;
-			if (IsTrackingConnected())
-				sensorCaps |= ovrTrackingCap_Position;
+			if (!IsTrackingConnected())
+				printf("Oculus tracking device not detected!\n");
+			sensorCaps |= ovrTrackingCap_Position;
 
 			if (StartTrackingCaps != sensorCaps)
 			{
@@ -184,7 +185,7 @@ namespace video
 			ovrEyeType eye = m_device->EyeRenderOrder[(int)e];
 			ovrPosef p = ovrHmd_GetEyePose(m_device, eye);
 			pos.set(p.Position.x, p.Position.y, p.Position.z);
-			ori = math::quaternion(p.Orientation.w, -p.Orientation.x, -p.Orientation.y, p.Orientation.z);
+			ori = math::quaternion(p.Orientation.w, p.Orientation.x, p.Orientation.y, p.Orientation.z);
 			return true;
 		}
 		math::vector3d GetCameraPosition()
@@ -214,7 +215,7 @@ namespace video
 		{
 
 			ovrTrackingState s = ovrHmd_GetTrackingState(m_device, 0);
-			return math::quaternion(s.HeadPose.ThePose.Orientation.w, -s.HeadPose.ThePose.Orientation.x, -s.HeadPose.ThePose.Orientation.y, s.HeadPose.ThePose.Orientation.z);
+			return math::quaternion(s.HeadPose.ThePose.Orientation.w, s.HeadPose.ThePose.Orientation.x, s.HeadPose.ThePose.Orientation.y, s.HeadPose.ThePose.Orientation.z);
 
 		}
 

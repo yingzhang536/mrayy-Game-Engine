@@ -225,10 +225,10 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
- 	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource
+	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
  	m_renderingState->AddState(remote);
 
-	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), new TBee::LocalRobotCommunicator(), "AugCam");
+	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), 0, "AugCam");//new TBee::LocalRobotCommunicator()
  	m_renderingState->AddState(camera);
 
 	depth = new GeomDepthState("Depth");

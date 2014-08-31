@@ -39,6 +39,12 @@ namespace mray
 		High,
 		UltraHigh
 	};
+
+	struct CameraInfo
+	{
+		int index;
+		core::string guidPath;
+	};
 class GstVideoProvider
 {
 protected:
@@ -48,7 +54,7 @@ public:
 	GstVideoProvider();
 	virtual~GstVideoProvider();
 
-	void SetCameras(int cam0, int cam1);
+	void SetCameras(const CameraInfo& cam0, const CameraInfo& cam1);
 	void SetTargetResolution(const math::vector2di& res);
 
 	bool IsStereoCameras();

@@ -50,7 +50,7 @@ namespace mray
 	};
 
 
-class RobotCommunicator:public ITelubeeRobotListener
+class RobotCommunicator :public ITelubeeRobotListener, public IRobotStatusProvider
 {
 protected:
 	OS::IDynamicLibraryPtr m_robotLib;
@@ -62,6 +62,7 @@ protected:
 
 	network::IUDPClient* m_client;
 
+	OS::IMutex* m_dataMutex;
 	OS::IThread* m_thread;
 
 	IRobotCommunicatorListener* m_listener;
@@ -73,6 +74,15 @@ protected:
 public:
 	RobotCommunicator();
 	virtual~RobotCommunicator();
+
+	void Initialize();
+
+	const RobotStatus& GetRobotStatus()const{
+		return m_robotStatus;
+	}
+
+	virtual void GetRobotStatus(RobotStatus& st)const ;
+
 
 	void StartServer(int port);
 	void StopServer();

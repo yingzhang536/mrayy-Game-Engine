@@ -212,7 +212,7 @@ const math::vector3di& GLTexture::getSize()
 IHardwarePixelBuffer* GLTexture::getSurface(int face)
 {
 	_onResourceUsed();
-	FATAL_ERROR(face>=m_surfaces.size(),mT("face>= m_surfaces.size() : GLTexture::getSurface()"));
+	FATAL_ERROR(face >= m_surfaces.size(), (core::string(mT("face>= m_surfaces.size() : GLTexture::getSurface()")) + this->getResourceName()).c_str());
 	return m_surfaces[face];
 }
 

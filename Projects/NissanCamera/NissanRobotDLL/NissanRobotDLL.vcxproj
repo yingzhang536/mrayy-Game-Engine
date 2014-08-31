@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{932D0B94-E40C-40A6-AB9F-D6970DD699CB}</ProjectGuid>
+    <ProjectGuid>{9C29FB97-1995-4257-87D9-3441EE2936B6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TelubeeRobotDLL</RootNamespace>
     <SccProjectName>

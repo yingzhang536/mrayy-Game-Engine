@@ -52,6 +52,13 @@ core::string DirectShowVideoGrabber::GetDeviceName(int id)
 	core::char_to_string(d,str);
 	return str;
 }
+core::string DirectShowVideoGrabber::GetDevicePath(int id)
+{
+	core::string str;
+	char* d = s_videoInput->getDevicePath(id);
+	core::char_to_string(d, str);
+	return str;
+}
 void DirectShowVideoGrabber::SetDevice(int id)
 {
 	InitDevice(id,m_size.x,m_size.y,m_fps);
@@ -168,6 +175,8 @@ const video::ImageInfo* DirectShowVideoGrabber::GetLastFrame()
 
 void DirectShowVideoGrabber::SetParameter(const core::string& name,const core::string& value)
 {
+	if (m_device == -1 || !m_inited)
+		return;
 	float v=core::StringConverter::toFloat(value);
 	if(name.equals_ignore_case(Param_Exposure))
 	{
@@ -223,6 +232,8 @@ void DirectShowVideoGrabber::SetParameter(const core::string& name,const core::s
 
 core::string DirectShowVideoGrabber::GetParameter(const core::string& name)
 {
+	if (m_device == -1 || !m_inited)
+		return "";
 	long min; long max; long SteppingDelta; long currentValue=0; long flags; long defaultValue;
 	if(name.equals_ignore_case(Param_Exposure))
 	{

@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "TorsoRobotDLL.h"
-#include "RobotSerialPort.h"
+#include "torsoController.h"
 #include <stdio.h>
 #include "IRobotController.h"
 
@@ -12,7 +12,7 @@ class RobotSerialPort;
 class  CTelubeeRobotDLL
 {
 protected:
-	IRobotController* m_impl;
+	torsoController* m_impl;
 public:
 
 	static CTelubeeRobotDLL* instance;
@@ -36,7 +36,7 @@ CTelubeeRobotDLL* CTelubeeRobotDLL::instance = 0;
 CTelubeeRobotDLL::CTelubeeRobotDLL()
 {
 	printf("************************* TORSO Robot Agent ************************* \n");
-	m_impl = new RobotSerialPort();
+	m_impl = new torsoController();
 
 }
 

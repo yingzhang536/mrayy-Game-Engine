@@ -80,11 +80,21 @@ public:
 			m_robotStatus.speedX = math::clamp<float>(m_robotStatus.speedX, -1, 1);
 			m_robotStatus.speedY = math::clamp<float>(m_robotStatus.speedY, -1, 1);
 		}
-		else if (name == "HeadRotation" && vals.size() == 3)
+		else if (name == "HeadRotation" && vals.size() == 4)
 		{
-			m_robotStatus.tilt = atof(vals[0].c_str());
-			m_robotStatus.yaw = atof(vals[1].c_str());
-			m_robotStatus.roll = atof(vals[2].c_str());
+
+			math::quaternion q;
+			q.w = atof(vals[0].c_str());
+			q.x = atof(vals[1].c_str());
+			q.y = atof(vals[2].c_str());
+			q.z = atof(vals[3].c_str());
+
+			math::vector3d angles;
+			q.toEulerAngles(angles);
+
+			m_robotStatus.tilt = angles.x;
+			m_robotStatus.yaw = angles.y;
+			m_robotStatus.roll = angles.z;
 
 			//do head limits
 			m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);

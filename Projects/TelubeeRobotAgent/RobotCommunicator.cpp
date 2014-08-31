@@ -10,6 +10,7 @@
 #include "IRobotController.h"
 #include "IDllManager.h"
 #include "ILogManager.h"
+#include "MutexLocks.h"
 
 
 namespace mray
@@ -46,12 +47,15 @@ RobotCommunicator::RobotCommunicator()
 	m_client = network::INetwork::getInstance().createUDPClient();
 	m_thread = 0;
 	
-
+	m_dataMutex = OS::IThreadManager::getInstance().createMutex();
 	m_localControl = 0;
 	m_robotLib = OS::IDllManager::getInstance().getLibrary("Robot.dll");
+	m_msgSink = 0;
 	if (!m_robotLib)
 	{
-		gLogManager.log("Failed to load Robot.dll!! Please make sure Robot.dll is placed next to application.", ELL_ERROR);
+		gLogManager.log("Failed to load Robot.dll!! Please make sure Robot.dll is placed next to application.", ELL_WARNING);
+		m_robotController = 0;
+		return;
 	}
 	dllFunctionPtr libInitPtr;
 	dllLoadRobotFunctionPtr robotLoadPtr;
@@ -63,18 +67,31 @@ RobotCommunicator::RobotCommunicator()
 
 	m_robotController = robotLoadPtr();
 
-	m_msgSink = 0;
 		
 }
 
 RobotCommunicator::~RobotCommunicator()
 {
 	dllFunctionPtr libDestroyPtr;
-	libDestroyPtr = (dllFunctionPtr)m_robotLib->getSymbolName("DLL_RobotDestroy");
+	if (m_robotLib)
+	{
+		libDestroyPtr = (dllFunctionPtr)m_robotLib->getSymbolName("DLL_RobotDestroy");
+	}
 	StopServer();
 	delete m_client;
 	delete m_robotController;
 	libDestroyPtr();
+	delete m_dataMutex;
+}
+void RobotCommunicator::Initialize()
+{
+	if (m_robotController)
+		m_robotController->InitializeRobot(this);
+}
+void RobotCommunicator::GetRobotStatus(RobotStatus& st)const
+{
+	OS::ScopedLock l(m_dataMutex);
+	memcpy(&st, &m_robotStatus, sizeof(m_robotStatus));
 }
 
 void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string& name, const core::string& value)
@@ -83,20 +100,22 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 	std::vector<core::string> vals;
 	vals=core::StringUtil::Split(value, ",");
 
+	OS::ScopedLock lock(m_dataMutex);
+
 	if (name == "Speed" && vals.size() == 2)
 	{
-		m_robotStatus.speed.x = atof(vals[0].c_str());
-		m_robotStatus.speed.y = atof(vals[1].c_str());
+		m_robotStatus.speed[0] = atof(vals[0].c_str());
+		m_robotStatus.speed[1] = atof(vals[1].c_str());
 		//limit the speed
-		m_robotStatus.speed.x = math::clamp<float>(m_robotStatus.speed.x, -1, 1);
-		m_robotStatus.speed.y = math::clamp<float>(m_robotStatus.speed.y, -1, 1);
+		m_robotStatus.speed[0] = math::clamp<float>(m_robotStatus.speed[0], -1, 1);
+		m_robotStatus.speed[1] = math::clamp<float>(m_robotStatus.speed[1], -1, 1);
 	}
-	else if (name == "HeadRotation" && vals.size() == 3)
+	else if (name == "HeadRotation" && vals.size() == 4)
 	{
-		m_robotStatus.headRotation.w = atof(vals[0].c_str());
-		m_robotStatus.headRotation.x = atof(vals[1].c_str());
-		m_robotStatus.headRotation.y = atof(vals[2].c_str());
-		m_robotStatus.headRotation.z = atof(vals[2].c_str());
+		m_robotStatus.headRotation[0] = atof(vals[0].c_str());
+		m_robotStatus.headRotation[1] = atof(vals[1].c_str());
+		m_robotStatus.headRotation[2] = atof(vals[2].c_str());
+		m_robotStatus.headRotation[3] = atof(vals[3].c_str());
 
 		//do head limits
 // 		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
@@ -105,9 +124,9 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 	}
 	else if (name == "HeadPosition" && vals.size() == 3)
 	{
-		m_robotStatus.headPos.x = atof(vals[0].c_str());
-		m_robotStatus.headPos.y = atof(vals[1].c_str());
-		m_robotStatus.headPos.z = atof(vals[2].c_str());
+		m_robotStatus.headPos[0] = atof(vals[0].c_str());
+		m_robotStatus.headPos[1] = atof(vals[1].c_str());
+		m_robotStatus.headPos[2] = atof(vals[2].c_str());
 
 	}
 	else if (name == "Rotation" && vals.size() == 1)
@@ -155,7 +174,9 @@ void RobotCommunicator::SetRobotData(const RobotStatus &st)
 
 void RobotCommunicator::_RobotStatus(const RobotStatus& st)
 {
-	if ((st.connected || m_localControl) && !m_robotController->IsConnected())
+	if (!m_robotController)
+		return;
+		if ((st.connected || m_localControl) && !m_robotController->IsConnected())
 		m_robotController->ConnectRobot();
 	
 	if ((!st.connected && !m_localControl) && m_robotController->IsConnected())

@@ -235,7 +235,7 @@ bool GLFBORenderTarget::initialize(const ITexturePtr&colorBuffer,
 	// ... then inform OpenGL that we wish to render to these two targets
 	//glDrawBuffers(m_usedTarget,G_ColorTargetAttachments);
 
-	gLogManager.log(core::string(mT("FBO Render Target Created, dim:"))+core::StringConverter::toString(m_size),ELL_INFO);
+	gLogManager.log(core::string(mT("FBO Render Target Created, dim:"))+core::StringConverter::toString(m_size),ELL_INFO,EVL_Heavy);
 
 	bool res=checkFrameBufferStatus();
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -303,6 +303,12 @@ void GLFBORenderTarget::refreshAttachment(uint index)
 		gLogManager.log(mT("GLFBORenderTarget::attachRenderTarget() - Invalid FrameBuffer Object ID"),ELL_WARNING);
 	//if(target!=0)
 	m_size.set(glTex->getSize().x,glTex->getSize().y);
+
+	if (!m_sharedDepthBuffer)
+	{
+		((GLRenderBuffer*)m_depthBuffer.pointer())->Resize(m_size.x, m_size.y);
+		((GLRenderBuffer*)m_depthBuffer.pointer())->bindToFrameBuffer(GL_DEPTH_ATTACHMENT_EXT, 0);
+	}
 
 	glDrawBuffers(m_usedTarget,G_ColorTargetAttachments);
 	bool res=checkFrameBufferStatus();

@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "TorsoRobotDLL.h"
 #include "IRobotController.h"
+#include "vectors.h"
 #include <stdlib.h>
 #include <thread>
 
@@ -15,6 +16,42 @@ IRobotController* robot;
 RobotStatus status;
 
 bool quit = false;
+
+
+float normq(Quaternion q)
+{
+	float len = q[0] * q[0]
+		+ q[1] * q[1]
+		+ q[2] * q[2]
+		+ q[3] * q[3];
+	if (len)
+	{
+		len = sqrt(len);
+		q[0] /= len;
+		q[1] /= len;
+		q[2] /= len;
+		q[3] /= len;
+	}
+	return len;
+}
+void eulertoq(float pitch, float yaw, float roll, Quaternion& q)
+{
+
+	float num = (roll * 0.5f)*DEGREE_TO_RAD;
+	float num2 = (float)sin((double)num);
+	float num3 = (float)cos((double)num);
+	float num4 = (pitch * 0.5f)*DEGREE_TO_RAD;
+	float num5 = (float)sin((double)num4);
+	float num6 = (float)cos((double)num4);
+	float num7 = (yaw * 0.5f)*DEGREE_TO_RAD;
+	float num8 = (float)sin((double)num7);
+	float num9 = (float)cos((double)num7);
+	q[0] = num9 * num6 * num3 + num8 * num5 * num2;
+	q[1] = num9 * num5 * num3 + num8 * num6 * num2;
+	q[2] = num8 * num6 * num3 - num9 * num5 * num2;
+	q[3] = num9 * num6 * num2 - num8 * num5 * num3;
+	normq(q);
+}
 
 void PrintStatus()
 {
@@ -60,9 +97,9 @@ void ProcessCommand(char c)
 		float x, y, z;
 		printf("Enter Position Values (x,y,z):");
 		scanf_s("%f,%f,%f", &x, &y, &z);
-		status.headPos.x = x;
-		status.headPos.y = y;
-		status.headPos.z = z;
+		status.headPos[0] = x;
+		status.headPos[1] = y;
+		status.headPos[2] = z;
 	}
 	break;
 	case 'r':
@@ -72,7 +109,8 @@ void ProcessCommand(char c)
 		float x, y, z;
 		printf("Enter Rotation Values (tilt,yaw,roll):");
 		scanf_s("%f,%f,%f", &x, &y, &z);
-		status.headRotation.fromEulerAngles(x, y, z);
+
+		eulertoq(x, y, z, status.headRotation);
 	}
 		break;
 	case 'q':
@@ -97,8 +135,8 @@ void ProcessThread(void* arg)
 int _tmain(int argc, _TCHAR* argv[])
 {
 
-	DLL_RobotInit();
-	robot = DLL_GetRobotController();
+	mray::DLL_RobotInit();
+	robot = mray::DLL_GetRobotController();
 
 	std::thread process(ProcessThread,(void*) NULL);;
 	process.detach();//start robot process
@@ -123,7 +161,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	} while (!quit);
 	robot->DisconnectRobot();
-	DLL_RobotDestroy();
+	mray::DLL_RobotDestroy();
 	return 0;
 }
 

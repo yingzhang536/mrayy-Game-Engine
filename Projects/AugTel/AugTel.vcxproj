@@ -109,6 +109,7 @@
     <ClInclude Include="CompositeBoneComponent.h" />
     <ClInclude Include="DataCommunicator.h" />
     <ClInclude Include="DepthRequesterComponent.h" />
+    <ClInclude Include="FadeSceneEffect.h" />
     <ClInclude Include="FingerTipComponent.h" />
     <ClInclude Include="GeomDepthState.h" />
     <ClInclude Include="GloveController5.h" />
@@ -128,12 +129,15 @@
     <ClInclude Include="HeadMount.h" />
     <ClInclude Include="IFingerDataProvider.h" />
     <ClInclude Include="ConnectingState.h" />
+    <ClInclude Include="ISceneEffect.h" />
     <ClInclude Include="LatencyTestState.h" />
     <ClInclude Include="LocalCameraRenderingState.h" />
     <ClInclude Include="LocalRobotCommunicator.h" />
     <ClInclude Include="LoginScreenState.h" />
     <ClInclude Include="PenComponent.h" />
+    <ClInclude Include="RefractionSceneEffect.h" />
     <ClInclude Include="RobotSpaceComponent.h" />
+    <ClInclude Include="SceneEffectManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SurfaceWrapper.h" />
     <ClInclude Include="targetver.h" />
@@ -155,6 +159,7 @@
     <ClCompile Include="CameraTextureSource.cpp" />
     <ClCompile Include="CompositeBoneComponent.cpp" />
     <ClCompile Include="DataCommunicator.cpp" />
+    <ClCompile Include="FadeSceneEffect.cpp" />
     <ClCompile Include="FingerTipComponent.cpp" />
     <ClCompile Include="GeomDepthState.cpp" />
     <ClCompile Include="GloveController5.cpp" />
@@ -175,7 +180,9 @@
     <ClCompile Include="PenComponent.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
     </ClCompile>
+    <ClCompile Include="RefractionSceneEffect.cpp" />
     <ClCompile Include="RobotSpaceComponent.cpp" />
+    <ClCompile Include="SceneEffectManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

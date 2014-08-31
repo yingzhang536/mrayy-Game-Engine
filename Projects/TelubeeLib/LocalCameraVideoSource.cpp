@@ -50,8 +50,8 @@ void LocalCameraVideoSource::Open()
 
 	for (int i = 0; i < 2; ++i)
 	{
-	//	if (m_cameraSource[i].camera)
-	//		m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0.4");
+		if (m_cameraSource[i].camera)
+			m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0");
 	}
 
 }

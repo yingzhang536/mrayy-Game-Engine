@@ -63,7 +63,7 @@ public:
 
 	int sourceid;
 
-	int m_cam0, m_cam1;
+	CameraInfo m_cam0, m_cam1;
 
 	GstVideoGrabber* src;
 
@@ -294,8 +294,8 @@ public:
 		m_isLocal = false;
 		m_streamAudio = true;
 
-		m_cam0 = 0;
-		m_cam1 = 1;
+		m_cam0.index = 0;
+		m_cam1.index = 1;
 		m_resolution.set(1280, 720);
 	}
 	virtual~GstVideoProviderImpl()
@@ -304,7 +304,7 @@ public:
 		delete[]pixels;
 	}
 
-	void SetCameras(int cam0, int cam1)
+	void SetCameras(const CameraInfo&  cam0, const CameraInfo&  cam1)
 	{
 		m_cam0 = cam0;
 		m_cam1 = cam1;
@@ -622,10 +622,10 @@ public:
 			" ! mysink name=sink sync=false ";
 
 
-		if (m_cam0 == m_cam1)
+		if (m_cam0.index == m_cam1.index)
 		{
-
-			gstString = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0) +
+			//ksvideosrc
+			gstString = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0.index) + // device=" + m_cam0.guidPath + "" +//
 				" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace !  videoflip method=4 !";  // videoflip method=1 !   ";
 
 				/*
@@ -658,9 +658,11 @@ public:
 
 			gstString += "videotestsrc pattern=\"black\" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
 
-			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+			//
+			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) +" !video / x - raw - yuv, width = " + core::StringConverter::toString(m_resolution.x) + ", height = " + core::StringConverter::toString(m_resolution.y) + " !ffmpegcolorspace !videoflip method = 4 !videoscale !"
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
-			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+			//name=src2 device-index=" + core::StringConverter::toString(m_cam1)
+			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
 
 			gstString += " mix. ! ";
@@ -672,13 +674,12 @@ public:
 			" pass=" + pass +
 			//" qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
 			"  quantizer=" + core::StringConverter::toString(quanizer) +
-			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
+			"   speed-preset=ultrafast sliced-threads=true bitrate=" + core::StringConverter::toString(bitrate) +
 			" tune=zerolatency"
 			" rc-lookahead=0"
 			" sync-lookahead=0 "
 			//" option-string=\"slices = 2\" "
 			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
-			//" !gdppay" 
 			" ! mysink name=sink sync=false ";
 
 	//	gstString += "tp. ! queue ! autovideosink sync=false";
@@ -743,9 +744,9 @@ public:
 		mySrc->need_buffer = need_buffer;
 		mySrc->data = this;
 #endif
-		g_object_set(sink, "emit-signals", false, "sync", false, NULL);
+	//	g_object_set(sink, "emit-signals", false, "sync", false, NULL);
 		g_object_set(G_OBJECT(gstSink), "sync", FALSE, "async", FALSE, (void*)NULL);
-		g_object_set(gstSrc, "emit-signals", false, NULL);
+	//	g_object_set(gstSrc, "emit-signals", false, NULL);
 
 //  		g_signal_connect(sink, "new-buffer", G_CALLBACK(new_buffer), this);
 // 		g_signal_connect(sink, "new-preroll", G_CALLBACK(new_preroll), this);
@@ -766,10 +767,10 @@ public:
 		
 #if 1
 		gst_base_sink_set_sync(GST_BASE_SINK(sink), false);
-		gst_app_sink_set_max_buffers(GST_APP_SINK(sink), -1);
+	//	gst_app_sink_set_max_buffers(GST_APP_SINK(sink), -1);
 		gst_app_sink_set_drop(GST_APP_SINK(sink), true);
 		gst_base_sink_set_max_lateness(GST_BASE_SINK(sink), -1);
-		gst_app_src_set_callbacks(GST_APP_SRC(gstSrc), &srcCB, this, NULL);
+	//	gst_app_src_set_callbacks(GST_APP_SRC(gstSrc), &srcCB, this, NULL);
 
 #endif
 		/* Configure appsink */
@@ -794,7 +795,7 @@ public:
 		caps = gst_video_info_to_caps(&info);
 		
 #endif
-		g_object_set(gstSrc, "caps", caps, NULL);
+		//g_object_set(gstSrc, "caps", caps, NULL);
 		//gst_app_src_set_caps(GST_APP_SRC(gstSrc), caps);
 		gst_caps_unref(caps);
 
@@ -1098,6 +1099,7 @@ bool GstVideoProviderImpl::HandleMessage(GstBus * bus, GstMessage * msg){
 								GError *err;
 								gchar *debug;
 								gst_message_parse_warning(msg, &err, &debug);
+								printf("ofGstUtils - HandleMessage(): Warning- %s\n", debug);
 								gLogManager.log("ofGstUtils - HandleMessage(): Warning- " + core::string(debug), ELL_WARNING);
 								// 								ofLogVerbose("ofGstUtils") << "gstHandleMessage(): embedded video playback halted for plugin, module "
 								// 									<< gst_element_get_name(GST_MESSAGE_SRC(msg)) << "  reported: " << err->message;
@@ -1110,7 +1112,7 @@ bool GstVideoProviderImpl::HandleMessage(GstBus * bus, GstMessage * msg){
 								GError *err;
 								gchar *debug;
 								gst_message_parse_error(msg, &err, &debug);
-
+								printf("ofGstUtils - HandleMessage(): Error- %s\n" ,debug);
 								gLogManager.log("ofGstUtils - HandleMessage(): Error- " + core::string(debug), ELL_WARNING);
 								// 								ofLogVerbose("ofGstUtils") << "gstHandleMessage(): embedded video playback halted for plugin, module "
 								// 									<< gst_element_get_name(GST_MESSAGE_SRC(msg)) << "  reported: " << err->message;
@@ -1183,7 +1185,7 @@ bool GstVideoProvider::IsConnected()
 {
 	return m_connected;
 }
-void GstVideoProvider::SetCameras(int cam0, int cam1)
+void GstVideoProvider::SetCameras(const CameraInfo&  cam0, const CameraInfo&  cam1)
 {
 	m_impl->SetCameras(cam0, cam1);
 }
@@ -1195,6 +1197,6 @@ void GstVideoProvider::SetTargetResolution(const math::vector2di& res)
 
 bool GstVideoProvider::IsStereoCameras()
 {
-	return m_impl->m_cam0 != m_impl->m_cam1;
+	return m_impl->m_cam0.index != m_impl->m_cam1.index;
 }
 }

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TorsoRobotDLL.cpp" />
+    <ClCompile Include="Tserial_event.cpp" />
+    <ClCompile Include="RealLink.cpp">
+      <Filter>Source\RealTorsoClass</Filter>
+    </ClCompile>
+    <ClCompile Include="RealTorso.cpp">
+      <Filter>Source\RealTorsoClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Loaddata.cpp">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="movingAverage.cpp">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="vectors.cpp">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="variables.cpp">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="CPUTimer.cpp">
+      <Filter>Source\GeneralClass\TimerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>Source\GeneralClass\FilterClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceBoard.cpp">
+      <Filter>Source\GeneralClass\InterfaceClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor.cpp">
+      <Filter>Source\GeneralClass\MotorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="torsoController.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="agent.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TorsoRobotDLL.h" />
+    <ClInclude Include="Tserial_event.h" />
+    <ClInclude Include="RealLink.h">
+      <Filter>Source\RealTorsoClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RealTorso.h">
+      <Filter>Source\RealTorsoClass</Filter>
+    </ClInclude>
+    <ClInclude Include="movingAverage.h">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="vectors.h">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="variables.h">
+      <Filter>Source\GlobalFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUTimer.h">
+      <Filter>Source\GeneralClass\TimerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>Source\GeneralClass\FilterClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceBoard.h">
+      <Filter>Source\GeneralClass\InterfaceClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor.h">
+      <Filter>Source\GeneralClass\MotorClass</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h" />
+    <ClInclude Include="torsoController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{80fc993d-cafe-44da-b435-0f34fdd611c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GeneralClass">
+      <UniqueIdentifier>{21b59c78-c0b2-41b2-92ba-095e17df9ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GlobalFunction">
+      <UniqueIdentifier>{e692f375-a49c-4832-a33e-3c02f8a2bc0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\RealTorsoClass">
+      <UniqueIdentifier>{36fee8f8-a518-4ba5-a837-dfb155d2a410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GeneralClass\FilterClass">
+      <UniqueIdentifier>{875b42b6-aeb3-4ca1-83f5-3160ef9286b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GeneralClass\InterfaceClass">
+      <UniqueIdentifier>{0eed3253-9932-45f4-8d00-2b343e9c13cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GeneralClass\MotorClass">
+      <UniqueIdentifier>{d6d8411e-0e78-4f8e-a90d-a4857ff40837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GeneralClass\TimerClass">
+      <UniqueIdentifier>{544d96da-0ed3-40e0-b3d8-1b43f4602382}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

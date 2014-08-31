@@ -25,7 +25,7 @@
 #include "GUIAugTelScreen.h"
 #include "IGUISliderBar.h"
 #include "DataCommunicator.h"
-
+#include "SceneEffectManager.h"
 
 namespace mray
 {
@@ -49,6 +49,7 @@ protected:
 	GCPtr<scene::ViewPort> m_viewport[2];
 	GCPtr<physics::IPhysicManager> m_phManager;
 	GCPtr<scene::IDebugDrawManager> m_debugRenderer;
+	GCPtr<SceneEffectManager> m_effects;
 
 	GCPtr<GUI::IGUIManager> m_guiManager;
 	GCPtr<GUI::IGUIPanelElement> m_guiroot;

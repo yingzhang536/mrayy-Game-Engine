@@ -253,6 +253,7 @@ class videoInput{
 
 		//needs to be called after listDevices - otherwise returns NULL
 		static char * getDeviceName(int deviceID);
+		static char * getDevicePath(int deviceID);
 		
 		//choose to use callback based capture - or single threaded
 		void setUseCallback(bool useCallback);	
@@ -379,6 +380,7 @@ class videoInput{
 		static void __cdecl basicThread(void * objPtr);
 
 		static char deviceNames[VI_MAX_CAMERAS][255];
+		static char devicePaths[VI_MAX_CAMERAS][255];
 
 }; 
   

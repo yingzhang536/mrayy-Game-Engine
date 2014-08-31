@@ -8,6 +8,8 @@
 #include "agent.h"
 #include "movingAverage.h"
 #include "TelubeeRobotDLL.h"
+#include "Point3d.h"
+#include "quaternion.h"
 
 float testPosx = 100.00;
 float testPosy = 100.00; 
@@ -382,15 +384,15 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 
 	float v_size;
 
-	robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speed.x*v_scale);
-	robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speed.y*v_scale);
+	robot_vx = m_impl->mvRobot[BASE][0]->getNext(st.speed[0]*v_scale);
+	robot_vy = m_impl->mvRobot[BASE][1]->getNext(st.speed[1]*v_scale);
 	robot_rot = m_impl->mvRobot[BASE][2]->getNext(st.rotation*r_scale);
 
 //	robotX = m_impl->mvRobot[BASE][0]->getNext(st.X * 1000);
 //	robotY = m_impl->mvRobot[BASE][1]->getNext(st.Z * 1000);
 
 	mray::math::vector3d angles;
-	st.headRotation.toEulerAngles(angles);
+	mray::math::quaternion(st.headRotation[0], st.headRotation[1], st.headRotation[2], st.headRotation[3]).toEulerAngles(angles);
 
 	tilt = m_impl->mvRobot[HEAD][1]->getNext(angles.x);
 	pan = m_impl->mvRobot[HEAD][0]->getNext(angles.y);

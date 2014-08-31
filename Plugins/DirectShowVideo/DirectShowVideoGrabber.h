@@ -46,6 +46,7 @@ public:
 
 	int ListDevices();
 	core::string GetDeviceName(int id);
+	core::string GetDevicePath(int id);
 	void SetDevice(int id);
 
 	void SetFrameRate(int fps);

@@ -58,11 +58,14 @@
 #include "SceneComponent.h"
 
 #include "CameraConfigurationManager.h"
+#include "TextureRTWrap.h"
 
 #include "LocalCameraVideoSource.h"
 #include "ICameraVideoGrabber.h"
 #include "RobotCommunicatorComponent.h"
 
+#include "FadeSceneEffect.h"
+#include "RefractionSceneEffect.h"
 
 #define VIDEO_PORT 5000
 #define AUDIO_PORT 5002
@@ -323,6 +326,24 @@ void AugCameraRenderState::InitState()
 	}
 
 	{
+		m_effects = new SceneEffectManager();
+		{
+			FadeSceneEffect* fadeEffect = new FadeSceneEffect();
+			fadeEffect->SetTargetColor(video::SColor(1, 1, 1, 1));
+			fadeEffect->SetTime(3);
+			m_effects->AddEffect("Start", fadeEffect, true, true);
+		}
+		if (0)
+		{
+			RefractionSceneEffect* effect = new RefractionSceneEffect();
+			effect->SetAmount(0.1f);
+			m_effects->AddEffect("Refraction", effect, true, true);
+		}
+
+
+		m_effects->Init();
+	}
+	{
 		gShaderResourceManager.parseShaderXML(gFileSystem.openFile("AT_Shaders.shd"));
 		gMaterialResourceManager.parseMaterialXML(gFileSystem.openFile("AT_materials.mtrl"));
 	}
@@ -526,6 +547,8 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	m_screenLayout->OnDisconnected();
 
 	m_data->robotCommunicator->SetEnabled(true);
+	m_effects->SetAcive("Start", true);
+	m_effects->Begin();
 }
 
 void AugCameraRenderState::OnExit()
@@ -612,37 +635,6 @@ void AugCameraRenderState::_CalculateDepthGeom()
 	norm->unlock();
 }
 
-class TextureRTWrap :public video::IRenderArea
-{
-public:
-
-	video::ITexturePtr mTex;
-
-	TextureRTWrap(video::ITexture* t)
-	{
-		mTex = t;
-	}
-
-	virtual math::vector2di GetSize()
-	{
-		math::vector3di v = mTex->getSize();
-		return math::vector2d(v.x, v.y);
-	}
-
-	virtual const video::ITexturePtr& GetColorTexture(int i = 0)
-	{
-		return mTex;
-	}
-
-	virtual void GetParameter(const core::string& name, void* param){}
-
-	virtual int GetColorTextureCount() {
-		return 1;
-	}
-
-	virtual void Resize(int x, int y) {}
-};
-
 void AugCameraRenderState::_GenerateLightMap()
 {
 	ulong currTime = gEngine.getTimer()->getMilliseconds();
@@ -660,7 +652,7 @@ void AugCameraRenderState::_GenerateLightMap()
 	for (int i = 0; i < 10; ++i)
 	{
 		m_blurShader->GetParam("Offset")->SetValue((i + 1) * 4);
-		m_blurShader->render(&TextureRTWrap(t));
+		m_blurShader->render(&video::TextureRTWrap(t));
 		t = m_blurShader->getOutput()->GetColorTexture();
 
 
@@ -808,6 +800,14 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 	}
 	math::rectf vp(0, m_renderTarget[index]->GetSize());
 	m_guiManager->DrawAll(&vp);
+
+	video::ITexture* ret= m_effects->Render(m_renderTarget[index]->GetColorTexture(), rc);
+	device->setRenderTarget(m_renderTarget[index],false);
+
+	tex.SetTexture(ret);
+	device->useTexture(0, &tex);
+	device->draw2DImage(vprect, 1);
+
 	return m_renderTarget[index];
 
 
@@ -821,6 +821,8 @@ void AugCameraRenderState::Update(float dt)
 	m_guiManager->Update(dt);
 	m_phManager->update(dt);
 	m_debugRenderer->Update(dt);
+
+	m_effects->Update(dt);
 
 	m_openNiHandler->Update(dt);
 
