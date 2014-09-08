@@ -78,8 +78,16 @@ EntryPoint
 		op.valueSet.clear();
 	}
 	{
+		op.name = "CameraSource";
+		op.value = "Remote";
+		op.valueSet.insert("Local");
+		op.valueSet.insert("Remote");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
+	{
 		op.name = "HeadController";
-		op.value = "IK";
+		op.value = "Oculus";
 		op.valueSet.insert("IK");
 		op.valueSet.insert("Oculus");
 		extraOptions.push_back(op);
@@ -109,7 +117,7 @@ EntryPoint
 
 	//VLDEnable();
 	app->loadResourceFile(mT("atdataPath.stg"));
-	if (app->startup(mT("Robomech 2014 - Depth Touch"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
+	if (app->startup(mT("Oculus VR + TORSO"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
 	{
 		app->run();
 	}

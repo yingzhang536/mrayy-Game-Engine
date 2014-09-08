@@ -189,6 +189,18 @@
     <ClInclude Include="RefractionSceneEffect.h">
       <Filter>Source Files\Effects</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Source Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoRenderElement.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILoadingScreenLayout.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILoadingScreen.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -308,6 +320,15 @@
     <ClCompile Include="RefractionSceneEffect.cpp">
       <Filter>Source Files\Effects</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoRenderElement.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILoadingScreen.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
@@ -323,6 +344,9 @@
       <Filter>Source Files\GUI</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIMainMenu.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoadingScreenLayout.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
   </ItemGroup>

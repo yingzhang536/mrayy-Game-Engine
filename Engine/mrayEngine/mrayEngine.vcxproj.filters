@@ -261,32 +261,32 @@
     <Filter Include="Source Files\OS\Ports">
       <UniqueIdentifier>{39f0237f-38e7-440c-918b-a801ea19bd08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\codecs">
-      <UniqueIdentifier>{d9c6fb00-e025-43f7-8562-18983169635c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\models">
-      <UniqueIdentifier>{714b71b6-51c5-48eb-9efa-8b9e759a1d91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\anim">
-      <UniqueIdentifier>{eea0c831-1d4b-4881-9a1b-bb3c07feb66f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\image">
-      <UniqueIdentifier>{8d5f7432-843c-40fa-8522-cdb675a3c056}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\image\load">
-      <UniqueIdentifier>{dad8cead-0c30-4b01-b17c-33cdc455d3cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\image\write">
-      <UniqueIdentifier>{9a4df2a1-83c9-42dc-ad08-20f992d7cd23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\sound">
-      <UniqueIdentifier>{d644c24b-5004-4cc2-b290-e187a8ef82dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\codecs\terrain">
-      <UniqueIdentifier>{3696e1d3-13bb-4f0c-9254-d1d10b97e2d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\librarys\huffman">
       <UniqueIdentifier>{aaf2e005-ee62-4b04-8940-014d80392f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders">
+      <UniqueIdentifier>{d9c6fb00-e025-43f7-8562-18983169635c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\models">
+      <UniqueIdentifier>{714b71b6-51c5-48eb-9efa-8b9e759a1d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\anim">
+      <UniqueIdentifier>{eea0c831-1d4b-4881-9a1b-bb3c07feb66f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\image">
+      <UniqueIdentifier>{8d5f7432-843c-40fa-8522-cdb675a3c056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\image\load">
+      <UniqueIdentifier>{dad8cead-0c30-4b01-b17c-33cdc455d3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\image\write">
+      <UniqueIdentifier>{9a4df2a1-83c9-42dc-ad08-20f992d7cd23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\sound">
+      <UniqueIdentifier>{d644c24b-5004-4cc2-b290-e187a8ef82dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loaders\terrain">
+      <UniqueIdentifier>{3696e1d3-13bb-4f0c-9254-d1d10b97e2d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -945,142 +945,142 @@
       <Filter>Source Files\OS\NullOS</Filter>
     </ClInclude>
     <ClInclude Include="include\ChunkSerializer.h">
-      <Filter>Source Files\codecs</Filter>
+      <Filter>Source Files\loaders</Filter>
     </ClInclude>
     <ClInclude Include="include\IFileLoader.h">
-      <Filter>Source Files\codecs</Filter>
+      <Filter>Source Files\loaders</Filter>
     </ClInclude>
     <ClInclude Include="include\IFileWriter.h">
-      <Filter>Source Files\codecs</Filter>
+      <Filter>Source Files\loaders</Filter>
     </ClInclude>
     <ClInclude Include="include\3dsLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\acLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\IMeshLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\IModelWriter.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\MDLFileShared.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\MdlLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\mdlLoaderV0.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\mdlWriter.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\MeshLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\MeshV2Loader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\animLoader.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\animWriter.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\IAnimLoader.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\IAnimWriter.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\ISkeletonExporter.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\ISkeletonLoader.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\SkeletonExporter.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\SkeletonLoader.h">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClInclude>
     <ClInclude Include="include\FreeImageCodec.h">
-      <Filter>Source Files\codecs\image</Filter>
+      <Filter>Source Files\loaders\image</Filter>
     </ClInclude>
     <ClInclude Include="include\CBmpLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CDDSLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CJPGLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CPCXLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CPNGLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CRawLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CTargaLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CustomTexLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\FreeImageLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\ITexLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\TexLoader.h">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClInclude>
     <ClInclude Include="include\CBmpWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\CJPGWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\CTargaWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\CustomTexWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\FreeImageWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\ITexWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\TexWriter.h">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClInclude>
     <ClInclude Include="include\ISoundLoader.h">
-      <Filter>Source Files\codecs\sound</Filter>
+      <Filter>Source Files\loaders\sound</Filter>
     </ClInclude>
     <ClInclude Include="include\SoundLoader.h">
-      <Filter>Source Files\codecs\sound</Filter>
+      <Filter>Source Files\loaders\sound</Filter>
     </ClInclude>
     <ClInclude Include="include\HeightMapRaw16.h">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClInclude>
     <ClInclude Include="include\HeightMapRaw8.h">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClInclude>
     <ClInclude Include="include\HeightMapTexture.h">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClInclude>
     <ClInclude Include="include\IHeightMapLoader.h">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClInclude>
     <ClInclude Include="include\PhysicsLoggerSystem.h">
       <Filter>Source Files\Physics</Filter>
@@ -2307,7 +2307,7 @@
       <Filter>Source Files\core</Filter>
     </ClInclude>
     <ClInclude Include="include\AImpSceneLoader.h">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
     <ClInclude Include="include\FPSCalc.h">
       <Filter>Header Files</Filter>
@@ -2810,103 +2810,103 @@
       <Filter>Source Files\OS\Archive\loader</Filter>
     </ClCompile>
     <ClCompile Include="src\ChunkSerializer.cpp">
-      <Filter>Source Files\codecs</Filter>
+      <Filter>Source Files\loaders</Filter>
     </ClCompile>
     <ClCompile Include="src\3dsLoader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\acLoader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\mdlloader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\mdlLoaderV0.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\mdlWriter.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\MeshLoader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\MeshV2Loader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\animLoader.cpp">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClCompile>
     <ClCompile Include="src\animWriter.cpp">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClCompile>
     <ClCompile Include="src\SkeletonExporter.cpp">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClCompile>
     <ClCompile Include="src\SkeletonLoader.cpp">
-      <Filter>Source Files\codecs\anim</Filter>
+      <Filter>Source Files\loaders\anim</Filter>
     </ClCompile>
     <ClCompile Include="src\FreeImageCodec.cpp">
-      <Filter>Source Files\codecs\image</Filter>
+      <Filter>Source Files\loaders\image</Filter>
     </ClCompile>
     <ClCompile Include="src\CBmpLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CDDSLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\cjpgloader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\cpcxloader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CPNGLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CRawLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CTargaLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CustomTexLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\FreeImageLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\TexLoader.cpp">
-      <Filter>Source Files\codecs\image\load</Filter>
+      <Filter>Source Files\loaders\image\load</Filter>
     </ClCompile>
     <ClCompile Include="src\CBmpWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\CJPGWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\CTargaWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\CustomTexWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\FreeImageWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\TexWriter.cpp">
-      <Filter>Source Files\codecs\image\write</Filter>
+      <Filter>Source Files\loaders\image\write</Filter>
     </ClCompile>
     <ClCompile Include="src\SoundLoader.cpp">
-      <Filter>Source Files\codecs\sound</Filter>
+      <Filter>Source Files\loaders\sound</Filter>
     </ClCompile>
     <ClCompile Include="src\HeightMapRaw16.cpp">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\HeightMapRaw8.cpp">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\HeightMapTexture.cpp">
-      <Filter>Source Files\codecs\terrain</Filter>
+      <Filter>Source Files\loaders\terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\IPhysicObject.cpp">
       <Filter>Source Files\Physics\Deformable</Filter>
@@ -3632,7 +3632,7 @@
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="src\AImpSceneLoader.cpp">
-      <Filter>Source Files\codecs\models</Filter>
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\FPSCalc.cpp">
       <Filter>Source Files\core</Filter>

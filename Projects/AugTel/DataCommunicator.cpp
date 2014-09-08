@@ -24,7 +24,9 @@ namespace AugTel
 		DepthData = 1,
 		DepthSize = 2,
 		IsStereo = 3,
-		CameraConfig = 4
+		CameraConfig = 4,
+		CalibrationDone = 5,
+		ReportMessage = 6
 	};
 	class DataCommunicatorThread :public OS::IThreadFunction
 	{
@@ -109,11 +111,24 @@ int DataCommunicator::_Process()
 		FIRE_LISTENR_METHOD(OnIsStereoImages, (stereo));
 		//ATAppGlobal::Instance();
 	}break;
+	case (int)EMessages::CalibrationDone:
+	{
+		FIRE_LISTENR_METHOD(OnRobotCalibrationDone, ());
+		//ATAppGlobal::Instance();
+	}break;
 	case (int)EMessages::CameraConfig:
 	{
 		OS::StreamReader rdr(&stream);
 		core::string profile= rdr.binReadString();
 		FIRE_LISTENR_METHOD(OnCameraConfig, (profile));
+		//ATAppGlobal::Instance();
+	}break;
+	case (int)EMessages::ReportMessage:
+	{
+		OS::StreamReader rdr(&stream);
+		int code = rdr.binReadInt();
+		core::string msg = rdr.binReadString();
+		FIRE_LISTENR_METHOD(OnReportedMessage, (code,msg));
 		//ATAppGlobal::Instance();
 	}break;
 	default:

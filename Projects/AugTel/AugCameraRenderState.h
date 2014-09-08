@@ -26,6 +26,7 @@
 #include "IGUISliderBar.h"
 #include "DataCommunicator.h"
 #include "SceneEffectManager.h"
+#include "LoadingScreen.h"
 
 namespace mray
 {
@@ -44,6 +45,16 @@ class AugCameraRenderState :public TBee::IEyesRenderingBaseState,public scene::I
 {
 	typedef TBee::IEyesRenderingBaseState Parent;
 protected:
+
+	enum EStatus
+	{
+		ENone,
+		EConnectingRobot,
+		EWaitStart,
+		EStarted
+	};
+	EStatus m_status;
+
 	GCPtr<scene::SceneManager> m_sceneManager;
 	GCPtr<game::GameEntityManager> m_gameManager;
 	GCPtr<scene::ViewPort> m_viewport[2];
@@ -76,6 +87,8 @@ protected:
 
 	video::ParsedShaderPP* m_blurShader;
 
+	LoadingScreen* m_loadScreen;
+
 	bool m_viewDepth;
 
 	bool m_takeScreenShot;
@@ -89,6 +102,10 @@ protected:
 
 	float m_lightMapTimer;
 	scene::LightNode* m_lightSrc;
+
+	void _UpdateStarted(float dt);
+	void _RenderStarted(const math::rectf& rc, ETargetEye eye);
+	void _ChangeState(EStatus st);
 
 	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();
@@ -117,6 +134,8 @@ public:
 	virtual void OnDepthSize(const math::vector2di &sz);
 	virtual void OnIsStereoImages(bool isStereo);
 	virtual void OnCameraConfig(const core::string& cameraProfile);
+	virtual void OnRobotCalibrationDone();
+	virtual void OnReportedMessage(int code, const core::string& msg);
 
 };
 

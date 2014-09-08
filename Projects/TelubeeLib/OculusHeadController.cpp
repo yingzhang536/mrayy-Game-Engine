@@ -22,7 +22,7 @@ math::quaternion OculusHeadController::GetHeadOrientation()
 {
 	if (!AppData::Instance()->oculusDevice)
 		return math::quaternion::Identity;
-	math::quaternion q = AppData::Instance()->oculusDevice->GetOrientation();
+	math::quaternion q = AppData::Instance()->oculusDevice->GetOrientation()*m_initial;
 	q.Normalize();
 
 	return q;
@@ -42,7 +42,12 @@ math::vector3d OculusHeadController::GetHeadPosition()
 void OculusHeadController::Recalibrate()
 {
 	if (AppData::Instance()->oculusDevice)
+	{
 		AppData::Instance()->oculusDevice->ResetOrientation();
+		m_initial = AppData::Instance()->oculusDevice->GetOrientation();
+		m_initial = math::quaternion::Identity;
+	}
+	m_initial = m_initial.inverse();
 }
 
 }

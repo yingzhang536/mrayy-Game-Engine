@@ -525,7 +525,6 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	dev->draw2DShapeTextured(points, coords, 4, 1, 1);
 	//draw UI
 
-
 	math::vector2d pos = rc.ULPoint;
 	_RenderUI(rc,pos);
 

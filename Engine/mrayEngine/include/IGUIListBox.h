@@ -37,6 +37,7 @@ public:
 	ObjectEvent OnSelectChange;//args=Index
 
 	DECLARE_PROPERTY_TYPE(ItemHeight, float, MRAY_DLL);
+	DECLARE_PROPERTY_TYPE(Background, bool, MRAY_DLL);
 public:
 	IGUIListBox(IGUIManager* manager);
 	virtual~IGUIListBox();
@@ -57,7 +58,9 @@ public:
 	virtual int GetItemFromPos(const math::vector2d& y)=0;
 
 	virtual bool SetItemHeight(float h) = 0;
-	virtual float GetItemHeight()const = 0;
+		virtual float GetItemHeight()const = 0;
+		virtual bool SetBackground(bool h) = 0;
+		virtual bool GetBackground()const = 0;
 };
 
 }

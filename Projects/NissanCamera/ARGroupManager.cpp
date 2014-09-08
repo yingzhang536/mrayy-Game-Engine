@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "ARGroupManager.h"
 #include "MeshBufferData.h"
+#include "MeshResourceManager.h"
 
 
 
@@ -13,7 +14,7 @@ namespace NCam
 
 ARGroupManager::ARGroupManager()
 {
-
+	m_sceneManager = 0;
 }
 
 ARGroupManager::~ARGroupManager()
@@ -60,10 +61,26 @@ scene::IRenderable* ARGroupManager::GenerateMeshObject(ARMesh* obj)
 		}
 		colorStream->unlock();*/
 	}
+	gLogManager.log("AR custom mesh object was loaded: vertices["+core::StringConverter::toString(vertCount)+"]", ELL_SUCCESS);
 
 	return node;
 }
 
+scene::IRenderable* ARGroupManager::LoadMeshObject(ARPredef* obj)
+{
+	scene::SMeshPtr mesh = gMeshResourceManager.loadMesh("ARObjects\\"+obj->name,true);
+	if (!mesh)
+	{
+
+		gLogManager.log("Failed to load AR Predefined mesh object: " + obj->name, ELL_WARNING);
+		return 0;
+
+	}
+	scene::MeshRenderableNode* node = new scene::MeshRenderableNode(mesh);
+	gLogManager.log("AR Predefined mesh object was loaded: " + obj->name, ELL_SUCCESS);
+
+	return node;
+}
 ARSceneGroup* ARGroupManager::AddGroup(ARGroup* group)
 {
 	ARSceneGroup* ret = GetGroupListByID(group->groupID);
@@ -75,9 +92,15 @@ ARSceneGroup* ARGroupManager::AddGroup(ARGroup* group)
 	for (int i = 0; i < group->objects.size(); ++i)
 	{
 		scene::IRenderable* r=0;
-		if (group->objects[i]->objectType == EARObjectType::EARMesh)
+		switch (group->objects[i]->objectType)
 		{
-			r= GenerateMeshObject((ARMesh*)group->objects[i]);
+		case EARObjectType::EARMesh:
+			r = GenerateMeshObject((ARMesh*)group->objects[i]);
+			break;
+		case EARObjectType::EARPredef:
+			r = LoadMeshObject((ARPredef*)group->objects[i]);
+		default:
+			break;
 		}
 
 

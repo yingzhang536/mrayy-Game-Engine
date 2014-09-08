@@ -38,6 +38,7 @@ namespace mray
 namespace NCam
 {
 class RenderingStateManager;
+class ConsoleLogDevice;
 
 class ApplicationOculusData;
 
@@ -55,6 +56,7 @@ protected:
 	TBee::RenderingStateManager* m_renderingState;
 
 	core::string m_settingsPath;
+
 
 	TBeeRenderer* m_tbRenderer;
 

@@ -27,6 +27,7 @@ namespace TBee
 class OculusHeadController :public IHeadController
 {
 protected:
+	math::quaternion m_initial;
 public:
 	OculusHeadController();
 	virtual~OculusHeadController();

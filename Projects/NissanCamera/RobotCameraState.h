@@ -35,6 +35,8 @@ namespace mray
 namespace NCam
 {
 	class NissanRobotCommunicator;
+	class ARGroupManager;
+	class ConsoleLogDevice;
 
 	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener
 {
@@ -50,6 +52,7 @@ protected:
 	};
 	scene::MeshRenderableNode* m_surface[2];
 	SurfaceMeshParams m_surfaceParams;
+	math::vector3d m_cameraOffsets;
 
 	typedef IRenderingState Parent;
 
@@ -66,11 +69,16 @@ protected:
 	GUI::IGUIRenderer* m_guiRenderer;
 	bool m_lockAxis[3];
 
+	math::vector2di m_cameraResolution;
+	int m_cameraFPS;
+
 	TBee::CalibHeadController* m_headController;
 	NissanRobotCommunicator* m_robotComm;
 
 	ARServiceProvider* m_arServiceProvider;
+	ARGroupManager* m_arManager;
 
+	ConsoleLogDevice* m_consoleLogDevice;
 	GUI::GUIConsole* m_console;
 
 	float m_hmdFov;
@@ -82,7 +90,8 @@ protected:
 
 	void GenerateSurface(bool plane,float hfov, float vfov, int segments,  float cameraScreenDistance);
 	void _RenderUI(const math::rectf& rc);
-	void RescaleMesh(int index,const math::vector3d &scaleFactor);
+	void RescaleMesh(int index, const math::vector3d &scaleFactor);
+	void SetTransformation( const math::vector3d& pos,const math::vector3d &angles);
 public:
 	RobotCameraState();
 	virtual~RobotCameraState();

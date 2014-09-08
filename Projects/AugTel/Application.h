@@ -71,6 +71,8 @@ protected:
 
 	bool m_drawUI;
 
+	bool m_remoteCamera;
+
 	video::RenderWindow* m_previewWnd;
 	video::IRenderTargetPtr m_previewRT;
 	void _InitResources();

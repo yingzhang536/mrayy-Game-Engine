@@ -37,6 +37,8 @@ namespace AugTel
 		virtual void OnDepthSize(const math::vector2di &sz){}
 		virtual void OnIsStereoImages(bool isStereo){}
 		virtual void OnCameraConfig(const core::string& cameraProfile){}
+		virtual void OnRobotCalibrationDone(){}
+		virtual void OnReportedMessage(int code,const core::string& msg){}
 	};
 
 class DataCommunicator:public ListenerContainer<IDataCommunicatorListener*>
@@ -50,6 +52,8 @@ protected:
 	DECLARE_FIRE_METHOD(OnDepthSize, (const math::vector2di &sz), (sz));
 	DECLARE_FIRE_METHOD(OnIsStereoImages, (bool isStereo), (isStereo));
 	DECLARE_FIRE_METHOD(OnCameraConfig, (const core::string& cameraProfile), (cameraProfile));
+	DECLARE_FIRE_METHOD(OnRobotCalibrationDone, (), ());
+	DECLARE_FIRE_METHOD(OnReportedMessage, (int code, const core::string& msg), (code,msg));
 public:
 	DataCommunicator();
 	virtual~DataCommunicator();

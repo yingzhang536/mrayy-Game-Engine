@@ -76,6 +76,7 @@ public:
 	const NetAddress *connect(const core::string&host,ushort port);
 	const NetAddress *connect(const NetAddress&addr);
 
+	virtual uint GetPeerSocket(const NetAddress&addr) ;
 	bool peerConnected(const NetAddress&addr);
 	
 	void GetConnectedPeers(std::list<NetAddress>& peers);

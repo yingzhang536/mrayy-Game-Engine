@@ -28,6 +28,9 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{497c1674-671f-4b65-b627-dfeccec409c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Debug">
+      <UniqueIdentifier>{52595a15-bd6e-482c-ba09-f03e2162f992}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -75,6 +78,9 @@
     <ClInclude Include="GUIConsoleLayout.h">
       <Filter>Source Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="ConsoleLogDevice.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -106,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="GUIConsole.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleLogDevice.cpp">
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -435,7 +435,7 @@ static gboolean read_data_tobuffer(gst_app_t *app, GstBuffer** b)
 	network::UDPClientError err = app->client->RecvFrom(TmpPacket[app->index], &len, &address, 0);
 	if (err != network::UDP_SOCKET_ERROR_NONE)
 	{
-		printf("Failed to read UDP packet!\n");
+	//	printf("Failed to read UDP packet!\n");
 		return false;
 	}
 	else if (len == 0)

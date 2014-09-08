@@ -626,7 +626,7 @@ public:
 		{
 			//ksvideosrc
 			gstString = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0.index) + // device=" + m_cam0.guidPath + "" +//
-				" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace !  videoflip method=4 !";  // videoflip method=1 !   ";
+				" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace !  videoflip method=4 !";  // videoflip method=1 !   ";
 
 				/*
 				"x264enc  name=enc"
@@ -659,10 +659,10 @@ public:
 			gstString += "videotestsrc pattern=\"black\" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
 
 			//
-			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) +" !video / x - raw - yuv, width = " + core::StringConverter::toString(m_resolution.x) + ", height = " + core::StringConverter::toString(m_resolution.y) + " !ffmpegcolorspace !videoflip method = 4 !videoscale !"
+			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoscale !"
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
 			//name=src2 device-index=" + core::StringConverter::toString(m_cam1)
-			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoscale ! "
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
 
 			gstString += " mix. ! ";

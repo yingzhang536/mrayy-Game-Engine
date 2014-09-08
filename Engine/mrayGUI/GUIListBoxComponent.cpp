@@ -403,7 +403,8 @@ void GUIListBoxComponent::LBDraw(const math::rectf& rc)
 			clr=video::SColor(0.7,0.7,0.7,0.2);
 		else
 			clr=video::SColor(1,1,1,0.2);
-		creator->GetRenderQueue()->AddQuad(0,itmRc,math::rectf(0,0,1,1),clr);
+		if (m_drawBackground)
+			creator->GetRenderQueue()->AddQuad(0,itmRc,math::rectf(0,0,1,1),clr);
 		items[i]->Draw(itmRc,owner, font, creator->GetRenderQueue());
 		if(m_selectedItem==i)
 		{

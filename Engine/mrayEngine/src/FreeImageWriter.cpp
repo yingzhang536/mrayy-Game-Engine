@@ -125,7 +125,22 @@ bool FreeImageWriter::write(video::ImageInfo*tex,OS::IStream* stream,video::ETex
 	if(true)
 	{
 
-		dib = FreeImage_ConvertFromRawBits(pSrc, tex->Size.x, tex->Size.y, srcPitch, bpp, 0xFF0000, 0x00FF00, 0x0000FF, false);
+		dib = FreeImage_ConvertFromRawBits(pSrc, tex->Size.x, tex->Size.y, srcPitch, bpp, 0,0,0, false);
+		FIBITMAP* tmp = dib;
+		dib = FreeImage_ConvertTo32Bits(dib);
+		FreeImage_Unload(tmp);
+
+		int w = FreeImage_GetWidth(dib);
+		int h = FreeImage_GetHeight(dib);
+		//cout<<"The size of the image is: "<<textureFile<<" es "<<w<<"*"<<h<<endl; //Some debugging code
+
+		char* pixeles = (char*)FreeImage_GetBits(dib);
+		//FreeImage loads in BGR format, so you need to swap some bytes(Or use GL_BGR).
+
+		for (int j = 0; j < w*h; j++){
+
+			math::Swap(pixeles[j * 4 + 0], pixeles[j * 4 + 2]);
+		}
 	}else
 	{
 		dib=FreeImage_AllocateT(imageType,tex->Size.x,tex->Size.y,bpp);
@@ -138,7 +153,6 @@ bool FreeImageWriter::write(video::ImageInfo*tex,OS::IStream* stream,video::ETex
 			pSrc+=srcPitch;
 			pDst+=dstPitch;
 		}
-
 		//	memcpy(pDst,pSrc,tex->imageDataSize);
 	}
 	FIMEMORY* mem=FreeImage_OpenMemory();

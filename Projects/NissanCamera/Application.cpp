@@ -99,7 +99,8 @@ void Application::_InitResources()
 	font->Init();
 	gFontResourceManager.setDefaultFont(font);
 
-	gLogManager.log("Resources Loaded",ELL_SUCCESS);
+	gLogManager.log("Resources Loaded", ELL_SUCCESS);
+
 }
 void Application::onEvent(Event* event)
 {
@@ -130,15 +131,20 @@ void Application::onEvent(Event* event)
 		{
 			AppData::Instance()->IsDebugging = !AppData::Instance()->IsDebugging;
 		}
-		/*	if(e->press && e->key==KEY_F12)
+		if(e->press && e->key==KEY_F12)
 		{
-
+			math::vector3d sz;
+			sz.x = GetRenderWindow()->GetSize().x;
+			sz.y = GetRenderWindow()->GetSize().y;
+			sz.z = 1;
+			m_screenShot->createTexture(sz, video::EPixelFormat::EPixel_B8G8R8);
 			video::LockedPixelBox box=m_screenShot->getSurface(0)->lock(math::box3d(0,0,0,GetRenderWindow()->GetSize().x,GetRenderWindow()->GetSize().y,1),video::IHardwareBuffer::ELO_Discard);
 			GetRenderWindow()->TakeScreenShot(box);
 			m_screenShot->getSurface(0)->unlock();
-			gTextureResourceManager.writeResourceToDist(m_screenShot,"screenShot.tga");
+			core::string fname = gFileSystem.getAppPath() + "/Screenshots/screen" + core::StringConverter::toString(gEngine.getTimer()->getSeconds()) + ".png";
+			gTextureResourceManager.writeResourceToDist(m_screenShot,fname);
 
-		}*/
+		}
 	}
 
 }
@@ -203,7 +209,9 @@ void Application::init(const OptionContainer &extraOptions)
 	}
 	_InitResources();
 
-	LoadSettingsXML("TBeeSettings.xml");
+	NCAppGlobals::Instance()->Load("NissanConfig.cfg");
+
+	LoadSettingsXML("NissanSettings.xml");
 
 	this->m_limitFps = false;
 

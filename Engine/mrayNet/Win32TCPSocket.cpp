@@ -50,7 +50,10 @@ Win32TCPSocket::Win32TCPSocket(Win32Socket*sock){
 	m_attachedSock=sock;
 	m_threadFunc=new Win32TCPSocketProcessThread(this);
 
-	m_toCloseMutex=OS::IThreadManager::getInstance().createMutex();
+	m_sleepInterval = 10;
+
+	m_peersMutex = OS::IThreadManager::getInstance().createMutex();
+	m_toCloseMutex = OS::IThreadManager::getInstance().createMutex();
 }
 
 Win32TCPSocket::~Win32TCPSocket(){
@@ -127,6 +130,7 @@ bool Win32TCPSocket::startSocket(int port,int maxIncomingConnection,int sleepInt
 
 	m_localAddress=net->getSockAddr(m_socket);
 
+	FIRE_LISTENR_METHOD(OnSocketStarted, (this))
 	
 	return true;
 }
@@ -152,6 +156,7 @@ void Win32TCPSocket::stopSocket(){
 		delete *it;
 	}
 	m_connectedPeers.clear();
+	FIRE_LISTENR_METHOD(OnSocketStopped, (this))
 
 	
 }
@@ -181,17 +186,16 @@ void Win32TCPSocket::send(void*data,uint size,bool imediate,const NetAddress&add
 
 	traceFunction(eNetwork);
 
-	SPacket*pack=getOrCreatePacket();
-	pack->data.resize(size);
-	pack->data.write(&size,sizeof(size));
-	pack->data.write(data,size);
-	pack->remoteAddress=addr;
 
-	if(!imediate){
+	if (!imediate){
+		SPacket*pack = getOrCreatePacket();
+		pack->data.resize(size);
+		//pack->data.write(&size,sizeof(size));
+		pack->data.write(data, size);
+		pack->remoteAddress = addr;
 		m_sendPackets.push_back(pack);
 	}else{
-		sendPacket(pack->data.pointer(),pack->data.size(),pack->remoteAddress);
-		m_graveyardPackets.push_back(pack);
+		sendPacket(data,size,addr);
 	}
 	
 }
@@ -211,6 +215,13 @@ Win32TCPSocket::STCPPeer*Win32TCPSocket::getPeer(const NetAddress&addr){
 		if((*it)->address==addr)return *it;
 	}
 	return 0;
+}
+uint Win32TCPSocket::GetPeerSocket(const NetAddress&addr)
+{
+	STCPPeer* p=getPeer(addr);
+	if (!p)
+		return 0;
+	return p->m_socket;
 }
 
 bool Win32TCPSocket::peerConnected(const NetAddress&addr){
@@ -236,7 +247,7 @@ const NetAddress *Win32TCPSocket::connect(const NetAddress&addr){
 		
 		return 0;
 	}
-	net->setSocketOption(sock,ESocketOption::ESO_NONBLOCK,true);
+	//net->setSocketOption(sock,ESocketOption::ESO_NONBLOCK,true);
 	STCPPeer *peer=new STCPPeer();
 	peer->m_socket=sock;
 	peer->address = addr;
@@ -345,6 +356,9 @@ void Win32TCPSocket::update(){
 				m_connectedPeers.push_back(peer);
 				FD_SET(newSock,&readFD);
 				FD_SET(newSock,&exceptionFD);
+
+				FIRE_LISTENR_METHOD(OnPeerConnected, (this,addr))
+
 			}
 		}else 
 		{
@@ -362,7 +376,7 @@ void Win32TCPSocket::update(){
 						if(len>0){
 							len=recv((*peerIt)->m_socket,dataBuffer,sz,0);
 
-							GCPtr<SPacket> pack=new SPacket();
+							SPacket* pack=new SPacket();
 							pack->data.resize(len+1);
 							pack->data.write(dataBuffer,len);
 							pack->data[len]=0;

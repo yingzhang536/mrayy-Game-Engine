@@ -136,6 +136,16 @@ float GUIListBox::GetItemHeight()const
 	return m_component->GetItemHeight();
 }
 
+bool GUIListBox::SetBackground(bool h)
+{
+	m_component->SetBackground(h);
+	return true;
+}
+bool GUIListBox::GetBackground()const
+{
+
+	return m_component->GetBackground();
+}
 void GUIListBox::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())

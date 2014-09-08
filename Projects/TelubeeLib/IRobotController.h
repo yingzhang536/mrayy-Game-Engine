@@ -2,7 +2,7 @@
 #ifndef IRobotController_h__
 #define IRobotController_h__
 
-
+#include <string>
 
 class ITelubeeRobotListener;
 struct RobotStatus;
@@ -38,6 +38,7 @@ class ITelubeeRobotListener
 public:
 
 	virtual void OnCollisionData(float left, float right){}
+	void OnReportMessage(int code, const std::string& msg){}
 };
 
 class IRobotController

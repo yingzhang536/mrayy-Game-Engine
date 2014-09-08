@@ -67,9 +67,9 @@ namespace loaders{
 _3dsLoader::RenderMaterialInfo::RenderMaterialInfo()
 {
 	mat=new video::RenderMaterial();
-	mat->CreateTechnique(mT(""))->CreatePass(mT(""));
+	mat->CreateTechnique(mT("Default"))->CreatePass(mT("Default"));
 }
-scene::SMesh* _3dsLoader::load(const  mchar*filename)
+scene::SMesh* _3dsLoader::load(const  core::string&filename)
 {
 	if(!canLoad(filename))return 0;
 	m_FilePointer=gFileSystem.openFile(filename);
@@ -111,7 +111,7 @@ scene::SMesh*_3dsLoader::load(OS::IStream* stream)
 	return Mesh;
 
 }
-bool _3dsLoader::canLoad(const  mchar*name)
+bool _3dsLoader::canLoad(const  core::string&name)
 {
 	core::string str=core::StringUtil::ToLower(name);
 	return strSearch(str.c_str(),mT(".3ds"))!=0;
@@ -319,7 +319,7 @@ void _3dsLoader::ProcessNextMaterialChunk(scene::SMesh*pModel, tChunk *pPrevious
 			
 			// Here we read in the material name
 			m_CurrentChunk->bytesRead += m_FilePointer->read(strBuffer,  m_CurrentChunk->length - m_CurrentChunk->bytesRead);
-			materials[materials.size()- 1].Name=strBuffer;
+			materials[materials.size() - 1].Name = strBuffer;
 			break;
 		case _3DS_MATAMBIENT:						
 			// This holds the R G B color of our object

@@ -38,11 +38,14 @@ class ARGroupManager
 protected:
 	GroupMap m_groups;
 	scene::IRenderable* GenerateMeshObject(ARMesh* mesh);
+	scene::IRenderable* LoadMeshObject(ARPredef* mesh);
  
 	scene::ISceneManager* m_sceneManager;
 public:
 	ARGroupManager();
 	virtual ~ARGroupManager();
+
+	void SetSceneManager(scene::ISceneManager* mgr){ m_sceneManager = mgr; }
 
 	ARSceneGroup* AddGroup(ARGroup* group);
 	ARSceneGroup* GetGroupListByID(uint id);

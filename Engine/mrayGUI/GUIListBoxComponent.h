@@ -75,7 +75,6 @@ public:
 public:
 
 	ItemList items;
-
 	IListener* listener;
 
 	GUIListBoxComponent(IGUIElement* owner);
@@ -91,6 +90,7 @@ public:
 	void SetSelectedItem(int itm,int itemsCount);
 
 	void SetBackground(bool b){ m_drawBackground = b; }
+	bool GetBackground(){ return m_drawBackground; }
 
 	void SetSelectionColor(const video::SColor& clr);
 	const video::SColor& GetSelectionColor()const;

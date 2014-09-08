@@ -59,8 +59,9 @@ torsoController::torsoController()
 		//m_impl->mvRobot[BASE][i] = new MovAvg();
 		//m_impl->mvRobot[HEAD][i] = new MovAvg();
 	//}
-
-	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)timerThreadHead, this, NULL, NULL);
+	threadStart = true;
+	m_calibrated = false;
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)timerThreadHead, this, NULL, NULL);
 	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&timerThreadBase, this, NULL, NULL); 
 
 }
@@ -186,7 +187,7 @@ void torsoController::UpdateRobotStatus(const RobotStatus& st)
 	targetQuat[0] = st.headRotation[0];
 	targetQuat[1] = st.headRotation[3];
 	targetQuat[2] = st.headRotation[1];
-	targetQuat[3] = st.headRotation[2];
+	targetQuat[3] = -st.headRotation[2];
 
 	m_headPos[0] = -st.headPos[2];
 	m_headPos[1] = -st.headPos[0];
@@ -227,9 +228,10 @@ DWORD torsoController::timerThreadHead(torsoController *robot, LPVOID pdata){
 	int count = 0;
 	while (!isDone){
 		if (threadStart){
-
+			robot->_innerProcessRobot();
 		}
 
+		Sleep(100);
 	}
 
 	return 0;
@@ -248,6 +250,117 @@ DWORD torsoController::timerThreadBase(torsoController *robot, LPVOID pdata){
 	return 0;
 }
 
+
+
+void torsoController::_innerProcessRobot()
+{
+	if (!m_calibrated)
+		return;
+	double tmp_tangles[Torso_DOF] = { 0 }, torque[Torso_DOF] = { 0 };	// テンポラリ目標角格納配列、トルク格納配列
+	double debug_tangles[Torso_DOF], debug_nangles[Torso_DOF];
+
+	bool endflag2,endflag;
+	int count;
+	int looptime;
+	int bufftime;
+	char key;
+	int ret;
+
+	endflag2 = count = 0;
+	looptime = 0.0;
+	bufftime = 0;
+	///////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////  should be moved to different thread ///////////////
+	///////////////////////////////////////////////////////////////////////////////////
+	printf("Entering real-time mode..\n");
+	while (!endflag2){
+
+
+		printf("　press [enter] when ready.\n");
+		printf("　press [q] for finish experience.\n");
+		count++;
+		while (!_kbhit() && !m_connectFlag)
+		{
+			Sleep(100);
+		}
+		if (!m_connectFlag)
+		{
+			key = _getch();
+			if (key == 'q' || key == '9') endflag2 = 1;
+		}
+		if (endflag2 == true)
+		{
+			continue;;
+		}
+
+		endflag = 0;
+		m_isConnected = true;
+		m_connectFlag = true;
+
+		realTorso.ClearParameter();					// パラメータ群初期化
+		MainTimer.Start();							// タイマを初期化・スタート
+		SetZeroPos();					// トルソ初期姿勢決定
+		printf("TORSO Initialization.\n");
+		printf("press [q] for exit.\n");
+		realTorso.GetCounterValue();				// エンコーダ取得(ダミー処理、初速急上昇回避のため、必要ないかも)
+		ret = FirstMoving();						// 初期駆動
+		if (ret != 0){
+			printf("Initialization stopped.\n");
+			endflag = 1;
+		}
+
+		printf("Entering real-time mode..\n");
+		printf("press [q] for exit.\n");
+
+		MainTimer.Count();
+		//----- メインループ -----
+		while (!endflag){
+			looptime = (double)(MainTimer.Elapsed() - bufftime) / 1000000;	// ループタイム計測(確認用)
+			bufftime = MainTimer.Elapsed();			// ループタイム計測(確認用)
+			realTorso.GetCounterValue();			// Read Encorder
+
+			realTorso.SetTargetMatrix(targetRotMat);	// Data Aquesition
+			realTorso.CalcTargetAngles(tmp_tangles);			// IK Calculation
+			realTorso.SetTargetAngles(tmp_tangles);				// IK Solution to the robot
+
+			realTorso.SendToGLprogram();			// GL Check
+			realTorso.GetTorques(torque);			// PID Conbtroller
+			realTorso.SetDAValue(torque);			// Torque Output
+
+			realTorso.GetTargetAngles(debug_tangles);
+
+#ifdef FILE_OUT_TORSO_JOINT_DATA
+			fprintf(fp_torso, "%f, ", looptime);
+			fprintf(fp_torso, "%f, %f, %f, %f, %f, %f,,",
+				debug_tangles[0], debug_tangles[1], debug_tangles[2],
+				debug_tangles[3], debug_tangles[4], debug_tangles[5]);
+#endif
+			realTorso.GetNowAngles(debug_nangles);
+#ifdef FILE_OUT_TORSO_JOINT_DATA
+			fprintf(fp_torso, "%f, %f, %f, %f, %f, %f\n",
+				debug_nangles[0], debug_nangles[1], debug_nangles[2],
+				debug_nangles[3], debug_nangles[4], debug_nangles[5]);
+#endif
+			if (_kbhit()) { key = _getch(); if (key == 'q' || key == '9') endflag = 1; }
+			if (!m_connectFlag)
+				endflag = 1;
+
+			//Sleep(1);
+			MainTimer.CountAndWait(500);
+		}
+		m_isConnected = false;
+
+		printf("Exiting real-time mode.\n");
+		printf("To kill process, press [e].\n");
+		FinishMoving();
+
+		printf("move to next visitor. Visitor [count:%d]\n", count);
+	}
+	m_isConnected = false;
+
+	for (int i = 0; i < Torso_DOF; i++) torque[i] = 0.0;
+	realTorso.SetDAValue(torque);					// 全チャンネル0トルク出力
+}
 
 
 
@@ -427,6 +540,7 @@ int torsoController::FinishMoving(void)
 
 	realTorso.ChangeLimitRange(0);					// 可動範囲を戻す
 
+
 	return 0;
 }
 
@@ -548,100 +662,9 @@ int torsoController::mainRoutine(int CalibSelect)
 		_getch();
 	}
 
-	endflag2 = count = 0;
-	looptime = 0.0;
-	bufftime = 0;
+	m_calibrated = true;
 
 
-	///////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////  should be moved to different thread ///////////////
-	///////////////////////////////////////////////////////////////////////////////////
-	printf("Entering real-time mode..\n");
-	while (!endflag2){
-
-
-		printf("　press [enter] when ready.\n");
-		printf("　press [q] for finish experience.\n");
-		count++;
-		while (!_kbhit() && !m_connectFlag)
-		{
-			Sleep(100);
-		}
-		if (!m_connectFlag)
-		{
-			key = _getch();
-			if (key == 'q' || key == '9') endflag2 = 1;
-		}
-		if (endflag2 == true)
-		{
-			continue;;
-		}
-
-		endflag = 0;
-		m_isConnected = true;
-		m_connectFlag = true;
-
-		realTorso.ClearParameter();					// パラメータ群初期化
-		MainTimer.Start();							// タイマを初期化・スタート
-		SetZeroPos();					// トルソ初期姿勢決定
-		printf("TORSO Initialization.\n");
-		printf("press [q] for exit.\n");
-		realTorso.GetCounterValue();				// エンコーダ取得(ダミー処理、初速急上昇回避のため、必要ないかも)
-		ret = FirstMoving();						// 初期駆動
-		if (ret != 0){
-			printf("Initialization stopped.\n");
-			endflag = 1;
-		}
-
-		printf("Entering real-time mode..\n");
-		printf("press [q] for exit.\n");
-
-		MainTimer.Count();
-		//----- メインループ -----
-		while (!endflag){
-			looptime = (double)(MainTimer.Elapsed() - bufftime) / 1000000;	// ループタイム計測(確認用)
-			bufftime = MainTimer.Elapsed();			// ループタイム計測(確認用)
-			realTorso.GetCounterValue();			// Read Encorder
-
-			realTorso.SetTargetMatrix(targetRotMat);	// Data Aquesition
-			realTorso.CalcTargetAngles(tmp_tangles);			// IK Calculation
-			realTorso.SetTargetAngles(tmp_tangles);				// IK Solution to the robot
-
-			realTorso.SendToGLprogram();			// GL Check
-			realTorso.GetTorques(torque);			// PID Conbtroller
-			realTorso.SetDAValue(torque);			// Torque Output
-
-			realTorso.GetTargetAngles(debug_tangles);
-
-#ifdef FILE_OUT_TORSO_JOINT_DATA
-			fprintf(fp_torso, "%f, ", looptime);
-			fprintf(fp_torso, "%f, %f, %f, %f, %f, %f,,",
-				debug_tangles[0], debug_tangles[1], debug_tangles[2],
-				debug_tangles[3], debug_tangles[4], debug_tangles[5]);
-#endif
-			realTorso.GetNowAngles(debug_nangles);
-#ifdef FILE_OUT_TORSO_JOINT_DATA
-			fprintf(fp_torso, "%f, %f, %f, %f, %f, %f\n",
-				debug_nangles[0], debug_nangles[1], debug_nangles[2],
-				debug_nangles[3], debug_nangles[4], debug_nangles[5]);
-#endif
-			if (_kbhit()) { key = _getch(); if (key == 'q' || key == '9') endflag = 1; }
-			if (!m_connectFlag)
-				endflag = 1;
-			MainTimer.CountAndWait(500);
-		}
-		m_isConnected = false;
-
-		printf("Exiting real-time mode.\n");
-		printf("To kill process, press [e].\n");
-		FinishMoving();
-
-		printf("move to next visitor. Visitor [count:%d]\n", count);
-	}
-	m_isConnected = false;
-
-	for (i = 0; i<Torso_DOF; i++) torque[i] = 0.0;
-	realTorso.SetDAValue(torque);					// 全チャンネル0トルク出力
 	return 1;
 }
 

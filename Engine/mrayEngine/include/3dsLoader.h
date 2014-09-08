@@ -30,7 +30,7 @@ class MRAY_DLL _3dsLoader:public IMeshLoader
 		RenderMaterialInfo();
 		~RenderMaterialInfo()
 		{
-			delete mat;
+		//	delete mat;
 		}
 		core::string Name;
 		video::RenderMaterial* mat;
@@ -89,9 +89,9 @@ class MRAY_DLL _3dsLoader:public IMeshLoader
 	std::vector<RenderMaterialInfo> materials;
 public:
 	_3dsLoader(){};
-	virtual scene::SMesh* load(const  mchar* name);
+	virtual scene::SMesh* load(const  core::string& name);
 	virtual scene::SMesh* load(OS::IStream* stream);
-	virtual bool canLoad(const  mchar* name);
+	virtual bool canLoad(const  core::string& name);
 	virtual const core::string&getExtension();
 };
 };//loaders

@@ -51,6 +51,8 @@ protected:
 		DepthSize = 2,
 		IsStereo = 3,
 		CameraConfig = 4,
+		CalibrationDone = 5,
+		ReportMessage = 6,
 	};
 
 	bool m_robotInited;
@@ -143,8 +145,10 @@ public:
 	void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status);
 	void OnCollisionData(RobotCommunicator* sender, float left, float right);
 	void OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address);
+	void OnCalibrationDone(RobotCommunicator* sender);
+	void OnReportMessage(RobotCommunicator* sender, int code, const core::string& msg);
 
-	void OnMessage(network::NetAddress* addr,const core::string& msg, const core::string& value);
+	void OnMessage(network::NetAddress* addr, const core::string& msg, const core::string& value);
 
 	CameraProfileManager* LoadCameraProfiles(const core::string& path);
 	CameraProfileManager* GetCameraProfileManager(){ return m_cameraProfileManager; }

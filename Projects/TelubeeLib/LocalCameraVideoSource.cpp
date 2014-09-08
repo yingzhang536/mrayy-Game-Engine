@@ -23,6 +23,7 @@ namespace TBee
 	m_cameraSource[0].videoGrabber = new video::VideoGrabberTexture();
 	m_cameraSource[1].videoGrabber = new video::VideoGrabberTexture();
 
+	m_started = false;
 }
 LocalCameraVideoSource::~LocalCameraVideoSource()
 {
@@ -31,6 +32,25 @@ LocalCameraVideoSource::~LocalCameraVideoSource()
 	delete m_cameraSource[1].videoGrabber;
 }
 
+void LocalCameraVideoSource::SetCameraResolution(const math::vector2d& res, int fps)
+{
+	m_cameraResolution = res;
+	m_cameraFPS = fps;
+
+	if (m_started)
+	{
+		for (int i = 0; i < 2;++i)
+		{
+			if (m_cameraSource[i].camera)
+			{
+				m_cameraSource[i].camera->Stop();
+				m_cameraSource[i].camera->InitDevice(m_cameraSource[i].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
+				m_cameraSource[i].camera->Start();
+
+			}
+		}
+	}
+}
 void LocalCameraVideoSource::Init()
 {
 	for (int i = 0; i < 2; ++i)
@@ -44,19 +64,26 @@ void LocalCameraVideoSource::Init()
 }
 void LocalCameraVideoSource::Open()
 {
+	m_started = true;
 	m_cameraSource[0].camera->InitDevice(m_cameraSource[0].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 	if (m_cameraSource[1].camera)
 		m_cameraSource[1].camera->InitDevice(m_cameraSource[1].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 
+
 	for (int i = 0; i < 2; ++i)
 	{
 		if (m_cameraSource[i].camera)
-			m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0");
+		{
+			m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0.5");
+			core::string val = m_cameraSource[i].camera->GetParameter(video::ICameraVideoGrabber::Param_Focus);
+			printf("focus value is: %s\n", val.c_str());
+		}
 	}
 
 }
 void LocalCameraVideoSource::Close()
 {
+	m_started = false;
 	m_cameraSource[0].camera->Stop();
 	if (m_cameraSource[1].camera)
 		m_cameraSource[1].camera->Stop();

@@ -40,7 +40,11 @@ namespace mray
 		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort){};
 		virtual void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status){};
 
+		virtual void OnCalibrationDone(RobotCommunicator* sender){};
+
 		virtual void OnCollisionData(RobotCommunicator* sender, float left, float right){}
+
+		virtual void OnReportMessage(RobotCommunicator* sender, int code, const core::string& msg){}
 	};
 
 	class IMessageSink
@@ -99,6 +103,7 @@ public:
 	int _Process();
 
 	virtual void OnCollisionData(float left, float right);
+	void OnReportMessage(int code, const std::string& msg);
 
 };
 

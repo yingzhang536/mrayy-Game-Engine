@@ -280,7 +280,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 				}
 
 					
-				if (prof )
+				if (prof && false)
 				{
 					for (int j = 0; j < count; ++j)
 					{
@@ -559,6 +559,30 @@ void TRApplication::OnUserDisconnected(RobotCommunicator* sender, const network:
 	m_debugData.userConnected = false;
 	m_startVideo = false;
 	printf("User Disconnected : %s\n", address.toString().c_str());
+}
+void TRApplication::OnCalibrationDone(RobotCommunicator* sender)
+{
+
+	const int BufferLen = 64;
+	uchar buffer[BufferLen];
+	OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
+	int reply = (int)EMessages::DepthSize;
+	int len = stream.write(&reply, sizeof(reply));
+	m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+}
+
+void TRApplication::OnReportMessage(RobotCommunicator* sender, int code, const core::string& msg)
+{
+	const int BufferLen = 512;
+	uchar buffer[BufferLen];
+	OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
+	OS::StreamWriter wrtr(&stream);
+	int reply = (int)EMessages::ReportMessage;
+	int len = stream.write(&reply, sizeof(reply));
+	len += wrtr.binWriteInt(code);
+	len += wrtr.binWriteString(msg);
+	m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+
 }
 
 void TRApplication::OnMessage(network::NetAddress* addr, const core::string& msg, const core::string& value)

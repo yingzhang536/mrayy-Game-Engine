@@ -105,6 +105,7 @@
     <ClInclude Include="ARGroupManager.h" />
     <ClInclude Include="ARServiceProvider.h" />
     <ClInclude Include="CalibHeadController.h" />
+    <ClInclude Include="ConsoleLogDevice.h" />
     <ClInclude Include="dispObjSM.h" />
     <ClInclude Include="dispObjSMParser.h" />
     <ClInclude Include="ARDataTypes.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="ARGroupManager.cpp" />
     <ClCompile Include="ARServiceProvider.cpp" />
     <ClCompile Include="CalibHeadController.cpp" />
+    <ClCompile Include="ConsoleLogDevice.cpp" />
     <ClCompile Include="dispObjSMParser.cpp" />
     <ClCompile Include="GUIConsole.cpp" />
     <ClCompile Include="NissanRobotCommunicator.cpp" />

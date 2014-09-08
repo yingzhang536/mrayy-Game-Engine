@@ -132,6 +132,7 @@ namespace AugTel
 // 	m_eyes[0].cw = 0;
 // 	m_eyes[1].cw = 1;
 
+	m_status = EConnectingRobot;
 	m_camVideoSrc = src;
 
 	SetVideoSource(m_camVideoSrc);
@@ -147,11 +148,16 @@ namespace AugTel
 
 	m_lightMapTimer = 0;
 
+	m_showScene = false;
+
 	m_showDebug = false;
 	m_vtState = new VTBaseState();
+
+	m_loadScreen = new LoadingScreen();
 }
 AugCameraRenderState::~AugCameraRenderState()
 {
+	delete m_loadScreen;
 	delete m_vtState;
 	delete m_data;
 	delete m_camVideoSrc;
@@ -168,6 +174,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 	if (Parent::OnEvent(e, rc))
 		return true;
 	bool ok = false;
+
 	if (m_guiManager)
 	{
 		if (m_guiManager->OnEvent(e, &rc))
@@ -178,7 +185,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 		KeyboardEvent* evt = (KeyboardEvent*)e;
 		if (evt->press)
 		{
-			if ( evt->key == KEY_F11)
+			if (evt->key == KEY_F11)
 			{
 				gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->GetColorTexture(), "depth.tga");
 			}
@@ -220,21 +227,12 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				m_showScene = !m_showScene;
 				ok = true;
 			}
-			else if (evt->key == KEY_SPACE )
+			else if (evt->Char==43 )
 			{
-				if (m_robotConnector->IsRobotConnected())
-				{
-					m_screenLayout->OnDisconnected();
-					m_robotConnector->EndUpdate();
-				}
-				else
-				{
-					m_vtState->CalibratePosition();
-
-					m_robotConnector->GetHeadController()->Recalibrate();
-					m_robotConnector->StartUpdate();
-					m_screenLayout->OnConnected();
-				}
+				 if (m_status == EWaitStart)
+					_ChangeState(EConnectingRobot);
+				 else 
+					 _ChangeState(EWaitStart);
 				ok = true;
 			}
 			else if (evt->key == KEY_ESCAPE)// && evt->lshift)
@@ -311,7 +309,7 @@ void AugCameraRenderState::InitState()
 		m_gameManager->SetPhysicsManager(m_phManager);
 		m_gameManager->SetSceneManager(m_sceneManager);
 
-		m_showScene = true;
+		m_showScene = false;
 
 		gAppData.guiManager = m_guiManager;
 	}
@@ -355,6 +353,9 @@ void AugCameraRenderState::InitState()
 	}
 	{
 		m_data->Init();
+	}
+	{
+		m_loadScreen->Init();
 	}
 	{
 		std::vector<game::GameEntity*> entLst;
@@ -549,6 +550,9 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	m_data->robotCommunicator->SetEnabled(true);
 	m_effects->SetAcive("Start", true);
 	m_effects->Begin();
+
+	m_status = ENone;
+	m_loadScreen->Start();
 }
 
 void AugCameraRenderState::OnExit()
@@ -564,6 +568,8 @@ void AugCameraRenderState::OnExit()
 
 	gAppData.cameraProvider = 0;
 	m_data->robotCommunicator->SetEnabled(false);
+	
+	m_loadScreen->End();
 }
 void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 {
@@ -716,9 +722,11 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 }
 
 #define DRAW_GRID false
-
-video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETargetEye eye)
+void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 {
+	video::IVideoDevice* device = Engine::getInstance().getDevice();
+	int index = GetEyeIndex(eye);
+
 	if (m_depthTime > 0.3)
 	{
 		m_depthTime = 0;
@@ -735,8 +743,6 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 
 	m_depthVisualizer->Update();
 
-	video::IVideoDevice* device = Engine::getInstance().getDevice();
-	int index = GetEyeIndex(eye);
 	m_camVideoSrc->Blit();
 
 	if (AppData::Instance()->IsDebugging || m_showDebug)
@@ -774,8 +780,8 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 		r.ULPoint *= rc.getSize();
 		r.BRPoint *= rc.getSize();
 
-		device->draw2DImage(r,video::SColor(1,1,1,0.5));
-	//	m_openNiHandler->Render(rc, 0.5f);
+		device->draw2DImage(r, video::SColor(1, 1, 1, 0.5));
+		//	m_openNiHandler->Render(rc, 0.5f);
 	}
 	if (AppData::Instance()->IsDebugging && false)
 		m_gameManager->GUIRender(Parent::m_guiRenderer, vprect);
@@ -788,6 +794,40 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 		device->draw2DImage(vprect, 1, 0, &tc);
 	}
 
+	math::rectf vp(0, m_renderTarget[index]->GetSize());
+	m_guiManager->DrawAll(&vp);
+
+	/*video::ITexture* ret= m_effects->Render(m_renderTarget[index]->GetColorTexture(), rc);
+	device->setRenderTarget(m_renderTarget[index],false);
+
+	tex.SetTexture(ret);
+	device->useTexture(0, &tex);
+	device->draw2DImage(vprect, 1);
+	*/
+}
+video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETargetEye eye)
+{
+	video::IVideoDevice* device = Engine::getInstance().getDevice();
+	int index = GetEyeIndex(eye);
+	Parent::Render(rc, eye);
+	switch (m_status)
+	{
+	case mray::AugTel::AugCameraRenderState::ENone:
+		break;
+	case mray::AugTel::AugCameraRenderState::EWaitStart:
+	{
+		math::rectf vp(0, m_renderTarget[index]->GetSize());
+		m_guiManager->DrawAll(&vp);
+	}break;
+	case mray::AugTel::AugCameraRenderState::EConnectingRobot:
+			m_loadScreen->Draw(rc);
+		break;
+	case mray::AugTel::AugCameraRenderState::EStarted:
+		_RenderStarted(rc, eye);
+		break;
+	default:
+		break;
+	}
 	if (m_takeScreenShot)
 	{
 		ulong currTime = gEngine.getTimer()->getMilliseconds();
@@ -798,24 +838,13 @@ video::IRenderTarget* AugCameraRenderState::Render(const math::rectf& rc, ETarge
 		gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->GetColorTexture(0), name);
 		m_takeScreenShot = false;
 	}
-	math::rectf vp(0, m_renderTarget[index]->GetSize());
-	m_guiManager->DrawAll(&vp);
-
-	video::ITexture* ret= m_effects->Render(m_renderTarget[index]->GetColorTexture(), rc);
-	device->setRenderTarget(m_renderTarget[index],false);
-
-	tex.SetTexture(ret);
-	device->useTexture(0, &tex);
-	device->draw2DImage(vprect, 1);
-
 	return m_renderTarget[index];
 
 
 }
 
-void AugCameraRenderState::Update(float dt)
+void AugCameraRenderState::_UpdateStarted(float dt)
 {
-	Parent::Update(dt);
 	m_sceneManager->update(dt);
 	m_gameManager->Update(dt);
 	m_guiManager->Update(dt);
@@ -826,7 +855,7 @@ void AugCameraRenderState::Update(float dt)
 
 	m_openNiHandler->Update(dt);
 
-	controllers::IKeyboardController* kb= gAppData.inputMngr->getKeyboard();
+	controllers::IKeyboardController* kb = gAppData.inputMngr->getKeyboard();
 
 	math::vector2d s = m_openNiHandler->GetScale();
 	s.x += (kb->getKeyState(KEY_K) - kb->getKeyState(KEY_J))*dt*0.5f;
@@ -838,7 +867,6 @@ void AugCameraRenderState::Update(float dt)
 	m_openNiHandler->SetScale(s);
 	m_openNiHandler->SetCenter(c);
 
-	m_vtState->Update(dt);
 
 	m_depthTime += dt;
 
@@ -848,7 +876,78 @@ void AugCameraRenderState::Update(float dt)
 	if (m_videoSource->IsLocal() && f != m_focus)
 	{
 		TBee::LocalCameraVideoSource* src = dynamic_cast<TBee::LocalCameraVideoSource*>(m_videoSource);
-	//	src->GetCamera(0)->SetParameter(video::ICameraVideoGrabber::Param_Focus, core::StringConverter::toString(m_focus));
+		//	src->GetCamera(0)->SetParameter(video::ICameraVideoGrabber::Param_Focus, core::StringConverter::toString(m_focus));
+	}
+}
+
+void AugCameraRenderState::_ChangeState(EStatus st)
+{
+	m_status = st;
+	/*
+	if (m_robotConnector->IsRobotConnected())
+	{
+		m_screenLayout->OnDisconnected();
+		m_robotConnector->EndUpdate();
+	}
+	else
+	{
+		m_vtState->CalibratePosition();
+
+		m_robotConnector->GetHeadController()->Recalibrate();
+		m_robotConnector->StartUpdate();
+		m_screenLayout->OnConnected();
+	}*/
+	switch (m_status)
+	{
+	case mray::AugTel::AugCameraRenderState::ENone:
+		break;
+	case mray::AugTel::AugCameraRenderState::EWaitStart:
+		m_screenLayout->OnDisconnected();
+		m_robotConnector->EndUpdate();
+		break;
+	case mray::AugTel::AugCameraRenderState::EConnectingRobot:
+		m_vtState->CalibratePosition();
+
+		m_robotConnector->GetHeadController()->Recalibrate();
+		m_robotConnector->UpdateStatus();
+		Sleep(200);
+		m_robotConnector->StartUpdate();
+		m_screenLayout->OnConnected();
+
+		m_loadScreen->Start();
+		break;
+	case mray::AugTel::AugCameraRenderState::EStarted:
+		break;
+	default:
+		break;
+	}
+}
+
+void AugCameraRenderState::Update(float dt)
+{
+	Parent::Update(dt);
+	m_vtState->Update(dt);
+
+	switch (m_status)
+	{
+	case mray::AugTel::AugCameraRenderState::ENone:
+		_ChangeState(EWaitStart);
+		break;
+	case mray::AugTel::AugCameraRenderState::EWaitStart:
+		m_guiManager->Update(dt);
+		break;
+	case mray::AugTel::AugCameraRenderState::EConnectingRobot:
+		m_loadScreen->Update(dt);
+		if (m_loadScreen->IsDone())
+		{
+			m_status = EStarted;
+		}
+		break;
+	case mray::AugTel::AugCameraRenderState::EStarted:
+		_UpdateStarted(dt);
+		break;
+	default:
+		break;
 	}
 
 
@@ -887,6 +986,17 @@ void AugCameraRenderState::OnCameraConfig(const core::string& cameraProfile)
 		return;
 	m_cameraConfiguration = config;
 	m_camConfigDirty = true;
+}
+void AugCameraRenderState::OnRobotCalibrationDone()
+{
+	printf("Robot was calibrated!\n");
+
+}
+
+
+void AugCameraRenderState::OnReportedMessage(int code, const core::string& msg)
+{
+	printf("Message arrived [%d]:%s\n", code, msg.c_str());
 }
 
 }

@@ -110,7 +110,7 @@ video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETar
 
 	if (m_showColor && !m_changed)
 	{
-		if (clr.R > 0.8 && clr.G < 0.3 && clr.B < 0.3)
+		if (clr.R > 0.8 && clr.G < 0.6 && clr.B < 0.6)
 		{
 			m_changed = true;
 			float latency = gEngine.getTimer()->getSeconds() - m_startTime;

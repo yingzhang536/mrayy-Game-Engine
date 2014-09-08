@@ -65,6 +65,8 @@ RenderTechnique* RenderMaterial::CreateTechnique(const core::string& name)
 	RenderTechnique* t=new RenderTechnique(this);
 	t->SetName(name);
 	AddTechnique(t);
+	if (m_activeTechnique == 0)
+		m_activeTechnique = t;
 	return t;
 }
 const RenderTechniqueList& RenderMaterial::GetTechniques()const

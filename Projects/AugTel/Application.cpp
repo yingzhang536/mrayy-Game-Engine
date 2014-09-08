@@ -225,10 +225,13 @@ void Application::_initStates()
 	if (ifo)
 		ip = ifo->IP;
 
-	remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
- 	m_renderingState->AddState(remote);
+	if (m_remoteCamera)
+		remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+  	else
+ 		remote = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+	m_renderingState->AddState(remote);
 
-	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), 0, "AugCam");//new TBee::LocalRobotCommunicator()
+	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), 0, "AugCam");////new TBee::LocalRobotCommunicator()
  	m_renderingState->AddState(camera);
 
 	depth = new GeomDepthState("Depth");
@@ -290,7 +293,9 @@ void Application::init(const OptionContainer &extraOptions)
 		else
 			ATAppGlobal::Instance()->headController = TBee::EHeadControllerType::Oculus;
 	
-		ATAppGlobal::Instance()->m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
+		ATAppGlobal::Instance()->m_controller =  extraOptions.GetOptionByName("Controller")->getValue() == "XBox" ? EController::XBox : EController::Logicool;
+
+		m_remoteCamera = extraOptions.GetOptionByName("CameraSource")->getValue() == "Remote";
 
 		if (ATAppGlobal::Instance()->m_controller == EController::XBox)
 		{

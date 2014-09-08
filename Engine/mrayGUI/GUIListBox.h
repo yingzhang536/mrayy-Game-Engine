@@ -60,6 +60,8 @@ public:
 	virtual bool SetItemHeight(float h) ;
 	virtual float GetItemHeight()const ;
 
+	virtual bool SetBackground(bool h) ;
+	virtual bool GetBackground()const ;
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();
 };

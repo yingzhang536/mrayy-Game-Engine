@@ -43,6 +43,7 @@ protected:
 		video::ICameraVideoGrabber* camera;
 	};
 
+	bool m_started;
 
 	math::vector2d m_cameraResolution;
 	int m_cameraFPS;
@@ -55,6 +56,8 @@ public:
 	void Open();
 	void Close();
 	video::ICameraVideoGrabber* GetCamera(int i){ return m_cameraSource[i].camera; }
+
+	void SetCameraResolution(const math::vector2d& res, int fps);
 
 	void SetCameraID(int i, int cam);
 	int GetCameraID(int i){ return m_cameraSource[i].id; }

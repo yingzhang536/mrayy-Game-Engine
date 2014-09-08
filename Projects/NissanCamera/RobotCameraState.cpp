@@ -15,8 +15,10 @@
 #include "OptiTrackHeadController.h"
 #include "CalibHeadController.h"
 #include "GUIThemeManager.h"
+#include "ARGroupManager.h"
 #include "GUIConsole.h"
 #include "TextureResourceManager.h"
+#include "ConsoleLogDevice.h"
 
 namespace mray
 {
@@ -74,14 +76,22 @@ RobotCameraState::RobotCameraState()
 	m_useLensCorrection = false;
 	m_cameraConfiguration = 0;
 
+	m_cameraFPS = 30;
+	m_cameraResolution.set(1280, 720);
+
 	m_arServiceProvider = new ARServiceProvider();
 	m_arServiceProvider->AddListener(this);
+	m_arManager = new ARGroupManager();
 
 }
 
 RobotCameraState::~RobotCameraState()
 {
 	delete m_videoSource;
+	delete m_arServiceProvider;
+	delete m_arManager;
+
+	gLogManager.removeLogDevice(m_consoleLogDevice);
 }
 
 
@@ -137,10 +147,10 @@ void RobotCameraState::GenerateSurface(bool plane, float hfov, float vfov, int s
 				math::vector3d(-1, +1, 0)
 			};
 			math::vector2d tcPtr[4] = {
-				math::vector2d(0, 0),
 				math::vector2d(1, 0),
-				math::vector2d(1, 1),
+				math::vector2d(0, 0),
 				math::vector2d(0, 1),
+				math::vector2d(1, 1),
 			};
 
 			math::matrix3x3 rotMat;
@@ -175,7 +185,11 @@ void RobotCameraState::GenerateSurface(bool plane, float hfov, float vfov, int s
 			m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("Default");
 			bdata->setMaterial(mtrl);
 
+			rnode->setDrawInCustomLayer(true);
+			rnode->setCustomLayer(scene::RGH_Solid - 1);
+
 			m_screenMtrl[i]->setRenderState(video::RS_Lighting, video::ES_DontUse);
+			m_screenMtrl[i]->setRenderState(video::RS_ZWrite, video::ES_DontUse);
 			m_screenMtrl[i]->setRenderState(video::RS_CullFace, video::ES_DontUse);
 
 			m_screenNode[i]->AttachNode(rnode);
@@ -355,15 +369,29 @@ void RobotCameraState::InitState()
 		console->SetSize(math::vector2d(100, 300));
 
 		m_console = console;
+
+		m_consoleLogDevice = new ConsoleLogDevice(console);
+
+		gLogManager.addLogDevice(m_consoleLogDevice);
 	}
 
+
 	m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
-	float cameraScreenDistance = 1.0f;
+	m_cameraOffsets.z = 1.0f;
+	m_cameraOffsets.x = -1;
+
+	((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraResolution(m_cameraResolution,m_cameraFPS);
 	m_videoSource->Init();
 
 	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
 	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
+	{
+		m_arManager->SetSceneManager(m_sceneManager);
+		core::string ip = NCAppGlobals::Instance()->GetValue("ARServer", "IP");
+		uint port = core::StringConverter::toUInt(NCAppGlobals::Instance()->GetValue("ARServer", "Port"));
+		m_arServiceProvider->Connect(ip,port);
 
+	}
 	{
 		scene::CameraNode* cam[2];
 		video::EPixelFormat pf = video::EPixel_R8G8B8A8;//video::EPixel_R8G8B8A8;//
@@ -397,13 +425,26 @@ void RobotCameraState::InitState()
 			//m_headNode->addChild(cam[i]);
 		}
 
-		GenerateSurface(true,100, 100, 20, cameraScreenDistance);
+		GenerateSurface(true, 100, 100, 20, m_cameraOffsets.z);
 
 		m_camera[GetEyeIndex(TBee::Eye_Left )]->setPosition(math::vector3d(-0.03, 0, 0));
 		m_camera[GetEyeIndex(TBee::Eye_Right)]->setPosition(math::vector3d(+0.03, 0, 0));
 	}
 
 	m_console->AddToHistory("System Inited.", video::DefaultColors::Green);
+
+
+	if (false)
+	{
+		ARPredef *predef=new ARPredef;
+		ARGroup grp ;
+		predef->name = "drivable_area.3DS";
+		grp.objects.push_back(predef);
+
+		ARCommandAddData cmd;
+		cmd.group = &grp;
+		OnARContents(&cmd);
+	}
 }
 
 
@@ -481,6 +522,27 @@ void RobotCameraState::OnExit()
 	m_robotConnector->DisconnectRobot();
 }
 
+void RobotCameraState::SetTransformation( const math::vector3d& pos, const math::vector3d &angles)
+{
+	if (true)
+	{
+	//	m_headNode->setPosition(pos);
+		math::vector3d p;
+		math::quaternion q(0, 0, angles.z);
+		p.z = m_cameraOffsets.z;
+		p.x = m_cameraOffsets.x + math::sind(angles.y)*m_cameraOffsets.z;
+		m_screenNode[0]->setPosition(p);
+		m_screenNode[1]->setPosition(p);
+		m_screenNode[0]->setOrintation(q);
+		m_screenNode[1]->setOrintation(q);
+	}
+	else
+	{
+		m_headNode->setOrintation(angles);
+		m_headNode->setPosition(pos);
+	}
+}
+
 float time = 0;
 void RobotCameraState::Update(float dt)
 {
@@ -504,9 +566,10 @@ void RobotCameraState::Update(float dt)
 		rot.y = 0;
 	if (m_lockAxis[2])
 		rot.z = 0;
-	m_headNode->setOrintation(rot);
 
-	m_headNode->setPosition(pos);
+	SetTransformation(pos, rot);
+
+	m_arServiceProvider->Update();
 }
 
 
@@ -534,7 +597,7 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 {
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
-	video::ITexture* camTex =   gTextureResourceManager.loadTexture2D("Checker.png");//m_videoSource->GetEyeTexture(index); //
+	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);;// gTextureResourceManager.loadTexture2D("Checker.png");// //
 
 	video::ShaderSemanticTable::getInstance().setRenderPass(0);
 
@@ -687,10 +750,26 @@ void RobotCameraState::LoadFromXML(xml::XMLElement* e)
 {
 	Parent::LoadFromXML(e);
 
+
+
 	xml::XMLElement* c = e->getSubElement("Calibration");
 	if (c)
 		m_headController->LoadFromXML(c);
 
+
+	xml::XMLAttribute* attr;
+
+
+	attr = e->getAttribute("Size");
+	if (attr)
+	{
+		m_cameraResolution = core::StringConverter::toVector2d(attr->value);
+	}
+	attr = e->getAttribute("FPS");
+	if (attr)
+	{
+		m_cameraFPS = core::StringConverter::toInt(attr->value);
+	}
 
 	core::string camConfigName = e->getValueString("CameraConfiguration");
 
@@ -711,7 +790,10 @@ xml::XMLElement* RobotCameraState::WriteToXML(xml::XMLElement* e)
 
 void RobotCameraState::OnARContents(ARCommandAddData* cmd)
 {
-	cmd->group->objects;
+	m_arManager->AddGroup(cmd->group);
+	for (int i = 0; i < cmd->group->objects.size(); ++i)
+	{
+	}
 }
 void RobotCameraState::OnVechicleData()
 {

@@ -86,7 +86,11 @@ RobotCommunicator::~RobotCommunicator()
 void RobotCommunicator::Initialize()
 {
 	if (m_robotController)
+	{
 		m_robotController->InitializeRobot(this);
+	}
+	if (m_listener)
+		m_listener->OnCalibrationDone(this);
 }
 void RobotCommunicator::GetRobotStatus(RobotStatus& st)const
 {
@@ -258,6 +262,15 @@ void RobotCommunicator::OnCollisionData(float left, float right)
 	{
 		m_listener->OnCollisionData(this,left, right);
 	}
+}
+
+void RobotCommunicator::OnReportMessage(int code, const std::string& msg)
+{
+	if (m_listener)
+	{
+		m_listener->OnReportMessage(this, code, msg);
+	}
+
 }
 
 }

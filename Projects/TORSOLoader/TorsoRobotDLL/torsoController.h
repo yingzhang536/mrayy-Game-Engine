@@ -24,6 +24,8 @@ protected:
 
 	float m_offset[3];
 
+	bool m_calibrated;
+
 	IRobotStatusProvider* m_robotStatusProvider;
 
 	static DWORD WINAPI timerThreadHead(torsoController *robot, LPVOID pdata);
@@ -37,6 +39,7 @@ protected:
 	int debugRoutine(void);
 
 	void SetZeroPos();
+
 
 public:
 	torsoController();
@@ -52,6 +55,9 @@ public:
 
 
 	static void ConvertToMatrix(const Quaternion& q, const float* pos, double* mat);
+
+
+	void _innerProcessRobot();
 
 };
 

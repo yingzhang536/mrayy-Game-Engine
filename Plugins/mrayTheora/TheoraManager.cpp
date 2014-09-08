@@ -128,13 +128,16 @@ namespace video{
 			if(m_AudioBufferSize==mFreq*mNumChannels/10)
 			{
 				sound::ISoundStreamFrame* stream=impl->mngr->CreateManualStream();
-				stream->SetStreamFrameData(m_AudioTempBuffer,m_AudioBufferSize,mFreq,sound::ESF_16,mNumChannels);
+				if (stream)
+				{
+					stream->SetStreamFrameData(m_AudioTempBuffer, m_AudioBufferSize, mFreq, sound::ESF_16, mNumChannels);
 
-				snd->QueueSoundBuffer(stream);
-				m_AudioBufferSize=0;
+					snd->QueueSoundBuffer(stream);
+				}
+				m_AudioBufferSize = 0;
 			}
 		}
-		if(!snd->isPlaying())
+		if (snd && !snd->isPlaying())
 			snd->play();
 	}
 
