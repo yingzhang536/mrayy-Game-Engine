@@ -13,7 +13,8 @@ namespace NCam
 	{
 		EARMesh,
 		EARPredef,
-		EARString
+		EARString,
+		EARVehicle
 	};
 
 	// element values for DispObjCommonAttribute.origin (masks)
@@ -32,7 +33,8 @@ namespace NCam
 		ELineStrip = video::MR_LINE_STRIP,
 		ETriangles = video::MR_TRIANGLES,
 		ETriangleStrip = video::MR_TRIANGLE_STRIP,
-		ETriangleFan = video::MR_TRIANGLE_FAN
+		ETriangleFan = video::MR_TRIANGLE_FAN,
+		EQuads= video::MR_QUADS
 	};
 
 
@@ -69,11 +71,13 @@ namespace NCam
 	class IARObject
 	{
 	public:
+		uint id;
 		EARObjectType objectType;
 		math::vector3d pos;
+		math::vector3d scale;
 		math::vector3d dir;
 		EARCoordinates coordinates;
-		IARObject(EARObjectType type) :objectType(type)
+		IARObject(EARObjectType type) :objectType(type), scale(1)
 		{}
 	};
 	class ARMesh :public IARObject
@@ -114,6 +118,14 @@ namespace NCam
 		std::vector<video::SColor> colors;
 
 		core::string text;
+	};
+
+	class ARVehicle :public IARObject
+	{
+	public:
+		ARVehicle() :IARObject(EARObjectType::EARVehicle)
+		{}
+
 	};
 
 

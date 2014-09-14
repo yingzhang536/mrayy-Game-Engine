@@ -44,6 +44,7 @@ public:
 	virtual~RobotSerialPort();
 
 	void SetListener(ITelubeeRobotListener* l);
+	virtual void InitializeRobot(IRobotStatusProvider* robotStatusProvider) ;
 	void ConnectRobot();
 	void DisconnectRobot();
 	bool IsConnected();

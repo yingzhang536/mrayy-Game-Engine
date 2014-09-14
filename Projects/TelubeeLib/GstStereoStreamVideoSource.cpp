@@ -45,7 +45,7 @@ void GstStereoStreamVideoSource::Close()
 {
 	m_providers->Disconnect();
 }
-bool GstStereoStreamVideoSource::Blit()
+bool GstStereoStreamVideoSource::Blit(int eye)
 {
 	bool dirty = false;
 	m_providers->Update(gEngine.getFPS()->dt());

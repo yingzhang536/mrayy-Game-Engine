@@ -197,6 +197,10 @@ std::string RobotSerialPort::ScanePorts()
 	}
 	return "";
 }
+void RobotSerialPort::InitializeRobot(IRobotStatusProvider* robotStatusProvider)
+{
+
+}
 void RobotSerialPort::ConnectRobot()
 {
 

@@ -72,6 +72,9 @@ Application::Application()
 	NCAppGlobals::Instance()->App = this;
 	m_drawUI=false;
 	m_tbRenderer = 0;
+	m_limitFps = true;
+	m_limitFpsCount = 40;
+
 }
 Application::~Application()
 {
@@ -156,9 +159,9 @@ void Application::_initStates()
 	nullState->InitState();
 	m_renderingState->AddState(nullState);
 
-	streamerTest = new TBee::RemoteCameraRenderingState("CameraRemote");
-	streamerTest->InitState();
-	m_renderingState->AddState(streamerTest);
+// 	streamerTest = new TBee::RemoteCameraRenderingState("CameraRemote");
+// 	streamerTest->InitState();
+// 	m_renderingState->AddState(streamerTest);
 
 	cameraState = new RobotCameraState();//TBee::LocalCameraRenderingState();
 	((RobotCameraState*)cameraState)->SetCameraInfo(Eye_Left, m_cameraID[Eye_Left]);
@@ -213,7 +216,6 @@ void Application::init(const OptionContainer &extraOptions)
 
 	LoadSettingsXML("NissanSettings.xml");
 
-	this->m_limitFps = false;
 
 	network::createWin32Network();
 
@@ -244,6 +246,7 @@ void Application::init(const OptionContainer &extraOptions)
 
 
 	m_renderingState=new TBee::RenderingStateManager();
+	m_renderingState->SetSleepTime(1.0 / 150.0f);
 	_initStates();
 	m_appStateManager->AddState(m_renderingState,"Rendering");
 	m_appStateManager->SetInitialState("Rendering");
@@ -276,7 +279,7 @@ void Application::RenderUI(const math::rectf& rc)
 		if(font){
 			m_guiRender->Prepare();
 
-			float yoffset=50;
+			float yoffset = rc.getHeight() - 200;
 
 
 			GUI::FontAttributes attr;
@@ -291,8 +294,16 @@ void Application::RenderUI(const math::rectf& rc)
 			attr.RightToLeft=0;
 			core::string msg=mT("FPS= ");
 			msg+=core::StringConverter::toString((int)gEngine.getFPS()->getFPS());
-			font->print(math::rectf(rc.getWidth() - 250, rc.getHeight() - 50, 10, 10), &attr, 0, msg, m_guiRender);
-			yoffset+=attr.fontSize;
+			font->print(math::rectf(rc.getWidth() - 250,  yoffset, 10, 10), &attr, 0, msg, m_guiRender);
+			yoffset += attr.fontSize;
+			 msg = mT("Draw calls= ");
+			msg += core::StringConverter::toString(gEngine.getDevice()->getBatchDrawnCount());
+			font->print(math::rectf(rc.getWidth() - 250, yoffset, 10, 10), &attr, 0, msg, m_guiRender);
+			yoffset += attr.fontSize;
+			msg = mT("Primitives= ");
+			msg += core::StringConverter::toString(gEngine.getDevice()->getPrimitiveDrawnCount());
+			font->print(math::rectf(rc.getWidth() - 250, yoffset, 10, 10), &attr, 0, msg, m_guiRender);
+			yoffset += attr.fontSize;
 
 		}
 
@@ -331,7 +342,6 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 void Application::update(float dt)
 {
 	CMRayApplication::update(dt);
-
 
 	if(m_soundManager)
 		m_soundManager->runSounds(dt);

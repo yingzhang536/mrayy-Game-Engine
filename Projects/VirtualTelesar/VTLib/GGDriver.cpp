@@ -27,6 +27,7 @@ public:
 	}
 	virtual~GGDriverImpl()
 	{
+		delete m_sender;
 	}
 
 	void Init(const core::string& ip,int port)

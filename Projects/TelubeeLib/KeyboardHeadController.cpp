@@ -12,7 +12,7 @@ namespace mray
 namespace TBee
 {
 
-math::quaternion KeyboardHeadController::GetHeadOrientation()
+bool KeyboardHeadController::GetHeadOrientation(math::quaternion& v)
 {
 	controllers::IMouseController* mouse= AppData::Instance()->inputMngr->getMouse();
 	math::vector2d sz= AppData::Instance()->inputMngr->GetRenderWindow()->GetSize();
@@ -25,12 +25,13 @@ math::quaternion KeyboardHeadController::GetHeadOrientation()
 	pan *= 70*2;
 	tilt *= 50 * 2;
 
-	return math::quaternion(tilt, pan, 0);
+	v= math::quaternion(tilt, pan, 0);
 
+	return true;
 }
-math::vector3d KeyboardHeadController::GetHeadPosition()
+bool KeyboardHeadController::GetHeadPosition(math::vector3d& v)
 {
-	return math::vector3d::Zero;
+	return false;
 }
 
 }

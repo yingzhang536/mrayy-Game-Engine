@@ -18,24 +18,24 @@ OculusHeadController::~OculusHeadController()
 }
 
 
-math::quaternion OculusHeadController::GetHeadOrientation()
+bool OculusHeadController::GetHeadOrientation(math::quaternion& v)
 {
 	if (!AppData::Instance()->oculusDevice)
-		return math::quaternion::Identity;
-	math::quaternion q = AppData::Instance()->oculusDevice->GetOrientation()*m_initial;
-	q.Normalize();
+		return false;
+	v= AppData::Instance()->oculusDevice->GetOrientation()*m_initial;
+	v.Normalize();
 
-	return q;
+	return true;
 }
-math::vector3d OculusHeadController::GetHeadPosition()
+bool OculusHeadController::GetHeadPosition(math::vector3d& v)
 {
 #ifdef OCULUS_DK1
 	return math::vector3d::Zero;
 #else
 	if (!AppData::Instance()->oculusDevice)
-		return 0;
-	return AppData::Instance()->oculusDevice->GetPosition();
-
+		return false;
+	v=AppData::Instance()->oculusDevice->GetPosition();
+	return true;
 #endif
 }
 

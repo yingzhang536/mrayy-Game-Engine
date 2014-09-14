@@ -201,6 +201,9 @@
     <ClInclude Include="GUILoadingScreen.h">
       <Filter>Source Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="RobotViewerState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -328,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="GUILoadingScreen.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotViewerState.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

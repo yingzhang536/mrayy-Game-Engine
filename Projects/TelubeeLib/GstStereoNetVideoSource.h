@@ -43,7 +43,7 @@ public:
 	void Init();
 	void Open();
 	void Close();
-	bool Blit();
+	bool Blit(int eye);
 
 	virtual math::vector2d GetEyeScalingFactor(int i);
 	virtual math::vector2d GetEyeResolution(int i);

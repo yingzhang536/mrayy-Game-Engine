@@ -13,12 +13,19 @@
 #include "FontResourceManager.h"
 #include "NCAppGlobals.h"
 #include "OptiTrackHeadController.h"
+#include "KeyboardHeadController.h"
 #include "CalibHeadController.h"
 #include "GUIThemeManager.h"
 #include "ARGroupManager.h"
 #include "GUIConsole.h"
 #include "TextureResourceManager.h"
 #include "ConsoleLogDevice.h"
+#include "ICameraVideoGrabber.h"
+#include "MeshResourceManager.h"
+
+#include "NCAppGlobals.h"
+#include "Application.h"
+#include "StringUtil.h"
 
 namespace mray
 {
@@ -38,8 +45,8 @@ namespace NCam
 		{
 			float time = gEngine.getTimer()->getSeconds();
 			math::vector3d angles;
-			//angles.x = 20 * sin(time*0.001f);
-			//angles.y = 30 * sin(time*0.002f);
+			angles.x = 20 * sin(time*0.001f);
+			angles.y = 30 * sin(time*0.002f);
 			angles.z = 20 * sin(time*0.005f);
 			return math::quaternion(angles);
 		}
@@ -61,27 +68,38 @@ RobotCameraState::RobotCameraState()
 	m_robotConnector->SetCommunicator(m_robotComm);
 
 	m_headController = new TBee::CalibHeadController(new TBee::OptiTrackHeadController(1));
+	//m_headController = new TBee::CalibHeadController(new TBee::KeyboardHeadController());
 	//m_headController = new TBee::CalibHeadController(new TestController());
 
 	m_robotConnector->SetHeadController(m_headController);
-	m_hmdFov = 80;
+	m_hmdFov = 50;
 
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
 	m_guiRenderer = r;
-	m_lockAxis[0] = true;
+	m_lockAxis[0] = false;
 	m_lockAxis[1] = false;
-	m_lockAxis[2] = true;
+	m_lockAxis[2] = false;
 	m_camConfigDirty = true;
 	m_useLensCorrection = false;
 	m_cameraConfiguration = 0;
 
-	m_cameraFPS = 30;
+	m_cameraFPS = 85;
 	m_cameraResolution.set(1280, 720);
 
 	m_arServiceProvider = new ARServiceProvider();
 	m_arServiceProvider->AddListener(this);
 	m_arManager = new ARGroupManager();
+
+	m_commandManager = new CommandManager();
+	m_commandManager->MessageLog += newClassDelegate1("", this, &RobotCameraState::_OnCommandMessage);
+
+	m_commandManager->addCommand(new ARCreateObject(m_commandManager, this));
+	m_commandManager->addCommand(new ARUpdateCommand(m_commandManager, this));
+	m_commandManager->addCommand(new ARRemoveCommand(m_commandManager, this));
+	m_commandManager->addCommand(new ARQeuryCommand(m_commandManager, this));
+	m_commandManager->addCommand(new ARMoveCommand(m_commandManager, this));
+	m_commandManager->addCommand(new ARAlphaCommand(m_commandManager, this));
 
 }
 
@@ -182,21 +200,24 @@ void RobotCameraState::GenerateSurface(bool plane, float hfov, float vfov, int s
 			idx->writeData(0, 6 * sizeof(ushort), idxPtr, true);
 
 			video::RenderMaterialPtr mtrl = new video::RenderMaterial();
-			m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("Default");
+			m_screenMtrl[i] = mtrl->CreateTechnique("Default")->CreatePass("ScreenPass");
 			bdata->setMaterial(mtrl);
 
-			rnode->setDrawInCustomLayer(true);
-			rnode->setCustomLayer(scene::RGH_Solid - 1);
+			rnode->SetHasCustomRenderGroup(true);
+			rnode->SetTargetRenderGroup(scene::RGH_Solid - 5);
 
 			m_screenMtrl[i]->setRenderState(video::RS_Lighting, video::ES_DontUse);
 			m_screenMtrl[i]->setRenderState(video::RS_ZWrite, video::ES_DontUse);
+			m_screenMtrl[i]->setRenderState(video::RS_ZTest, video::ES_DontUse);
 			m_screenMtrl[i]->setRenderState(video::RS_CullFace, video::ES_DontUse);
 
 			m_screenNode[i]->AttachNode(rnode);
-			m_headNode->addChild(m_screenNode[i]);
+			m_camera[i]->addChild(m_screenNode[i]);
+			//m_headNode->addChild(m_screenNode[i]);
 			m_screenNode[i]->setPosition(math::vector3d(0, 0, cameraScreenDistance));
 			m_screenNode[i]->setVisible(false);
 			m_screenNode[i]->setScale(1);
+			m_screenNode[i]->setCullingType(scene::SCT_NONE);
 		}
 
 	}
@@ -348,6 +369,18 @@ void RobotCameraState::RescaleMesh(int index,const math::vector3d &scaleFactor)
 	}
 }
 
+
+void RobotCameraState::_OnConsoleCommand(GUI::GUIConsole*, const core::string& cmd)
+{
+	core::string s = core::StringUtil::Trim(cmd, "\r \t");
+	m_commandManager->execCommand(s);
+}
+void RobotCameraState::_OnCommandMessage(const core::string& msg)
+{
+	m_console->AddToHistory(msg, video::SColor(1));
+}
+
+
 void RobotCameraState::InitState()
 {
 	Parent::InitState();
@@ -367,8 +400,10 @@ void RobotCameraState::InitState()
 		console->SetAnchorTop(true);
 		console->SetPosition(0);
 		console->SetSize(math::vector2d(100, 300));
-
+		console->SetVisible(false);
 		m_console = console;
+
+		m_console->OnCommand += newClassDelegate2("", this, &RobotCameraState::_OnConsoleCommand);
 
 		m_consoleLogDevice = new ConsoleLogDevice(console);
 
@@ -376,33 +411,53 @@ void RobotCameraState::InitState()
 	}
 
 
-	m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
-	m_cameraOffsets.z = 1.0f;
-	m_cameraOffsets.x = -1;
-
-	((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraResolution(m_cameraResolution,m_cameraFPS);
-	m_videoSource->Init();
+	{
+		m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
+	}
+	m_cameraOffsets.z = 1.6f;		//camera offset from user eye
+	m_cameraOffsets.x = -0.6;		// camera offset from center of screen
+	m_cameraOffsets.y = -0.1;		// camera offset from center of screen
+	{
+		((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraResolution(m_cameraResolution, m_cameraFPS);
+		m_videoSource->Init();
+	}
 
 	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
 	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
 	{
-		m_arManager->SetSceneManager(m_sceneManager);
+		m_arRoot = m_sceneManager->createSceneNode("AR_Root_Node");
+
+		m_arManager->SetSceneManager(m_sceneManager, m_arRoot);
 		core::string ip = NCAppGlobals::Instance()->GetValue("ARServer", "IP");
 		uint port = core::StringConverter::toUInt(NCAppGlobals::Instance()->GetValue("ARServer", "Port"));
-		m_arServiceProvider->Connect(ip,port);
+	
+		//m_arServiceProvider->Connect(ip,port);
 
+
+		//Create a default "Shared" material for generated AR contents in order to boost performance
+		video::RenderMaterial* material = new video::RenderMaterial();
+		video::RenderPass* pass= material->CreateTechnique("Default")->CreatePass("Default");
+		pass->setRenderState(video::RS_Lighting, video::ES_DontUse);
+		pass->setRenderState(video::RS_CullFace, video::ES_DontUse);
+		pass->SetDiffuse(1);
+		pass->SetAmbient(1);
+		gMaterialResourceManager.addResource(material,"DefaultAR_Mtrl");
 	}
 	{
 		scene::CameraNode* cam[2];
-		video::EPixelFormat pf = video::EPixel_R8G8B8A8;//video::EPixel_R8G8B8A8;//
+		video::EPixelFormat pf = video::EPixel_R8G8B8;//video::EPixel_R8G8B8A8;//
 		m_headNode = m_sceneManager->createSceneNode();
 
+		scene::LightNode* light= m_sceneManager->createLightNode("Sun");
+		light->setPosition(1000);
+
+		core::string vpName[] = { "Left", "Right" };
 
 		for (int i = 0; i < 2; ++i)
 		{
 			cam[i] = m_sceneManager->createCamera();
 			m_viewport[i] = new scene::ViewPort("", cam[i], 0, 0, math::rectf(0, 0, 1, 1), 0);
-			m_viewport[i]->SetClearColor(video::SColor(0, 0, 0, 1));
+			m_viewport[i]->SetClearColor(video::SColor(0,0,0, 1));
 
 			video::ITexturePtr renderTargetTex = Engine::getInstance().getDevice()->createTexture2D(math::vector2d(1, 1), pf, true);
 			renderTargetTex->setBilinearFilter(false);
@@ -415,14 +470,15 @@ void RobotCameraState::InitState()
 			m_viewport[i]->SetAutoUpdateRTSize(true);
 			m_viewport[i]->AddListener(this);
 
-			cam[i]->setZNear(0.01);
-			cam[i]->setZFar(100);
+			cam[i]->setZNear(0.1);
+			cam[i]->setZFar(100000);
 
 			//if (ATAppGlobal::Instance()->oculusDevice)
 			cam[i]->setFovY(m_hmdFov);
 			cam[i]->setAutoUpdateAspect(true);
 			m_camera[i] = cam[i];
-			//m_headNode->addChild(cam[i]);
+			m_headNode->addChild(cam[i]);
+
 		}
 
 		GenerateSurface(true, 100, 100, 20, m_cameraOffsets.z);
@@ -436,14 +492,89 @@ void RobotCameraState::InitState()
 
 	if (false)
 	{
-		ARPredef *predef=new ARPredef;
-		ARGroup grp ;
-		predef->name = "drivable_area.3DS";
+		ARGroup grp;
+		ARPredef *predef = new ARPredef;
+		predef->name = "drivable_area.obj";
 		grp.objects.push_back(predef);
 
 		ARCommandAddData cmd;
 		cmd.group = &grp;
 		OnARContents(&cmd);
+	}
+	if (false)
+	{
+		CreateARObject(1000, "sign2.obj", 0, 0);
+	}
+	if (false)
+	{
+		for (int i = 0; i < 1; ++i)
+		{
+			CreateARObject(10 + i, "drivable_area.3ds", 0, 0);
+		}
+	}
+
+
+	if (false)
+	{
+		core::string files[] =
+		{
+			"drivable_area.obj",
+			"sign.obj",
+			"sign_semitrans.obj"
+		};
+		for (int i = 0; i < 3; ++i)
+		{
+			scene::SMeshPtr mesh = gMeshResourceManager.loadMesh(files[i], true);
+			scene::MeshRenderableNode* node = new scene::MeshRenderableNode(mesh);
+			scene::ISceneNode* sn = m_sceneManager->createSceneNode(files[i]);
+			sn->AttachNode(node);
+			m_arRoot->addChild(sn);
+		}
+	}
+
+	if (true)
+	{
+		//scene::SMeshPtr mesh= gMeshResourceManager.loadMesh("van.3ds",true);
+		//scene::MeshRenderableNode* node = new scene::MeshRenderableNode(mesh);
+		m_vehicleModel = m_sceneManager->createSceneNode("VehicleModel");
+		m_vehicleModel->setPosition(math::vector3d(-47197.953, 100, 61388.07));
+		m_vehicleModel->addChild(m_headNode);
+		//m_vehicleModel->AttachNode(node);
+	}
+	if (false)
+	{
+		ARMesh* mesh = new ARMesh();
+		mesh->verticies.push_back(math::vector3d(0, 0, 5));
+		mesh->verticies.push_back(math::vector3d(0, 1, 5));
+		mesh->verticies.push_back(math::vector3d(1, 1, 5));
+		mesh->verticies.push_back(math::vector3d(1, 0, 5));
+		
+		mesh->normals.push_back(math::vector3d(0, 0, 1));
+		mesh->normals.push_back(math::vector3d(0, 0, 1));
+		mesh->normals.push_back(math::vector3d(0, 0, 1));
+		mesh->normals.push_back(math::vector3d(0, 0, 1));
+
+		mesh->colors.push_back(1);
+		mesh->colors.push_back(1);
+		mesh->colors.push_back(1);
+		mesh->colors.push_back(1);
+
+		mesh->meshType = EARMeshType::EQuads;
+
+		mesh->cullface = false;
+
+		mesh->colorType = EARColorType::EVertex;
+
+		mesh->pos.set(0, 0, 10);
+		mesh->scale = 10;
+
+		ARGroup grp;
+		grp.objects.push_back(mesh);
+
+		ARCommandAddData cmd;
+		cmd.group = &grp;
+		OnARContents(&cmd);
+
 	}
 }
 
@@ -503,6 +634,16 @@ bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 				GenerateSurface(!m_surfaceParams.plane, m_surfaceParams.hfov, m_surfaceParams.vfov, m_surfaceParams.segments, m_surfaceParams.radius);
 				ok = true;
 			}
+			else if (evt->key == KEY_TAB)
+			{
+				m_console->SetVisible(!m_console->IsVisible());
+				ok = true;
+			}
+			else if (evt->key == KEY_V && evt->ctrl)
+			{
+				m_arRoot->setVisible(!m_arRoot->isVisible(),true);
+				ok = true;
+			}
 		}
 	}
 	return ok;
@@ -511,6 +652,8 @@ void RobotCameraState::OnEnter(TBee::IRenderingState*prev)
 {
 	Parent::OnEnter(prev);
 	m_videoSource->Open();
+	((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraParameterValue(video::ICameraVideoGrabber::Param_Focus, "0.0");
+
 	//m_robotConnector->ConnectRobot();
 
 }
@@ -528,18 +671,19 @@ void RobotCameraState::SetTransformation( const math::vector3d& pos, const math:
 	{
 	//	m_headNode->setPosition(pos);
 		math::vector3d p;
-		math::quaternion q(0, 0, angles.z);
+		//math::quaternion q(0, 0, angles.z);
 		p.z = m_cameraOffsets.z;
 		p.x = m_cameraOffsets.x + math::sind(angles.y)*m_cameraOffsets.z;
+		p.y = m_cameraOffsets.y + math::sind(-angles.x)*m_cameraOffsets.z;
 		m_screenNode[0]->setPosition(p);
 		m_screenNode[1]->setPosition(p);
-		m_screenNode[0]->setOrintation(q);
-		m_screenNode[1]->setOrintation(q);
+// 		m_screenNode[0]->setOrintation(q);
+// 		m_screenNode[1]->setOrintation(q);
 	}
-	else
+	//else
 	{
-		m_headNode->setOrintation(angles);
-		m_headNode->setPosition(pos);
+		m_headNode->setOrintation(m_headRotationOffset+ angles);
+		m_headNode->setPosition(m_headPosOffset+ pos);
 	}
 }
 
@@ -553,13 +697,17 @@ void RobotCameraState::Update(float dt)
 	math::quaternion q = m_robotConnector->GetHeadRotation();
 	math::vector3d pos = m_robotConnector->GetHeadPosition();
 
+
 	math::vector3d rot,r ;
 	q.toEulerAngles(r);
+	
 	rot.x = r.y;
 	rot.z = r.x;
 	rot.y = r.z;
 // 	rot.x = -rot.x;
 // 	rot.z = -rot.z;
+	//rot = r;
+	
 	if (m_lockAxis[0])
 		rot.x = 0;
 	if (m_lockAxis[1])
@@ -570,6 +718,77 @@ void RobotCameraState::Update(float dt)
 	SetTransformation(pos, rot);
 
 	m_arServiceProvider->Update();
+
+	_UpdateMovement(dt);
+
+	m_sceneManager->update(dt);
+}
+void RobotCameraState::_UpdateMovement(float dt)
+{
+
+	//update car pos
+	if (m_arManager->GetVehicle())
+	{
+		m_vehicleModel->setPosition(m_arManager->GetVehicle()->getAbsolutePosition());
+		m_vehicleModel->setOrintation(m_arManager->GetVehicle()->getAbsoluteOrintation());
+	}
+
+	InputManager* mngr = NCAppGlobals::Instance()->App->GetInputManager();
+	controllers::IKeyboardController* kb = mngr->getKeyboard();
+	controllers::IMouseController* m = mngr->getMouse();
+
+	if (kb->getKeyState(KEY_LCONTROL))
+	{
+		math::vector3d angles;
+		angles.x = kb->getKeyState(KEY_LEFT) - kb->getKeyState(KEY_RIGHT);
+		angles.y = kb->getKeyState(KEY_UP) - kb->getKeyState(KEY_DOWN);
+
+		//	m_headNode->rotate(angles*100*dt, scene::TS_Local);
+
+		m_cameraOffsets.x += angles.x*dt*0.1f;
+		m_cameraOffsets.y += angles.y*dt*0.1f;
+	}
+	if (kb->getKeyState(KEY_LCONTROL))
+	{
+		math::vector3d speed;
+		speed.x = kb->getKeyState(KEY_A) - kb->getKeyState(KEY_D);
+		speed.z = kb->getKeyState(KEY_W) - kb->getKeyState(KEY_S);
+		speed.y = kb->getKeyState(KEY_Q) - kb->getKeyState(KEY_Z);
+		speed *= 10 * dt;
+
+		math::vector3d pos;
+		//pos = m_headNode->getPosition();
+
+		pos = m_headNode->getOrintation()*math::vector3d::XAxis*speed.x;
+		pos += m_headNode->getOrintation()*math::vector3d::YAxis*speed.y;
+		pos += m_headNode->getOrintation()*math::vector3d::ZAxis*speed.z;
+		//m_headNode->setPosition(pos);
+
+		m_headPosOffset += pos;
+
+		//	m_headNode->rotate(angles*100*dt, scene::TS_Local);
+
+		// 			m_cameraOffsets.x += angles.x*dt*0.1f;
+		// 			m_cameraOffsets.y += angles.y*dt*0.1f;
+	}
+	if (m->isPressed(controllers::EMB_Right))
+	{
+		math::vector3d angles;
+		angles.x = m->getDY();
+		angles.y = -m->getDX();
+		angles *= 100 * dt;
+		m_headRotationOffset += angles;
+
+		//math::quaternion q = math::quaternion(angles.y,  m_headNode->getOrintation().getYAxis());
+
+		//m_headNode->rotate(q, scene::TS_Parent);
+		
+// 		q = math::quaternion(angles.x, m_headNode->getOrintation().getXAxis());
+// 		m_headNode->rotate(q, scene::TS_Parent);
+
+		// 			m_cameraOffsets.x += angles.x*dt*0.1f;
+		// 			m_cameraOffsets.y += angles.y*dt*0.1f;
+	}
 }
 
 
@@ -595,9 +814,10 @@ public:
 
 video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
+	
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
-	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);;// gTextureResourceManager.loadTexture2D("Checker.png");// //
+	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);;//gTextureResourceManager.loadTexture2D("Checker.png");// //
 
 	video::ShaderSemanticTable::getInstance().setRenderPass(0);
 
@@ -637,12 +857,14 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 	{
 		RescaleMesh(index,scale);
 	}
+	device->set3DMode();
 	m_screenNode[index]->setVisible(true);
 	//m_screenNode[index]->setScale(scale);
 	m_screenMtrl[index]->setTexture(camTex, 0);
 	//m_screenMtrl[index]->setTexture(gTextureResourceManager.loadTexture2D("Checker.png"), 0);
 	m_viewport[index]->setAbsViewPort(rc);
 	m_viewport[index]->draw();
+
 	Parent::Render(rc, eye);
 	video::TextureUnit tex;
 
@@ -652,23 +874,81 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 	math::rectf tc = math::rectf(0, 0, 1, 1);
 	device->draw2DImage(rc, 1, 0, &tc);
 	m_screenNode[index]->setVisible(false);
+
 	_RenderUI(rc);
 
 	return m_renderTarget[index];
 }
+void RobotCameraState::onRenderDone(scene::ViewPort*vp)
+{
+
+	if (!TBee::AppData::Instance()->IsDebugging)
+		return;
+	
+	int index = 0;
+	if (vp->getName() == "Left")
+		index = 0;
+	else index = 1;
+	video::IVideoDevice* device = Engine::getInstance().getDevice();
+//	device->set3DMode();
+	video::RenderPass pass(0);
+	pass.setRenderState(video::RS_Lighting, video::ES_DontUse);
+	pass.setRenderState(video::RS_ZTest, video::ES_DontUse);
+	pass.SetThickness(2);
+	device->useRenderPass(&pass);
+	device->setTransformationState(video::TS_WORLD, m_headNode->getAbsoluteTransformation());
+
+	math::vector3d origin;
+	origin = 0;
+	origin += math::vector3d::XAxis* m_cameraOffsets.x;
+	origin += math::vector3d::YAxis* m_cameraOffsets.y;
+	device->draw3DLine(origin, origin + math::vector3d::ZAxis * m_cameraOffsets.z, video::SColor(1, 0, 0, 1));
+
+
+	int n =30;
+	for (int i = 0; i < n; ++i)
+	{
+		math::vector3d a;
+		math::vector3d b;
+		a.z = m_cameraOffsets.z;
+		b.z = m_cameraOffsets.z;
+		float step = (i - n*0.5f)*0.1f;;
+
+		a.y = -1;
+		b.y = 1;
+		b.x = a.x = step;
+
+		float strength = pow(1 - fabs((float)i - n*0.5f) / (float)(n*0.5f),3);
+
+		device->draw3DLine(a, b, video::SColor( strength, 0, 0, 1));
+
+		a.x = -1;
+		b.x = 1;
+		b.y = a.y = step;
+		a.z = m_cameraOffsets.z;
+		b.z = m_cameraOffsets.z;
+		device->draw3DLine(a, b, video::SColor(strength, 0, 0, 1));
+	}
+
+	device->useRenderPass(0);
+
+}
 
 void RobotCameraState::_RenderUI(const math::rectf& rc)
 {
-	if (!TBee::AppData::Instance()->IsDebugging)
-		return;
+
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();
 	GUI::FontAttributes attr;
 
 
 	video::IVideoDevice* dev = Engine::getInstance().getDevice();
+	dev->set2DMode();
 	TBee::AppData* app = TBee::AppData::Instance();
 	m_guimngr->DrawAll(&rc);
-	
+	m_guiRenderer->Flush();
+
+	if (!TBee::AppData::Instance()->IsDebugging)
+		return;
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -682,6 +962,7 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 		attr.RightToLeft = 0;
 
 		math::rectf r = rc;
+
 		{
 			core::string msg = "Axis Lock: ";
 			if (m_lockAxis[0])
@@ -696,6 +977,12 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 				msg += "[Z]";
 			else msg += "Z";
 			attr.fontColor.Set(0, 1, 0, 1);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+		}
+		{
+
+			core::string msg = mT("Camera Offset: ") + core::StringConverter::toString(math::vector2d(m_cameraOffsets.x, m_cameraOffsets.y));
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
@@ -736,6 +1023,22 @@ void RobotCameraState::_RenderUI(const math::rectf& rc)
 
 		}
 
+		if (m_arManager->GetVehicle())
+		{
+
+			scene::ISceneNode* v = m_arManager->GetVehicle();
+
+			core::string msg = mT("Car Position: ") + core::StringConverter::toString(v->getPosition());
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+			math::vector3d angles;
+			v->getOrintation().toEulerAngles(angles);
+			msg = mT("Car Heading: ") + core::StringConverter::toString(angles);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+
+
+		}
 
 		core::string msg = mT("Is Homing: ");
 		msg += m_robotComm->IsHoming() ? "Yes" : "No";
@@ -794,6 +1097,12 @@ void RobotCameraState::OnARContents(ARCommandAddData* cmd)
 	for (int i = 0; i < cmd->group->objects.size(); ++i)
 	{
 	}
+	/*
+	if (m_arManager->GetVehicle() && m_vehicleModel->getParent() != m_arManager->GetVehicle())
+	{
+		m_arManager->GetVehicle()->addChild(m_vehicleModel);
+		m_arManager->GetVehicle()->addChild(m_headNode);
+	}*/
 }
 void RobotCameraState::OnVechicleData()
 {
@@ -801,8 +1110,81 @@ void RobotCameraState::OnVechicleData()
 }
 void RobotCameraState::OnDeletedGroup(ARCommandDeleteGroup* cmd)
 {
-
+	m_arManager->RemoveGroup(cmd->groupID);
 }
+
+void RobotCameraState::CreateARObject(uint id, const core::string& name, const math::vector3d& pos, const math::vector3d& dir)
+{
+
+	ARGroup *grp = new ARGroup();
+	ARPredef *predef = new ARPredef;
+	predef->name =name;
+	predef->pos = pos;
+	predef->dir = dir;
+
+	grp->objects.push_back(predef);
+	grp->groupID = id;
+
+	ARCommandAddData cmd;
+	cmd.group =grp;
+	OnARContents(&cmd);
+}
+void RobotCameraState::UpdateARObject(uint id, const math::vector3d& pos, const math::vector3d& dir)
+{
+	CreateARObject(id, "", pos, dir);
+}
+void RobotCameraState::MoveARObject(uint id, const math::vector3d& pos, const math::vector3d& dir)
+{
+
+	ARSceneGroup* g = m_arManager->GetGroupListByID(id);
+	if (!g)
+		return ;
+	if (!g->objects.size())
+		return ;
+
+	math::vector3d p,d;
+	p = g->objects.begin()->second->obj->pos;
+	d = g->objects.begin()->second->obj->dir;
+	p += pos;
+	d += dir;
+	g->objects.begin()->second->obj->pos=p;
+	g->objects.begin()->second->obj->dir=d;
+	g->objects.begin()->second->sceneNode->setPosition(p);
+	g->objects.begin()->second->sceneNode->setOrintation(d);
+}
+
+
+void RobotCameraState::RemoveARObject(uint id)
+{
+	ARCommandDeleteGroup cmd;
+	cmd.groupID = id;
+	OnDeletedGroup(&cmd);
+}
+void RobotCameraState::SelectARObject(uint id)
+{
+}
+void RobotCameraState::SetARAlpha(uint id, float v)
+{
+	if (id==-1)
+		m_arManager->SetAlpha(v);
+	else 
+		m_arManager->SetAlpha(id, v);
+}
+bool RobotCameraState::QueryARObject(uint id, math::vector3d& pos, math::vector3d& dir)
+{
+	ARSceneGroup* g= m_arManager->GetGroupListByID(id);
+	if (!g)
+		return false;
+	if (!g->objects.size())
+		return false;
+
+	pos = g->objects.begin()->second->obj->pos;
+	dir = g->objects.begin()->second->obj->dir;
+
+	return true;
+}
+
+
 
 }
 }

@@ -39,7 +39,7 @@ void GstStereoNetVideoSource::Close()
 	m_providers->Disconnect();
 
 }
-bool GstStereoNetVideoSource::Blit()
+bool GstStereoNetVideoSource::Blit(int eye)
 {
 
 	bool dirty = false;

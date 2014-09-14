@@ -29,6 +29,7 @@ private:
 protected:
 	float m_dt;
 	ThreadJobManager* m_jobsManager;
+	std::vector<CameraNode*> m_cameras;
 public:
 	UpdateSceneVisitor(float dt,ThreadJobManager* jobsManager);
 	virtual ~UpdateSceneVisitor();

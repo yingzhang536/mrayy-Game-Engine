@@ -489,6 +489,7 @@ void CameraNode::onAspectChanged(float w,float h){
 
 void CameraNode::OnVisit(ISceneVisitor*visitor)
 {
+	ISceneNode::OnVisit(visitor);
 	visitor->Visit(this);
 }
 void CameraNode::SaveToDesc(CameraNodeDesc* desc)const

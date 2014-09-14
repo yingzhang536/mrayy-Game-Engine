@@ -17,20 +17,24 @@ NodeHeadController::~NodeHeadController()
 {
 }
 
-math::quaternion NodeHeadController::GetHeadOrientation()
+bool NodeHeadController::GetHeadOrientation(math::quaternion&v)
 {
 	if (m_node){
 		math::vector3d a;
 		 (m_node->getAbsoluteOrintation()*m_initialOrientation.inverse()).toEulerAngles(a);
-		 return math::quaternion(a.x, -a.y, -a.z);
+		 v= math::quaternion(a.x, -a.y, -a.z);
+		 return true;
 	}
-	return math::quaternion::Identity;
+	return false;
 }
-math::vector3d NodeHeadController::GetHeadPosition()
+bool NodeHeadController::GetHeadPosition(math::vector3d&v)
 {
 	if (m_node)
-		return m_node->getAbsolutePosition();
-	return 0;
+	{
+		v = m_node->getAbsolutePosition();
+		return true;
+	}
+	return false;
 }
 
 void NodeHeadController::Recalibrate()

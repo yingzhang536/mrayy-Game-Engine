@@ -117,7 +117,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;zziplib.lib;zlib.lib;libexpatMT.lib;libPng.lib;FreeImage.lib;mrayMath.lib;freetype230.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -176,7 +176,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimpd.lib;zziplibd.lib;libexpatMT.lib;zlibd.lib;FreeImaged.lib;freetype_D.lib;mrayMath.lib;regex_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <Version>0.99</Version>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -309,8 +309,10 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\3DSLoader.cpp" />
     <ClInclude Include="..\..\Dependencies\include\huffman\huffman.h" />
     <ClInclude Include="HuffmanCompression.h" />
+    <ClInclude Include="include\3DSLoader.h" />
     <ClInclude Include="include\AImpSceneLoader.h" />
     <ClInclude Include="include\AtlasPacker.h" />
     <ClInclude Include="include\BatchRenderer.h" />
@@ -593,7 +595,7 @@
     <ClInclude Include="include\ChunkSerializer.h" />
     <ClInclude Include="include\IFileLoader.h" />
     <ClInclude Include="include\IFileWriter.h" />
-    <ClInclude Include="include\3dsLoader.h" />
+    <ClInclude Include="include\3dsLoader_old.h" />
     <ClInclude Include="include\acLoader.h" />
     <ClInclude Include="include\IMeshLoader.h" />
     <ClInclude Include="include\IModelWriter.h" />
@@ -1221,7 +1223,7 @@
     <ClCompile Include="src\CPakLoader.cpp" />
     <ClCompile Include="src\CZipLoader.cpp" />
     <ClCompile Include="src\ChunkSerializer.cpp" />
-    <ClCompile Include="src\3dsLoader.cpp" />
+    <ClCompile Include="src\3dsLoader_old.cpp" />
     <ClCompile Include="src\acLoader.cpp" />
     <ClCompile Include="src\mdlloader.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>

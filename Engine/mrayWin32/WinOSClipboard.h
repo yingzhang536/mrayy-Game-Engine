@@ -19,9 +19,9 @@ public:
 	WinOSClipboard();
 	virtual ~WinOSClipboard();
 	//! copy text to clipboard
-	virtual void copyToClipboard(const  mchar*data);
+	virtual void copyToClipboard(const  core::UTFString&  data);
 	//! get clipboard text
-	virtual  mchar* getClipboardText();
+	virtual  core::UTFString getClipboardText();
 };
 
 

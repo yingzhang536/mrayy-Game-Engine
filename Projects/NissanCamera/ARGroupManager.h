@@ -13,6 +13,10 @@ namespace NCam
 	class ARSceneObject
 	{
 	public:
+		ARSceneObject() :id(0), alpha(1), group(0), obj(0), sceneNode(0)
+		{}
+		uint id;
+		float alpha;
 		ARSceneGroup* group;
 		IARObject* obj;
 		scene::ISceneNode* sceneNode;
@@ -22,14 +26,16 @@ namespace NCam
 	public:
 		~ARSceneGroup()
 		{
-			for (int i = 0; i < objects.size();++i)
+			std::map<uint, ARSceneObject*>::iterator it = objects.begin();
+			for (; it != objects.end();++it)
 			{
-				delete objects[i];
+				delete it->second;
 			}
+			objects.clear();
 			delete group;
 		}
 		ARGroup* group;
-		std::vector<ARSceneObject*> objects;
+		std::map<uint,ARSceneObject*> objects;
 	};
 	typedef std::map<uint, ARSceneGroup*> GroupMap;
 
@@ -39,20 +45,32 @@ protected:
 	GroupMap m_groups;
 	scene::IRenderable* GenerateMeshObject(ARMesh* mesh);
 	scene::IRenderable* LoadMeshObject(ARPredef* mesh);
+	scene::IRenderable* LoadStringObject(ARString* mesh);
+	scene::IRenderable* LoadVehicleObject(ARVehicle* mesh);
  
+
+	void _UpdateGroup(ARSceneGroup* grp, ARGroup* src);
 	scene::ISceneManager* m_sceneManager;
+	scene::ISceneNode* m_arRoot;
+
+	scene::ISceneNode* m_vehicle;
 public:
 	ARGroupManager();
 	virtual ~ARGroupManager();
 
-	void SetSceneManager(scene::ISceneManager* mgr){ m_sceneManager = mgr; }
+	void SetSceneManager(scene::ISceneManager* mgr, scene::ISceneNode* arRoot){ m_sceneManager = mgr; m_arRoot = arRoot; }
+
+	scene::ISceneNode* GetVehicle(){ return m_vehicle; }
 
 	ARSceneGroup* AddGroup(ARGroup* group);
 	ARSceneGroup* GetGroupListByID(uint id);
-	void RemoveGroup(uint id);
-	void HideGroup(uint id);
-	void ShowGroup(uint id);
+	bool RemoveGroup(uint id);
+	bool HideGroup(uint id);
+	bool ShowGroup(uint id);
 	void ClearGroups();
+
+	bool SetAlpha(uint id, float alpha);
+	bool SetAlpha( float alpha);
 
 };
 

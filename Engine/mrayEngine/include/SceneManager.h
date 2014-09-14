@@ -52,6 +52,8 @@ protected:
 
 	OS::IMutex* m_nodesMutex;
 
+	ISceneNode* m_rootNode;
+
 	ThreadJobManager* m_jobsThreadsManager;
 
 	BenchmarkItem* m_benchmarkItem;
@@ -72,6 +74,8 @@ public:
 
 	ThreadJobManager* GetJobsManager(){return m_jobsThreadsManager;}
 
+	virtual void setRootNode(scene::ISceneNode* root) { m_rootNode = root; }
+	virtual scene::ISceneNode* getRootNode(){ return m_rootNode; }
 	virtual void registerBenchmark();
 	virtual void unregisterBenchmark();
 
@@ -90,15 +94,15 @@ public:
 	virtual void SetDebugDrawManager(IDebugDrawManager* mngr);
 	virtual IDebugDrawManager* GetDebugDrawManager();
 
-	virtual LightNode* createLightNode(const core::string&name=mT(""));
-	virtual ISceneNode* createSceneNode(const core::string&name=mT(""));
-	virtual CameraNode* createCamera(const core::string&name=mT(""));
+	virtual LightNode* createLightNode(const core::string&name = mT(""), ISceneNode* parent = 0);
+	virtual ISceneNode* createSceneNode(const core::string&name = mT(""), ISceneNode* parent = 0);
+	virtual CameraNode* createCamera(const core::string&name = mT(""), ISceneNode* parent = 0);
 
 	/*!
 	  Add a custom scene Node to scene manager
 	  the node would be a child of the scene manager
 	*/
-	void addSceneNode(const ISceneNodePtr& node);
+	void addSceneNode(const ISceneNodePtr& node, ISceneNode* parent = 0);
 	void removeSceneNode(ISceneNode*node);
 	ISceneNode* getNodeByID(uint id);
 
@@ -122,7 +126,7 @@ public:
 
 	virtual void OnVisit(ISceneVisitor*visitor);
 
-	const SceneNodeMap& GetChildren(){return m_Children;}
+	//const SceneNodeMap& GetChildren(){return m_Children;}
 };
 
 }

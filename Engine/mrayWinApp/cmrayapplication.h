@@ -59,6 +59,8 @@ public:
 	CMRayApplication(const core::string&logFile=mT("log.txt"));
 	virtual~CMRayApplication();
 
+	bool IsDone(){ return m_terminate; }
+
 	virtual void init(const OptionContainer &extraOptions);
 	virtual void run();
 

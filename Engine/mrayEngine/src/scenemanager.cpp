@@ -43,6 +43,8 @@ namespace scene{
 SceneManager::SceneManager(video::IVideoDevice*dev):
 ISceneManager(dev),m_activeCamera(0)
 {
+	m_rootNode = new ISceneNode("Root Scene Node", 0, this);
+	m_rootNode->setCullingType(SCT_NONE);
 
 	m_benchmarkItem=new BenchmarkItem(mT("SceneManager"));
 
@@ -146,7 +148,7 @@ void SceneManager::removeSceneNode(ISceneNode*node)
 
 
 
-void SceneManager::addSceneNode(const ISceneNodePtr& node)
+void SceneManager::addSceneNode(const ISceneNodePtr& node, ISceneNode* parent)
 {
 	if(!node)
 		return;
@@ -169,70 +171,65 @@ void SceneManager::addSceneNode(const ISceneNodePtr& node)
 	}
 
 	node->_OnAddedToSceneManager(this);
+	if (parent)
+		parent->addChild(node);
+	else if (m_rootNode)
+		m_rootNode->addChild(node);
+	else gSceneLoggerSystem.log("AddSceneNode: parent node is null, and there is no root node set!", ELL_WARNING);
 }
 
 
-LightNode* SceneManager::createLightNode(const core::string&name)
+LightNode* SceneManager::createLightNode(const core::string&name, ISceneNode* parent)
 {
 	core::string strName=name;
 	if(strName==mT(""))
 	{
 		strName=mT("LightNode#")+core::StringConverter::toString(++m_nameIDGenerator);
 	}
-	SceneNodeMap::iterator it= m_Children.find(strName);
-	if(it!=m_Children.end())
-	{
-		gSceneLoggerSystem.log(mT("CreateLight: SceneNode with name:")+strName+mT(" is already exists in the scene manager"),ELL_WARNING,EVL_Heavy);
-		//pick new name
-		strName+=core::StringConverter::toString(++m_nameIDGenerator);
-	}
-
+	
 	LightNode* node=new LightNode(strName,m_objectsID.GetNextID(),this);
-	m_objectsID.AddObject(node,node->getID());
-	m_Children[strName]=node;
-	node->_OnAddedToSceneManager(this);
+	addSceneNode(node, parent);
+	
 	return node;
 }
-ISceneNode* SceneManager::createSceneNode(const core::string&name)
+ISceneNode* SceneManager::createSceneNode(const core::string&name, ISceneNode* parent)
 {
 	core::string strName=name;
 	if(strName==mT(""))
 	{
 		strName=mT("SceneNode#")+core::StringConverter::toString(++m_nameIDGenerator);
 	}
+	/*
 	SceneNodeMap::iterator it= m_Children.find(strName);
 	if(it!=m_Children.end())
 	{
 		gSceneLoggerSystem.log(mT("CreateSceneNode: SceneNode with name:")+strName+mT(" is already exists in the scene manager"),ELL_WARNING,EVL_Heavy);
 		//pick new name
 		strName+=core::StringConverter::toString(++m_nameIDGenerator);
-	}
+	}*/
 
 	ISceneNode* node=new ISceneNode(strName,m_objectsID.GetNextID(),this);
+	addSceneNode(node, parent);
+	/*
 	m_objectsID.AddObject(node,node->getID());
 	m_Children[strName]=node;
 	node->_OnAddedToSceneManager(this);
+
+	if (parent)
+		parent->addChild(node);
+	else
+		m_rootNode->addChild(node);*/
 	return node;
 }
-CameraNode* SceneManager::createCamera(const core::string&name)
+CameraNode* SceneManager::createCamera(const core::string&name, ISceneNode* parent)
 {
 	core::string strName=name;
 	if(strName==mT(""))
 	{
 		strName=mT("CameraNode#")+core::StringConverter::toString(++m_nameIDGenerator);
 	}
-	SceneNodeMap::iterator it= m_Children.find(strName);
-	if(it!=m_Children.end())
-	{
-		gSceneLoggerSystem.log(mT("CreateCamera: SceneNode with name:")+strName+mT(" is already exists in the scene manager"),ELL_WARNING,EVL_Heavy);
-		//pick new name
-		strName+=core::StringConverter::toString(++m_nameIDGenerator);
-	}
-
 	CameraNode* node=new CameraNode(strName,m_objectsID.GetNextID(),this);
-	m_objectsID.AddObject(node,node->getID());
-	m_Children[strName]=node;
-	node->_OnAddedToSceneManager(this);
+	addSceneNode(node, parent);
 	return node;
 }
 

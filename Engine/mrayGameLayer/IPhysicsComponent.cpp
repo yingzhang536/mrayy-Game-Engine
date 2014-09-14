@@ -101,6 +101,16 @@ void PhysicalComponentAttachment::SaveToXML(xml::XMLElement*e)
 }
 
 
+
+IPhysicsComponent::~IPhysicsComponent()
+{
+
+	std::list<PhysicalComponentAttachment*>::iterator it = m_attachments.begin();
+	for (; it != m_attachments.end(); ++it)
+		delete *it;
+	m_attachments.clear();
+}
+
 bool IPhysicsComponent::InitComponent()
 {
 	if(!IGameComponent::InitComponent())

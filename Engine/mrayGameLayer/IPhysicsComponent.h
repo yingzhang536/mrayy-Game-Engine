@@ -72,7 +72,7 @@ protected:
 	std::list<PhysicalComponentAttachment*> m_attachments;
 public:
 	IPhysicsComponent(){}
-	virtual~IPhysicsComponent(){}
+	virtual~IPhysicsComponent();
 
 	virtual bool InitComponent();
 

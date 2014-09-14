@@ -24,6 +24,8 @@ protected:
 
 public:
 
+	DelegateEvent2<GUIConsole*,const core::string&> OnCommand; //this,const mchar* cmd
+
 	GUIConsole(IGUIManager* m);
 	virtual ~GUIConsole();
 

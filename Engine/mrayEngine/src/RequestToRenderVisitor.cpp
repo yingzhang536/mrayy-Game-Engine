@@ -49,10 +49,12 @@ void RequestToRenderVisitor::_AddRenderableNode(IRenderable*r)
 				continue;
 
 			int targetLayer=0;
+
 			if(r->HasCustomRenderGroup())
 			{
 				targetLayer=r->GetTargetRenderGroup();
-			}else if(ROP.mesh){
+			}
+			if(ROP.mesh){
 				video::RenderMaterial*mr=ROP.mesh->getMaterial();
 				if(mr)
 				{
@@ -62,11 +64,15 @@ void RequestToRenderVisitor::_AddRenderableNode(IRenderable*r)
 						for(int i=0;i<lst.size();++i)
 						{
 							video::RenderPass*p=lst[i];
-							if(p->getRenderState(video::RS_Blend))
-								targetLayer=RGH_Transparent;
-							else
-								targetLayer=RGH_Solid;
-							ROP.pass=p;
+							if (!r->HasCustomRenderGroup())
+							{
+								if (p->getRenderState(video::RS_Blend))
+									targetLayer = RGH_Transparent;
+								else
+									targetLayer = RGH_Solid;
+
+							}
+							ROP.pass = p;
 							m_smngr->getRenderManager()->addOperation(targetLayer,ROP);
 						}
 					}
@@ -76,7 +82,7 @@ void RequestToRenderVisitor::_AddRenderableNode(IRenderable*r)
 			if(!ROP.mesh && !ROP.customRender || added)
 				continue;
 
-			m_smngr->getRenderManager()->addOperation(targetLayer,ROP);
+			//m_smngr->getRenderManager()->addOperation(targetLayer,ROP);
 		}
 	}else if(r->isCustomRender())
 	{
@@ -99,22 +105,27 @@ void RequestToRenderVisitor::Visit(ISceneManager*mngr)
 
 	m_smngr->clearRenderList();
 
-	const ISceneManager::SceneNodeMap& lst=m_smngr->GetChildren();
+
+	if (!mngr->getRootNode())
+		return;
+	mngr->getRootNode()->OnVisit(this);
+
+/*	const ISceneManager::SceneNodeMap& lst = m_smngr->GetChildren();
 	ISceneManager::SceneNodeMap::const_iterator it=lst.begin();
 	for (;it!=lst.end();++it)
 	{
 		it->second->OnVisit(this);
-	}
+	}*/
 }
 
 void RequestToRenderVisitor::Visit(ISceneNode*node)
 {
-	Visit((IMovable*)node);
 	if(!node->isVisible() || m_smngr->isNodeCulled(node))
 	{
 		node->SetDrown(false);
 		return;
 	}
+	Visit((IMovable*)node);
 	node->SetDrown(true);
 	node->preRender();
 

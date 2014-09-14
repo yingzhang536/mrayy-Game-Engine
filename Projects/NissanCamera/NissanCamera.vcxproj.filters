@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{52595a15-bd6e-482c-ba09-f03e2162f992}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{24e118ec-941b-47b4-a312-81fa94baa563}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -81,6 +84,9 @@
     <ClInclude Include="ConsoleLogDevice.h">
       <Filter>Source Files\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="ARCommands.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -115,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="ConsoleLogDevice.cpp">
       <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ARCommands.cpp">
+      <Filter>Source Files\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

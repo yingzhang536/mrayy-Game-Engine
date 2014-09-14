@@ -70,15 +70,6 @@ void LocalCameraVideoSource::Open()
 		m_cameraSource[1].camera->InitDevice(m_cameraSource[1].id, m_cameraResolution.x, m_cameraResolution.y, m_cameraFPS);
 
 
-	for (int i = 0; i < 2; ++i)
-	{
-		if (m_cameraSource[i].camera)
-		{
-			m_cameraSource[i].camera->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0.5");
-			core::string val = m_cameraSource[i].camera->GetParameter(video::ICameraVideoGrabber::Param_Focus);
-			printf("focus value is: %s\n", val.c_str());
-		}
-	}
 
 }
 void LocalCameraVideoSource::Close()
@@ -88,6 +79,25 @@ void LocalCameraVideoSource::Close()
 	if (m_cameraSource[1].camera)
 		m_cameraSource[1].camera->Stop();
 }
+void LocalCameraVideoSource::SetCameraParameterValue(const core::string& name, const core::string& value)
+{
+
+
+	for (int i = 0; i < 2; ++i)
+	{
+		if (m_cameraSource[i].camera)
+		{
+			m_cameraSource[i].camera->SetParameter(name, value);
+
+			printf("Camera [%d] %s value is: %s\n", i, name.c_str(), m_cameraSource[i].camera->GetParameter(name).c_str());
+		}
+	}
+}
+const core::string& LocalCameraVideoSource::GetCameraParameterValue(const core::string& namne)
+{
+	return m_cameraSource[0].camera->GetParameter(namne);
+}
+
 void LocalCameraVideoSource::SetCameraID(int i, int cam)
 {
 	m_cameraSource[i].id = cam;
@@ -101,11 +111,17 @@ video::ITexturePtr LocalCameraVideoSource::GetEyeTexture(int i)
 	return m_cameraSource[i].videoGrabber->GetTexture();
 }
 
-bool LocalCameraVideoSource::Blit()
+bool LocalCameraVideoSource::Blit(int eye)
 {
-	bool a=m_cameraSource[0].videoGrabber->Blit();
-	bool b=m_cameraSource[1].videoGrabber->Blit();
-	return a || b;
+	if (eye < 0)
+	{
+		bool a = m_cameraSource[0].videoGrabber->Blit();
+		bool b = m_cameraSource[1].videoGrabber->Blit();
+		return a || b;
+	}
+	else if (eye<2)
+		return m_cameraSource[eye].videoGrabber->Blit();
+	return false;
 }
 void LocalCameraVideoSource::LoadFromXML(xml::XMLElement* e)
 {

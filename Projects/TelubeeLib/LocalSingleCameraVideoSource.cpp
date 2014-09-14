@@ -62,7 +62,7 @@ video::ITexturePtr LocalSingleCameraVideoSource::GetEyeTexture(int i)
 	return m_cameraSource.videoGrabber->GetTexture();
 }
 
-bool LocalSingleCameraVideoSource::Blit()
+bool LocalSingleCameraVideoSource::Blit(int eye)
 {
 	bool a = m_cameraSource.videoGrabber->Blit();
 	return a ;

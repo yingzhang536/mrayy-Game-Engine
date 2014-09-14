@@ -40,14 +40,22 @@ GstVideoPlayer::GstVideoPlayer(){
 GstVideoPlayer::~GstVideoPlayer(){
 	close();
 
-
-	delete m_readData[0].client;
-	m_readData[0].client = 0;
-
-	delete m_readData[1].client;
-	m_readData[1].client = 0;
-
+	for (int i = 0; i < 2; ++i)
+	{
+		if (m_readData[i].client)
+		{
+			m_readData[i].client->Close();
+		}
+	}
 	delete videoUtils;
+	for (int i = 0; i < 2; ++i)
+	{
+		if (m_readData[i].client)
+		{
+			delete m_readData[i].client;
+			m_readData[i].client = 0;
+		}
+	}
 }
 
 void GstVideoPlayer::SetImageFormat(video::EPixelFormat pixelFormat){
@@ -472,7 +480,7 @@ static gboolean read_data(gst_app_t *app)
 	GstFlowReturn ret;
 
 	GstBuffer *buffer;
-	if (read_data_tobuffer(app, &buffer))
+	if ( read_data_tobuffer(app, &buffer))
 	{
 		ret = gst_app_src_push_buffer((GstAppSrc*)(app->src), buffer);
 		//gst_buffer_unref(buffer);
@@ -637,7 +645,8 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 #endif
 
 	//Audio
-	gstString+=" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=44100! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+	if(false)
+		gstString+=" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=44100! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 
 #if 0 
 	gstPipeline = gst_pipeline_new("pipeline0");

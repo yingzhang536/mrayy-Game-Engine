@@ -24,7 +24,6 @@
 #include "EnumManager.h"
 #include "DefaultEnum.h"
 #include "SceneHelper.h"
-#include "CommandManager.h"
 #include "DefaultObjects.h"
 
 #include "SkyBoxManager.h"
@@ -150,7 +149,6 @@ namespace mray
 			new EnumManager();
 			DefaultEnum::registerDefaultEnum();
 
-			new CommandManager();
 
 			ioSystem = system;
 
@@ -317,9 +315,6 @@ namespace mray
 			delete LogSubSystemManager::getInstancePtr();
 
 			delete loggerManager;
-
-
-			delete CommandManager::getInstancePtr();
 
 			delete delegateManager;
 

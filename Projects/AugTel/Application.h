@@ -60,7 +60,6 @@ protected:
 
 	TBeeRenderer* m_tbRenderer;
 
-	video::ITexturePtr m_screenShot;
 
 	GCPtr<TBee::ApplicationStateManager> m_appStateManager;
 	TBee::RenderingStateManager* m_renderingState;
@@ -72,6 +71,9 @@ protected:
 	bool m_drawUI;
 
 	bool m_remoteCamera;
+	video::ITexturePtr m_screenShot;
+	bool m_screenShotEnabled;
+	float m_screenShotTimer;
 
 	video::RenderWindow* m_previewWnd;
 	video::IRenderTargetPtr m_previewRT;

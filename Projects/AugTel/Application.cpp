@@ -71,6 +71,7 @@
 #include "mrayOIS.h"
 
 #include "TelubeeRobotDLL.h"
+#include "RobotViewerState.h"
 
 
 namespace mray
@@ -117,6 +118,8 @@ Application::Application()
 	m_drawUI = false;
 	new ATAppGlobal();
 
+	m_screenShotEnabled = false;
+
 	this->m_limitFps = true;
 }
 Application::~Application()
@@ -132,6 +135,7 @@ Application::~Application()
 	delete ATAppGlobal::Instance()->robotInfoManager;
 	delete ATAppGlobal::Instance();
 	VT::ReleaseVTLib();
+
 }
 
 void Application::_InitResources()
@@ -159,6 +163,8 @@ void Application::_InitResources()
 }
 void Application::onEvent(Event* event)
 {
+	if (CMRayApplication::IsDone())
+		return;
 	CMRayApplication::onEvent(event);
 	if (!m_tbRenderer)
 		return;
@@ -183,7 +189,9 @@ void Application::onEvent(Event* event)
 		}
 			if(e->press && e->key==KEY_F12)
 		{
-
+				m_screenShotEnabled = !m_screenShotEnabled;
+				m_screenShotTimer = 100;
+				/*
 			video::LockedPixelBox box=m_screenShot->getSurface(0)->lock(math::box3d(0,0,0,GetRenderWindow()->GetSize().x,GetRenderWindow()->GetSize().y,1),video::IHardwareBuffer::ELO_Discard);
 			GetRenderWindow()->TakeScreenShot(box);
 			m_screenShot->getSurface(0)->unlock();
@@ -199,7 +207,7 @@ void Application::onEvent(Event* event)
 			name = "screenShot";
 			name += buffer;
 			name += ".png";
-			gTextureResourceManager.writeResourceToDist(m_screenShot,name);
+			gTextureResourceManager.writeResourceToDist(m_screenShot,name);*/
 
 		}
 	}
@@ -226,9 +234,9 @@ void Application::_initStates()
 		ip = ifo->IP;
 
 	if (m_remoteCamera)
-		remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new RobotViewerState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
   	else
- 		remote = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new RobotViewerState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
 	m_renderingState->AddState(remote);
 
 	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), 0, "AugCam");////new TBee::LocalRobotCommunicator()
@@ -503,6 +511,25 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 
 		math::rectf trc;
 		getDevice()->draw2DImage(rc, 1);
+
+		if (m_screenShotEnabled && m_screenShotTimer>1)
+		{
+			m_screenShotTimer = 0;
+
+			math::vector3d sz;
+			sz.x = wnd->GetSize().x;
+			sz.y = wnd->GetSize().y;
+			sz.z = 1;
+			m_screenShot->createTexture(sz, video::EPixelFormat::EPixel_B8G8R8);
+			video::LockedPixelBox box = m_screenShot->getSurface(0)->lock(math::box3d(0, 0, 0, wnd->GetSize().x, wnd->GetSize().y, 1), video::IHardwareBuffer::ELO_Discard);
+			wnd->TakeScreenShot(box);
+			m_screenShot->getSurface(0)->unlock();
+			core::string fname = gFileSystem.getAppPath() + "/Screenshots/Torso_" + core::StringConverter::toString(gEngine.getTimer()->getSeconds()) + ".png";
+			gTextureResourceManager.writeResourceToDist(m_screenShot, fname);
+
+			getDevice()->draw2DRectangle(math::rectf(0,0,20,20), video::SColor(1,0,0,1));
+
+		}
 		return;
 	}
 	getDevice()->setViewport(m_mainVP);
@@ -522,6 +549,7 @@ void Application::update(float dt)
 
 	m_wiiManager->PollEvents();
 
+	m_screenShotTimer += dt;
 	//OS::IThreadManager::getInstance().sleep(1000/30);
 
 }

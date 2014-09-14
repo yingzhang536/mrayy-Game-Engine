@@ -69,8 +69,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;TelubeeRobotDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>mrayGLDevice.lib;TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;TelubeeRobotDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib;libcd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -140,6 +140,7 @@
     <ClInclude Include="PenComponent.h" />
     <ClInclude Include="RefractionSceneEffect.h" />
     <ClInclude Include="RobotSpaceComponent.h" />
+    <ClInclude Include="RobotViewerState.h" />
     <ClInclude Include="SceneEffectManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SurfaceWrapper.h" />
@@ -188,6 +189,7 @@
     </ClCompile>
     <ClCompile Include="RefractionSceneEffect.cpp" />
     <ClCompile Include="RobotSpaceComponent.cpp" />
+    <ClCompile Include="RobotViewerState.cpp" />
     <ClCompile Include="SceneEffectManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

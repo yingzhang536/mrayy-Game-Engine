@@ -28,7 +28,7 @@ namespace NCam
 			while (caller->isActive())
 			{
 				m_owner->UpdateThread();
-				OS::IThreadManager::getInstance().sleep(100);
+				OS::IThreadManager::getInstance().sleep(20);
 			}
 		}
 	};
@@ -39,6 +39,7 @@ ARServiceProvider::ARServiceProvider()
 	m_commandsMutex = OS::IThreadManager::getInstance().createMutex();
 	m_thread = OS::IThreadManager::getInstance().createThread(function);
 	m_connection = network::INetwork::getInstance().createTCPSocket();
+	m_connection->SetManualSocket(true);
 }
 
 ARServiceProvider::~ARServiceProvider()
@@ -97,31 +98,36 @@ void ARServiceProvider::Update()
 
 }
 
-bool ParseCoordinate(uint origin, EARCoordinates& coord)
+bool ParserCommon(DispObjHdr*hdr, IARObject* obj)
 {
-
+	uint origin=hdr->attr.origin;
 	switch (origin) {
 	case ORIGIN_3DSPACE_3D_WORLD:
-		coord= EARCoordinates::EWorldSpace;
+		obj->coordinates= EARCoordinates::EWorldSpace;
 		break;
 	case ORIGIN_3DSPACE_3D_OWNCAR:
-		coord= EARCoordinates::EOwnCar;
+		obj->coordinates = EARCoordinates::EOwnCar;
 		break;
 	case ORIGIN_WINDOW_3D_WORLD:
-		coord = EARCoordinates::EWindow3DWorld;
+		obj->coordinates = EARCoordinates::EWindow3DWorld;
 		break;
 	case ORIGIN_WINDOW_3D_OWNCAR:
-		coord = EARCoordinates::EWindow3DOwnCar;
+		obj->coordinates = EARCoordinates::EWindow3DOwnCar;
 		break;
 	case ORIGIN_WINDOW_2D_PIXEL:
-		coord = EARCoordinates::EWindow2DPixel;
+		obj->coordinates = EARCoordinates::EWindow2DPixel;
 		break;
 	case ORIGIN_WINDOW_2D_NORMALIZE:
-		coord = EARCoordinates::EWindow2DNormalized;
+		obj->coordinates = EARCoordinates::EWindow2DNormalized;
 		break;
-	default:
-		return false;
-	}
+	};
+
+	obj->pos.set(hdr->attr.posDir.pos.x,
+		hdr->attr.posDir.pos.z, -hdr->attr.posDir.pos.y);
+
+	obj->dir.set(hdr->attr.posDir.pitch,
+		hdr->attr.posDir.heading, hdr->attr.posDir.roll);
+
 	return true;
 }
 
@@ -132,19 +138,15 @@ IARObject* ParseObject(DispObjHdr* pHdr)
 	DOSM_GLObject glObj;
 	DOSM_Predefined predefined;
 	DOSM_String str;
+	DOSM_VehicleData vehcle;
 	IARObject* ret = 0;
 	if (parser.asGLObject(pHdr, &glObj)) {
 
 		ARMesh* mesh = new ARMesh();
 		ret = mesh;
 
-		ParseCoordinate(glObj.pHdr->attr.origin, mesh->coordinates);
-		mesh->pos.set(glObj.pHdr->attr.posDir.pos.x,
-			glObj.pHdr->attr.posDir.pos.y, glObj.pHdr->attr.posDir.pos.z);
-
-		mesh->dir.set(glObj.pHdr->attr.posDir.heading,
-			glObj.pHdr->attr.posDir.heading, glObj.pHdr->attr.posDir.heading);
-
+		ParserCommon(glObj.pHdr, mesh);
+	
 		mesh->lineWidth = glObj.pGL->lineWidth;
 		mesh->cullface = glObj.pGL->backCulling;
 
@@ -192,6 +194,20 @@ IARObject* ParseObject(DispObjHdr* pHdr)
 		default:
 			break;
 		}
+		switch (glObj.pGL->colorType)
+		{
+		case DISPOBJ_COLOR_NONE:
+			mesh->colorType = EARColorType::ENone;
+			break;
+		case DISPOBJ_COLOR_VERTEX:
+			mesh->colorType = EARColorType::EVertex;
+			break;
+		case DISPOBJ_COLOR_OVERALL:
+			mesh->colorType = EARColorType::EOverall;
+			break;
+		default:
+			break;
+		}
 
 		mesh->verticies.resize(glObj.points.size());
 		for (size_t i = 0; i < glObj.points.size(); i++) {
@@ -212,13 +228,7 @@ IARObject* ParseObject(DispObjHdr* pHdr)
 	else if (parser.asPredefined(pHdr, &predefined)) {
 		ARPredef* mesh = new ARPredef();
 		ret = mesh;
-
-		ParseCoordinate(predefined.pHdr->attr.origin, mesh->coordinates);
-		mesh->pos.set(predefined.pHdr->attr.posDir.pos.x,
-			predefined.pHdr->attr.posDir.pos.y, predefined.pHdr->attr.posDir.pos.z);
-
-		mesh->dir.set(predefined.pHdr->attr.posDir.heading,
-			predefined.pHdr->attr.posDir.heading, predefined.pHdr->attr.posDir.heading);
+		ParserCommon(predefined.pHdr, mesh);
 
 		mesh->name = predefined.pPredefined->name;
 		mesh->scale.set(predefined.pPredefined->scaleX, predefined.pPredefined->scaleY, predefined.pPredefined->scaleZ);
@@ -227,13 +237,7 @@ IARObject* ParseObject(DispObjHdr* pHdr)
 	else if (parser.asString(pHdr, &str)) {
 		ARString* mesh = new ARString();
 		ret = mesh;
-
-		ParseCoordinate(str.pHdr->attr.origin, mesh->coordinates);
-		mesh->pos.set(str.pHdr->attr.posDir.pos.x,
-			str.pHdr->attr.posDir.pos.y, str.pHdr->attr.posDir.pos.z);
-
-		mesh->dir.set(str.pHdr->attr.posDir.heading,
-			str.pHdr->attr.posDir.heading, str.pHdr->attr.posDir.heading);
+		ParserCommon(str.pHdr, mesh);
 
 		mesh->fontSize = str.pString->fontSize;
 		mesh->fontType = str.pFont;
@@ -256,8 +260,13 @@ IARObject* ParseObject(DispObjHdr* pHdr)
 		}
 		mesh->text = str.pData;
 	}
-	else {
+	else if(parser.asVehicleData(pHdr,&vehcle)) {
+		ARVehicle* v = new ARVehicle();
+		ret = v;
+		ParserCommon(vehcle.pHdr, v);
+
 	}
+	ret->id = pHdr->oh.objId;
 	return ret;
 }
 
@@ -281,14 +290,23 @@ void ARServiceProvider::UpdateThread()
 	bool hadData = false;
 	char *data = NULL;
 	while (!doneFlag) {
-		network::SPacket* recPack = m_connection->popMessage();
-		if (!recPack)
+		//network::SPacket* recPack = m_connection->popMessage();
+		uint dataLen = 0;
+		if(!m_connection->receive(m_serverAddr, &dataLen, sizeof(dataLen), 0) )
+			continue;
+		
+		if (!dataLen)
 		{
 			//problem occurred, we should receive DATA_END
 			break;
 		}
+		uint *data = new uint[dataLen];
+		if (!m_connection->receive(m_serverAddr, data, dataLen, 0))
+		{
+			delete [] data;
+			continue;;
+		}
 
-		data =(char*) recPack->data.pointer();
 		uint *p = (uint *)data;
 		uint dataType = *p++;
 
@@ -331,7 +349,7 @@ void ARServiceProvider::UpdateThread()
 			m_commandsMutex->unlock();
 		}
 
-		delete recPack;
+		delete [] data;
 	}
 }
 

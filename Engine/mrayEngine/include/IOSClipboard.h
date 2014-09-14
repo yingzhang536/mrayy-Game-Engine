@@ -14,23 +14,21 @@
 #ifndef ___IOSClipboard___
 #define ___IOSClipboard___
 
-#include "ISingleton.h"
-#include "mString.h"
+#include "UTFString.h"
 
 namespace mray{
 namespace OS{
 
-class IOSClipboard:public ISingleton<IOSClipboard>
+class IOSClipboard
 {
 public:
 	IOSClipboard(){}
 	virtual~IOSClipboard(){}
 	//! copy text to clipboard
-	virtual void copyToClipboard(const  mchar*data)=0;
+	virtual void copyToClipboard(const  core::UTFString& data) = 0;
 	//! get clipboard text
-	virtual mchar* getClipboardText()=0;
+	virtual core::UTFString getClipboardText() = 0;
 };
-#define gOSClipboard OS::IOSClipboard::getInstance()
 
 }
 }

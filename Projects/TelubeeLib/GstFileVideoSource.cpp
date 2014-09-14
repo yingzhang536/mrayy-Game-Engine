@@ -38,7 +38,7 @@ void GstFileVideoSource::Close()
 	m_providers->Disconnect();
 
 }
-bool GstFileVideoSource::Blit()
+bool GstFileVideoSource::Blit(int eye)
 {
 
 	bool dirty = false;

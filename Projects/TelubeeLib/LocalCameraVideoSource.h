@@ -69,7 +69,10 @@ public:
 
 	virtual bool IsLocal(){ return true; }
 
-	bool Blit();
+	bool Blit(int eye);
+
+	void SetCameraParameterValue(const core::string& namne, const core::string& value);
+	const core::string& GetCameraParameterValue(const core::string& namne);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 };

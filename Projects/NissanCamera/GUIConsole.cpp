@@ -5,6 +5,7 @@
 #include "GUIOverlay.h"
 #include "GUIOverlayManager.h"
 #include "GUIElementRegion.h"
+#include "StringUtil.h"
 
 
 namespace mray
@@ -39,8 +40,13 @@ void GUIConsole::_OnCommand(IObject* obj, void* data)
 	KeyboardEvent* event = (KeyboardEvent*)(data);
 	if (event->press && event->key == KEY_RETURN && Command->GetText().Length()>0)
 	{
-		GUI::StringListItem* item = new GUI::StringListItem(Command->GetText());
+		core::UTFString str = core::UTFString("> ");
+		str+=Command->GetText();
+		GUI::StringListItem* item = new GUI::StringListItem(str);
 		History->AddItem(item);
+
+		core::string cmd = Command->GetText().GetAsString();
+		OnCommand(this, cmd);
 		Command->SetText(core::string(""));
 	}
 }
@@ -50,7 +56,7 @@ void GUIConsole::_OnSelectCommand(IObject* obj, void* data)
 	int i=History->GetSelectedItem();
 	if (i == -1)
 		return;
-	Command->SetText(History->GetItem(i)->toString());
+//	Command->SetText(History->GetItem(i)->toString());
 }
 
 bool GUIConsole::OnEvent(Event* e)
@@ -109,9 +115,15 @@ void GUIConsole::Draw(const math::rectf*vp)
 
 void GUIConsole::AddToHistory(const core::string& text, const video::SColor& color)
 {
-	GUI::StringListItem* item = new GUI::StringListItem(text);
-	History->AddItem(item);
-
+	std::vector<core::string> vals= core::StringUtil::Split(text, "\n");
+	for (int i = 0; i < vals.size(); ++i)
+	{
+		if (vals[i] == "")
+			continue;
+		GUI::StringListItem* item = new GUI::StringListItem(vals[i]);
+		History->AddItem(item);
+		History->SetStartItem(History->GetItemsCount() - History->GetItemsPerPage());
+	}
 }
 IMPLEMENT_RTTI(GUIConsole, IGUIPanelElement);
 IMPLEMENT_ELEMENT_FACTORY(GUIConsole);

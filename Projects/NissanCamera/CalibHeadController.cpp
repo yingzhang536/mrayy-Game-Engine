@@ -13,6 +13,8 @@ namespace mray
 namespace TBee
 {
 
+#define  SAMPLES_COUNT 40
+
 void CalibHeadController::CalibrationInfo::LoadFromXML(xml::XMLElement* e)
 {
 	headOrintation = core::StringConverter::toQuaternion(e->getValueString("HeadOrientation"));
@@ -29,27 +31,72 @@ void CalibHeadController::CalibrationInfo::WriteToXML(xml::XMLElement* elem)
 	e->addAttribute("StaticHeadOffset", core::StringConverter::toString(staticHeadOffset));
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-math::quaternion CalibHeadController::GetHeadOrientation()
+CalibHeadController::CalibHeadController(IHeadController* o) :m_otherController(o)
 {
-	
-	return m_otherController->GetHeadOrientation()*m_calibration.headOrintation.inverse();;
+	m_lostPos = 0;
+	m_lostOri = 0;
 }
 
-math::vector3d CalibHeadController::GetHeadPosition()
+bool CalibHeadController::GetHeadOrientation(math::quaternion& v)
 {
-	return m_otherController->GetHeadPosition() - m_calibration.headPosition - m_calibration.staticHeadOffset;
+	math::quaternion q;
+	if (!m_otherController->GetHeadOrientation(q) )
+	{
+		m_lostOri = SAMPLES_COUNT;
+		v = m_lastQuaternion*m_calibration.headOrintation.inverse();
+		m_trackedQuaternion = m_lastQuaternion;
+		return true;
+	}
 
+	if (m_lostOri > 0)
+	{
+		v.Slerp(m_trackedQuaternion, q, (1 - (float)m_lostOri / (float)SAMPLES_COUNT));
+		m_lostOri--;
+	}
+	else
+	{
+		v = q;
+		m_trackedQuaternion = q;
+	}
+	m_lastQuaternion = v;
+	v = v*m_calibration.headOrintation.inverse();;
+
+	return true;
+}
+
+bool CalibHeadController::GetHeadPosition(math::vector3d& v)
+{
+	math::vector3d pos;
+	if (!m_otherController->GetHeadPosition(pos))
+	{
+		m_lostPos = SAMPLES_COUNT;;
+		v = m_lastPos - m_calibration.headPosition - m_calibration.staticHeadOffset;
+		m_trackedPos = m_lastPos;
+		return true;
+	}
+	if (m_lostPos > 0)
+	{
+		v = math::lerp(m_trackedPos, pos, (1 - (float)m_lostPos / SAMPLES_COUNT));
+		m_lostPos--;
+	}
+	else
+	{
+		m_trackedPos = pos;
+		v = pos;
+	}
+	m_lastPos = v;
+	v = v - m_calibration.headPosition - m_calibration.staticHeadOffset;
+	return true;
 }
 
 
 void CalibHeadController::Calibrate()
 {
 	m_calibration.calibrated = true;
-	m_calibration.headPosition = m_otherController->GetHeadPosition();
-	m_calibration.headOrintation = m_otherController->GetHeadOrientation();
+	m_otherController->GetHeadPosition(m_calibration.headPosition);
+	m_otherController->GetHeadOrientation(m_calibration.headOrintation);
 }
 
 

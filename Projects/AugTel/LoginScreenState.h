@@ -44,10 +44,10 @@ protected:
 		EDone
 	};
 	EStatus m_status;
-	GUI::IGUIManager* m_guiManager;
+	GCPtr<GUI::IGUIManager> m_guiManager;
 	GUI::IGUIPanelElement* m_guiroot;
 
-	GUILoginMenu* m_loginMenu;
+	GCPtr<GUILoginMenu> m_loginMenu;
 
 	void OnExitPressed(IObject* caller,void* args);
 	void OnConnectRemotePressed(IObject* caller, void* args);

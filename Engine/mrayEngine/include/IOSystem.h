@@ -22,6 +22,8 @@ namespace mray{
 	class OptionContainer;
 namespace OS{
 
+	class IOSClipboard;
+
 	class IDirOS;
 	class ISystemProcess;
 	class ITimer;
@@ -74,6 +76,7 @@ public:
 	virtual IDirOS* createDirSystem()=0;
 
 	virtual ITimer* createTimer() = 0;
+	virtual IOSClipboard* getClipboard() = 0;
 
 	virtual bool getMemoryState(SMemoryState& state)=0;
 	virtual bool getPowerState(SPowerStatus& state)=0;

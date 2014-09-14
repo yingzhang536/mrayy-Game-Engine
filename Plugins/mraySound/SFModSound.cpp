@@ -115,13 +115,13 @@ bool SFModSound:: setMinDistance(float min_dist){
 	return true;
 }
 
-void SFModSound::setSoundBuffer(ISoundStreamFrame*data)
+void SFModSound::setSoundBuffer(GCPtr<ISoundStreamFrame> data)
 {
-	dataFormat=dynamic_cast<SFModSoundStream*>(data);
+	dataFormat=data;
 }
 
 
-ISoundStreamFrame*SFModSound::getSoundBuffer()
+GCPtr<ISoundStreamFrame> SFModSound::getSoundBuffer()
 {
 	return dataFormat;
 }

@@ -37,7 +37,7 @@ class MRAY_SOUND_DLL SFModSoundManager:public ISoundManager
 
 	SoundsList soundsList;
 
-	std::vector<ISoundStreamFrame*>sndDataFiles;
+	std::vector<GCPtr<SFModSoundStream>>sndDataFiles;
 	ISoundStreamFrame*getSound(const core::string&filename);
 
 

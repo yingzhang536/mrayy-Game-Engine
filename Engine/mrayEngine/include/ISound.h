@@ -92,8 +92,8 @@ public:
 	virtual uint getTimeLength()=0;
 	virtual uint getTimePosition()=0;
 
-	virtual void setSoundBuffer(ISoundStreamFrame*data)=0;
-	virtual ISoundStreamFrame*getSoundBuffer()=0;
+	virtual void setSoundBuffer(GCPtr<ISoundStreamFrame> data) = 0;
+	virtual GCPtr<ISoundStreamFrame> getSoundBuffer() = 0;
 
 	virtual void QueueSoundBuffer(ISoundStreamFrame*data)=0;
 	virtual void UnqueueSoundBuffer(ISoundStreamFrame*data)=0;

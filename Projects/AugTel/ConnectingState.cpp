@@ -232,6 +232,7 @@ void ConnectingState::InitState()
 
 		GUI::GUIOverlay* screenOverlay = GUI::GUIOverlayManager::getInstance().LoadOverlay("GUIConnectingScreen.gui");
 		screenOverlay->CreateElements(m_guiManager, m_guiroot, 0, m_connectScreen);
+
 	}
 	m_model = "TelesarDesc.xml";
 

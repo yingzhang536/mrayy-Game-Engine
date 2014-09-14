@@ -22,6 +22,9 @@
 #include "ARServiceProvider.h"
 #include "GUIManager.h"
 #include "GUIConsole.h"
+#include "CommandManager.h"
+#include "ARCommands.h"
+
 
 namespace mray
 {
@@ -38,7 +41,7 @@ namespace NCam
 	class ARGroupManager;
 	class ConsoleLogDevice;
 
-	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener
+	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener,public IARCommandListener
 {
 protected:
 
@@ -80,6 +83,12 @@ protected:
 
 	ConsoleLogDevice* m_consoleLogDevice;
 	GUI::GUIConsole* m_console;
+	scene::ISceneNode* m_vehicleModel;
+	scene::ISceneNode* m_arRoot;
+	math::vector3d m_headRotationOffset;
+	math::vector3d m_headPosOffset;
+
+	GCPtr<CommandManager> m_commandManager;
 
 	float m_hmdFov;
 
@@ -88,10 +97,17 @@ protected:
 	TBee::TelubeeCameraConfiguration *m_cameraConfiguration;
 	bool m_camConfigDirty;
 
+
 	void GenerateSurface(bool plane,float hfov, float vfov, int segments,  float cameraScreenDistance);
 	void _RenderUI(const math::rectf& rc);
 	void RescaleMesh(int index, const math::vector3d &scaleFactor);
 	void SetTransformation( const math::vector3d& pos,const math::vector3d &angles);
+
+	void _OnConsoleCommand(GUI::GUIConsole*, const core::string& cmd);
+	void _OnCommandMessage(const core::string& msg);
+
+	void _UpdateMovement(float dt);
+
 public:
 	RobotCameraState();
 	virtual~RobotCameraState();
@@ -113,6 +129,19 @@ public:
 	virtual void OnARContents(ARCommandAddData* cmd);
 	virtual void OnVechicleData();
 	virtual void OnDeletedGroup(ARCommandDeleteGroup* cmd);
+
+	virtual void onRenderDone(scene::ViewPort*vp);
+
+	virtual void CreateARObject(uint id, const core::string& name, const math::vector3d& pos, const math::vector3d& dir);
+	virtual void UpdateARObject(uint id, const math::vector3d& pos, const math::vector3d& dir);
+	virtual void MoveARObject(uint id, const math::vector3d& pos, const math::vector3d& dir);
+	virtual void RemoveARObject(uint id);
+	virtual void SelectARObject(uint id);
+	virtual void SetARAlpha(uint id, float v);
+	virtual bool QueryARObject(uint id, math::vector3d& pos, math::vector3d& dir);
+
+
+
 };
 
 }

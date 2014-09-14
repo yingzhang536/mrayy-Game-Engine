@@ -31,6 +31,7 @@ class MRAY_SOUND_DLL SFModSoundStream:public ISoundStreamFrame
 {
 private:
 protected:
+	virtual void unloadInternal();
 public:
 	FMOD::Sound*m_sound;
 	bool m_isStreaming;
@@ -39,6 +40,8 @@ public:
 	SFModSoundManager*manager;
 
 	char* m_streamData;
+
+
 
 	SFModSoundStream(const core::string&name);
 

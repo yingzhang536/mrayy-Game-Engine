@@ -136,6 +136,8 @@ SFModSoundManager::~SFModSoundManager(){
 
 	soundsList.clear();
 	
+	for (int i = 0; i < sndDataFiles.size(); ++i)
+		sndDataFiles[i]->unload();
 	sndDataFiles.clear();
 
 	FMOD_RESULT result;
@@ -339,7 +341,6 @@ SFModSoundStream* SFModSoundManager::createDataFile(const core::string&filename,
 		dataFile->m_isStreaming=false;
 	}
 
-
 	if(reportError(result)){
 		return 0;
 	}
@@ -362,7 +363,7 @@ ISoundPtr SFModSoundManager::loadSound(const core::string&filename,bool isStream
 		return ISoundPtr::Null;
 	
 	snd=new  SFModSound(this,filename);
-	snd->setSoundBuffer(dataFile->duplicate());
+	snd->setSoundBuffer(dataFile);
 	addSound(snd);
 		
 	return snd;

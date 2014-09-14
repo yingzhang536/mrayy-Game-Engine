@@ -19,12 +19,14 @@
 #include "GCPtr.h"
 
 #include "ICommand.h"
+#include "IDelegate.h"
 
 
 namespace mray{
 
 	typedef std::map<core::string,GCPtr<ICommand>> CommandList;
-class MRAY_DLL CommandManager:public ISingleton<CommandManager>
+
+class MRAY_DLL CommandManager
 {
 private:
 protected:
@@ -32,6 +34,9 @@ protected:
 	core::string m_lastMsg;
 	std::vector<core::string> m_args;
 public:
+
+	DelegateEvent1<const core::string&> MessageLog;
+
 	CommandManager();
 	virtual~CommandManager();
 

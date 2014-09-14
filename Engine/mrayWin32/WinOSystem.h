@@ -44,6 +44,8 @@ public:
 	virtual IDirOS* createDirSystem();
 	virtual ITimer* createTimer() ;
 
+	virtual IOSClipboard* getClipboard(){ return m_clipboardManager; }
+
 	virtual bool getMemoryState(SMemoryState& state);
 	virtual bool getPowerState(SPowerStatus& state);
 	virtual int getProcessorsCount();

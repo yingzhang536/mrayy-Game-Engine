@@ -18,15 +18,20 @@ SFModSoundStream::SFModSoundStream(const core::string&name):m_sound(0)
 }
 
 SFModSoundStream::~SFModSoundStream(){
-	if(m_sound){
-		m_sound->release();
-		m_sound=0;
-	}
-	if(m_streamData){
-		delete [] m_streamData;
-	}
+	
 }
 
+void SFModSoundStream::unloadInternal()
+{
+	if (m_sound){
+		m_sound->release();
+		m_sound = 0;
+	}
+	if (m_streamData){
+		delete[] m_streamData;
+		m_streamData = 0;
+	}
+}
 
 uint SFModSoundStream::GetChannels()
 {

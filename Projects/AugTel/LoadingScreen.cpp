@@ -101,6 +101,7 @@ void LoadingScreen::End()
 
 bool LoadingScreen::IsDone()
 {
+	return true;
 	return m_done|| m_video->IsDone();
 }
 

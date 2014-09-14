@@ -48,6 +48,7 @@ protected:
 	GCPtr<OS::IThread> m_thread;
 	OS::IThreadFunction* m_threadFunc;
 
+	bool m_isManual;
 	
 	NetAddress m_localAddress;
 
@@ -66,6 +67,7 @@ public:
 	Win32TCPSocket(Win32Socket*sock);
 	virtual~Win32TCPSocket();
 
+	void SetManualSocket(bool m);
 	bool startSocket(int port,int maxIncomingConnection,int sleepInterval);
 	void stopSocket();
 
@@ -84,6 +86,8 @@ public:
 	const NetAddress*getAddress();
 
 	void send(void*data,uint size,bool imediate,const NetAddress&addr);
+
+	virtual int receive(const NetAddress& peer, void* data, uint size, int flags);
 
 	SPacket*popMessage();
 

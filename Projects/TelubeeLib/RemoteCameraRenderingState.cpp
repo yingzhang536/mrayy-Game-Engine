@@ -25,7 +25,6 @@ RemoteCameraRenderingState::RemoteCameraRenderingState(const core::string& name)
 
 	m_fps = 0;
 	m_timeAcc = 0;
-	IEyesRenderingBaseState::InitState();
 	m_robotConnector->SetCommunicator(new RemoteRobotCommunicator());
 
 	m_cameraSource = new GstStereoNetVideoSource();
@@ -110,7 +109,7 @@ void RemoteCameraRenderingState::OnExit()
 void RemoteCameraRenderingState::Update(float dt)
 {
 	IEyesRenderingBaseState::Update(dt);
-	if (m_cameraSource->Blit())
+	if (m_cameraSource->Blit(-1))
 	{
 		m_frameCounter++;
 		if (m_timeAcc >= 1)

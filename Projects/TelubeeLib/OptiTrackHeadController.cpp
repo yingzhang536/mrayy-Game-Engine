@@ -19,22 +19,25 @@ OptiTrackHeadController::~OptiTrackHeadController()
 }
 
 
-math::quaternion OptiTrackHeadController::GetHeadOrientation()
+bool OptiTrackHeadController::GetHeadOrientation(math::quaternion& v)
 {
 	math::quaternion* q= AppData::Instance()->optiDataSource->GetOrientationByID(m_headID);
 	if (!q)
-		return math::quaternion::Identity;
+		return false;
 	math::vector3d a;
 	q->toEulerAngles(a);
 	
-	return math::quaternion(-a.x,a.y,-a.z);
+	v= math::quaternion(-a.x,a.y,-a.z);
+	
+	return true;
 }
-math::vector3d OptiTrackHeadController::GetHeadPosition()
+bool OptiTrackHeadController::GetHeadPosition(math::vector3d& v)
 {
-	math::vector3d* v=AppData::Instance()->optiDataSource->GetPositionByID(m_headID);
-	if (!v)
-		return math::vector3d::Zero;
-	return *v;
+	math::vector3d* p=AppData::Instance()->optiDataSource->GetPositionByID(m_headID);
+	if (!p)
+		return false;
+	v=*p;
+	return true;
 }
 
 }

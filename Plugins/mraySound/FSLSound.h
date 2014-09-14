@@ -34,7 +34,7 @@ protected:
 	ESoundType m_mode;
 	math::vector3d lastPos;
 
-	FSLSoundBuffer* m_data;
+	GCPtr<FSLSoundBuffer> m_data;
 	FSLManager* m_manager;
 	uint m_playedSamples;
 	bool m_playing;
@@ -92,8 +92,8 @@ public:
 	virtual uint getTimeLength();
 	virtual uint getTimePosition();
 
-	virtual void setSoundBuffer(ISoundStreamFrame*data);
-	virtual ISoundStreamFrame*getSoundBuffer();
+	virtual void setSoundBuffer(GCPtr<ISoundStreamFrame>data);
+	virtual GCPtr<ISoundStreamFrame> getSoundBuffer();
 
 	virtual void QueueSoundBuffer(ISoundStreamFrame*data);
 	virtual void UnqueueSoundBuffer(ISoundStreamFrame*data);

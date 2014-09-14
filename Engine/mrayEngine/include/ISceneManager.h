@@ -40,6 +40,9 @@ public:
 	video::IVideoDevice*getDevice();
 	void setDevice(video::IVideoDevice*dev);
 
+	virtual void setRootNode(scene::ISceneNode* root) = 0;
+	virtual scene::ISceneNode* getRootNode() = 0;
+
 	virtual void SetDebugDrawManager(IDebugDrawManager* mngr)=0;
 	virtual IDebugDrawManager* GetDebugDrawManager()=0;
 
@@ -60,19 +63,19 @@ public:
 	virtual void addPassSubscriber(IRenderPassSubscriber*rps)=0;
 	virtual void removePassSubscriber(IRenderPassSubscriber*rps)=0;
 
-	virtual LightNode* createLightNode(const core::string&name=mT(""))=0;
-	virtual ISceneNode* createSceneNode(const core::string&name=mT(""))=0;
-	virtual CameraNode* createCamera(const core::string&name=mT(""))=0;
+	virtual LightNode* createLightNode(const core::string&name = mT(""), ISceneNode* parent = 0) = 0;
+	virtual ISceneNode* createSceneNode(const core::string&name = mT(""), ISceneNode* parent = 0) = 0;
+	virtual CameraNode* createCamera(const core::string&name = mT(""), ISceneNode* parent = 0) = 0;
 
 	/*!
 		Add a Node to scene manager
-		the node would be a child of the scene manager
+		if parent is null, the node would be a child of the scene manager root node
 	*/
-	virtual void addSceneNode(const ISceneNodePtr& node)=0;
+	virtual void addSceneNode(const ISceneNodePtr& node,ISceneNode* parent=0)=0;
 	virtual void removeSceneNode(ISceneNode* node)=0;
 	virtual ISceneNode* getNodeByID(uint id)=0;
 	virtual void clearSceneNodes()=0;
-	virtual const SceneNodeMap& GetChildren()=0;
+	//virtual const SceneNodeMap& GetChildren()=0;
 
 	virtual CameraNode* getActiveCamera()=0;
 	virtual void setActiveCamera(CameraNode* camera)=0;

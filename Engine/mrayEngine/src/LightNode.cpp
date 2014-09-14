@@ -310,6 +310,7 @@ void LightNode::prepareForShadowPass(IViewNode* cam,IRenderPass*pass)
 
 void LightNode::OnVisit(ISceneVisitor*visitor)
 {
+	ISceneNode::OnVisit(visitor);
 	visitor->Visit(this);
 }
 

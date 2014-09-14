@@ -953,9 +953,6 @@
     <ClInclude Include="include\IFileWriter.h">
       <Filter>Source Files\loaders</Filter>
     </ClInclude>
-    <ClInclude Include="include\3dsLoader.h">
-      <Filter>Source Files\loaders\models</Filter>
-    </ClInclude>
     <ClInclude Include="include\acLoader.h">
       <Filter>Source Files\loaders\models</Filter>
     </ClInclude>
@@ -2324,6 +2321,12 @@
     <ClInclude Include="include\TextureRTWrap.h">
       <Filter>Source Files\video</Filter>
     </ClInclude>
+    <ClInclude Include="include\3dsLoader_old.h">
+      <Filter>Source Files\loaders\models</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3DSLoader.h">
+      <Filter>Source Files\loaders\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RTTI_OBJECTS.cpp">
@@ -2811,9 +2814,6 @@
     </ClCompile>
     <ClCompile Include="src\ChunkSerializer.cpp">
       <Filter>Source Files\loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\3dsLoader.cpp">
-      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
     <ClCompile Include="src\acLoader.cpp">
       <Filter>Source Files\loaders\models</Filter>
@@ -3642,6 +3642,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\include\huffman\huffman.c">
       <Filter>Source Files\librarys\huffman</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3dsLoader_old.cpp">
+      <Filter>Source Files\loaders\models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3DSLoader.cpp">
+      <Filter>Source Files\loaders\models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

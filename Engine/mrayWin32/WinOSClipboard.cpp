@@ -16,18 +16,19 @@ namespace OS{
 	{
 
 	}
-void WinOSClipboard::copyToClipboard(const  mchar*data)
+	void WinOSClipboard::copyToClipboard(const  core::UTFString& data)
 {
-	if(!data || !OpenClipboard(0))return;
+	if( !OpenClipboard(0))return;
 	EmptyClipboard();
 
 	HGLOBAL clipData;
-	 mchar*buffer;
+	utf32*buffer;
 
-	clipData=GlobalAlloc(GMEM_DDESHARE,sizeof( mchar)*(strLength(data)+1));
-	buffer=( mchar*)GlobalLock(clipData);
+	 clipData = GlobalAlloc(GMEM_DDESHARE, sizeof(utf32)*data.Length());
+	 buffer = (utf32*)GlobalLock(clipData);
 	
-	strCopy(buffer,data);
+	 memcpy(buffer, data.c_str(), sizeof(utf32)*data.Length());
+	//strCopy(buffer,data);
 	
 	GlobalUnlock(clipData);
 	SetClipboardData(CF_UNICODETEXT,buffer);
@@ -35,17 +36,18 @@ void WinOSClipboard::copyToClipboard(const  mchar*data)
 
 }
 
- mchar* WinOSClipboard::getClipboardText()
+core::UTFString WinOSClipboard::getClipboardText()
 {
-	if(!OpenClipboard(0))return 0;
+	if(!OpenClipboard(0))
+		return core::UTFString::Empty;
 
-	 mchar*buffer=0;
 
 	HANDLE hData=GetClipboardData(CF_UNICODETEXT);
-	buffer=( mchar*)GlobalLock(hData);
+	
+	wchar_t* buffer=( wchar_t*)GlobalLock(hData);
 	GlobalUnlock(hData);
 	CloseClipboard();
-	return buffer;
+	return core::UTFString(buffer);
 
 
 }

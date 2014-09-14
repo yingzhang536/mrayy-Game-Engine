@@ -42,6 +42,25 @@ void GUIListBoxComponent::_increaseStartItem(int c,int itmsCount)
 	if(lastItem-m_startItem<m_currentPageSize)
 		m_startItem=lastItem-m_currentPageSize;
 }
+
+
+int GUIListBoxComponent::GetItemsPerPageCount()
+{
+	IGUITheme* skin = owner->GetCreator()->GetActiveTheme();
+	math::rectf innerRect;
+
+	if (skin)
+	{
+		innerRect = skin->getSizableRect(4, rc, 0, mT("Frame"));
+	}
+	else
+		innerRect = rc;
+
+	float cDim = GetLineHeight();
+	return  _GetItemsCount(innerRect, cDim);
+
+}
+
 int GUIListBoxComponent::_GetItemsCount(const math::rectf& rc,float& cDim)
 {
 	int h=GetLineHeight();

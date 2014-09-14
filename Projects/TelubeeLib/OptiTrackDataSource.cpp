@@ -67,8 +67,11 @@ void OptiTrackDataSource::Connect(const core::string& serverIP,const core::strin
 			ipaddress = addr;
 		}
 		ip = inet_ntoa(ipaddress);
+		printf("OptiTrack local IP address: %s\n", ip.c_str());
 
 	}
+	printf("Trying to connect to optiTrack server: %s\n", serverIP.c_str());
+
 	m_tracker->Connect(animation::Opti_Unicast,serverIP,ip,"239.255.30.99");
 }
 void OptiTrackDataSource::Disconnect()

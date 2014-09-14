@@ -39,7 +39,7 @@ void GstSingleNetVideoSource::Close()
 	m_providers->Disconnect();
 
 }
-bool GstSingleNetVideoSource::Blit()
+bool GstSingleNetVideoSource::Blit(int eye)
 {
 
 	bool dirty = false;

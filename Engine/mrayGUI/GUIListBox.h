@@ -64,6 +64,10 @@ public:
 	virtual bool GetBackground()const ;
 	virtual IGUIElement* Duplicate();
 	virtual FontAttributes* GetFontAttributes();
+
+	virtual int GetItemsPerPage();
+	virtual void SetStartItem(int item);
+
 };
 
 DECLARE_ELEMENT_FACTORY(GUIListBox);

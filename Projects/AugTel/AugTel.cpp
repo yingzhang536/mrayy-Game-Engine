@@ -6,9 +6,13 @@
 #include "GCCollector.h"
 #include "DirectShowVideoGrabber.h"
 #include <windows.h>
-// #include <vld.h>
-// #include <vldapi.h>
 
+//#define ENABLE_VLD
+
+#ifdef ENABLE_VLD
+	#include <vld.h>
+	#include <vldapi.h>
+#endif
 
 using namespace mray;
 using namespace core;
@@ -115,14 +119,18 @@ EntryPoint
 		op.valueSet.clear();
 	}
 
-	//VLDEnable();
+#ifdef ENABLE_VLD
+	VLDEnable();
+#endif
 	app->loadResourceFile(mT("atdataPath.stg"));
 	if (app->startup(mT("Oculus VR + TORSO"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))
 	{
 		app->run();
 	}
 
-	//	VLDDisable();
+#ifdef ENABLE_VLD
+	VLDDisable();
+#endif
 	app = 0;
 
 	GCCollector::shutdown();

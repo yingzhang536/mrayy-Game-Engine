@@ -52,7 +52,7 @@ public:
 
 	virtual bool IsLocal(){ return true; }
 
-	bool Blit();
+	bool Blit(int eye);
 
 	virtual void LoadFromXML(xml::XMLElement* e);
 };

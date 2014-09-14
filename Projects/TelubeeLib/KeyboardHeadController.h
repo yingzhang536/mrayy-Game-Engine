@@ -30,8 +30,8 @@ public:
 	KeyboardHeadController(){}
 	virtual~KeyboardHeadController(){}
 
-	virtual math::quaternion GetHeadOrientation() ;
-	virtual math::vector3d GetHeadPosition() ;
+	virtual bool GetHeadOrientation(math::quaternion& v);
+	virtual bool GetHeadPosition(math::vector3d& v) ;
 };
 
 }

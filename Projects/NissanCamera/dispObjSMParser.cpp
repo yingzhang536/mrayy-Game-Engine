@@ -30,6 +30,7 @@ bool DispObjSMParser::asGLObject(DispObjHdr *pHdr, DOSM_GLObject *pRet)
 	pRet->points.clear();
 	pRet->normals.clear();
 	pRet->colors.clear();
+
 	if (pHdr->oh.type != DISPOBJ_TYPE_GL_OBJECT) {
 		pRet->pHdr = NULL;
 		pRet->pGL = NULL;

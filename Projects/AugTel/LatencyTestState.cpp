@@ -28,6 +28,7 @@ LatencyTestState::LatencyTestState(const core::string& name, TBee::ICameraVideoS
 }
 LatencyTestState::~LatencyTestState()
 {
+	delete m_camVideoSrc;
 	delete m_robotConnector;
 }
 
@@ -86,7 +87,7 @@ video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETar
 	video::TextureUnit tex;
 	m_camVideoSrc->Blit();
 
-	Engine::getInstance().getDevice()->setRenderTarget(rt);
+	Engine::getInstance().getDevice()->setRenderTarget(rt,1,1,1);
 	if (m_showColor)
 	{
 		Engine::getInstance().getDevice()->draw2DRectangle(rc, video::SColor(1, 0, 0, 1));

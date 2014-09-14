@@ -45,15 +45,23 @@ protected:
 		void WriteToXML(xml::XMLElement* e);
 	};
 
+	//frame counter to smooth down the result values when marker is lost
+	int m_lostPos;
+	int m_lostOri;
+
+	math::vector3d m_lastPos;
+	math::quaternion m_lastQuaternion;
+
+	math::vector3d m_trackedPos;
+	math::quaternion m_trackedQuaternion;
 	CalibrationInfo m_calibration;
 public:
-	CalibHeadController(IHeadController* o) :m_otherController(o)
-	{}
+	CalibHeadController(IHeadController* o);
 	virtual~CalibHeadController(){}
 
 
-	virtual math::quaternion GetHeadOrientation();
-	virtual math::vector3d GetHeadPosition();
+	virtual bool GetHeadOrientation(math::quaternion& v);
+	virtual bool GetHeadPosition(math::vector3d &v);
 
 	void Calibrate();
 

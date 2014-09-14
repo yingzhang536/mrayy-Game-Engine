@@ -97,6 +97,8 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 IEyesRenderingBaseState::~IEyesRenderingBaseState()
 {
 	delete m_robotConnector;
+	delete m_videoSource;
+	delete m_guiRenderer;
 }
 
 void IEyesRenderingBaseState::_UpdateCameraParams()
@@ -135,6 +137,8 @@ void IEyesRenderingBaseState::SetHMDParameters(float targetAspectRatio,  float h
 void IEyesRenderingBaseState::InitState()
 {
 	IRenderingState::InitState();
+	if (m_videoSource)
+		m_videoSource->Init();
 
 }
 
@@ -377,6 +381,9 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 	tex.SetEdgeColor(video::DefaultColors::Black);
 	tex.setTextureClamp(video::ETW_WrapS, video::ETC_CLAMP_TO_BORDER);
 	tex.setTextureClamp(video::ETW_WrapT, video::ETC_CLAMP_TO_BORDER);
+
+	if (m_videoSource)
+		m_videoSource->Blit(index);
 
 	video::ITexturePtr cameraTex = m_videoSource->GetEyeTexture(index);
 

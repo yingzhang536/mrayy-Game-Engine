@@ -30,8 +30,8 @@ public:
 	virtual~IHeadController(){}
 
 
-	virtual math::quaternion GetHeadOrientation() = 0;
-	virtual math::vector3d GetHeadPosition() = 0;
+	virtual bool GetHeadOrientation(math::quaternion& q) = 0;
+	virtual bool GetHeadPosition(math::vector3d& v) = 0;
 
 	virtual void Recalibrate(){}
 };

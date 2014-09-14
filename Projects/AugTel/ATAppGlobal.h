@@ -65,10 +65,18 @@ public:
 		guiManager = 0;
 		dataCommunicator = 0;
 		cameraProvider = 0;
+
+		TargetVideoPort = 5000;
+		TargetAudioPort = 5002;
+		TargetCommunicationPort = 5003;
 	}
 	Application* App;
 	core::string ServerIP;
 
+
+	uint TargetVideoPort;
+	uint TargetAudioPort;
+	uint TargetCommunicationPort;
 
 	core::string DVIPort;
 	EController m_controller;

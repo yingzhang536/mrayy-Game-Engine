@@ -58,6 +58,7 @@ OpenNIHandler::~OpenNIHandler()
 	{
 		m_threadFunc->destroy = true;
 		OS::IThreadManager::getInstance().killThread(m_thread);
+		delete m_threadFunc;
 	}
 }
 

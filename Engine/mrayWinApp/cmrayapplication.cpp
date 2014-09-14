@@ -299,6 +299,7 @@ void CMRayApplication::run(){
 	while(Win32WindowUtils::doMessagePump() && !m_terminate){
 		doFrame();
 	}
+	m_terminate = true;
 	for(int i=0;i<m_renderWindowLst.size();++i)
 		video::RenderWindowUtils::RemoveListener(m_renderWindowLst[i],this);
 	onDone();

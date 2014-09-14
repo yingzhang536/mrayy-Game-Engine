@@ -345,8 +345,8 @@ void torsoController::_innerProcessRobot()
 			if (!m_connectFlag)
 				endflag = 1;
 
-			//Sleep(1);
-			MainTimer.CountAndWait(500);
+			Sleep(1);
+			//MainTimer.CountAndWait(500);
 		}
 		m_isConnected = false;
 

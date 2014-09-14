@@ -277,6 +277,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 				{
 					grabber->InitDevice(m_cameraIfo[i].ifo.index, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
 					m_cameraIfo[i].ifo.guidPath = grabber->GetDevicePath(m_cameraIfo[i].ifo.index);
+					grabber->SetParameter(video::ICameraVideoGrabber::Param_Focus, "0");
 				}
 
 					

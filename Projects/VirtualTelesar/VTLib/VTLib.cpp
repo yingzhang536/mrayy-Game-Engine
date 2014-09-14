@@ -60,7 +60,7 @@ void ReleaseVTLib()
 {
 	--s_RefCounter;
 
-	if (s_RefCounter > 0)
+	if (s_RefCounter != 0)
 		return;
 
 	delete VT::CommunicationManager::getInstancePtr();

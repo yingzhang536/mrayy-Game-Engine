@@ -659,10 +659,10 @@ public:
 			gstString += "videotestsrc pattern=\"black\" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
 
 			//
-			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoscale !"
+			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale !"
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
 			//name=src2 device-index=" + core::StringConverter::toString(m_cam1)
-			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoscale ! "
+			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
 
 			gstString += " mix. ! ";
@@ -672,14 +672,17 @@ public:
 		gstString +=
 			" x264enc  name=enc"
 			" pass=" + pass +
-			//" qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
-			"  quantizer=" + core::StringConverter::toString(quanizer) +
-			"   speed-preset=ultrafast sliced-threads=true bitrate=" + core::StringConverter::toString(bitrate) +
-			" tune=zerolatency"
-			" rc-lookahead=0"
-			" sync-lookahead=0 "
+			//"// qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
+			//"  quantizer=" + core::StringConverter::toString(quanizer) +
+			//" sliced-threads=true "//
+			" bitrate=" + core::StringConverter::toString(bitrate) +
+			"   speed-preset=ultrafast "
+  			" tune=zerolatency "
+  			" rc-lookahead=0"
+  			" sync-lookahead=0 "
 			//" option-string=\"slices = 2\" "
-			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+			//" ! queue max-size-bytes=100000000 max-size-time=0 "
+			" ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 			" ! mysink name=sink sync=false ";
 
 	//	gstString += "tp. ! queue ! autovideosink sync=false";

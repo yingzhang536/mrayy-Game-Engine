@@ -40,6 +40,8 @@ protected:
 	IRenderingState* m_oldState;
 	GCPtr<ITransitionBlender> m_blender;
 
+	float m_sleepTime;
+
 	void OnStateChanged(StateMachine*,IState* oldS,IState* newS);
 	DECLARE_FIRE_METHOD(OnStateChanged, (TBee::IRenderingState* old, TBee::IRenderingState* state), (old, state))
 public:
@@ -48,6 +50,8 @@ public:
 
 	void AddState(IRenderingState* st);
 	IRenderingState* GetActiveState();
+
+	void SetSleepTime(float s){ m_sleepTime = s; }
 
 	virtual bool OnEvent(Event* e, const math::rectf& rc);
 	virtual void OnEnter(IApplicationState* prev);

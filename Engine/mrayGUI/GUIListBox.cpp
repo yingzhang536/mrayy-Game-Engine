@@ -27,6 +27,14 @@ GUIListBox::~GUIListBox()
 	delete m_component;
 }
 
+int GUIListBox::GetItemsPerPage()
+{
+	return m_component->GetItemsPerPageCount();
+}
+void GUIListBox::SetStartItem(int item)
+{
+	m_component->SetStartItem(item);
+}
 
 int GUIListBox::GetItemsCount()const
 {

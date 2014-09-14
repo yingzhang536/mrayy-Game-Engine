@@ -222,14 +222,14 @@ uint FSLSound::getTimePosition(){
 	return fslSoundGetBufferPosition(m_snd);
 }
 
-void FSLSound::setSoundBuffer(ISoundStreamFrame*data){
-	m_data=dynamic_cast<FSLSoundBuffer*>(data);
+void FSLSound::setSoundBuffer(GCPtr<ISoundStreamFrame> data){
+	m_data=data;
 	if(m_data){
 		fslSetSoundBuffer(m_snd,m_data->getBuffer());
 	}else
 		fslSetSoundBuffer(m_snd,0);
 }
-ISoundStreamFrame*FSLSound::getSoundBuffer(){
+GCPtr<ISoundStreamFrame> FSLSound::getSoundBuffer(){
 	return m_data;
 }
 void FSLSound::QueueSoundBuffer(ISoundStreamFrame*data)

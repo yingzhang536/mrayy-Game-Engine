@@ -31,6 +31,7 @@ AppData::AppData()
 AppData::~AppData()
 {
 	delete optiDataSource;
+	delete camConfig;
 }
 
 void AppData::Init()

@@ -17,7 +17,6 @@
 #ifndef __AImpSceneLoader__
 #define __AImpSceneLoader__
 
-#if 0
 
 #include "SMesh.h"
 #include "IMeshLoader.h"
@@ -43,10 +42,10 @@ public:
 	const core::string&getExtension();
 
 	static void InitImporters(loaders::MeshLoader* l);
+	static void DestroyImporter();
 };
 
 }
 }
 
-#endif
 #endif

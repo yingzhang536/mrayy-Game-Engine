@@ -42,7 +42,7 @@ class MRAY_SOUND_DLL SFModSound:public ISound
 
 	SFModSoundManager*soundSystem;
 
-	SFModSoundStream *dataFormat;
+	GCPtr<SFModSoundStream> dataFormat;
 	bool m_bAttachToListener;
 	bool dieAfterEnd;
 
@@ -74,8 +74,8 @@ public:
 	virtual bool setLooping(bool loop);
 	virtual bool getLooping(){return m_looping;}
 
-	virtual void setSoundBuffer(ISoundStreamFrame*data);
-	virtual ISoundStreamFrame*getSoundBuffer();
+	virtual void setSoundBuffer(GCPtr<ISoundStreamFrame>data);
+	virtual GCPtr<ISoundStreamFrame> getSoundBuffer();
 
 	virtual void QueueSoundBuffer(ISoundStreamFrame*data);
 	virtual void UnqueueSoundBuffer(ISoundStreamFrame*data);

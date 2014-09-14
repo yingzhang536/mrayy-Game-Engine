@@ -97,9 +97,9 @@ public:
 			m_robotStatus.roll = angles.z;
 
 			//do head limits
-			m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);
-			m_robotStatus.yaw = math::clamp(m_robotStatus.yaw, -70.0f, 70.0f);
-			m_robotStatus.roll = math::clamp(m_robotStatus.roll, -40.0f, 40.0f);
+			m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -80.0f, 80.0f);
+			m_robotStatus.yaw = math::clamp<float>(m_robotStatus.yaw, -80.0f, 80.0f);
+			m_robotStatus.roll = math::clamp(m_robotStatus.roll, -80.0f, 80.0f);
 		}
 		else if (name == "HeadPosition" && vals.size() == 3)
 		{	

@@ -153,7 +153,7 @@ void RenderingStateManager::OnUpdate(float dt)
 
 		if(canSleep)
 		{
-			float sleep=(1.0f/60.0f - dt)*1000;
+			float sleep=(m_sleepTime - dt)*1000;
 			if(sleep>0)
 			{
 				OS::IThreadManager::getInstance().sleep(sleep);

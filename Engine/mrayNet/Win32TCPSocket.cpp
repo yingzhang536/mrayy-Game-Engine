@@ -51,6 +51,7 @@ Win32TCPSocket::Win32TCPSocket(Win32Socket*sock){
 	m_threadFunc=new Win32TCPSocketProcessThread(this);
 
 	m_sleepInterval = 10;
+	m_isManual = false;
 
 	m_peersMutex = OS::IThreadManager::getInstance().createMutex();
 	m_toCloseMutex = OS::IThreadManager::getInstance().createMutex();
@@ -72,6 +73,12 @@ Win32TCPSocket::~Win32TCPSocket(){
 		delete *it;
 
 }
+
+void Win32TCPSocket::SetManualSocket(bool m)
+{
+	m_isManual = m;
+}
+
 void Win32TCPSocket::deletePeer(STCPPeer*peer){
 	if(!peer)return;
 	Win32Network*net=(Win32Network*)INetwork::getInstancePtr();
@@ -141,14 +148,20 @@ void Win32TCPSocket::stopSocket(){
 
 	if(!INetwork::isExist())
 		return;
+	Win32Network*net = (Win32Network*)INetwork::getInstancePtr();
 
-	Win32Network*net=(Win32Network*)INetwork::getInstancePtr();
-	net->closeSocket(m_socket);
-	m_socket=INVALID_SOCKET;
-	m_thread->terminate();
-	while(m_thread->isActive())
-		Sleep(10);
-
+	if (m_socket != INVALID_SOCKET)
+	{
+		net->closeSocket(m_socket);
+		m_socket=INVALID_SOCKET;
+	}
+	if (m_thread)
+	{
+		OS::IThreadManager::getInstance().killThread(m_thread);
+		while (m_thread->isActive())
+			Sleep(10);
+		m_thread = 0;
+	}
 	OS::ScopedLock locker(m_peersMutex);
 	std::list<STCPPeer*>::iterator it = m_connectedPeers.begin();
 	for(;it!=m_connectedPeers.end();++it){
@@ -187,7 +200,7 @@ void Win32TCPSocket::send(void*data,uint size,bool imediate,const NetAddress&add
 	traceFunction(eNetwork);
 
 
-	if (!imediate){
+	if (!imediate ){
 		SPacket*pack = getOrCreatePacket();
 		pack->data.resize(size);
 		//pack->data.write(&size,sizeof(size));
@@ -199,6 +212,15 @@ void Win32TCPSocket::send(void*data,uint size,bool imediate,const NetAddress&add
 	}
 	
 }
+
+int Win32TCPSocket::receive(const NetAddress&addr,void* data, uint size, int flags)
+{
+	STCPPeer* peer = getPeer(addr);
+	if (!peer)
+		return 0;
+	return ::recv(peer->m_socket, (char*)data, size, flags);
+}
+
 SPacket*Win32TCPSocket::popMessage(){
 	if(!m_thread)return 0;
 	if(!m_recivedPackets.size())return 0;
@@ -247,7 +269,7 @@ const NetAddress *Win32TCPSocket::connect(const NetAddress&addr){
 		
 		return 0;
 	}
-	//net->setSocketOption(sock,ESocketOption::ESO_NONBLOCK,true);
+	net->setSocketOption(sock,ESocketOption::ESO_NONBLOCK,true);
 	STCPPeer *peer=new STCPPeer();
 	peer->m_socket=sock;
 	peer->address = addr;
@@ -368,13 +390,13 @@ void Win32TCPSocket::update(){
 					m_toClosePeers.push_back((*peerIt)->address);
 					deletePeer(*peerIt);
 					remove=1;
-				}else if(FD_ISSET((*peerIt)->m_socket,&readFD)){
+				}else if(FD_ISSET((*peerIt)->m_socket,&readFD) && !m_isManual){
 					uint sz=0;
 					int len=0;
 					do{
-						len=recv((*peerIt)->m_socket,(char*)&sz,sizeof(sz),0);
+						len=::recv((*peerIt)->m_socket,(char*)&sz,sizeof(sz),0);
 						if(len>0){
-							len=recv((*peerIt)->m_socket,dataBuffer,sz,0);
+							len = ::recv((*peerIt)->m_socket, dataBuffer, sz, 0);
 
 							SPacket* pack=new SPacket();
 							pack->data.resize(len+1);

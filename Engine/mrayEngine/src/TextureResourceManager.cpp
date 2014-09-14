@@ -55,7 +55,7 @@ TextureResourceManager::TextureResourceManager(video::IVideoDevice*device)
 	addTextureLoader(new loaders::CPCXLoader);*/
 	addTextureLoader(new loaders::CustomTexLoader);
 
-	addTextureLoader(new loaders::CDDSLoader);
+//	addTextureLoader(new loaders::CDDSLoader);
 	addTextureLoader(new loaders::FreeImageLoader);
 
 	/*

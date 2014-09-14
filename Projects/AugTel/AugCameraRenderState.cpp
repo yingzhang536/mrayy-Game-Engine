@@ -66,10 +66,8 @@
 
 #include "FadeSceneEffect.h"
 #include "RefractionSceneEffect.h"
+#include "MeshResourceManager.h"
 
-#define VIDEO_PORT 5000
-#define AUDIO_PORT 5002
-#define COMMUNICATION_PORT 5003
 
 namespace mray
 {
@@ -160,7 +158,6 @@ AugCameraRenderState::~AugCameraRenderState()
 	delete m_loadScreen;
 	delete m_vtState;
 	delete m_data;
-	delete m_camVideoSrc;
 	m_gameManager = 0;
 	m_sceneManager = 0;
 	m_phManager = 0;
@@ -227,7 +224,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				m_showScene = !m_showScene;
 				ok = true;
 			}
-			else if (evt->Char==43 )
+			else if (evt->Char==43 || evt->key==KEY_SPACE)
 			{
 				 if (m_status == EWaitStart)
 					_ChangeState(EConnectingRobot);
@@ -425,8 +422,8 @@ void AugCameraRenderState::InitState()
 			}
 
 			hm->addChild(cam[i]);
-			cam[i]->setZNear(0.001);
-			cam[i]->setZFar(10);
+			cam[i]->setZNear(0.1);
+			cam[i]->setZFar(100000);
 
 			//if (gAppData.oculusDevice)
 			cam[i]->setFovY(m_cameraConfiguration->fov);
@@ -470,6 +467,17 @@ void AugCameraRenderState::InitState()
 			t->setMipmapsFilter(false);
 			t->createTexture(math::vector3di(2048, 2048, 1), video::EPixel_Float16_R);
 			m_lightSrc->setShadowMap(gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0));
+		}
+
+		if (false)
+		{
+			scene::SMeshPtr mesh= gMeshResourceManager.loadMesh("car.3ds",true);
+			if (mesh)
+			{
+				scene::MeshRenderableNode* n = new scene::MeshRenderableNode(mesh);
+				scene::ISceneNode* node = m_sceneManager->createSceneNode();
+				node->AttachNode(n);
+			}
 		}
 	}
 
@@ -537,11 +545,11 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	m_camVideoSrc->Open();
 	
 	gAppData.dataCommunicator->AddListener(this);
-	gAppData.dataCommunicator->Start(COMMUNICATION_PORT);
+	gAppData.dataCommunicator->Start(gAppData.TargetCommunicationPort);
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	if(ifo)
-		m_robotConnector->ConnectRobotIP(ifo->IP, VIDEO_PORT,  AUDIO_PORT, COMMUNICATION_PORT);
+		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort);
 	m_robotConnector->SetData("depthSize", "", false);
 	//m_robotConnector->EndUpdate();
 
@@ -743,7 +751,7 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 
 	m_depthVisualizer->Update();
 
-	m_camVideoSrc->Blit();
+	//m_camVideoSrc->Blit();
 
 	if (AppData::Instance()->IsDebugging || m_showDebug)
 	{

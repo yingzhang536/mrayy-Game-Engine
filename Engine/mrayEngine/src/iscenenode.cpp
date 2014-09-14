@@ -750,14 +750,15 @@ void ISceneNode::OnVisit(ISceneVisitor*visitor)
 	//IMovable::OnVisit(visitor,true);
 
 	//if(!visited)
-		visitor->Visit(this);
-/*
-	core::IteratorPair<MovableNodeList> it(getChildren());
-	for(;!it.done();++it)
+	visitor->Visit(this);
+
+	MovableNodeList::iterator it = m_Children.begin();
+	MovableNodeList::iterator end = m_Children.end();
+	for (; it != end; ++it)
 	{
 		(*it)->OnVisit(visitor);
 	}
-
+	/*
 	for (int i=0;i<GetAttachedNodesCount();++i)
 	{
 		GetAttachedNode(i)->OnVisit(visitor);

@@ -7,6 +7,7 @@
 #include "KeyboardEvent.h"
 #include "MouseEvent.h"
 #include "IOSClipboard.h"
+#include "IOSystem.h"
 #include <Regex/Pattern.h>
 
 
@@ -301,7 +302,7 @@ bool GUIEditBoxComponent::OnKeyboardEvent(KeyboardEvent* event)
 					{
 						core::string str;
 						str=text.substr(m_MarkBegin,m_MarkEnd-m_MarkBegin).GetAsString();
-						gOSClipboard.copyToClipboard(str.c_str());
+						OS::IOSystem::getInstance().getClipboard()->copyToClipboard(str);
 						textChanged=true;
 					}
 					break;
@@ -311,7 +312,7 @@ bool GUIEditBoxComponent::OnKeyboardEvent(KeyboardEvent* event)
 						str=text.substr(m_MarkBegin,m_MarkEnd-m_MarkBegin).GetAsString();
 						_RemoveSelectedText();
 						text.Erase(m_MarkBegin,m_MarkEnd);
-						gOSClipboard.copyToClipboard(str.c_str());
+						OS::IOSystem::getInstance().getClipboard()->copyToClipboard(str);
 						m_MarkBegin=m_MarkEnd=0;
 						textChanged=true;
 					}
@@ -321,10 +322,12 @@ bool GUIEditBoxComponent::OnKeyboardEvent(KeyboardEvent* event)
 						int a=m_MarkBegin,b=m_MarkEnd;
 						if(m_MarkBegin==m_MarkEnd)
 							a=b=m_CursorPos;
-						core::string str=text.substr(0,a).GetAsString();
-						str+=gOSClipboard.getClipboardText();
+						core::UTFString str=text.substr(0,a);
+						core::UTFString copied= OS::IOSystem::getInstance().getClipboard()->getClipboardText();
+						str += copied;
+						m_CursorPos = str.Length();
 						str+=text.substr(b,text.Length()-b).GetAsString();
-						text.Set(str);
+						text=str;
 						textChanged=true;
 					}
 					break;

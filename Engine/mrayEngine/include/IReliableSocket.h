@@ -43,6 +43,9 @@ public:
 	IReliableSocket(){}
 	virtual~IReliableSocket(){}
 
+	//if manual socket, then the receiving will be handled by the user
+	virtual void SetManualSocket(bool isManual) = 0;
+
 	virtual bool startSocket(int port,int maxIncomingConnection,int sleepInterval)=0;
 	virtual void stopSocket()=0;
 
@@ -61,6 +64,8 @@ public:
 	virtual const NetAddress*getAddress()=0;
 
 	virtual void send(void*data,uint size,bool imediate,const NetAddress&addr)=0;
+
+	virtual int receive(const NetAddress&peer,void* data, uint size, int flags) = 0;
 
 	virtual SPacket*popMessage()=0;
 

@@ -204,7 +204,6 @@ video::IRenderTarget* LocalCameraRenderingState::Render(const math::rectf& rc,ET
 void LocalCameraRenderingState::Update(float dt)
 {
 	IEyesRenderingBaseState::Update(dt);
-	m_cameraSource->Blit();
 }
 
 

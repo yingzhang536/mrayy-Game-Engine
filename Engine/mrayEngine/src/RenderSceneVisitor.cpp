@@ -24,18 +24,22 @@ RenderSceneVisitor::~RenderSceneVisitor()
 void RenderSceneVisitor::Visit(ISceneManager*mngr)
 {
 	m_smngr=mngr;
-
+	/*
 	const ISceneManager::SceneNodeMap& lst=m_smngr->GetChildren();
 	ISceneManager::SceneNodeMap::const_iterator it=lst.begin();
 	for (;it!=lst.end();++it)
 	{
 		it->second->OnVisit(this);
-	}
+	}*/
+	if (!m_smngr->getRootNode())
+		return;
+	m_smngr->getRootNode()->OnVisit(this);
+
 }
 
 void RenderSceneVisitor::Visit(ISceneNode*node)
 {
-	if(!node->IsDrown())
+	if(!node->IsDrown() )
 		return;
 	node->render(m_pass);
 	const AttachNodesList& attached=node->GetAttachedNodes();

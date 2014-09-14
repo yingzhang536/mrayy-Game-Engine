@@ -75,16 +75,19 @@ namespace video
 	}
 	bool RenderPass::setMaterialRenderer(EMaterialRenderType type){
 		switch(type){
-	case MRT_SOLID:
+		case MRT_SOLID:
+			m_SrcBlend = EBF_ZERO;
+			m_DstBlend = EBF_ONE;
 		setRenderState(RS_Blend,ES_DontUse);
-		setRenderState(RS_AlphaTest,ES_Use);
+		setRenderState(RS_AlphaTest, ES_Use);
+		setRenderState(RS_ZWrite, ES_Use);
 		break;
 	case MRT_TRANSPARENT:
 
 		m_SrcBlend=EBF_SRC_ALPHA;
 		m_DstBlend=EBF_ONE_MINUS_SRC_ALPHA;
 		setRenderState(RS_Blend,ES_Use);
-		setRenderState(RS_Lighting	,ES_DontUse);
+	//	setRenderState(RS_Lighting	,ES_DontUse);
 		setRenderState(RS_Fog		,ES_DontUse);
 		setRenderState(RS_AlphaTest	,ES_DontUse);
 		setRenderState(RS_ZWrite	,ES_DontUse);

@@ -27,12 +27,24 @@ UpdateSceneVisitor::~UpdateSceneVisitor()
 
 void UpdateSceneVisitor::Visit(ISceneManager*mngr)
 {
-	const ISceneManager::SceneNodeMap& lst=mngr->GetChildren();
+/*	const ISceneManager::SceneNodeMap& lst=mngr->GetChildren();
 	ISceneManager::SceneNodeMap::const_iterator it=lst.begin();
 	for (;it!=lst.end();++it)
 	{
 		it->second->OnVisit(this);
+	}*/
+
+	if (!mngr->getRootNode())
+		return;
+	mngr->getRootNode()->OnVisit(this);
+
+
+	for (int i = 0; i < m_cameras.size(); ++i)
+	{
+		if (m_cameras[i]->isVisible())
+			m_cameras[i]->update(m_dt);
 	}
+	m_cameras.clear();
 }
 
 void UpdateSceneVisitor::Visit(ISceneNode*node)
@@ -53,8 +65,10 @@ void UpdateSceneVisitor::Visit(ISceneNode*node)
 void UpdateSceneVisitor::Visit(CameraNode*c)
 {
 	Visit((ISceneNode*)c);
-	if(c->isVisible())
-		c->update(m_dt);
+	m_cameras.push_back(c);
+
+// 	if(c->isVisible())
+// 		c->update(m_dt);
 }
 
 void UpdateSceneVisitor::Visit(LightNode*l)

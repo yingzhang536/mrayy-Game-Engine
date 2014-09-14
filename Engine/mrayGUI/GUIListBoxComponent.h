@@ -85,7 +85,13 @@ public:
 
 	void OnValueChanged(GUISliderbarComponent*caller);
 
-	void SetStartItem(int i){m_startItem=i;}
+	void SetStartItem(int i)
+	{
+		if (i < 0)i = 0;
+		if (i>=items.size())
+			i = items.size() - 1;
+		m_startItem = i;
+	}
 	int GetSelectedItem();
 	void SetSelectedItem(int itm,int itemsCount);
 
@@ -112,6 +118,8 @@ public:
 	virtual void LostFocus();
 
 	bool IsTracking();
+
+	int GetItemsPerPageCount();
 };
 
 

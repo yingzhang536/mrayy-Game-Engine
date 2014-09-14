@@ -242,7 +242,7 @@ void CRealTorso::CalcTargetAngles(double *param)
 	param[4]=-param[4];
 	param[5]=-param[5];
 
-	printf("%0.3f,%0.3f,%0.3f\n", param[3], param[4], param[5]);
+	//printf("%0.3f,%0.3f,%0.3f\n", param[3], param[4], param[5]);
 }
 
 void CRealTorso::GetTargetAngles(double *angles)

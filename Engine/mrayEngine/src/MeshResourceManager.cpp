@@ -24,14 +24,15 @@ MeshResourceManager::MeshResourceManager()
 :IResourceManager(mT("Mesh Resource Manager"))
 {
 	m_meshLoader=new loaders::MeshLoader();
-	addMeshLoader(new loaders::_3dsLoader());
+	//addMeshLoader(new loaders::_3dsLoader());
 	addMeshLoader(new loaders::mdlLoaderV0());
 	addMeshLoader(new loaders::MeshV2Loader());
-//	loaders::AImpSceneLoader::InitImporters(m_meshLoader);
+	loaders::AImpSceneLoader::InitImporters(m_meshLoader);
 
 }
 MeshResourceManager::~MeshResourceManager(){
 	m_meshLoader=0;
+	loaders::AImpSceneLoader::DestroyImporter();
 }
 
 void MeshResourceManager::addMeshLoader(loaders::IMeshLoader*loader){
