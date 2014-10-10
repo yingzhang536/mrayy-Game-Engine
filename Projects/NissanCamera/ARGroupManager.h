@@ -61,6 +61,9 @@ public:
 	void SetSceneManager(scene::ISceneManager* mgr, scene::ISceneNode* arRoot){ m_sceneManager = mgr; m_arRoot = arRoot; }
 
 	scene::ISceneNode* GetVehicle(){ return m_vehicle; }
+	const GroupMap& GetGroups(){
+		return m_groups;
+	}
 
 	ARSceneGroup* AddGroup(ARGroup* group);
 	ARSceneGroup* GetGroupListByID(uint id);

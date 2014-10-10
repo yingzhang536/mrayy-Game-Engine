@@ -61,7 +61,7 @@ core::string UnicodeEncoding::GetString(const byte* buff,int len)
 #else
 		ptr[0]=*buff;
 #endif
-		ret.appendChar(v);
+		ret.append(1,v);
 		buff+=2;
 	}
 	return ret;
@@ -114,7 +114,7 @@ core::stringw UnicodeEncoding::GetStringW(const byte* buff,int len)
 	{
 		ptr[0]=*buff;
 		ptr[1]=*(buff+1);
-		ret.appendChar(v);
+		ret.append(1,v);
 		buff+=2;
 	}
 	return ret;

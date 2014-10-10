@@ -455,7 +455,7 @@ public:
 		m_sentBytes += size;
 //		printf("data sent: %d\n", size);
 
-	//	printf("%d-",size);
+		printf("%d - ",size);
 #if GST_VERSION_MAJOR==1
 		gst_buffer_unmap(buffer, &mapinfo);
 #endif
@@ -566,7 +566,7 @@ public:
 		default:
 			break;
 		}
-		pass = "pass1";
+		pass = "pass2";
 		quanizer = 1;
 
 		if (m_isLocal)
@@ -659,32 +659,44 @@ public:
 			gstString += "videotestsrc pattern=\"black\" ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
 
 			//
-			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale !"
+			gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + "  ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale !"
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
 			//name=src2 device-index=" + core::StringConverter::toString(m_cam1)
-			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + " ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
+			gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + "  ! video/x-raw-yuv,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! ffmpegcolorspace ! videoflip method=4 ! videoscale ! "
 				"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
 
 			gstString += " mix. ! ";
 		}
 
 		//http://mewiki.project357.com/wiki/X264_Encoding_Suggestions#Encoder_latency
+		if (true)
+		{
 		gstString +=
 			" x264enc  name=enc"
-			" pass=" + pass +
+			//" pass=" + pass +
 			//"// qp-min=1 qp-max=" + core::StringConverter::toString(quanizer*5) +
 			//"  quantizer=" + core::StringConverter::toString(quanizer) +
 			//" sliced-threads=true "//
 			" bitrate=" + core::StringConverter::toString(bitrate) +
-			"   speed-preset=ultrafast "
-  			" tune=zerolatency "
-  			" rc-lookahead=0"
-  			" sync-lookahead=0 "
+			" speed-preset=superfast  "
+			" tune=zerolatency "
+			//	" rc-lookahead=0"
+			" sync-lookahead=0 "
 			//" option-string=\"slices = 2\" "
 			//" ! queue max-size-bytes=100000000 max-size-time=0 "
 			" ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
 			" ! mysink name=sink sync=false ";
-
+		}
+		else
+		{
+			//Encode using VP8
+			gstString +=
+				" vp8enc  name=enc"
+				" bitrate=" + core::StringConverter::toString(bitrate) +
+				" speed=2"
+				" ! rtpvp8pay"// mtu=" + core::StringConverter::toString(mu) + 
+				" ! mysink name=sink sync=false ";
+		}
 	//	gstString += "tp. ! queue ! autovideosink sync=false";
 		/*
 		gstString += "ksvideosrc name=src1 device-index=0 typefind=true ! typefind ! ffmpegcolorspace !  videoscale ! video/x-raw-yuv,width=640,height=720 ! mix.sink_1 ";
@@ -707,12 +719,18 @@ public:
 			" ! mysink name=sink sync=false ";
 #endif
 		if (m_streamAudio)
-			gstString+=" dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert   !audioresample ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+			gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc quality=2 ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+	//	gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 		//audio/x-raw-int, endianness=1234, signed=true, width=16, depth=16, rate=22000, channels=1
 		//vorbisenc  !
 
 		printf("Connection String: %s\n", gstString.c_str());
 		gstPipeline = gst_parse_launch(gstString.c_str(), &err);// !appsink name = sink sync = false", NULL); sync = false
+		if (err)
+		{
+			printf("Pipeline error: %s", err->message);
+
+		}
 		if (!gstPipeline)
 		{
 			gLogManager.log("pipleine couldn't be created!",ELL_ERROR);

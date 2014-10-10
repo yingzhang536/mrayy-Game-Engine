@@ -41,23 +41,25 @@ namespace NCam
 		virtual~TestController()
 		{}
 
-		virtual math::quaternion GetHeadOrientation()
+		virtual bool GetHeadOrientation(math::quaternion& q)
 		{
 			float time = gEngine.getTimer()->getSeconds();
 			math::vector3d angles;
 			angles.x = 20 * sin(time*0.001f);
 			angles.y = 30 * sin(time*0.002f);
 			angles.z = 20 * sin(time*0.005f);
-			return math::quaternion(angles);
+			q= math::quaternion(angles);
+			return true;
 		}
-		virtual math::vector3d GetHeadPosition()
+		virtual bool GetHeadPosition(math::vector3d& v)
 		{
-			return 0;
+			v = 0;
+			return 1;
 		}
 	};
 
 RobotCameraState::RobotCameraState()
-:IRenderingState("RobotState")
+	:Parent("RobotState")
 {
 	m_exitCode = 0;
 	m_surface[0] = m_surface[1]= 0;
@@ -73,6 +75,8 @@ RobotCameraState::RobotCameraState()
 
 	m_robotConnector->SetHeadController(m_headController);
 	m_hmdFov = 50;
+//	SetVideoSource(m_videoSource);
+
 
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
@@ -87,6 +91,10 @@ RobotCameraState::RobotCameraState()
 	m_cameraFPS = 85;
 	m_cameraResolution.set(1280, 720);
 
+	m_cameraOffsets.z = 1.6f;		//camera offset from user eye
+	m_cameraOffsets.x = -0.6;		// camera offset from center of screen
+	m_cameraOffsets.y = -0.1;		// camera offset from center of screen
+
 	m_arServiceProvider = new ARServiceProvider();
 	m_arServiceProvider->AddListener(this);
 	m_arManager = new ARGroupManager();
@@ -100,12 +108,15 @@ RobotCameraState::RobotCameraState()
 	m_commandManager->addCommand(new ARQeuryCommand(m_commandManager, this));
 	m_commandManager->addCommand(new ARMoveCommand(m_commandManager, this));
 	m_commandManager->addCommand(new ARAlphaCommand(m_commandManager, this));
+	m_commandManager->addCommand(new ARFovCommand(m_commandManager, this));
+
+//	SetContentsOrigin(0.5, 0.5);
 
 }
 
 RobotCameraState::~RobotCameraState()
 {
-	delete m_videoSource;
+//	delete m_videoSource;
 	delete m_arServiceProvider;
 	delete m_arManager;
 
@@ -397,7 +408,7 @@ void RobotCameraState::InitState()
 		m_guiroot->AddElement(console);
 		console->SetAnchorLeft(true);
 		console->SetAnchorRight(true);
-		console->SetAnchorTop(true);
+		console->SetAnchorBottom(true);
 		console->SetPosition(0);
 		console->SetSize(math::vector2d(100, 300));
 		console->SetVisible(false);
@@ -414,9 +425,6 @@ void RobotCameraState::InitState()
 	{
 		m_sceneManager = new scene::SceneManager(Engine::getInstance().getDevice());
 	}
-	m_cameraOffsets.z = 1.6f;		//camera offset from user eye
-	m_cameraOffsets.x = -0.6;		// camera offset from center of screen
-	m_cameraOffsets.y = -0.1;		// camera offset from center of screen
 	{
 		((TBee::LocalCameraVideoSource*)m_videoSource)->SetCameraResolution(m_cameraResolution, m_cameraFPS);
 		m_videoSource->Init();
@@ -445,7 +453,7 @@ void RobotCameraState::InitState()
 	}
 	{
 		scene::CameraNode* cam[2];
-		video::EPixelFormat pf = video::EPixel_R8G8B8;//video::EPixel_R8G8B8A8;//
+		video::EPixelFormat pf = video::EPixel_R8G8B8A8;//video::EPixel_R8G8B8A8;//
 		m_headNode = m_sceneManager->createSceneNode();
 
 		scene::LightNode* light= m_sceneManager->createLightNode("Sun");
@@ -513,7 +521,6 @@ void RobotCameraState::InitState()
 		}
 	}
 
-
 	if (false)
 	{
 		core::string files[] =
@@ -537,9 +544,14 @@ void RobotCameraState::InitState()
 		//scene::SMeshPtr mesh= gMeshResourceManager.loadMesh("van.3ds",true);
 		//scene::MeshRenderableNode* node = new scene::MeshRenderableNode(mesh);
 		m_vehicleModel = m_sceneManager->createSceneNode("VehicleModel");
-		m_vehicleModel->setPosition(math::vector3d(-47197.953, 100, 61388.07));
+	//	m_vehicleModel->setPosition(math::vector3d(-47197.953, 100, 61388.07));
 		m_vehicleModel->addChild(m_headNode);
 		//m_vehicleModel->AttachNode(node);
+		{
+			CreateARObject(1000, "", math::vector3d(-47197.953, 100, 61388.07), 0);
+			ARSceneGroup *g= m_arManager->GetGroupListByID(1000);
+			m_vehicleRef = g->objects.begin()->second;
+		}
 	}
 	if (false)
 	{
@@ -576,6 +588,8 @@ void RobotCameraState::InitState()
 		OnARContents(&cmd);
 
 	}
+
+	m_commandManager->execCommand("exec initial.cmd");
 }
 
 
@@ -631,7 +645,7 @@ bool RobotCameraState::OnEvent(Event* e, const math::rectf& rc)
 			}
 			else if (evt->key == KEY_P)
 			{
-				GenerateSurface(!m_surfaceParams.plane, m_surfaceParams.hfov, m_surfaceParams.vfov, m_surfaceParams.segments, m_surfaceParams.radius);
+			//	GenerateSurface(!m_surfaceParams.plane, m_surfaceParams.hfov, m_surfaceParams.vfov, m_surfaceParams.segments, m_surfaceParams.radius);
 				ok = true;
 			}
 			else if (evt->key == KEY_TAB)
@@ -667,23 +681,46 @@ void RobotCameraState::OnExit()
 
 void RobotCameraState::SetTransformation( const math::vector3d& pos, const math::vector3d &angles)
 {
+	math::vector3d p;
 	if (true)
 	{
-	//	m_headNode->setPosition(pos);
-		math::vector3d p;
-		//math::quaternion q(0, 0, angles.z);
+		math::quaternion q(0, 0, angles.z);
 		p.z = m_cameraOffsets.z;
 		p.x = m_cameraOffsets.x + math::sind(angles.y)*m_cameraOffsets.z;
 		p.y = m_cameraOffsets.y + math::sind(-angles.x)*m_cameraOffsets.z;
+	//	m_headNode->setPosition(pos);
 		m_screenNode[0]->setPosition(p);
 		m_screenNode[1]->setPosition(p);
-// 		m_screenNode[0]->setOrintation(q);
-// 		m_screenNode[1]->setOrintation(q);
+ 		m_screenNode[0]->setOrintation(q);
+ 		m_screenNode[1]->setOrintation(q);
 	}
-	//else
+#if 0
+	else
 	{
-		m_headNode->setOrintation(m_headRotationOffset+ angles);
-		m_headNode->setPosition(m_headPosOffset+ pos);
+		p.z = m_cameraOffsets.z;
+		p.x = m_cameraOffsets.x + math::sind(angles.y)*m_cameraOffsets.z;
+		p.y = m_cameraOffsets.y + math::sind(-angles.x)*m_cameraOffsets.z;
+	
+		p = m_camera[0]->getAbsolutePosition() + m_camera[0]->getAbsoluteOrintation()*p;
+
+		math::vector3d proj1 = m_camera[0]->WorldToScreen(p);
+
+		SetContentsPosition(proj1.x, proj1.y);
+		SetContentsRotation(-angles.z);
+	}
+#endif
+	{
+// 		m_headNode->setOrintation(m_headRotationOffset);;// +angles);
+// 		m_headNode->setPosition(m_headPosOffset);// +pos);
+		m_vehicleRef->obj->pos += m_headPosOffset;
+		m_vehicleRef->obj->dir += m_headRotationOffset;
+		m_vehicleRef->sceneNode->setPosition(m_vehicleRef->obj->pos );
+		m_vehicleRef->sceneNode->setOrintation(m_vehicleRef->obj->dir );
+
+		m_headNode->setPosition(pos);
+
+		m_headRotationOffset = 0;	
+		m_headPosOffset = 0;
 	}
 }
 
@@ -732,6 +769,11 @@ void RobotCameraState::_UpdateMovement(float dt)
 		m_vehicleModel->setPosition(m_arManager->GetVehicle()->getAbsolutePosition());
 		m_vehicleModel->setOrintation(m_arManager->GetVehicle()->getAbsoluteOrintation());
 	}
+	else
+	{
+		m_vehicleModel->setPosition(m_vehicleRef->sceneNode->getAbsolutePosition());
+		m_vehicleModel->setOrintation(m_vehicleRef->sceneNode->getAbsoluteOrintation());
+	}
 
 	InputManager* mngr = NCAppGlobals::Instance()->App->GetInputManager();
 	controllers::IKeyboardController* kb = mngr->getKeyboard();
@@ -754,7 +796,7 @@ void RobotCameraState::_UpdateMovement(float dt)
 		speed.x = kb->getKeyState(KEY_A) - kb->getKeyState(KEY_D);
 		speed.z = kb->getKeyState(KEY_W) - kb->getKeyState(KEY_S);
 		speed.y = kb->getKeyState(KEY_Q) - kb->getKeyState(KEY_Z);
-		speed *= 10 * dt;
+		speed *=  dt;
 
 		math::vector3d pos;
 		//pos = m_headNode->getPosition();
@@ -776,7 +818,7 @@ void RobotCameraState::_UpdateMovement(float dt)
 		math::vector3d angles;
 		angles.x = m->getDY();
 		angles.y = -m->getDX();
-		angles *= 100 * dt;
+		angles *= 10 * dt;
 		m_headRotationOffset += angles;
 
 		//math::quaternion q = math::quaternion(angles.y,  m_headNode->getOrintation().getYAxis());
@@ -817,6 +859,9 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 	
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
+	Parent::Render(rc, eye);
+
+#if 1
 	video::ITexture* camTex = m_videoSource->GetEyeTexture(index);;//gTextureResourceManager.loadTexture2D("Checker.png");// //
 
 	video::ShaderSemanticTable::getInstance().setRenderPass(0);
@@ -858,14 +903,13 @@ video::IRenderTarget* RobotCameraState::Render(const math::rectf& rc, TBee::ETar
 		RescaleMesh(index,scale);
 	}
 	device->set3DMode();
+#endif
 	m_screenNode[index]->setVisible(true);
 	//m_screenNode[index]->setScale(scale);
 	m_screenMtrl[index]->setTexture(camTex, 0);
-	//m_screenMtrl[index]->setTexture(gTextureResourceManager.loadTexture2D("Checker.png"), 0);
 	m_viewport[index]->setAbsViewPort(rc);
 	m_viewport[index]->draw();
 
-	Parent::Render(rc, eye);
 	video::TextureUnit tex;
 
 	device->setRenderTarget(m_renderTarget[index]);
@@ -1077,6 +1121,10 @@ void RobotCameraState::LoadFromXML(xml::XMLElement* e)
 	core::string camConfigName = e->getValueString("CameraConfiguration");
 
 	m_useLensCorrection = e->getValueBool("UseLensCorrection");
+	math::vector2d proj = core::StringConverter::toVector2d(e->getValueString("CameraProjection"));
+	m_cameraOffsets.x = proj.x;
+	m_cameraOffsets.y = proj.y;
+
 
 	m_cameraConfiguration = NCAppGlobals::Instance()->camConfig->GetCameraConfiguration(camConfigName);
 
@@ -1131,7 +1179,16 @@ void RobotCameraState::CreateARObject(uint id, const core::string& name, const m
 }
 void RobotCameraState::UpdateARObject(uint id, const math::vector3d& pos, const math::vector3d& dir)
 {
-	CreateARObject(id, "", pos, dir);
+	ARSceneGroup* g = m_arManager->GetGroupListByID(id);
+	if (!g)
+		return;
+	if (!g->objects.size())
+		return;
+
+	g->objects.begin()->second->obj->pos = pos;
+	g->objects.begin()->second->obj->dir = dir;
+	g->objects.begin()->second->sceneNode->setPosition(pos);
+	g->objects.begin()->second->sceneNode->setOrintation(dir);
 }
 void RobotCameraState::MoveARObject(uint id, const math::vector3d& pos, const math::vector3d& dir)
 {
@@ -1182,6 +1239,22 @@ bool RobotCameraState::QueryARObject(uint id, math::vector3d& pos, math::vector3
 	dir = g->objects.begin()->second->obj->dir;
 
 	return true;
+}
+void RobotCameraState::ListARObjects(std::vector<uint> &ids)
+{
+	const GroupMap& g=m_arManager->GetGroups();
+	GroupMap::const_iterator it = g.begin();
+	for (; it != g.end();++it)
+	{
+		ids.push_back(it->second->group->groupID);
+	}
+
+}
+
+void RobotCameraState::ChangeARFov(float fov)
+{
+	m_camera[0]->setFovY(fov);
+	m_camera[1]->setFovY(fov);
 }
 
 

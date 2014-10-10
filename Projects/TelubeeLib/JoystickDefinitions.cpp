@@ -18,5 +18,5 @@ int JOYSTICK_R3Button = 11;
 
 int JOYSTICK_Axis0 = 0;
 int JOYSTICK_Axis1 = 1;
-int JOYSTICK_Axis2 = 2;
-int JOYSTICK_Axis3 = 3;
+int JOYSTICK_Axis2 = 3;
+int JOYSTICK_Axis3 = 2;

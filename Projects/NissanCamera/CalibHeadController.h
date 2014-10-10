@@ -60,7 +60,7 @@ public:
 	virtual~CalibHeadController(){}
 
 
-	virtual bool GetHeadOrientation(math::quaternion& v);
+	virtual bool GetHeadOrientation(math::quaternion& q);
 	virtual bool GetHeadPosition(math::vector3d &v);
 
 	void Calibrate();

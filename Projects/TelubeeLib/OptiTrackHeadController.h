@@ -26,6 +26,8 @@ class OptiTrackHeadController:public IHeadController
 {
 protected:
 	int m_headID;
+	std::list<math::vector3d> m_posAvg;
+	std::list<math::vector3d> m_oriAvg;
 public:
 	OptiTrackHeadController(int headId);
 	virtual~OptiTrackHeadController();

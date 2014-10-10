@@ -107,7 +107,14 @@ GameEntity* IGameComponent::GetOwnerEntity()const
 
 bool IGameComponent::SetEnabled(bool enabled)
 {
-	m_enabled=enabled;
+	m_enabled = enabled;
+	std::list<IObjectComponent*>::iterator it = m_componentList.begin();
+	for (; it != m_componentList.end(); ++it)
+	{
+		IGameComponent* comp = dynamic_cast<IGameComponent*>(*it);
+		if (comp)
+			comp->SetEnabled(enabled);
+	}
 	return true;
 }
 bool IGameComponent::IsEnabled()const

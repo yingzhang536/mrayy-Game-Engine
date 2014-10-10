@@ -72,6 +72,7 @@
 
 #include "TelubeeRobotDLL.h"
 #include "RobotViewerState.h"
+#include "LeapMotionController.h"
 
 
 namespace mray
@@ -234,13 +235,13 @@ void Application::_initStates()
 		ip = ifo->IP;
 
 	if (m_remoteCamera)
-		remote = new RobotViewerState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
   	else
-		remote = new RobotViewerState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
 	m_renderingState->AddState(remote);
 
-	camera = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), 0, "AugCam");////new TBee::LocalRobotCommunicator()
- 	m_renderingState->AddState(camera);
+// 	camera = new AugCameraRenderState(new TBee::LocalSingleCameraVideoSource(m_cam1), new TBee::LocalRobotCommunicator(), "AugCam");////
+//  	m_renderingState->AddState(camera);
 
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
@@ -254,7 +255,7 @@ void Application::_initStates()
 	m_renderingState->AddTransition(nullState, login, STATE_EXIT_CODE);
 	//m_renderingState->AddTransition(nullState, camera, STATE_EXIT_CODE);
 	m_renderingState->AddTransition(login, remote, ToRemoteCamera_CODE);//Camera
-	m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
+	//m_renderingState->AddTransition(login, camera, ToLocalCamera_CODE);
 	//m_renderingState->AddTransition("Intro", "AugCam", STATE_EXIT_CODE);
 	//m_renderingState->AddTransition(login, vtRs, ToDepthView_CODE);//Camera
 	//m_renderingState->AddTransition(login, depth, ToDepthView_CODE);
@@ -338,6 +339,7 @@ void Application::init(const OptionContainer &extraOptions)
 	VT::RefVTLib();
 
 	network::createWin32Network();
+
 
 	m_wiiManager = new controllers::WiimoteManager();
 	int cnt=m_wiiManager->ConnectWithAllMotes().size();

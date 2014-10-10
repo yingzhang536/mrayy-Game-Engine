@@ -250,6 +250,7 @@ bool PhysicsComponent::SetEnabled(bool enabled)
 	if(m_node)
 	{
 		m_node->SetBodyFlag(physics::EBF_Kinematic,!IsEnabled());
+		m_node->SetBodyFlag(physics::EBF_Frozen, !IsEnabled());
 	}
 	return true;
 }

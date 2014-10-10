@@ -33,7 +33,7 @@ DWORD RobotSerialPort::timerThreadHead(RobotSerialPort *robot, LPVOID pdata){
 	while (!isDone){
 		if (threadStart){
 			//printf("thread h: %d \r", count++);	
-			robot->head_control(-robot->pan, robot->tilt, -robot->roll);
+			robot->head_control(-robot->pan*yAxis, robot->tilt*xAxis, -robot->roll*zAxis);
 /*
 			if(upCount)
 				robot->head_control(count+=1, 0, 0);
@@ -360,6 +360,67 @@ int RobotSerialPort::head_control(float pan, float tilt, float roll){
 
 
 
+void MatrixtoXYZ(double matrix[16], double *a, double *b, double *c)
+{
+
+	*c = atan2(matrix[4], matrix[0]);
+	*b = -asin(matrix[8]);
+	if (cos(*b) != 0){
+		*a = asin((matrix[9] / cos(*b)));
+		if (matrix[10] < 0)*a = mray::math::PI64 - *a;
+		*c = *c;
+		*b = *b;
+	}
+	else{
+		*a = 0;
+		*c = atan2(matrix[1], matrix[5]);
+	}
+
+	*a = mray::math::toDeg(*a);
+	*b = mray::math::toDeg(*b);
+	*c = mray::math::toDeg(*c);
+
+}
+
+typedef double Matrix[4][4];
+
+void
+qtomatrix(Matrix m, const mray::math::quaternion& q)
+/*
+* Convert quaterion to rotation sub-matrix of 'm'.
+* The left column of 'm' gets zeroed, and m[3][3]=1.0, but the
+* translation part is left unmodified.
+*
+* m = q
+*/
+{
+#define X q.x 
+#define Y q.y 
+#define Z q.z 
+#define W q.w
+
+	float    x2 = X * X;
+	float    y2 = Y * Y;
+	float    z2 = Z * Z;
+
+	m[0][0] = 1 - 2 * (y2 + z2);
+	m[0][1] = 2 * (X * Y + W * Z);
+	m[0][2] = 2 * (X * Z - W * Y);
+	m[0][3] = 0.0;
+
+	m[1][0] = 2 * (X * Y - W * Z);
+	m[1][1] = 1 - 2 * (x2 + z2);
+	m[1][2] = 2 * (Y * Z + W * X);
+	m[1][3] = 0.0;
+
+	m[2][0] = 2 * (X * Z + W * Y);
+	m[2][1] = 2 * (Y * Z - W * X);
+	m[2][2] = 1 - 2 * (x2 + y2);
+	m[2][3] = 0.0;
+
+	m[3][3] = 1.0;
+}
+
 void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 {
 	if (!IsConnected())
@@ -395,8 +456,11 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 //	robotX = m_impl->mvRobot[BASE][0]->getNext(st.X * 1000);
 //	robotY = m_impl->mvRobot[BASE][1]->getNext(st.Z * 1000);
 
-	mray::math::vector3d angles;
-	mray::math::quaternion(st.headRotation[0], st.headRotation[1], st.headRotation[2], st.headRotation[3]).toEulerAngles(angles);
+	mray::math::Point3d<double> angles;
+	mray::math::quaternion q(st.headRotation[0], st.headRotation[1], st.headRotation[2], st.headRotation[3]);
+	Matrix rotMat;
+	qtomatrix(rotMat, q);
+	MatrixtoXYZ((double*)rotMat, &angles.x, &angles.y, &angles.z);
 
 	tilt = m_impl->mvRobot[HEAD][1]->getNext(angles.x);
 	pan = m_impl->mvRobot[HEAD][0]->getNext(angles.y);

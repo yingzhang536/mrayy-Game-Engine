@@ -41,6 +41,9 @@ namespace AugTel
 
 	class AugCameraStateImpl;
 	class VTBaseState;
+	class IHandsController;
+	class AugTelSceneContext;
+
 class AugCameraRenderState :public TBee::IEyesRenderingBaseState,public scene::IViewportListener,public IDataCommunicatorListener
 {
 	typedef TBee::IEyesRenderingBaseState Parent;
@@ -68,24 +71,22 @@ protected:
 
 	VTBaseState* m_vtState;
 	
-	AugCameraStateImpl* m_data;
+	AugTelSceneContext* m_context;
+	typedef std::map<core::string, int> HandsMap;
+	std::vector<IHandsController*> m_hands;
+	HandsMap m_handsMap;
 
 	TBee::ICameraVideoSource* m_camVideoSrc;
 
 	core::string m_optiProvider;
-	core::string m_model;
 
 	TBee::OpenNIHandler* m_openNiHandler;
 
 	math::vector4d m_depthParams;
 
-	scene::SMeshPtr m_depthMesh;
-	scene::ISceneNode* m_depthNode;
 	GCPtr<GUI::GUIAugTelScreen> m_screenLayout;
 
 	TBee::DepthVisualizer* m_depthVisualizer;
-
-	video::ParsedShaderPP* m_blurShader;
 
 	LoadingScreen* m_loadScreen;
 
@@ -100,14 +101,14 @@ protected:
 
 	bool m_showDebug;
 
-	float m_lightMapTimer;
 	scene::LightNode* m_lightSrc;
+
+	void _createHands();
 
 	void _UpdateStarted(float dt);
 	void _RenderStarted(const math::rectf& rc, ETargetEye eye);
 	void _ChangeState(EStatus st);
 
-	void _CalculateDepthGeom();
 	void _CreatePhysicsSystem();
 
 	void _GenerateLightMap();

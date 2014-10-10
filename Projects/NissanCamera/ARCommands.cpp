@@ -267,7 +267,7 @@ core::string ARQeuryCommand::getCommandInfo()
 
 int ARQeuryCommand::getCommandMinArgCount()
 {
-	return 1;
+	return 0;
 }
 
 
@@ -279,16 +279,31 @@ int ARQeuryCommand::getCommandMaxArgCount()
 
 bool ARQeuryCommand::onCommand(std::vector<core::string>& args)
 {
-	uint id = core::StringConverter::toUInt(args[1]);
-	math::vector3d pos, dir;
-	if (!m_listener->QueryARObject(id, pos, dir))
+	if (args.size() == 1)
 	{
-		m_lastMsg = "Object with ID="+core::StringConverter::toString(id)+" was not found!" ;
+		std::vector<uint> ids;
+		m_listener->ListARObjects(ids);
+		m_lastMsg = "Listing AR Objects in the scene:\n";
+		for (int i = 0; i < ids.size();++i)
+		{
+			m_lastMsg += "Object[" + core::StringConverter::toString(i) + "] Id is: " + core::StringConverter::toString(ids[i])+"\n";
+		}
+
 	}
 	else
 	{
-		m_lastMsg = "Position= " + core::StringConverter::toString(pos)+"\n";
-		m_lastMsg += "Direction= " + core::StringConverter::toString(dir);
+
+		uint id = core::StringConverter::toUInt(args[1]);
+		math::vector3d pos, dir;
+		if (!m_listener->QueryARObject(id, pos, dir))
+		{
+			m_lastMsg = "Object with ID=" + core::StringConverter::toString(id) + " was not found!";
+		}
+		else
+		{
+			m_lastMsg = "Position= " + core::StringConverter::toString(pos) + "\n";
+			m_lastMsg += "Direction= " + core::StringConverter::toString(dir);
+		}
 	}
 	return true;
 }
@@ -359,6 +374,59 @@ bool ARAlphaCommand::onCommand(std::vector<core::string>& args)
 
 
 const core::string& ARAlphaCommand::getLastMessage()
+{
+	return m_lastMsg;
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+ARFovCommand::ARFovCommand(CommandManager* o, IARCommandListener* listener)
+	:ICommand(o), m_listener(listener)
+{
+
+}
+
+ARFovCommand::~ARFovCommand()
+{
+
+}
+
+
+core::string ARFovCommand::getCommandName()
+{
+	return "fov";
+}
+
+
+core::string ARFovCommand::getCommandInfo()
+{
+	return "Format: fov [value] \n"
+		"Set the field of view for ar contents ";
+}
+
+
+int ARFovCommand::getCommandMinArgCount()
+{
+	return 1;
+}
+
+
+int ARFovCommand::getCommandMaxArgCount()
+{
+	return 1;
+}
+
+
+bool ARFovCommand::onCommand(std::vector<core::string>& args)
+{
+	float fov = 0;
+	fov= core::StringConverter::toFloat(args[1]);
+	m_listener->ChangeARFov(fov);
+	return true;
+}
+
+
+const core::string& ARFovCommand::getLastMessage()
 {
 	return m_lastMsg;
 }

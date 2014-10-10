@@ -52,13 +52,14 @@ bool KinBodyControlComponent::InitComponent()
 
 bool KinBodyControlComponent::SetEnabled(bool enabled)
 {
+	IGameComponent::SetEnabled(enabled);
 	return true;
 }
 
 
 bool KinBodyControlComponent::SetControlValue(const std::vector<ControlInputValues>&  v,EControlSource src)
 {
-	if(v.size()<0)
+	if(v.size()<0 || !m_enabled)
 		return false;
 	IControllableComponent::SetControlValue(v,src);
 	m_targetValue.resize(v.size());

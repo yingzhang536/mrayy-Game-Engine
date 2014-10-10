@@ -2,8 +2,8 @@
 
 
 #include "CommandManager.h"
-
-
+#include "IFileSystem.h"
+#include "StreamReader.h"
 #include "StringUtil.h"
 
 namespace mray{
@@ -54,11 +54,11 @@ namespace mray{
 						m_msg += p->second->getCommandName();
 						m_msg += mT("\n");
 						m_msg += p->second->getCommandInfo();
-						m_msg += mT("\n");
+						/*m_msg += mT("\n");
 						m_msg += mT("Min Parameters count: ") + core::StringConverter::toString(p->second->getCommandMinArgCount());
 						m_msg += mT("\n");
 						m_msg += mT("Max Parameters count: ") + core::StringConverter::toString(p->second->getCommandMaxArgCount());
-						
+			*/			
 						break;
 					}
 				}
@@ -70,8 +70,58 @@ namespace mray{
 
 	};
 
+	class CExecCommand :public ICommand
+	{
+	protected:
+		core::string m_msg;
+	public:
+		CExecCommand(CommandManager* o) :ICommand(o)
+		{
+		}
+
+		virtual core::string getCommandName(){
+			return mT("exec");
+		}
+
+		virtual core::string getCommandInfo(){
+			return mT("Execute an external commands file");
+		}
+
+		virtual int getCommandMinArgCount(){ return 1; }
+
+		virtual int getCommandMaxArgCount(){ return 1; }
+
+		virtual bool onCommand(std::vector<core::string>& args)
+		{
+			OS::IStreamPtr file= gFileSystem.openFile(args[1]);
+			if (!file)
+			{
+				m_msg = "Failed to load command file: " + args[1];
+				return false;
+			}
+			OS::StreamReader reader(file);
+			m_msg = "Executing external command file: "+args[1]+"\n";
+			while (!file->eof())
+			{
+				core::string line= reader.readLine();
+				line=core::StringUtil::Trim(line,"\r \t");
+				if (line == "")
+					continue;
+				m_owner->execCommand(line);
+				m_msg += " >>" + line+"\n";
+				m_msg += m_owner->getLastMessage()+"\n";
+			}
+			file->close();
+			return true;
+		}
+
+		virtual const core::string& getLastMessage(){ return m_msg; }
+
+	};
+
 CommandManager::CommandManager(){
 	addCommand(new CPrintCommands(this));
+	addCommand(new CExecCommand(this));
 }
 CommandManager::~CommandManager(){
 }
@@ -94,8 +144,8 @@ bool CommandManager::execCommand(const core::string&cmd){
 	bool res=false;
 	if(it!=m_commands.end()){
 		GCPtr<ICommand> cmd=it->second;
-		if(m_args.size()-1<cmd->getCommandMinArgCount() ||
-			m_args.size()-1>cmd->getCommandMaxArgCount() )
+		if (m_args.size() - 1<cmd->getCommandMinArgCount() && cmd->getCommandMinArgCount() != -1 ||
+			m_args.size() - 1>cmd->getCommandMaxArgCount() && cmd->getCommandMaxArgCount() != -1)
 		{
 			m_lastMsg=mT("Parameters count not matched!");
 		}

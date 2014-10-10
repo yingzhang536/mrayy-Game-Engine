@@ -34,7 +34,7 @@
 
 char robotCOM[5], headCOM[5]; 
 int robot_baudRate, head_baudRate; 
-
+int xAxis = 1, yAxis = 1, zAxis = 1;
 
 clock_t startT, endT;
 
@@ -107,6 +107,13 @@ void load_parameters(){
 				else if(strcmp (token[0], "HEAD_BAUD") == 0)
 					head_baudRate = atoi(token[1]);
 
+				else if (strcmp(token[0], "X") == 0)
+					xAxis = atoi(token[1]);
+				else if (strcmp(token[0], "Y") == 0)
+					yAxis = atoi(token[1]);
+				else if (strcmp(token[0], "Z") == 0)
+					zAxis = atoi(token[1]);
+
 			}
 
 			// process (print) the tokens
@@ -115,6 +122,12 @@ void load_parameters(){
 			//cout << endl;
 
 		}
+		if (!xAxis)
+			xAxis = 1;
+		if (!yAxis)
+			yAxis = 1;
+		if (!zAxis)
+			zAxis = 1;
 
 	}
 

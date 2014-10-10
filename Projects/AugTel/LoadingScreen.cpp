@@ -52,7 +52,7 @@ void LoadingScreen::Start()
 	m_video->SetVisible(true);
 
 	//m_screenLayout->SetInfo("");
-	m_screenLayout->SetInfo("Location: Pacifico Yokohama");
+	m_screenLayout->SetInfo("Location: Keio Media Design");
 	m_screenLayout->SetText("Connecting Robot", true);
 	math::vector2d pos = m_screenLayout->Status->GetPosition();
 	pos.x = 100;

@@ -48,7 +48,7 @@ core::string ASCIIEncoding::GetString(const byte* buff,int len)
 	//ret.reallocate(len);
 	for(int i=0;i<len;++i)
 	{
-		ret.appendChar((mchar)buff[i]);
+		ret.append(1,(mchar)buff[i]);
 	}
 	return ret;
 }

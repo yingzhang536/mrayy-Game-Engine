@@ -38,9 +38,9 @@ public:
 
 	virtual core::string getCommandInfo() = 0;
 
-	virtual int getCommandMinArgCount()=0;
+	virtual int getCommandMinArgCount(){ return -1; }
 
-	virtual int getCommandMaxArgCount()=0;
+	virtual int getCommandMaxArgCount(){ return -1; }
 
 	virtual bool onCommand(std::vector<core::string>& args)=0;
 

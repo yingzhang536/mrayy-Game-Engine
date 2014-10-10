@@ -35,9 +35,6 @@
 #include "MeshBufferData.h"
 #include "IMeshBuffer.h"
 #include "IHardwareStreamBuffer.h"
-#include "RenderMaterial.h"
-#include "RenderTechnique.h"
-#include "RenderPass.h"
 #include "DepthVisualizer.h"
 #include "DataCommunicator.h"
 #include "ParsedShaderPP.h"
@@ -67,6 +64,12 @@
 #include "FadeSceneEffect.h"
 #include "RefractionSceneEffect.h"
 #include "MeshResourceManager.h"
+#include "AugTelSceneContext.h"
+
+
+#include "VirtualHandsController.h"
+#include "LeapMotionHandsController.h"
+#include "JoystickDefinitions.h"
 
 
 namespace mray
@@ -74,55 +77,10 @@ namespace mray
 namespace AugTel
 {
 
-	class AugCameraStateImpl
-	{
-
-	protected:
-
-		void GenerateBRDF()
-		{
-			BRDFTexture = gEngine.getDevice()->createEmptyTexture2D(false);
-			BRDFTexture->setMipmapsFilter(false);
-			BRDFTexture->createTexture(math::vector3d(512, 512, 1), video::EPixel_Float16_R);
-			video::IRenderTargetPtr rt = gEngine.getDevice()->createRenderTarget("", BRDFTexture, 0, 0, 0);
-
-			video::IGPUShaderProgramPtr BRDF_FP = gShaderResourceManager.loadShaderFromFile("BRDF_PreComp.cg", video::EShader_FragmentProgram, "main_fp_PHBeckmann", video::ShaderPredefList(), "cg");
-			gEngine.getDevice()->set2DMode();
-			gEngine.getDevice()->setRenderTarget(rt);
-			gEngine.getDevice()->setFragmentShader(BRDF_FP);
-			gEngine.getDevice()->draw2DImage(math::rectf(0, 0, 512, 512), 1);
-			gEngine.getDevice()->setRenderTarget(0);
-			gEngine.getDevice()->setFragmentShader(0);
-			rt = 0;
-		}
-	public:
-		HeadMount* headMount;
-
-		video::ITexturePtr BRDFTexture;
-
-		VT::RobotCommunicatorComponent* robotCommunicator;
-	public:
-		AugCameraStateImpl()
-		{
-			headMount = 0;
-		}
-		~AugCameraStateImpl()
-		{
-		}
-
-		void Init()
-		{
-			GenerateBRDF();
-		}
-
-
-
-	};
 
 	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src , TBee::IRobotCommunicator* comm, const core::string& name)
 		:IEyesRenderingBaseState(name)
 {
-	m_data = new AugCameraStateImpl();
 
 // 	m_eyes[0].flip90 = 0;
 // 	m_eyes[1].flip90 = 0;
@@ -144,32 +102,45 @@ namespace AugTel
 
 	m_viewDepth = false;
 
-	m_lightMapTimer = 0;
-
 	m_showScene = false;
 
 	m_showDebug = false;
 	m_vtState = new VTBaseState();
 
 	m_loadScreen = new LoadingScreen();
+
+	m_context = new AugTelSceneContext();
+	m_context->videoSource = src;
+	
+
+
+
 }
 AugCameraRenderState::~AugCameraRenderState()
 {
 	delete m_loadScreen;
 	delete m_vtState;
-	delete m_data;
 	m_gameManager = 0;
 	m_sceneManager = 0;
 	m_phManager = 0;
 	delete m_openNiHandler;
 	delete m_depthVisualizer;
+	delete m_context;
+
+	{
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			delete m_hands[i];
+		}
+
+	}
 }
 
 
 bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 {
-	if (Parent::OnEvent(e, rc))
-		return true;
+// 	if (Parent::OnEvent(e, rc))
+// 		return true;
 	bool ok = false;
 
 	if (m_guiManager)
@@ -191,12 +162,12 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			{
 				if (evt->ctrl)
 				{
-					math::vector3d pos = m_data->headMount->getAbsolutePosition();
+					math::vector3d pos = m_context->headNode->getAbsolutePosition();
 					math::vector3d ang;
-					m_data->headMount->getAbsoluteOrintation().toEulerAngles(ang);
+					m_context->headNode->getAbsoluteOrintation().toEulerAngles(ang);
 					printf("%2.3f,%2.3f,%2.3f   %2.3f,%2.3f,%2.3f\n", pos.x, pos.y, pos.z,ang.x,ang.y,ang.z);
 				}else
-					m_data->headMount->SetDisabled(!m_data->headMount->IsDisabled());
+					m_context->headNode->SetDisabled(!m_context->headNode->IsDisabled());
 				ok = true;
 			}
 			else if ( evt->key == KEY_F10)
@@ -244,13 +215,34 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 
 				m_robotConnector->GetHeadController()->Recalibrate();
 				ok = true;
-			}else if (evt->press && evt->key == KEY_F12 && evt->ctrl)
+			}else if ( evt->key == KEY_F12 && evt->ctrl)
 			{
 				m_takeScreenShot = true;
 
 				ok = true;
 
 			}
+			else if (evt->key >= KEY_1 && evt->key < KEY_1 + m_hands.size())
+			{
+				int idx = evt->key - KEY_1;
+				for (int i = 0; i < m_hands.size(); ++i)
+				{
+					m_hands[i]->SetEnabled(i == idx);
+				}
+				ok = true;
+			}
+		}
+	}
+	if (e->getType() == ET_Joystick)
+	{
+		JoystickEvent* evt = (JoystickEvent*)e;
+		if (evt->event == JET_BUTTON_PRESSED)
+		{
+			if (m_status == EWaitStart)
+				_ChangeState(EConnectingRobot);
+			else
+				_ChangeState(EWaitStart);
+			ok = true;
 		}
 	}
 	return ok;
@@ -287,6 +279,11 @@ void AugCameraRenderState::_CreatePhysicsSystem()
 
 }
 
+
+void AugCameraRenderState::_createHands()
+{
+}
+
 void AugCameraRenderState::InitState()
 {
 	Parent::InitState();
@@ -309,6 +306,8 @@ void AugCameraRenderState::InitState()
 		m_showScene = false;
 
 		gAppData.guiManager = m_guiManager;
+
+		m_context->entManager = m_gameManager;
 	}
 
 	{
@@ -343,38 +342,9 @@ void AugCameraRenderState::InitState()
 		gMaterialResourceManager.parseMaterialXML(gFileSystem.openFile("AT_materials.mtrl"));
 	}
 	{
-		video::ParsedShaderPP* pp = new video::ParsedShaderPP(gEngine.getDevice());
-		pp->LoadXML(gFileSystem.openFile("blur.peff"));
-		m_blurShader = pp;
-
-	}
-	{
-		m_data->Init();
-	}
-	{
 		m_loadScreen->Init();
 	}
 	{
-		std::vector<game::GameEntity*> entLst;
-		m_gameManager->loadFromFile(m_model, &entLst);
-		game::SceneComponent* modelComp = game::IGameComponent::RetriveComponent<game::SceneComponent>(entLst[0], "SkinnedArms");
-		if (modelComp)
-		{
-			for (int i = 0; i < modelComp->GetSceneNode()->GetAttachedNodesCount(); ++i)
-			{
-				scene::IRenderable* r = modelComp->GetSceneNode()->GetAttachedNode(i);
-				r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_blurShader->getOutput()->GetColorTexture(0), 3);
-				//r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->BRDFTexture, 3);
-			}
-		}
-		m_data->robotCommunicator = 0;
-		const std::list<IObjectComponent*>& compLst= entLst[0]->GetComponent(VT::RobotCommunicatorComponent::getClassRTTI());
-		if (compLst.size() != 0)
-		{
-			m_data->robotCommunicator = dynamic_cast<VT::RobotCommunicatorComponent*>(*compLst.begin());
-			m_data->robotCommunicator->SetEnabled(false);
-		}
-
 
 		HeadMount* hm = new HeadMount(m_sceneManager, 1);
 		scene::CameraNode* cam[2];
@@ -423,32 +393,20 @@ void AugCameraRenderState::InitState()
 
 			hm->addChild(cam[i]);
 			cam[i]->setZNear(0.1);
-			cam[i]->setZFar(100000);
+			cam[i]->setZFar(1000);
 
 			//if (gAppData.oculusDevice)
-			cam[i]->setFovY(m_cameraConfiguration->fov);
+			cam[i]->setFovY(m_hmdFov);// m_cameraConfiguration->fov);
 			cam[i]->setPosition(math::vector3d(0.03 - 0.06*i, 0.07, 0));
 			m_camera[i] = cam[i];
 
 		}
 
-		game::GameEntity* ent = entLst[0];
 		hm->SetOculus(gAppData.oculusDevice);
 		m_sceneManager->addSceneNode(hm);
-		m_data->headMount = hm;
-		m_data->headMount->SetCamera(m_camera[0], m_camera[1]);
-		AugTel::HeadCameraComponent* eyes = ent->RetriveComponent<AugTel::HeadCameraComponent>(ent, "Head");
-		VT::CameraComponent* cameraComponent = ent->RetriveComponent<VT::CameraComponent>(ent, "stereoCamera");
+		m_context->headNode = hm;
+		m_context->headNode->SetCamera(m_camera[0], m_camera[1]);
 
-		if (eyes)
-		{
-			eyes->GetNode()->addChild(hm);
-			hm->setPosition(eyes->GetOffset());
-		}
-		else if (cameraComponent)
-		{
-			cameraComponent->MountCamera(hm, 0);
-		}
 
 		if (AppData::Instance()->headController == TBee::EHeadControllerType::SceneNode)
 		{
@@ -480,16 +438,21 @@ void AugCameraRenderState::InitState()
 			}
 		}
 	}
-
+	{
+		for (int i = 0; i < m_hands.size();++i)
+		{
+			m_hands[i]->Init(m_context);
+		}
+	}
 	{
 		if (m_videoSource->IsLocal())
 		{
-			m_openNiHandler->Init();
 		}
 		else
 		{
-			m_openNiHandler->CreateDepthFrame(320, 240);
+		//	m_openNiHandler->CreateDepthFrame(320, 240);
 		}
+		m_openNiHandler->Init();
 		m_openNiHandler->GetNormalCalculator().SetCalculateNormals(true);
 		math::vector2di sz = m_openNiHandler->GetSize();
 
@@ -497,33 +460,6 @@ void AugCameraRenderState::InitState()
 		m_depthVisualizer->SetViewNormals(true);
 		m_depthVisualizer->SetDepthFrame(m_openNiHandler->GetNormalCalculator().GetDepthFrame());
 
-		video::RenderMaterial* mtrl = new video::RenderMaterial();
-		video::RenderPass* pass= mtrl->CreateTechnique("D")->CreatePass("D");
-		pass->setRenderState(video::RS_Wireframe, video::ES_Use);
-		pass->setRenderState(video::RS_Lighting, video::ES_DontUse);
-
-		m_depthMesh = new scene::SMesh();
-		scene::MeshBufferData* buffData= m_depthMesh->addNewBuffer();
-		scene::MeshGenerator::getInstance().generatePlane(199,199, buffData->getMeshBuffer());
-
-		buffData->setMaterial(mtrl);
-
-		mtrl = gMaterialResourceManager.getMaterial("GreenMtrl");
-		scene::ISceneNode* node = m_sceneManager->createSceneNode();
-		scene::MeshRenderableNode* rnode = new scene::MeshRenderableNode(m_depthMesh);
-		rnode->setMaterial(mtrl, 0);
-		node->AttachNode(rnode);
-		node->setScale(math::vector3d(1.5, 1, 1.5));
-		node->setOrintation(math::quaternion(-90, math::vector3d::XAxis)*math::quaternion(180, math::vector3d::YAxis));
-		m_camera[0]->addChild(node);
-		node->setPosition(math::vector3d(0, 0, 1));
-
-		node->setVisible(false);
-		m_depthNode = node;
-			/*
-		buffData->getMeshBuffer()->createStream(0, video::EMeshStreamType::EMST_Position, video::EStreamDataType::ESDT_Point3f, sz.x*sz.y, video::IHardwareBuffer::EUT_Dynamic, true, true);
-		buffData->getMeshBuffer()->createStream(0, video::EMeshStreamType::EMST_Color, video::EStreamDataType::ESDT_Point4f, sz.x*sz.y, video::IHardwareBuffer::EUT_Dynamic, true, true);
-		buffData->getMeshBuffer()->createIndexBuffer(video::IHardwareIndexBuffer::EIT_16Bit,(sz.x-1)*(sz.y-1))*/
 	}
 
 }
@@ -533,12 +469,12 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	Parent::OnEnter(prev);
 	gAppData.optiDataSource->Connect(m_optiProvider);
 
-	if (m_videoSource->IsLocal())
+	//if (m_videoSource->IsLocal())
 	{
 		m_openNiHandler->Start(320, 240);
 	}
 
-	gAppData.headObject = m_data->headMount;
+	gAppData.headObject = m_context->headNode;
 	gAppData.depthProvider = m_openNiHandler;
 	gAppData.cameraProvider = m_videoSource;
 
@@ -555,12 +491,21 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 
 	m_screenLayout->OnDisconnected();
 
-	m_data->robotCommunicator->SetEnabled(true);
 	m_effects->SetAcive("Start", true);
 	m_effects->Begin();
 
 	m_status = ENone;
 	m_loadScreen->Start();
+
+
+	{
+
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			m_hands[i]->Start(m_context);
+		}
+
+	}
 }
 
 void AugCameraRenderState::OnExit()
@@ -575,9 +520,17 @@ void AugCameraRenderState::OnExit()
 	gAppData.dataCommunicator->RemoveListener(this);
 
 	gAppData.cameraProvider = 0;
-	m_data->robotCommunicator->SetEnabled(false);
 	
 	m_loadScreen->End();
+
+	{
+
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			m_hands[i]->End(m_context);
+		}
+
+	}
 }
 void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 {
@@ -605,87 +558,6 @@ void AugCameraRenderState::onRenderDone(scene::ViewPort*vp)
 {
 
 	m_debugRenderer->EndDraw();
-}
-
-void AugCameraRenderState::_CalculateDepthGeom()
-{
-	if (!m_depthNode->isVisible())
-		return;
-	scene::IMeshBuffer* buff= m_depthMesh->getBuffer(0);
-	video::IHardwareStreamBuffer* pos = buff->getStream(0, video::EMST_Position);
-	video::IHardwareStreamBuffer* norm = buff->getStream(0, video::EMST_Normal);
-	math::vector3d* posPtr = (math::vector3d*) pos->lock(0, 0, video::IHardwareStreamBuffer::ELO_Normal);
-	math::vector3d* nPtr = (math::vector3d*) norm->lock(0, 0, video::IHardwareStreamBuffer::ELO_Discard);
-
-	math::vector2di sz = m_openNiHandler->GetSize();
-	float* depthPtr = m_openNiHandler->GetNormalCalculator().GetDepthData();
-	math::vector3d* normPtr = m_openNiHandler->GetNormalCalculator().GetNormalData();
-	if (depthPtr && normPtr)
-	{
-		for (int i = 0; i < 200; ++i)
-		{
-			int i2 = (i*sz.x / 200);
-			for (int j = 0; j < 200; ++j)
-			{
-				int j2 = (j*sz.y / 200);
-
-				int idx = j*200 + i;
-				int idx2 = j2*sz.x + i2;
-				float v = depthPtr[idx2];
-
-				if (v>1)
-					v = 1;
-				else if (v < 0.1)
-					v = 1;
-				v = 1 - v;
-				//v = sin((float)i / (float)sz.x);
-				nPtr[idx] = normPtr[idx2];
-				posPtr[idx].y = v;
-			}
-		}
-	}
-
-	pos->unlock();
-	norm->unlock();
-}
-
-void AugCameraRenderState::_GenerateLightMap()
-{
-	ulong currTime = gEngine.getTimer()->getMilliseconds();
-
-	if (m_takeScreenShot)
-	{
-
-		core::string name = gFileSystem.getAppPath() + "screenShots/Image_";
-		name += core::StringConverter::toString(currTime);
-		name += ".png";
-		gTextureResourceManager.writeResourceToDist(m_camVideoSrc->GetEyeTexture(0), name);
-	}
-	video::IRenderTarget* prevRT = gEngine.getDevice()->getRenderTarget();
-	video::ITexture* t = m_videoSource->GetEyeTexture(0);
-	for (int i = 0; i < 10; ++i)
-	{
-		m_blurShader->GetParam("Offset")->SetValue((i + 1) * 4);
-		m_blurShader->render(&video::TextureRTWrap(t));
-		t = m_blurShader->getOutput()->GetColorTexture();
-
-
-		if (m_takeScreenShot)
-		{
-			time_t rawtime;
-			struct tm  timeinfo;
-
-			ulong currTime = gEngine.getTimer()->getMilliseconds();
-
-			core::string name = gFileSystem.getAppPath() + "screenShots/ImageDownSample"+core::StringConverter::toString(i)+"_";
-			name += core::StringConverter::toString(currTime);
-			name += ".png";
-			gTextureResourceManager.writeResourceToDist(m_blurShader->getOutput()->GetColorTexture(0), name);
-
-		}
-	}
-
-	gEngine.getDevice()->setRenderTarget(prevRT, 0, 0);
 }
 
 void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
@@ -740,15 +612,16 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 		m_depthTime = 0;
 		m_robotConnector->SetData("depth#1", core::StringConverter::toString(math::recti(0, 0, 320, 240)), false);
 	}
-	if (gEngine.getTimer()->getSeconds() - m_lightMapTimer > 200)
+
+
 	{
-		m_blurShader->Setup(math::rectf(0, 0, 256, 256));
-		_GenerateLightMap();
-		m_lightMapTimer = gEngine.getTimer()->getSeconds();
+
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			m_hands[i]->RenderStart(rc, eye);
+		}
+
 	}
-
-	_CalculateDepthGeom();
-
 	m_depthVisualizer->Update();
 
 	//m_camVideoSrc->Blit();
@@ -804,6 +677,16 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 
 	math::rectf vp(0, m_renderTarget[index]->GetSize());
 	m_guiManager->DrawAll(&vp);
+
+
+	{
+
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			m_hands[i]->DebugRender(rc, eye);
+		}
+
+	}
 
 	/*video::ITexture* ret= m_effects->Render(m_renderTarget[index]->GetColorTexture(), rc);
 	device->setRenderTarget(m_renderTarget[index],false);
@@ -863,17 +746,29 @@ void AugCameraRenderState::_UpdateStarted(float dt)
 
 	m_openNiHandler->Update(dt);
 
+
+	{
+
+		for (int i = 0; i < m_hands.size(); ++i)
+		{
+			m_hands[i]->Update(dt);
+		}
+
+	}
 	controllers::IKeyboardController* kb = gAppData.inputMngr->getKeyboard();
 
-	math::vector2d s = m_openNiHandler->GetScale();
-	s.x += (kb->getKeyState(KEY_K) - kb->getKeyState(KEY_J))*dt*0.5f;
-	s.y += (kb->getKeyState(KEY_I) - kb->getKeyState(KEY_M))*dt*0.5f;
+	if (!kb->getKeyState(KEY_LCONTROL))
+	{
+		math::vector2d s = m_openNiHandler->GetScale();
+		s.x += (kb->getKeyState(KEY_K) - kb->getKeyState(KEY_J))*dt*0.5f;
+		s.y += (kb->getKeyState(KEY_I) - kb->getKeyState(KEY_M))*dt*0.5f;
 
-	math::vector2d c = m_openNiHandler->GetCenter();
-	c.x += (kb->getKeyState(KEY_RIGHT) - kb->getKeyState(KEY_LEFT))*dt*0.5f;
-	c.y -= (kb->getKeyState(KEY_UP) - kb->getKeyState(KEY_DOWN))*dt*0.5f;
-	m_openNiHandler->SetScale(s);
-	m_openNiHandler->SetCenter(c);
+		math::vector2d c = m_openNiHandler->GetCenter();
+		c.x += (kb->getKeyState(KEY_RIGHT) - kb->getKeyState(KEY_LEFT))*dt*0.5f;
+		c.y -= (kb->getKeyState(KEY_UP) - kb->getKeyState(KEY_DOWN))*dt*0.5f;
+		m_openNiHandler->SetScale(s);
+		m_openNiHandler->SetCenter(c);
+	}
 
 
 	m_depthTime += dt;
@@ -964,8 +859,37 @@ void AugCameraRenderState::LoadFromXML(xml::XMLElement* e)
 {
 	IEyesRenderingBaseState::LoadFromXML(e);
 	m_camVideoSrc->LoadFromXML(e);
+	{
+		xml::XMLElement* he = e->getSubElement("Hands");
+		int i = 0;
+		while (he)
+		{
+			IHandsController* h = 0;
+			xml::XMLAttribute* attr = he->getAttribute("Type");
+			if (attr->value == "Virtual")
+			{
 
-	m_model = e->getValueString("Model");
+				h = new VirtualHandsController();
+				h->LoadFromXML(he);
+			}
+			else if (attr->value == "Leap")
+			{
+
+				h = new LeapMotionHandsController();
+				h->LoadFromXML(he);
+			}
+			else continue;;
+
+			m_hands.push_back(h);
+			m_handsMap[he->getValueString("Name")]=m_hands.size()-1;
+
+			if (i > 0)
+				h->SetEnabled(false);
+			++i;
+			he = he->nextSiblingElement("Hands");
+		}
+	}
+
 	m_optiProvider = e->getValueString("OptiProvider");
 
 	m_depthParams = core::StringConverter::toVector4d(e->getValueString("DepthParams"));

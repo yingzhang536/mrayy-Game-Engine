@@ -186,7 +186,7 @@ public:
 
 	void appendChar(T c)
 	{
-		append(0, c);
+		append(1, c);
 
 	}
 	

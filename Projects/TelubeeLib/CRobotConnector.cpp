@@ -101,7 +101,7 @@ void CRobotConnector::EndUpdate()
 	if (!m_communicator)
 		return;
 	m_status = false;
-	m_communicator->SetData("HeadRotation", "0,0,0", false);
+	m_communicator->SetData("HeadRotation", core::StringConverter::toString(math::quaternion::Identity), false);
 	m_communicator->Update(0);//only once
 	m_communicator->ConnectRobot(false);
 }

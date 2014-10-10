@@ -205,7 +205,6 @@ void CRealTorso::SetTargetMatrix(double *matrix)
 		targetMatrix[i]=matrix[i];
 }
 
-
 void CRealTorso::CalcTargetAngles(double *param)
 {
 	double len=vecLength3(targetMatrix[12],targetMatrix[13],targetMatrix[14]-0.17);

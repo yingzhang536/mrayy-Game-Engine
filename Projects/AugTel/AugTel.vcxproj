@@ -69,7 +69,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mrayGLDevice.lib;TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;TelubeeRobotDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mrayGLDevice.lib;TelubeeLib.lib;mrayOIS.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;VTSharedMem.lib;fglove.lib;vld.lib;vldmt.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;WiimoteController.lib;TelubeeRobotDLL.lib;leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib;libcd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -90,7 +90,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(Configuration);..\..\Dependencies\lib\$(Configuration);$(GST_SDK_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TelubeeRobotDLL.lib;TelubeeLib.lib;TelubeeRobotDLL.lib;mrayOIS.lib;VTSharedMem.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;fglove.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>leap.lib;TelubeeRobotDLL.lib;TelubeeLib.lib;TelubeeRobotDLL.lib;mrayOIS.lib;VTSharedMem.lib;mrayOpenNI.lib;mrayPhysx.lib;VTLib.lib;fglove.lib;mrayOptiTrack.lib;mrayEngine.lib;mrayGUI.lib;mrayMath.lib;mrayWinApp.lib;mrayWin32.lib;mrayGameLayer.lib;mrayNet.lib;mySqlDBConnection.lib;ws2_32.lib;mraySound.lib;mrayFSM.lib;mrayTheora.lib;berkelium.lib;mrayBerkelium.lib;DirectShowVideo.lib;mrayOculusVR.lib;mrayGStreamer.lib;regex.lib;WiimoteController.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>atlthunk.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -105,6 +105,7 @@
     <ClInclude Include="ATAppGlobal.h" />
     <ClInclude Include="ATGameComponents.h" />
     <ClInclude Include="AugCameraRenderState.h" />
+    <ClInclude Include="AugTelSceneContext.h" />
     <ClInclude Include="CameraTextureSource.h" />
     <ClInclude Include="CompositeBoneComponent.h" />
     <ClInclude Include="DataCommunicator.h" />
@@ -131,8 +132,12 @@
     <ClInclude Include="HeadMount.h" />
     <ClInclude Include="IFingerDataProvider.h" />
     <ClInclude Include="ConnectingState.h" />
+    <ClInclude Include="IHandsController.h" />
     <ClInclude Include="ISceneEffect.h" />
     <ClInclude Include="LatencyTestState.h" />
+    <ClInclude Include="LeapMotionController.h" />
+    <ClInclude Include="LeapMotionHandsController.h" />
+    <ClInclude Include="LeapMotionImageRetrival.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="LocalCameraRenderingState.h" />
     <ClInclude Include="LocalRobotCommunicator.h" />
@@ -147,6 +152,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TriggerObjectComponent.h" />
     <ClInclude Include="VideoRenderElement.h" />
+    <ClInclude Include="VirtualHandsController.h" />
     <ClInclude Include="VisItemDescComponent.h" />
     <ClInclude Include="VTBaseState.h" />
     <ClInclude Include="VTelesarRenderingState.h" />
@@ -180,6 +186,9 @@
     <ClCompile Include="HeadCameraComponent.cpp" />
     <ClCompile Include="ConnectingState.cpp" />
     <ClCompile Include="LatencyTestState.cpp" />
+    <ClCompile Include="LeapMotionController.cpp" />
+    <ClCompile Include="LeapMotionHandsController.cpp" />
+    <ClCompile Include="LeapMotionImageRetrival.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="LocalCameraRenderingState.cpp" />
     <ClCompile Include="LocalRobotCommunicator.cpp" />
@@ -198,6 +207,7 @@
     <ClCompile Include="SurfaceWrapper.cpp" />
     <ClCompile Include="TriggerObjectComponent.cpp" />
     <ClCompile Include="VideoRenderElement.cpp" />
+    <ClCompile Include="VirtualHandsController.cpp" />
     <ClCompile Include="VisItemDescComponent.cpp" />
     <ClCompile Include="VTBaseState.cpp" />
     <ClCompile Include="VTelesarRenderingState.cpp" />

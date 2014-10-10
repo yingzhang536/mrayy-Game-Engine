@@ -38,6 +38,7 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 
 	m_videoSource = 0;
 
+	m_contentsRotation = 0;
 
 	m_robotConnector = new CRobotConnector();
 
@@ -499,6 +500,17 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 		math::vector2d(tc.BRPoint.x, tc.BRPoint.y),
 		math::vector2d(tc.ULPoint.x, tc.BRPoint.y)
 	};
+	//if (m_contentsRotation!=0)
+	{
+		math::matrix3x3 rotMatrix;
+		rotMatrix.setAngle(m_contentsRotation);
+		rotMatrix.translate(m_contentsPos);
+		math::vector2d o = m_contentsOrigin*targetRect.getSize();
+		for (int i = 0; i < 4; ++i)
+		{
+			points[i] = rotMatrix*(points[i] - o) + o;
+		}
+	}
 	if (m_cameraConfiguration->cameraRotation[index]!=TelubeeCameraConfiguration::None)
 	{
 		math::matrix3x3 rotMatrix;

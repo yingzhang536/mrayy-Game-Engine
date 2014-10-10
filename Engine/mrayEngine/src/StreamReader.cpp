@@ -47,7 +47,8 @@ core::string StreamReader::readLine(char comment){
 	bool flag;
 	bool done=0;
 	core::string result;
-	do{
+	//do
+	{
 		flag=0;
 		n=0;
 		while(m_stream->canRead()){
@@ -60,11 +61,11 @@ core::string StreamReader::readLine(char comment){
 				flag=1;
 			}
 			if(!flag)
-				result.appendChar((wchar_t) ch);
+				result.append(1,(wchar_t) ch);
 			n++;
 		}
 	}
-	while(!done);///until read one line at least
+	//while(!done);///until read one line at least
 
 	FIRE_LISTENR_METHOD(OnReadData,(result.c_str(),result.length()*sizeof(char)));
 	return result;
@@ -178,7 +179,7 @@ core::string StreamReader::readString()
 	int cnt=1;
 	out=mT("");
 
-	out.appendChar(c);
+	out.append(1,c);
 	cnt++;
 	while(m_stream->canRead()){
 	
@@ -186,7 +187,7 @@ core::string StreamReader::readString()
 			break;
 		if(c==0 ||  isspace(c))
 			break;
-		out.appendChar(c);
+		out.append(1,c);
 	}
 	return out;
 }

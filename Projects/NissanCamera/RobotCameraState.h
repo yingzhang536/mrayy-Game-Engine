@@ -15,7 +15,7 @@
 #ifndef __RobotCameraState__
 #define __RobotCameraState__
 
-#include "IRenderingState.h"
+#include "IEyesRenderingBaseState.h"
 #include "SceneManager.h"
 #include "ViewPort.h"
 #include "ParsedShaderPP.h"
@@ -24,6 +24,7 @@
 #include "GUIConsole.h"
 #include "CommandManager.h"
 #include "ARCommands.h"
+#include "ARGroupManager.h"
 
 
 namespace mray
@@ -37,12 +38,13 @@ namespace mray
 	}
 namespace NCam
 {
-	class NissanRobotCommunicator;
-	class ARGroupManager;
-	class ConsoleLogDevice;
+class NissanRobotCommunicator;
+class ARGroupManager;
+class ConsoleLogDevice;
 
-	class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener,public IARServiceListener,public IARCommandListener
+class RobotCameraState :public TBee::IRenderingState, public scene::IViewportListener, public IARServiceListener, public IARCommandListener
 {
+	typedef TBee::IRenderingState Parent;
 protected:
 
 	struct SurfaceMeshParams
@@ -57,7 +59,7 @@ protected:
 	SurfaceMeshParams m_surfaceParams;
 	math::vector3d m_cameraOffsets;
 
-	typedef IRenderingState Parent;
+//	typedef IRenderingState Parent;
 
 	GCPtr<GUI::GUIManager> m_guimngr;
 
@@ -84,6 +86,7 @@ protected:
 	ConsoleLogDevice* m_consoleLogDevice;
 	GUI::GUIConsole* m_console;
 	scene::ISceneNode* m_vehicleModel;
+	ARSceneObject* m_vehicleRef;
 	scene::ISceneNode* m_arRoot;
 	math::vector3d m_headRotationOffset;
 	math::vector3d m_headPosOffset;
@@ -139,7 +142,8 @@ public:
 	virtual void SelectARObject(uint id);
 	virtual void SetARAlpha(uint id, float v);
 	virtual bool QueryARObject(uint id, math::vector3d& pos, math::vector3d& dir);
-
+	virtual void ListARObjects(std::vector<uint> &ids);
+	virtual void ChangeARFov(float fov);
 
 
 };

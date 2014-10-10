@@ -100,12 +100,12 @@ public:
 			m_robotStatus.speed[0] = math::clamp<float>(m_robotStatus.speed[0], -1, 1);
 			m_robotStatus.speed[1] = math::clamp<float>(m_robotStatus.speed[1], -1, 1);
 		}
-		else if (name == "HeadRotation" && vals.size() == 3)
+		else if (name == "HeadRotation" && vals.size() == 4)
 		{
 			m_robotStatus.headRotation[0] = atof(vals[0].c_str());
 			m_robotStatus.headRotation[1] = atof(vals[1].c_str());
 			m_robotStatus.headRotation[2] = atof(vals[2].c_str());
-			m_robotStatus.headRotation[3] = atof(vals[2].c_str());
+			m_robotStatus.headRotation[3] = atof(vals[3].c_str());
 
 			//do head limits
 			// 		m_robotStatus.tilt = math::clamp(m_robotStatus.tilt, -50.0f, 50.0f);

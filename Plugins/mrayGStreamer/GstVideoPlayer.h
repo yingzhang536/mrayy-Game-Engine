@@ -90,6 +90,9 @@ public:
 		return m_readData[0].recvBytes + m_readData[1].recvBytes;
 	}
 
+	//void SendData(GstBuffer* buffer, int index);
+
+
 protected:
 	bool	allocate(int bpp);
 	void	OnStreamPrepared();

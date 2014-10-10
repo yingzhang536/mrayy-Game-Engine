@@ -195,8 +195,8 @@ math::vector3d CameraNode::WorldToScreen(const math::vector3d& pos)
 	math::vector4d proj=mat*math::vector4d(pos.x,pos.y,pos.z,1);
 	proj/=proj.w;
 	proj.y=-proj.y;
-	proj.x=(proj.x+1)*m_rWindow.getWidth()*0.5f + m_rWindow.ULPoint.x;
-	proj.y=(proj.y+1)*m_rWindow.getHeight()*0.5f + m_rWindow.ULPoint.y;
+	proj.x=(proj.x/*+1*/)*m_rWindow.getWidth()*0.5f + m_rWindow.ULPoint.x;
+	proj.y=(proj.y/*+1*/)*m_rWindow.getHeight()*0.5f + m_rWindow.ULPoint.y;
 	return math::vector3d(proj.x,proj.y,proj.z);
 }
 

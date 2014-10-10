@@ -69,7 +69,7 @@ float JoystickInputController::GetRotation()
 	
 	 float r= joystick->getAxisState(JOYSTICK_Axis2).abs;
 
-	 m_currentRotation = (r - m_currentRotation)*gEngine.getFPS()->dt() * 3;
+	 m_currentRotation += (r - m_currentRotation)*gEngine.getFPS()->dt() * 9;
 	 return m_currentRotation;
 }
 

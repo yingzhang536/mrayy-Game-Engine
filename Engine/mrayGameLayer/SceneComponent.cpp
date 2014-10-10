@@ -88,6 +88,15 @@ bool SceneComponent::InitComponent()
 
 	return true;
 }
+bool SceneComponent::SetEnabled(bool e)
+{
+	IGameComponent::SetEnabled(e);
+	if (m_node)
+	{
+		m_node->setVisible(e,false);
+	}
+	return true;
+}
 
 void SceneComponent::SetSceneNode(scene::ISceneNode* node)
 {

@@ -49,6 +49,8 @@ public:
 
 	virtual bool InitComponent();
 
+	virtual bool SetEnabled(bool e);
+
 	bool AddComponent(IObjectComponent* comp);
 	void RemoveComponent(IObjectComponent* comp);
 

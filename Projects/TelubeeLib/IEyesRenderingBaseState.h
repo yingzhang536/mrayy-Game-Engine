@@ -65,6 +65,9 @@ protected:
 	CRobotConnector* m_robotConnector;
 	ICameraVideoSource* m_videoSource;
 
+	math::vector2d m_contentsPos,m_contentsOrigin;
+	float m_contentsRotation;
+
 	void _UpdateCameraParams();
 
 	virtual void _RenderUI(const math::rectf& rc,math::vector2d& pos);
@@ -75,6 +78,9 @@ public:
 
 	virtual void InitState();
 	void SetHMDParameters(float targetAspectRatio, float hmdFov);
+	void SetContentsOrigin(float x, float y){ m_contentsOrigin.set(x, y); }
+	void SetContentsPosition(float x, float y){ m_contentsPos.set(x, y); }
+	void SetContentsRotation(float r){ m_contentsRotation = r; }
 
 	void SetVideoSource(ICameraVideoSource* src){ m_videoSource = src; }
 	ICameraVideoSource* GetVideoSource(){ return m_videoSource; }

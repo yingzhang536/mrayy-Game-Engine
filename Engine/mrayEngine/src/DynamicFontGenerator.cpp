@@ -247,7 +247,7 @@ void DynamicFontGenerator::GenerateFont()
 				lastID = c;
 				rangeMap.push_back(m_charsAttr.size());
 			}
-			text.appendChar(c);
+			text.append(1,c);
 			//calculate character size
 			SIZE sz;
 			GetTextExtentPoint32W(bmpdc, &c, 1, &sz);

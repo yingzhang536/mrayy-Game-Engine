@@ -104,11 +104,14 @@ void GGComponent::SetChannelValue(int c,float v)
 
 void GGComponent::Update(float dt)
 {
-	m_impl->driver->SendData(&m_impl->feedback);
+	if (m_enabled)
+		m_impl->driver->SendData(&m_impl->feedback);
 }
 
 void GGComponent::OnGUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp)
 {
+	if (!m_enabled)
+		return;
 	IVTComponent::OnGUIRender(renderer, vp);
 	return;
 	GUI::IFont* font = gFontResourceManager.getDefaultFont();

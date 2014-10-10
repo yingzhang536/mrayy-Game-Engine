@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Effects">
       <UniqueIdentifier>{ec837f77-8170-4a90-92ba-99c64e59ebd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Hands">
+      <UniqueIdentifier>{f6e3314d-2343-4d4d-bda0-c275391f6e7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -204,6 +207,24 @@
     <ClInclude Include="RobotViewerState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="IHandsController.h">
+      <Filter>Source Files\Hands</Filter>
+    </ClInclude>
+    <ClInclude Include="AugTelSceneContext.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualHandsController.h">
+      <Filter>Source Files\Hands</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapMotionController.h">
+      <Filter>Source Files\DataSource</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapMotionHandsController.h">
+      <Filter>Source Files\Hands</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapMotionImageRetrival.h">
+      <Filter>Source Files\DataSource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -334,6 +355,18 @@
     </ClCompile>
     <ClCompile Include="RobotViewerState.cpp">
       <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualHandsController.cpp">
+      <Filter>Source Files\Hands</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapMotionHandsController.cpp">
+      <Filter>Source Files\Hands</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapMotionController.cpp">
+      <Filter>Source Files\DataSource</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapMotionImageRetrival.cpp">
+      <Filter>Source Files\DataSource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "GstUtils.h"
 
 #include "CMySrc.h"
+#include "CMySink.h"
 
 namespace mray
 {
@@ -450,6 +451,7 @@ static gboolean read_data_tobuffer(gst_app_t *app, GstBuffer** b)
 		return false;
 	app->recvBytes += len;
 	//	printf("UDP Packet received:%d\n", len);
+		printf("%d - ", len);
 	//	ptr = (guint8*)g_malloc(len);
 	//	g_assert(ptr);
 	size = len;
@@ -549,6 +551,39 @@ void GstVideoPlayer::SetElementsAttribute(const core::string& elem, ...)
 	va_end(ap);
 }
 
+#if 0
+void GstVideoPlayer::SendData(GstBuffer* buffer, int index)
+{
+#if GST_VERSION_MAJOR==0
+	guint8* data = GST_BUFFER_DATA(buffer);
+	int size = GST_BUFFER_SIZE(buffer);
+#else
+	GstMapInfo mapinfo;
+	gst_buffer_map(buffer, &mapinfo, GST_MAP_READ);
+
+	guint8* data = mapinfo.data;
+	int size = mapinfo.size;
+#endif
+	/*
+	network::NetAddress addr;
+	addr.address = m_targetAddress.address;
+	addr.port = m_targetPorts[index];
+	m_udpClient[index]->SendTo(&addr, (char*)data, size);*/
+	//		printf("data sent: %d\n", size);
+
+}
+#endif
+static GstFlowReturn new_audiobuffer(GstMySink * sink, gpointer data, GstBuffer* buffer) {
+	//GstBuffer *buffer;
+	/* Retrieve the buffer */
+	//	buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
+	//g_signal_emit_by_name(sink, "pull-buffer", &buffer);
+	if (buffer) {
+		/* The only thing we do in this example is print a * to indicate a received buffer */
+	//	((GstVideoPlayer*)data)->SendData(buffer, 1);
+	}
+	return GST_FLOW_OK;
+}
 bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPort, int localAudioPort)
 {
 	GstElement * gstPipeline, *src, *mpg, *depay, *dec, *sink;
@@ -635,18 +670,39 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 		" ffdec_mpeg4  name=dec max-threads=3 ! ffmpegcolorspace ! video/x-raw-rgb  ! appsink name=sink sync=false "//"appsink name=sink sync=false";
 		" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 
-	//
-	gstString = "appsrc name=src ! application/x-rtp, payload=96 !   rtph264depay ! ffdec_h264! ffmpegcolorspace  ! video/x-raw-rgb !  appsink name = sink sync = false ";//"appsink name = sink sync = false";
+	// Decode using H264 
+	gstString = "appsrc name=src ! application/x-rtp, payload=96 ! gstrtpjitterbuffer drop-on-latency=true latency=500  !   rtph264depay ! ffdec_h264! ffmpegcolorspace  ! video/x-raw-rgb !  appsink name = sink sync = false ";//"appsink name = sink sync = false";
+	
+	if (false)
+	{
+		// Decode using VP8
+		gstString = "gstrtpbin name=rtpbin appsrc name=src ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=(string)VP8-DRAFT-0-3-2 ! rtpbin.recv_rtp_sink_0 "
+			" rtpbin. rtpvp8depay !   vp8dec ! ffmpegcolorspace  ! video/x-raw-rgb !  appsink name = sink sync = false ";//"appsink name = sink sync = false";
+
+		gstString = "appsrc name=src ! application/x-rtp,media=video,clock-rate=90000,encoding-name=VP8-DRAFT-IETF-01,payload=96"
+			" ! rtpvp8depay !   vp8dec  ! ffmpegcolorspace   !  appsink name=sink sync=false ";//"appsink name = sink sync = false";
+	}
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 #else
 	gstString = "appsrc name=src ! application/x-rtp, media=video, clock-rate=90000, payload=96, encoding-name=H264 !  rtph264depay name=depay !"
 		" avdec_h264 name=dec max-threads=0 ! videoconvert   ! appsink name=sink sync=false " ;//"appsink name=sink sync=false";
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
-#endif
 
-	//Audio
-	if(false)
-		gstString+=" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=44100! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=44100,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+
+#endif
+	//Audio - Stream in 
+	if(true)
+		gstString += " mysrc name=audioSrc !  audio/x-flac, channels=1, rate=1600! flacdec ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+
+
+	//Audio - Stream out
+	if (false)
+	{
+		gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc quality=2 ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+	}
+
+	//	gstString += " mysrc name=audioSrc ! application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, sprop-parameter-sets=(string)\"Z0LAH9oBQBbsBEAAAAMAQAAADyPGDKgA\\,aM48gA\\=\\=\", payload=(int)96, ssrc=(uint)619601928, clock-base=(uint)3192998579, seqnum-base=(uint)31708 !"
+	//	" rtpvorbisdepay!  vorbisdec ! audioconvert   ! autoaudiosink name=audioSink sync=false ";
 
 #if 0 
 	gstPipeline = gst_pipeline_new("pipeline0");
@@ -664,6 +720,11 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	gst_bin_add_many(GST_BIN(gstPipeline), src, capsFilter, depay, dec, mpg, sink, NULL);
 #else
 	gstPipeline = gst_parse_launch(gstString.c_str(), &err);
+	if (err)
+	{
+		printf("Pipeline error: %s", err->message);
+
+	}
 
 	src = gst_bin_get_by_name(GST_BIN(gstPipeline), "src");
 	GstMySrc* audioSrc = GST_MySRC(gst_bin_get_by_name(GST_BIN(gstPipeline), "audioSrc"));
@@ -671,11 +732,17 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	dec = gst_bin_get_by_name(GST_BIN(gstPipeline), "dec");//theoradec//ffdec_h264
 	mpg = gst_bin_get_by_name(GST_BIN(gstPipeline), "mpg");
 	sink = gst_bin_get_by_name(GST_BIN(gstPipeline), "sink");//( "autovideosink", "screen_sink" );
+	GstMySink* audioSink = GST_MYSINK(gst_bin_get_by_name(GST_BIN(gstPipeline), "audiosink"));
 
 	GstElement* rtpsrc = gst_bin_get_by_name(GST_BIN(gstPipeline), "rtpsrc");
 	GstElement* rtcpsrc = gst_bin_get_by_name(GST_BIN(gstPipeline), "rtcpsrc");
 	GstElement* rcpsink = gst_bin_get_by_name(GST_BIN(gstPipeline), "rtcpsink");
 
+	if (audioSink)
+	{
+		audioSink->new_buffer = new_audiobuffer;
+		audioSink->data = this;
+	}
 
 	caps = gst_caps_new_simple("application/x-rtp",
 		"media", G_TYPE_STRING, "video",
@@ -767,9 +834,11 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	gst_base_sink_set_max_lateness(GST_BASE_SINK(sink), -1);
 	*/
 	m_connectData.sink = sink;
+	//video source read data element
 	m_readData[0].src = src;
 	m_readData[0].sourceID = 0;
 
+	//audio source read data element
 	m_readData[1].src = GST_ELEMENT(audioSrc);
 	m_readData[1].sourceID = 0;
 
@@ -794,12 +863,14 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 	srcCB.seek_data = 0;
 	gst_app_src_set_callbacks(GST_APP_SRC(src), &srcCB, &m_readData[0], NULL);
 
-	//gst_app_src_set_callbacks(audioSrc, &srcCB, &m_readData[1], NULL);
+//	gst_app_src_set_callbacks(GST_APP_SRC(audioSrc), &srcCB, &m_readData[1], NULL);
+	
+	//assign audio callback function
 	if (audioSrc)
 	{
 		audioSrc->data = &m_readData[1];
 		audioSrc->need_buffer = read_buffer_data;
-	}
+	}/**/
 
 
 	if (threadAppSink){
