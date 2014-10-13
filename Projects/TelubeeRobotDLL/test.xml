@@ -1,1 +1,0 @@
-<Root AttrA="Test &amp; bad" AttrB="Test &lt; bad" AttrC="Test &gt; bad" AttrD="Test &quot; bad" AttrE="Test &apos; bad"/>

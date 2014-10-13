@@ -38,6 +38,7 @@ class MRAY_DLL ILogManager:public ISingleton<ILogManager>
 {
 private:
 protected:
+	virtual void Output(const core::string& v) = 0;
 public:
 	ILogManager(){}
 	virtual~ILogManager(){}
@@ -57,6 +58,20 @@ public:
 	virtual void removeLogDevice(const ILogDevicePtr&logger)=0;
 
 	virtual void flush()=0;
+
+
+	virtual ILogManager& StartLog(ELogLevel level)
+	{
+		return *this;
+	}
+
+	//make sure to call StartLog before stream log your output
+	template <class T>
+	ILogManager& operator << (const T& v)
+	{
+		Output(core::StringConverter::toString(v));
+		return *this;
+	}
 
 	static const mchar* getLogLevelStr(ELogLevel l);
 };

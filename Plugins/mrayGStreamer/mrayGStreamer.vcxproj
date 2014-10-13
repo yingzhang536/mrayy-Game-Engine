@@ -111,6 +111,7 @@
     <ClInclude Include="IGstAppListener.h" />
     <ClInclude Include="GstUtils.h" />
     <ClInclude Include="GstVideoPlayer.h" />
+    <ClInclude Include="IVideoPipeline.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

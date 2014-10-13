@@ -1,8 +1,0 @@
-
-
-Plugins
-{
-	mrayGL "mrayGLDevice.dll"
-	mraySound "mraySound.dll"
-	mrayParticled "mrayParticles.dll"
-}

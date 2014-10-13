@@ -33,7 +33,12 @@ class MRAY_DLL LogManager:public ILogManager
 		core::string msg;
 		ELogLevel level;
 	};
+	LogMsg m_message;
+	bool m_messagePending;
+
 	std::vector<LogMsg> m_logHistory;
+	virtual void Output(const core::string& v);
+	void _CheckMessagePending();
 public:
 
 	LogManager();
@@ -49,6 +54,8 @@ public:
 	virtual void endSection(bool Success);
 
 	virtual void close();
+
+	virtual ILogManager& StartLog(ELogLevel level);
 
 	virtual void addLogDevice(const ILogDevicePtr&logger);
 	virtual void removeLogDevice(const ILogDevicePtr&logger);

@@ -67,20 +67,33 @@ DWORD RobotSerialPort::timerThreadBase(RobotSerialPort *robot, LPVOID pdata){
 	}
 }
 
+#define ROOMBA_CONTROLLER
 
 class RobotSerialPortImpl
 	{
 	public:
-		Tserial_event *comROBOT;	// Serial Port
+#ifdef ROOMBA_CONTROLLER
+		mray::RoombaController* m_baseController;
+#else 
+		mray::OldBaseController* m_baseController
+#endif
 		Tserial_event *comHEAD;		// Serial Port
 		MovAvg *mvRobot[2][3];		// 1 - base, 2 - head moving avarage 
 
 		ITelubeeRobotListener* listener;
 		RobotSerialPortImpl()
 		{
-			comROBOT = 0;
+#ifdef ROOMBA_CONTROLLER
+			m_baseController = new mray::RoombaController;
+#else 
+			m_baseController=new mray::OldBaseController;
+#endif
 			comHEAD = 0;
 			listener = 0;
+		}
+		~RobotSerialPortImpl()
+		{
+			delete m_baseController;
 		}
 		void NotifyCollision(float l, float r)
 		{
@@ -205,29 +218,32 @@ void RobotSerialPort::ConnectRobot()
 {
 
 	int ret=0;
-	m_impl->comROBOT = new Tserial_event();
+
 	m_impl->comHEAD = new Tserial_event();
-	if (m_impl->comROBOT != 0){
-		m_impl->comROBOT->setManager(robot_SerialEventManager);
-		ret = m_impl->comROBOT->connect(robotCOM, robot_baudRate, SERIAL_PARITY_ODD, 8, FALSE, TRUE);
-		if (!ret){
 
-			if (debug_print)
-				printf("Robot Connected!\n", ret);
-			m_impl->comROBOT->setRxSize(15);
-			yamahaInitialize();		// initialize yamaha robot
-		}
-		else{
+	
+#ifndef ROOMBA_CONTROLLER	
+	m_impl->m_baseController->GetComEvent()->setManager(robot_SerialEventManager);
+#endif
+	ret=m_impl->m_baseController->Connect(robotCOM);
+	if (ret){
 
-			if (debug_print)
-			{
-				printf("Robot not connected (%ld)\n", ret);
-				printf("Robot baud (%ld)\n", ret);
-			}
-			m_impl->comROBOT->disconnect();
-			delete m_impl->comROBOT;
-			m_impl->comROBOT = 0;
+		if (debug_print)
+			printf("Robot Connected!\n", ret);
+		
+#ifndef ROOMBA_CONTROLLER	
+		m_impl->m_baseController->GetComEvent()->setRxSize(15);
+#endif
+//		yamahaInitialize();		// initialize yamaha robot
+	}
+	else{
+
+		if (debug_print)
+		{
+			printf("Robot not connected (%ld)\n", ret);
+			printf("Robot baud (%ld)\n", ret);
 		}
+		m_impl->m_baseController->Disconnect();
 	}
 
 	if (m_impl->comHEAD != 0){
@@ -253,7 +269,7 @@ void RobotSerialPort::ConnectRobot()
 
 bool RobotSerialPort::IsConnected()
 {
-	return m_impl->comHEAD != 0 || m_impl->comROBOT != 0;
+	return m_impl->comHEAD != 0 || m_impl->m_baseController->IsConnected();
 }
 
 void RobotSerialPort::DisconnectRobot()
@@ -261,45 +277,36 @@ void RobotSerialPort::DisconnectRobot()
 	int ret = 0;
 	if (debug_print)
 		printf("Disconnecting Robot\n", ret);
-	if (m_impl->comROBOT != 0){
-		m_impl->comROBOT->disconnect();
-	}
+	m_impl->m_baseController->Disconnect();
 
 	if (m_impl->comHEAD != 0){
 		m_impl->comHEAD->disconnect();
 	}
-	delete m_impl->comROBOT;
 	delete m_impl->comHEAD;
-	m_impl->comROBOT = 0;
 	m_impl->comHEAD = 0;
+
 
 
 }
 
 int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, int control){
-	int packet_size;
-	char sCommand[128];
-	if (!m_impl->comROBOT)
+
+	if (!m_impl->m_baseController->IsConnected())
 		return FALSE;
-
 	if (control == RUN)
-		sprintf_s(sCommand,128, "V,%d,%d,%d\r\n", velocity_x, velocity_y, rotation);
+		m_impl->m_baseController->Drive(mray::math::vector2di(velocity_x, velocity_y), rotation);
 	else if (control == STOP)
-		sprintf_s(sCommand, 128, "q\r\n");
-
-	packet_size = strlen(sCommand);
-	m_impl->comROBOT->sendData(sCommand, packet_size);
-
+		m_impl->m_baseController->DriveStop();
 	return true;
 
 }
 
-
+/*
 int RobotSerialPort::yamahaXY_control(float pos_x, float pos_y, int control){
 	int packet_size;
 	char sCommand[128];
 
-	if (!m_impl->comROBOT)
+	if (!m_impl->m_baseController->IsConnected())
 		return FALSE;
 
 	if (control == RUN)
@@ -337,7 +344,7 @@ int RobotSerialPort::yamahaInitialize(){
 
 	return true;
 
-}
+}*/
 
 
 int RobotSerialPort::head_control(float pan, float tilt, float roll){

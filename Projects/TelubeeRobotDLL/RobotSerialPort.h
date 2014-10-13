@@ -18,8 +18,10 @@
 
 #include <string>
 #include "IRobotController.h"
+#include "RoombaController.h"
+#include <windows.h>
 
-	class RobotSerialPortImpl;
+class RobotSerialPortImpl;
 class RobotSerialPort:public IRobotController
 {
 protected:
@@ -30,8 +32,8 @@ protected:
 	float pan, tilt, roll;
 	bool baseConnected;
 	int omni_control(int velocity_x, int velocity_y, int rotation, int control);
-	int yamahaInitialize();
-	int yamahaXY_control(float pos_x, float pos_y, int control);
+// 	int yamahaInitialize();
+// 	int yamahaXY_control(float pos_x, float pos_y, int control);
 	int head_control(float pan, float tilt, float roll);
 
 	static DWORD WINAPI timerThreadHead(RobotSerialPort *robot, LPVOID pdata);

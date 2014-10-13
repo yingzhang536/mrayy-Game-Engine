@@ -8,6 +8,7 @@ namespace mray{
 
 LogManager::LogManager():m_verboseLevel(EVL_Normal)
 {
+	m_messagePending = false;
 }
 
 LogManager::~LogManager(){
@@ -39,7 +40,8 @@ void LogManager::log(const core::string &msg,const core::string &info,ELogLevel 
 }
 
 void LogManager::log(const core::string &msg,ELogLevel level,EVerbosLevel vl){
-	if(vl>m_verboseLevel)
+	_CheckMessagePending();
+	if (vl > m_verboseLevel)
 		return;
 
 	LogMsg tmp;
@@ -56,6 +58,7 @@ void LogManager::log(const core::string &msg,ELogLevel level,EVerbosLevel vl){
 
 
 void LogManager::startSection(const core::string &name){
+	_CheckMessagePending();
 	LogMsg tmp;
 	tmp.level=ELL_INFO;
 	tmp.msg=mT(" ---------- ")+name+mT(" ---------- ");
@@ -67,6 +70,7 @@ void LogManager::startSection(const core::string &name){
 }
 
 void LogManager::endSection(bool Success){
+	_CheckMessagePending();
 	LogMsg tmp;
 	tmp.level=Success ? ELL_SUCCESS:ELL_WARNING;
 	tmp.msg=mT(" ---------- [Done] ---------- ");
@@ -79,6 +83,12 @@ void LogManager::endSection(bool Success){
 
 
 void LogManager::close(){
+	if (m_messagePending)
+	{
+		m_logHistory.push_back(m_message);
+		m_messagePending = false;
+	}
+	flush();
 	LogDeviceList::iterator it=m_loggers.begin();
 	for(;it!=m_loggers.end();++it){
 		(*it)->close();
@@ -87,6 +97,7 @@ void LogManager::close(){
 
 
 void LogManager::addLogDevice(const ILogDevicePtr&logger){
+	_CheckMessagePending();
 	m_loggers.push_back(logger);
 
 	for (int i=0;i<m_logHistory.size();++i)
@@ -105,8 +116,43 @@ void LogManager::removeLogDevice(const ILogDevicePtr&logger){
 	}
 }
 
+ILogManager& LogManager::StartLog(ELogLevel level)
+{
+	_CheckMessagePending();
+
+	m_messagePending = true;
+	m_message.level = level;
+	return *this;
+}
+
+void LogManager::Output(const core::string& v)
+{
+
+	if (!m_messagePending)
+	{
+		m_message.level = ELL_INFO;
+		m_messagePending = true;
+	}
+	m_message.msg += v;
+}
+void LogManager::_CheckMessagePending()
+{
+
+	if (m_messagePending)
+	{
+		m_logHistory.push_back(m_message);
+		LogDeviceList::iterator it = m_loggers.begin();
+		for (; it != m_loggers.end(); ++it){
+			(*it)->log(m_message.msg, m_message.level);
+		}
+		m_message.msg = "";
+		m_messagePending = false;
+	}
+}
+
 void LogManager::flush(){
-	LogDeviceList::iterator it=m_loggers.begin();
+	_CheckMessagePending();
+	LogDeviceList::iterator it = m_loggers.begin();
 	for(;it!=m_loggers.end();++it){
 		(*it)->flush();
 	}

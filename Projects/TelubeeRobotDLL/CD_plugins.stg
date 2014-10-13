@@ -1,7 +1,0 @@
-
-
-Plugins
-{
-	Path "mrayGL.dll"
-	Path "mraySound.dll"
-}

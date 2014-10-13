@@ -99,9 +99,6 @@
     <ClInclude Include="WinThreadManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ofSerial.h">
-      <Filter>Source Files\SerialPort</Filter>
-    </ClInclude>
     <ClInclude Include="Win32SerialPort.h">
       <Filter>Source Files\SerialPort</Filter>
     </ClInclude>
@@ -178,9 +175,6 @@
     </ClCompile>
     <ClCompile Include="WinTimer.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ofSerial.cpp">
-      <Filter>Source Files\SerialPort</Filter>
     </ClCompile>
     <ClCompile Include="Win32SerialPort.cpp">
       <Filter>Source Files\SerialPort</Filter>

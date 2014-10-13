@@ -68,7 +68,7 @@ namespace OS{
 	};
 
 	class IFileMonitor;
-
+	class ISerialPortService;
 class MRAY_DLL IOSystem:public ISingleton<IOSystem>
 {
 public:
@@ -88,6 +88,7 @@ public:
 	virtual ulong HandleWindowEvent(const OptionContainer& params)=0;
 
 	virtual IFileMonitor* CreateFileMonitor() = 0;
+	virtual ISerialPortService* GetSerialPortService()=0;
 };
 
 #define gOSystem  mray::OS::IOSystem::getInstance()

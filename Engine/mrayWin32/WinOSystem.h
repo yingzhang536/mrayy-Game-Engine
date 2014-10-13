@@ -32,7 +32,7 @@ private:
 	GCPtr<IDllManager> m_dllManager;
 	GCPtr<IOSClipboard> m_clipboardManager;
 	GCPtr<IOSRegistry> m_registryManager;
-
+	GCPtr<ISerialPortService> m_serialportService;
 
 	std::vector<uint> m_processorsAffineMask;
 public:
@@ -56,6 +56,8 @@ public:
 	virtual ulong HandleWindowEvent(const OptionContainer& params);
 
 	virtual IFileMonitor* CreateFileMonitor() ;
+
+	virtual ISerialPortService* GetSerialPortService(){ return m_serialportService; }
 };
 
 }

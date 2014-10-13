@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Impl">
       <UniqueIdentifier>{5fa98040-1bc5-4fe0-be2e-4c389cda3dbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Robot">
+      <UniqueIdentifier>{d7a1206c-e861-4477-b7f2-9534d564305f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -42,6 +45,15 @@
     <ClInclude Include="TelubeeRobotDLL.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="RoombaController.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="IBaseController.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="OldBaseController.h">
+      <Filter>Source Files\Robot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -61,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="RobotSerialPort.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RoombaController.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="OldBaseController.cpp">
+      <Filter>Source Files\Robot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

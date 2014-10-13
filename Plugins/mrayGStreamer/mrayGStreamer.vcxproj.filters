@@ -39,6 +39,9 @@
     <ClInclude Include="IGstAppListener.h" />
     <ClInclude Include="GstUtils.h" />
     <ClInclude Include="GstVideoPlayer.h" />
+    <ClInclude Include="IVideoPipeline.h">
+      <Filter>Pipelines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -52,6 +55,9 @@
     </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{3d0f569f-2d84-4c17-82f3-805c1c75543d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipelines">
+      <UniqueIdentifier>{fe5bf891-37c7-4f43-8aa6-0a8831edaa12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -135,6 +135,7 @@ void TRApplication::_InitResources()
 {
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
+	(gLogManager.StartLog(ELL_INFO) << "Initing Resources").flush();;
 
 	gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
 	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));

@@ -17,8 +17,7 @@
 
 
 #include "ISerialPort.h"
-
-class ofSerial;
+#include "serial/serial.h"
 
 namespace mray
 {
@@ -28,8 +27,7 @@ namespace OS
 class Win32SerialPort:public ISerialPort
 {
 protected:
-	ofSerial* m_sp;
-	bool m_open;
+	serial::Serial* m_port;
 	IStream* m_stream;
 public:
 	Win32SerialPort();
@@ -37,13 +35,16 @@ public:
 
 
 	virtual bool OpenByName(const core::string& port,int baudRate);
-	virtual bool OpenByID(int ID,int baudRate);
+
 	virtual void Close();
 
+	virtual void SetTimeOut(uint read_timeout, uint write_timeout);
+	virtual void GetTimeOut(uint &read_timeout, uint &write_timeout);
+	virtual uint GetBaudRate() ;
 	virtual int Write(const void* data,size_t size);
 	virtual int Read(void* data,size_t size);
 
-	virtual int AvailableData();
+	virtual uint AvailableData();
 	virtual bool IsOpen();
 	virtual void Flush(bool flushIn,bool flushOut);
 
@@ -54,9 +55,16 @@ public:
 
 class Win32SerialPortService:public ISerialPortService
 {
+protected:
+	bool bPortsEnumerated;
+	std::vector <SerialPortInfo> devices;
 public:
-	Win32SerialPortService(){}
-	std::vector<SerialPortInfo> EnumAvaliablePorts(bool rescan=false);
+	Win32SerialPortService();
+	virtual ISerialPort* CreateSerialPort()
+	{
+		return new Win32SerialPort();
+	}
+	std::vector<SerialPortInfo> EnumAvaliablePorts(bool rescan = false);
 };
 
 

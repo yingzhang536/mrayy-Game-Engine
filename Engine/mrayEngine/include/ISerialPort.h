@@ -27,8 +27,9 @@ namespace OS
 	struct SerialPortInfo
 	{
 	public:
-		int ID;
 		core::string Name;
+		core::string Description;
+		core::string HardwareID;
 	};
 
 	class ISerialPort;
@@ -66,13 +67,16 @@ public:
 	virtual~ISerialPort(){}
 
 	virtual bool OpenByName(const core::string& port,int baudRate)=0;
-	virtual bool OpenByID(int ID,int baudRate)=0;
 	virtual void Close()=0;
 
+	virtual void SetTimeOut(uint read_timeout, uint write_timeout) = 0;
+	virtual void GetTimeOut(uint &read_timeout, uint &write_timeout) = 0;
 	virtual int Write(const void* data,size_t size)=0;
 	virtual int Read(void* data,size_t size)=0;
 
-	virtual int AvailableData()=0;
+	virtual uint GetBaudRate() = 0;
+
+	virtual uint AvailableData() = 0;
 	virtual bool IsOpen()=0;
 	virtual void Flush(bool flushIn,bool flushOut)=0;
 
@@ -85,6 +89,7 @@ public:
 class ISerialPortService
 {
 public:
+	virtual ISerialPort* CreateSerialPort() = 0;
 	virtual std::vector<SerialPortInfo> EnumAvaliablePorts(bool rescan)=0;
 };
 

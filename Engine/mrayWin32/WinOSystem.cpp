@@ -15,6 +15,7 @@
 #include "Win32CallbackProc.h"
 #include "OptionContainer.h"
 #include "WinFileMonitor.h"
+#include "Win32SerialPort.h"
 
 namespace mray{
 namespace OS{
@@ -26,6 +27,7 @@ WinOSystem::WinOSystem(){
 	m_dllManager=new OS::WinDllManager();
 	m_clipboardManager=new OS::WinOSClipboard();
 	m_threadManager=new OS::WinThreadManager();
+	m_serialportService = new Win32SerialPortService;
 
 	new Win32MessageProc();
 
