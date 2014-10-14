@@ -487,17 +487,20 @@ int Win32Network::inner_receivefrom(SOCKET s,void*data,int len,
 
 	traceFunction(eNetwork);
 
-	int sinLength = sizeof (struct sockaddr_in);
-	DWORD  recvLength=0;
+	DWORD  recvLength = 0;
 	struct sockaddr_in sin;
-	sin.sin_family=AF_INET;
 
-	sin.sin_addr.s_addr=0;
+	if (!fromAddress)
+		recvLength = ::recv(s, (char*)data, len, flags);
+	else
+	{
+		int sinLength = sizeof (struct sockaddr_in);
+		sin.sin_family = AF_INET;
 
-
-	recvLength=recvfrom (s, (char*)data,len,0,
-		fromAddress != NULL ? (struct sockaddr *) & sin : 0,
-		fromAddress != NULL ? &sinLength : 0);
+		sin.sin_addr.s_addr = 0;
+		recvLength = ::recvfrom(s, (char*)data, len, flags,
+			(struct sockaddr *) & sin, &sinLength);
+	}
 	if (recvLength == SOCKET_ERROR)
 	{
 		int err=WSAGetLastError ();

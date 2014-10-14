@@ -1022,7 +1022,7 @@ int GstVideoUtils::preroll_cb(GstSample * sample){
 	if (!pixels.imageData)
 	{
 		if (m_impl->isStream && m_impl->appsink){
-			m_impl->appsink->on_stream_prepared();
+			m_impl->appsink->OnStreamPrepared();
 		}
 		else{
 			gLogManager.log("GstVideoUtils = preroll_cb(): received a preroll without allocation", ELL_WARNING);
@@ -1103,7 +1103,7 @@ int GstVideoUtils::buffer_cb(GstSample * sample){
 	}
 	else{
 		if (m_impl->isStream && m_impl->appsink){
-			m_impl->appsink->on_stream_prepared();
+			m_impl->appsink->OnStreamPrepared();
 		}
 		else{
 			gLogManager.log("received a preroll without allocation", ELL_WARNING);

@@ -293,6 +293,8 @@ int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, 
 
 	if (!m_impl->m_baseController->IsConnected())
 		return FALSE;
+	if (abs(rotation) < 5)
+		rotation = 0;
 	if (control == RUN)
 		m_impl->m_baseController->Drive(mray::math::vector2di(velocity_x, velocity_y), rotation);
 	else if (control == STOP)

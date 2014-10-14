@@ -276,7 +276,6 @@ gst_mysink_unlock_stop(GstBaseSink * bsink)
 	sink = GST_MYSINK(bsink);
 
 	//g_cancellable_reset(sink->cancellable);
-
 	return TRUE;
 }
 

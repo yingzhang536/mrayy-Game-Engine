@@ -84,7 +84,6 @@ gst_mysrc_class_init(GstMySrcClass * klass)
 
 	gst_element_class_add_pad_template(gstelement_class,
 		gst_static_pad_template_get(&mysrc_template));
-
 	gst_element_class_set_details_simple(gstelement_class,
 		"MYSrc class",
 		"Source",

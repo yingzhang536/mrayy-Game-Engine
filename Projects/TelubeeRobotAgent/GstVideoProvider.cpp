@@ -702,24 +702,63 @@ public:
 		gstString += "ksvideosrc name=src1 device-index=0 typefind=true ! typefind ! ffmpegcolorspace !  videoscale ! video/x-raw-yuv,width=640,height=720 ! mix.sink_1 ";
 		gstString += "ksvideosrc name=src2 device-index=1 typefind=true ! typefind ! ffmpegcolorspace ! videoscale ! video/x-raw-yuv,width=640,height=720! mix.sink_2 ";
 		*/
+		if (m_streamAudio)
+			gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc quality=2 ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 
 #else
 
-		gstString = "appsrc name=src ! "
->>>>>>> 01f40b2f8b35b31cc868b822317ab72bba293e7f
-			"video/x-raw,format=RGB,framerate=" + core::StringConverter::toString(m_frameRate) + "/1" +
-			",width=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().x) +
-			",height=" + core::StringConverter::toString(src->GetGrabber()->GetFrameSize().y) +
-			" ! videoconvert !  videorate!  "
-		"x264enc  name=enc pass=" + pass +
-// 			"  quantizer=" + core::StringConverter::toString(quanizer) +
-// 			"   speed-preset=ultrafast sliced-threads=false bitrate=" + core::StringConverter::toString(bitrate) +
-// 			" tune=zerolatency"
-			"  ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+	if (m_cam0.index == m_cam1.index)
+	{
+		//ksvideosrc
+		gstString = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0.index) + // device=" + m_cam0.guidPath + "" +//
+			" ! video/x-raw,format=I420,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! videoconvert !  videoflip method=4 !";  // videoflip method=1 !   ";
+
+	}
+	else
+	{
+
+		int halfW = m_resolution.x / 2;
+		gstString = "videomixer name=mix sink_0::xpos=0   sink_0::ypos=0  sink_0::alpha=1  sink_0::zorder=0  sink_1::xpos=0   sink_1::ypos=0  sink_1::zorder=1     sink_2::xpos=" + core::StringConverter::toString(halfW) + "   sink_2::ypos=0  sink_2::zorder=1  ";
+	
+		gstString += "videotestsrc pattern=\"black\" ! video/x-raw,format=RGB,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + " !  mix.sink_0 ";
+
+		//
+		gstString += "ksvideosrc name=src1 device-index=" + core::StringConverter::toString(m_cam0.index) + "  ! video/x-raw,format=RGB,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! videoconvert ! videoflip method=4 ! videoscale !"
+			"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + " ! mix.sink_1 ";
+		//name=src2 device-index=" + core::StringConverter::toString(m_cam1)
+		gstString += "ksvideosrc name=src2 device-index=" + core::StringConverter::toString(m_cam1.index) + "  ! video/x-raw,format=RGB,width=" + core::StringConverter::toString(m_resolution.x) + ",height=" + core::StringConverter::toString(m_resolution.y) + ",framerate=30/1 ! videoconvert ! videoflip method=4 ! videoscale ! "
+			"video/x-raw-yuv,width=" + core::StringConverter::toString(halfW) + ",height=" + core::StringConverter::toString(m_resolution.y) + "! mix.sink_2 ";
+
+		gstString += " mix. ! ";
+	}
+
+	//http://mewiki.project357.com/wiki/X264_Encoding_Suggestions#Encoder_latency
+	if (true)
+	{
+		gstString +=
+			" x264enc  name=enc"
+			" bitrate=" + core::StringConverter::toString(bitrate) +
+			" speed-preset=superfast  "
+			" tune=zerolatency "
+			" sync-lookahead=0 "
+			" ! rtph264pay"// mtu=" + core::StringConverter::toString(mu) + 
+			" ! gdppay"
 			" ! mysink name=sink sync=false ";
+	}
+	else
+	{
+		//Encode using VP8
+		gstString +=
+			" vp8enc  name=enc"
+			" bitrate=" + core::StringConverter::toString(bitrate) +
+			" speed=2"
+			" ! rtpvp8pay"// mtu=" + core::StringConverter::toString(mu) + 
+			" ! mysink name=sink sync=false ";
+	}
+	if (m_streamAudio)
+		gstString += " directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc quality=2 ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
+
 #endif
-		if (m_streamAudio)
-			gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc quality=2 ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 	//	gstString += " dshowaudiosrc! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! flacenc ! mysink name=audiosink sync=false "; //oggmux max-delay=50 max-page-delay=50 
 		//audio/x-raw-int, endianness=1234, signed=true, width=16, depth=16, rate=22000, channels=1
 		//vorbisenc  !
@@ -786,7 +825,7 @@ public:
 
 		//gst_app_sink_set_callbacks(GST_APP_SINK(gstSink), &gstCallbacks, this, NULL);
 		
-#if 1
+#if 0
 		gst_base_sink_set_sync(GST_BASE_SINK(sink), false);
 	//	gst_app_sink_set_max_buffers(GST_APP_SINK(sink), -1);
 		gst_app_sink_set_drop(GST_APP_SINK(sink), true);
@@ -798,9 +837,9 @@ public:
 
 	
 
-		GstCaps* caps;
+	//	GstCaps* caps;
 #if GST_VERSION_MAJOR==0
-		caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y, m_frameRate,  1, 4, 3);
+	//	caps = gst_video_format_new_caps(GST_VIDEO_FORMAT_BGR, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y, m_frameRate,  1, 4, 3);
 #else
 
 		/*caps = gst_caps_new_simple("video/x-raw",
@@ -813,13 +852,13 @@ public:
 			NULL);*/
 		GstVideoInfo info;
 		gst_video_info_set_format(&info, GST_VIDEO_FORMAT_RGB, src->GetGrabber()->GetFrameSize().x, src->GetGrabber()->GetFrameSize().y);
-		caps = gst_video_info_to_caps(&info);
+		//caps = gst_video_info_to_caps(&info);
 		
 #endif
 		//g_object_set(gstSrc, "caps", caps, NULL);
 		//gst_app_src_set_caps(GST_APP_SRC(gstSrc), caps);
-		gst_caps_unref(caps);
-
+	//	gst_caps_unref(caps);
+//
 // 		caps = gst_caps_new_simple("application/x-rtp",
 // 			"media", G_TYPE_STRING, "video",
 // 			"clock-rate", G_TYPE_INT, 90000,

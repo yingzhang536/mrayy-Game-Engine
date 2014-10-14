@@ -15,6 +15,24 @@
     </ClCompile>
     <ClCompile Include="GstUtils.cpp" />
     <ClCompile Include="GstVideoPlayer.cpp" />
+    <ClCompile Include="CMyUDPSink.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="CMyUDPSrc.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoAppSinkHandler.cpp">
+      <Filter>Elements\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="GstPipelineHandler.cpp">
+      <Filter>Elements\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="GstNetworkPlayer.cpp">
+      <Filter>StreamType</Filter>
+    </ClCompile>
+    <ClCompile Include="GstNetworkStreamer.cpp">
+      <Filter>StreamType</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GStreamerManager.h" />
@@ -39,8 +57,23 @@
     <ClInclude Include="IGstAppListener.h" />
     <ClInclude Include="GstUtils.h" />
     <ClInclude Include="GstVideoPlayer.h" />
-    <ClInclude Include="IVideoPipeline.h">
-      <Filter>Pipelines</Filter>
+    <ClInclude Include="CMyUDPSink.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="CMyUDPSrc.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoAppSinkHandler.h">
+      <Filter>Elements\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="GstPipelineHandler.h">
+      <Filter>Elements\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="GstNetworkStreamer.h">
+      <Filter>StreamType</Filter>
+    </ClInclude>
+    <ClInclude Include="GstNetworkPlayer.h">
+      <Filter>StreamType</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +91,9 @@
     </Filter>
     <Filter Include="Pipelines">
       <UniqueIdentifier>{fe5bf891-37c7-4f43-8aa6-0a8831edaa12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Handlers">
+      <UniqueIdentifier>{6812035b-b5ea-4dcc-92ea-c3208a262540}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -58,13 +58,13 @@ namespace mray
     requestedRadius_ (),                        \
     requestedLeftVelocity_ (),                  \
     requestedRightVelocity_ ()
-RoombaController::RoombaController():
+RoombaControllerImpl::RoombaControllerImpl():
 INITIALIZE_SENSORS(), currentMode_(IROBOT_CREATE_OFF)
 {
 	m_serialPort = OS::IOSystem::getInstance().GetSerialPortService()->CreateSerialPort();
 
 }
-RoombaController::~RoombaController()
+RoombaControllerImpl::~RoombaControllerImpl()
 {
 	Disconnect();
 	delete m_serialPort;
@@ -116,7 +116,7 @@ receiveInt16(OS::ISerialPort* s)
 	 }
 	return (v[1] << 8) + v[0];
 }
-bool RoombaController::Connect(const core::string& port)
+bool RoombaControllerImpl::Connect(const core::string& port)
 {
 	Disconnect();
 	try
@@ -133,17 +133,17 @@ bool RoombaController::Connect(const core::string& port)
 		SendFullModeCommand();
 	return IsConnected();
 }
-bool RoombaController::IsConnected()
+bool RoombaControllerImpl::IsConnected()
 {
 	return m_serialPort->IsOpen();
 }
-void RoombaController::Disconnect()
+void RoombaControllerImpl::Disconnect()
 {
 	m_serialPort->Close();
 }
 
 //Switch to passive mode.
-void RoombaController::SendStartCommand()
+void RoombaControllerImpl::SendStartCommand()
 {
 
 	if (currentMode_ != IROBOT_CREATE_OFF)
@@ -154,7 +154,7 @@ void RoombaController::SendStartCommand()
 }
 
 //Switch to safe mode.
-void RoombaController::SendSafeCommand()
+void RoombaControllerImpl::SendSafeCommand()
 {
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
 		return;
@@ -165,7 +165,7 @@ void RoombaController::SendSafeCommand()
 }
 
 //Switch to full mode.
-void RoombaController::SendFullModeCommand()
+void RoombaControllerImpl::SendFullModeCommand()
 {
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
 		return;
@@ -176,7 +176,7 @@ void RoombaController::SendFullModeCommand()
 }
 
 
-void RoombaController::Drive(const math::vector2di& speed, int radius)
+void RoombaControllerImpl::Drive(const math::vector2di& speed, int radius)
 {
 
 	int velocity = speed.x;
@@ -191,12 +191,12 @@ void RoombaController::Drive(const math::vector2di& speed, int radius)
 	sendInt16(m_serialPort, velocity);
 	sendInt16(m_serialPort, radius);
 }
-void RoombaController::DriveStop()
+void RoombaControllerImpl::DriveStop()
 {
 	Drive(0, 0);
 }
 //drive each wheel seperately
-void RoombaController::DriveWheels(int leftWheel, int rightWheel)
+void RoombaControllerImpl::DriveWheels(int leftWheel, int rightWheel)
 {
 	if (currentMode_ < IROBOT_CREATE_SAFE)
 		return;
@@ -214,7 +214,7 @@ void RoombaController::DriveWheels(int leftWheel, int rightWheel)
 ///  Switch on/off advance or play leds.
 ///  c Power led color.
 ///  i Power led light intensity.
-void RoombaController::SetLED(Led l, int c, int i)
+void RoombaControllerImpl::SetLED(Led l, int c, int i)
 {
 	if (currentMode_ < IROBOT_CREATE_SAFE)
 		return;
@@ -227,7 +227,7 @@ void RoombaController::SetLED(Led l, int c, int i)
 }
 
 //sid Song id.
-void RoombaController::SetSong(unsigned char sid, const song_t& song)
+void RoombaControllerImpl::SetSong(unsigned char sid, const song_t& song)
 {
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
 		return;
@@ -250,7 +250,7 @@ void RoombaController::SetSong(unsigned char sid, const song_t& song)
 
 }
 
-void RoombaController::PlaySong(uint v)
+void RoombaControllerImpl::PlaySong(uint v)
 {
 	if (currentMode_ < IROBOT_CREATE_SAFE)
 		return;
@@ -262,7 +262,7 @@ void RoombaController::PlaySong(uint v)
 
 }
 
-void RoombaController::RequestSensorPacket(SensorPacket packet)
+void RoombaControllerImpl::RequestSensorPacket(SensorPacket packet)
 {
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
 		return;
@@ -301,7 +301,7 @@ void RoombaController::RequestSensorPacket(SensorPacket packet)
 	m_serialPort->Write(op, sizeof(op));\
 	m_serialPort->Write(ss.str().c_str(), size);
 
-void RoombaController::QueryListCommand(const sensorPackets_t& packets)
+void RoombaControllerImpl::QueryListCommand(const sensorPackets_t& packets)
 {
 	MAKE_SENSOR_CMD(OPCODE_QUERY_LIST,
 		queriedSensors_.push(*it));
@@ -309,7 +309,7 @@ void RoombaController::QueryListCommand(const sensorPackets_t& packets)
 }
 
 // t is in tenth of second
-void RoombaController::RobotWait(uchar t)
+void RoombaControllerImpl::RobotWait(uchar t)
 {
 
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
@@ -319,14 +319,14 @@ void RoombaController::RobotWait(uchar t)
 	m_serialPort->Write(op, sizeof(op));
 }
 
-void RoombaController::UpdateSensors()
+void RoombaControllerImpl::UpdateSensors()
 {
 
 }
 
 #define MK_SENSOR_GETTER(TYPE, NAME)            \
   TYPE                                          \
-  RoombaController::NAME ()                               \
+  RoombaControllerImpl::NAME ()                               \
   {                                             \
     UpdateSensors ();                           \
     return NAME##_;                             \
@@ -361,7 +361,7 @@ MK_SENSOR_GETTER(bool, advanceButton)
 MK_SENSOR_GETTER(bool, playButton)
 MK_SENSOR_GETTER(short, distance)
 MK_SENSOR_GETTER(short, angle)
-MK_SENSOR_GETTER(RoombaController::ChargingState, chargingState)
+MK_SENSOR_GETTER(RoombaControllerImpl::ChargingState, chargingState)
 MK_SENSOR_GETTER(short, batteryVoltage)
 MK_SENSOR_GETTER(short, batteryCurrent)
 MK_SENSOR_GETTER(short, batteryTemperature)
@@ -379,6 +379,47 @@ MK_SENSOR_GETTER(short, requestedVelocity)
 MK_SENSOR_GETTER(short, requestedRadius)
 MK_SENSOR_GETTER(short, requestedLeftVelocity)
 MK_SENSOR_GETTER(short, requestedRightVelocity)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+
+bool RoombaController::Connect(const core::string& port)
+{
+	return m_impl->Connect(port);
+}
+bool RoombaController::IsConnected()
+{
+	return m_impl->IsConnected();
+}
+void RoombaController::Disconnect()
+{
+	 m_impl->Disconnect();
+
+}
+
+void RoombaController::Drive(const math::vector2di& speed, int rotationSpeed)
+{
+	int l = 0;
+	int r = 0;
+	l = r = speed.x;
+	l -= rotationSpeed;
+	r += rotationSpeed;
+
+	l /= 2;
+	r /= 2;
+	 m_impl->DriveWheels(l,r);
+
+}
+void RoombaController::DriveStop()
+{
+	m_impl->DriveStop();
+}
+
+
+
+
 }
 
 

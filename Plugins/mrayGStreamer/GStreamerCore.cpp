@@ -14,6 +14,8 @@
 #include <algorithm>
 #include "CMySrc.h"
 #include "CMySink.h"
+#include "CMyUDPSrc.h"
+#include "CMyUDPSink.h"
 
 namespace mray
 {
@@ -67,16 +69,34 @@ GStreamerCore::~GStreamerCore()
 }
 
 
+void g_logFunction(const gchar   *log_domain,
+	GLogLevelFlags log_level,
+	const gchar   *message,
+	gpointer       user_data)
+{
+}
+
 void GStreamerCore::_Init()
 {
 
 	GError *err = 0;
-	if (!gst_init_check(NULL, NULL, &err))
+	_gst_debug_enabled = false; 
+	if (!gst_init_check(0,0, &err))
 	{
 		gLogManager.log("GStreamerCore - Failed to init GStreamer!"+ core::StringConverter::toString(err->message), ELL_ERROR, EVL_Heavy);
 	}
 	else
 	{
+		g_log_set_handler(0,  G_LOG_LEVEL_CRITICAL, g_logFunction, 0);
+		g_log_set_handler(0, G_LOG_FLAG_FATAL , g_logFunction, 0);
+		g_log_set_default_handler(g_logFunction, 0);
+
+		fclose(stderr);
+
+		//register plugin path
+		core::string gst_path = g_getenv("GSTREAMER_1_0_ROOT_X86");
+		putenv(("GST_PLUGIN_PATH_1_0=" + gst_path + "lib\\gstreamer-1.0" + ";.").c_str());
+		//add our custom src/sink elements
 		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
 			"appsink", (char*)"Element application sink",
 			appsink_plugin_init, "0.1", "LGPL", "ofVideoPlayer", "openFrameworks",
@@ -88,6 +108,14 @@ void GStreamerCore::_Init()
 		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
 			"mysink", (char*)"Element application sink",
 			_GstMySinkClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+			"");
+		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
+			"myudpsrc", (char*)"Element udp src",
+			_GstMyUDPSrcClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
+			"");
+		gst_plugin_register_static(GST_VERSION_MAJOR, GST_VERSION_MINOR,
+			"myudpsink", (char*)"Element udp sink",
+			_GstMyUDPSinkClass::plugin_init, "0.1", "LGPL", "GstVideoProvider", "TELUBee",
 			"");
 		gLogManager.log("GStreamerCore - GStreamer inited", ELL_INFO, EVL_Heavy);
 	}

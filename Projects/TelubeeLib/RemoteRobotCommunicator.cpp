@@ -310,7 +310,7 @@ void RemoteRobotCommunicator::_SendUpdate()
 	m_data->UpdateData();
 	core::string data = m_data->outputValues;
 	m_data->dataMutex->unlock();
-	m_data->client->SendTo(&m_data->addr, data.c_str(), data.length() + 1);
+	m_data->client->SendTo(&m_data->addr, data.c_str(), data.length() + 1,0);
 
 	return;
 #ifdef USE_UDPCLIENT

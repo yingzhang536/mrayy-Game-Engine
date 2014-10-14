@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="GStreamerManager.cpp" />
+    <ClCompile Include="GStreamerPlayback.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="CMySink.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="CMySrc.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="GStreamerCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GstUtils.cpp" />
+    <ClCompile Include="GstVideoPlayer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GStreamerManager.h" />
+    <ClInclude Include="GStreamerPlayback.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="IGStreamerPlayer.h">
+      <Filter>StreamType</Filter>
+    </ClInclude>
+    <ClInclude Include="GStreamerFilePlayer.h">
+      <Filter>StreamType</Filter>
+    </ClInclude>
+    <ClInclude Include="CMySink.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="CMySrc.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="GStreamerCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="IGstAppListener.h" />
+    <ClInclude Include="GstUtils.h" />
+    <ClInclude Include="GstVideoPlayer.h" />
+    <ClInclude Include="IVideoPipeline.h">
+      <Filter>Pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkStreamVideoPipeline.h">
+      <Filter>Pipelines</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="StreamType">
+      <UniqueIdentifier>{394fc3d5-9b6f-4084-8c0c-9bd58e4321f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements">
+      <UniqueIdentifier>{818528a4-6d2a-44a9-9048-d6661d607626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{3d0f569f-2d84-4c17-82f3-805c1c75543d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipelines">
+      <UniqueIdentifier>{fe5bf891-37c7-4f43-8aa6-0a8831edaa12}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

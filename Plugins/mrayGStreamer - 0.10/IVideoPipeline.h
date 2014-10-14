@@ -21,9 +21,9 @@ public:
 
 	//generate pipeline string to be used by gstreamer
 	virtual core::string  GetPipelineString() = 0;
-
-	virtual void OnStartPipeline() = 0;
-	virtual void OnStopPipeline() = 0;
+	
+	//create pipeline  
+	virtual bool CreatePipeline() = 0;
 
 	//get number of source elements used in this pipeline
 	virtual int GetSourceCount() = 0;

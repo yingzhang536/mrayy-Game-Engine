@@ -327,11 +327,14 @@ namespace network
 	}  // end Win32UDPClient::Disconnect()
 
 	UDPClientError Win32UDPClient::SendTo(const NetAddress* destAddr, const char* buffer, 
-		unsigned int len)
+		unsigned int len, unsigned int* outlen)
 	{
 		if (connected)
 		{
-			if (send(handle, (const char*)buffer, (size_t)len, 0) < 0)
+			int l = send(handle, (const char*)buffer, (size_t)len, 0);
+			if (outlen)
+				*outlen = l;
+			if (l< 0)
 			{
 				perror("Win32UDPClient::SendTo(): send() error:");
 #ifdef WIN32
@@ -353,10 +356,12 @@ namespace network
 				Win32Network::CreateAddress(*destAddr,addr);
 				addrPtr=&addr;
 			}
-
-			if (sendto(handle, buffer, (size_t)len, 0, 
-				(struct sockaddr*)addrPtr, 
-				sizeof(addr)) < 0)
+			int l = sendto(handle, buffer, (size_t)len, 0,
+				(struct sockaddr*)addrPtr,
+				sizeof(addr));
+			if (outlen)
+				*outlen = l;
+			if (l < 0)
 			{
 #ifdef WIN32
 				TRACE("Win32UDPClient::SendTo() error (%d)\n", WSAGetLastError());
@@ -376,6 +381,21 @@ namespace network
 	void Win32UDPClient::SetNonBlocking(bool b)
 	{
 		Win32Network::setSocketOption(handle, network::ESocketOption::ESO_NONBLOCK, true);
+	}
+	bool Win32UDPClient::WaitForData(int sec, int usec)
+	{
+		fd_set readSet;
+		FD_ZERO(&readSet);
+		FD_SET(handle, &readSet);
+		struct timeval tv,*tvp=0;
+		tv.tv_sec = sec;
+		tv.tv_usec = usec;
+		if (sec != -1 || usec != -1)
+			tvp = &tv;
+		if (select(handle + 1, &readSet, 0, 0, tvp) == SOCKET_ERROR)
+			return false;
+		FD_ISSET(handle, &readSet);
+		return true;
 	}
 	UDPClientError Win32UDPClient::RecvFrom(char*            buffer, 
 		unsigned int*    buflen, 
@@ -443,15 +463,17 @@ namespace network
 
 	UDPClientError Win32UDPClient::GetAvailableBytes(unsigned int* len)
 	{
-
-		int result = Win32Network::inner_receivefrom(handle, 0, (int)*len, 0,MSG_PEEK);
-		if (result < 0)
+		u_long bytes = 0;
+		
+		int result = ioctlsocket(handle, FIONREAD, &bytes);
+		if (result != 0)
 		{
 			*len = 0;
 			return UDP_SOCKET_ERROR_RECV;
 		}
 		else
 		{
+			*len = bytes;
 			return UDP_SOCKET_ERROR_NONE;
 		}
 	}

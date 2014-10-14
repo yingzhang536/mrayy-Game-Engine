@@ -18,6 +18,7 @@
 #ifndef __IUDPClient__
 #define __IUDPClient__
 
+#include "mString.h"
 
 namespace mray
 {
@@ -91,9 +92,11 @@ public:
 	virtual UDPClientError SetReuse(bool state) =0;
 	virtual UDPClientError SetMulticastInterface(unsigned long interfaceAddress) =0;
 
-	virtual UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len) =0;
+	virtual UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len, unsigned int* outlen = 0) = 0;
 	virtual UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src,int flags) =0;
 
+	//-1,-1 for infinite
+	virtual bool WaitForData(int sec = -1, int usec = -1) = 0;
 	virtual UDPClientError GetAvailableBytes(unsigned int* len)=0;
 
 	virtual void SetNonBlocking(bool b)=0;

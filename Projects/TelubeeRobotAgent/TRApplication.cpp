@@ -218,6 +218,13 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	network::createWin32Network();
 
 	{
+		m_streamer = new video::GstNetworkStreamer();
+		m_streamer->BindPorts("127.0.0.1", 6000);
+		m_streamer->StartStream();
+		m_streamer->Play();
+	}
+
+	{
 		std::vector<sound::InputStreamDeviceInfo> lst;
 		sound::DirectSoundInputStream inputStream;
 		inputStream.ListDevices(lst);
@@ -300,7 +307,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 			}
 		}
 	}
-
+	return;
 	m_combinedCameras = new CombineVideoGrabber();
 	/*if (m_quality==EStreamingQuality::UltraLow)
 		m_combinedCameras->SetFrameSize(640, 360);
@@ -349,6 +356,7 @@ void TRApplication::WindowPostRender(video::RenderWindow* wnd)
 void TRApplication::update(float dt)
 {
 	CMRayApplication::update(dt);
+	return;
 
 	if (m_debugData.userConnected && !m_robotInited)
 	{
@@ -443,6 +451,8 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 	math::rectf texCoords(0,1,1,0);
 	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
 	*/
+	return;
+
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 	if (font){
 		m_guiRender->Prepare();
@@ -464,7 +474,6 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 #define LOG_OUT(msg,x,y)\
 	font->print(math::rectf((x), (y) + yoffset, 10, 10), &attr, 0, msg, m_guiRender);\
 	yoffset += attr.fontSize;
-
 		{
 			attr.fontSize = 18;
 			yoffset = 100;

@@ -75,7 +75,8 @@ namespace network
 		UDPClientError SetReuse(bool state);
 		UDPClientError SetMulticastInterface(unsigned long interfaceAddress);
 
-		UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len);
+		//send data
+		UDPClientError SendTo(const NetAddress* dest, const char* buffer, unsigned int len,unsigned int* outlen=0);
 		UDPClientError RecvFrom(char* buffer, unsigned int* buflen, NetAddress* src,int flags);
 		UDPClientError GetAvailableBytes(unsigned int* len);
 		// Status
@@ -84,6 +85,7 @@ namespace network
 		unsigned short Port() {return port;}
 		SocketHandle Handle() {return handle;}
 
+		virtual bool WaitForData(int sec, int usec);
 		void SetNonBlocking(bool b);
 
 		void OnReceive();

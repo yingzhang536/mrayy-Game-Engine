@@ -12,7 +12,7 @@
 namespace mray
 {
 	
-class RoombaController:public IBaseController
+class RoombaControllerImpl
 {
 protected:
 
@@ -156,8 +156,8 @@ public:
 	typedef std::vector<SensorPacket> sensorPackets_t;
 	typedef std::queue<SensorPacket> queriedPackets_t;
 public:
-	RoombaController();
-	virtual ~RoombaController();
+	RoombaControllerImpl();
+	virtual ~RoombaControllerImpl();
 
 	bool Connect(const core::string& port);
 	bool IsConnected();
@@ -399,6 +399,8 @@ protected:
 		OPCODE_PWM_LOW_SIDE_DRIVERS = 144,
 		/// Driver direct command.
 		OPCODE_DRIVE_DIRECT = 145,
+		/// Driver direct PWM command.
+		OPCODE_DRIVE_DIRECT_PWM = 146,
 		/// Digital ouputs command.
 		OPCODE_DIGITAL_OUTPUTS = 147,
 		/// Stream command.
@@ -520,6 +522,25 @@ public:
 
 };
 
+class RoombaController :public IBaseController
+{
+	RoombaControllerImpl* m_impl;
+public:
+	RoombaController()
+	{
+		m_impl = new RoombaControllerImpl();
+	}
+	virtual ~RoombaController()
+	{
+		delete m_impl;
+	}
+	virtual bool Connect(const core::string& port) ;
+	virtual bool IsConnected() ;
+	virtual void Disconnect() ;
+
+	virtual void Drive(const math::vector2di& speed, int rotationSpeed) ;
+	virtual void DriveStop() ;
+};
 }
 
 #endif // RoombaController_h__

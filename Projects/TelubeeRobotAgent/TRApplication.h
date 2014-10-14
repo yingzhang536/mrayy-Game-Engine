@@ -27,6 +27,7 @@
 #include "IUDPClient.h"
 #include "OpenNIManager.h"
 #include "CameraProfile.h"
+#include "GstNetworkStreamer.h"
 
 namespace mray
 {
@@ -64,6 +65,7 @@ protected:
 
 	GCPtr<video::ICameraVideoGrabber> m_cameras[2];
 	GCPtr<video::IVideoGrabber> m_combinedCameras;
+	GCPtr<video::GstNetworkStreamer> m_streamer;
 
 	video::VideoGrabberTexture m_cameraTextures[3];
 

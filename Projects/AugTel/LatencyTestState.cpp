@@ -25,6 +25,8 @@ LatencyTestState::LatencyTestState(const core::string& name, TBee::ICameraVideoS
 	m_robotConnector->SetCommunicator(new TBee::RemoteRobotCommunicator());
 	m_minLatency = 99999;
 	m_maxLatency = 0;
+
+
 }
 LatencyTestState::~LatencyTestState()
 {
@@ -35,7 +37,16 @@ LatencyTestState::~LatencyTestState()
 void LatencyTestState::InitState()
 {
 	IRenderingState::InitState();
-	m_camVideoSrc->Init();
+	//m_camVideoSrc->Init();
+
+	m_player = new video::GstNetworkPlayer();
+	m_streamer = new video::GstNetworkStreamer();
+
+	m_playerGrabber = new video::VideoGrabberTexture();
+	m_playerGrabber->Set(m_player, 0);
+
+	m_streamer->BindPorts("127.0.0.1", 6000);
+	m_player->SetIPAddress("127.0.0.1", 6000);
 }
 bool LatencyTestState::OnEvent(Event* e, const math::rectf& rc)
 {
@@ -62,7 +73,7 @@ bool LatencyTestState::OnEvent(Event* e, const math::rectf& rc)
 void LatencyTestState::OnEnter(IRenderingState*prev)
 {
 	IRenderingState::OnEnter(prev);
-	m_camVideoSrc->Open();
+	//m_camVideoSrc->Open();
 
 
 	gAppData.dataCommunicator->Start(COMMUNICATION_PORT);
@@ -73,19 +84,35 @@ void LatencyTestState::OnEnter(IRenderingState*prev)
 	//m_robotConnector->EndUpdate();
 	m_robotConnector->ConnectRobot();
 
+// 	m_streamer->StartStream();
+// 	m_streamer->Play();
+	m_player->StartStream();
+	m_player->Play();
+
 }
 void LatencyTestState::OnExit()
 {
 	IRenderingState::OnExit();
 	m_camVideoSrc->Close();
 	m_robotConnector->DisconnectRobot();
+	m_streamer->Close();
+	m_player->Close();
 }
 video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
 
 	video::IRenderTarget* rt = IRenderingState::Render(rc, eye);
 	video::TextureUnit tex;
-	m_camVideoSrc->Blit();
+	//m_camVideoSrc->Blit();
+	m_playerGrabber->Blit();
+
+	Engine::getInstance().getDevice()->setRenderTarget(rt, 1, 1, 1);
+	tex.SetTexture(m_playerGrabber->GetTexture());
+	Engine::getInstance().getDevice()->useTexture(0, &tex);
+	Engine::getInstance().getDevice()->draw2DImage(rc, video::SColor(1, 1, 1, 1));
+
+	return rt;
+
 
 	Engine::getInstance().getDevice()->setRenderTarget(rt,1,1,1);
 	if (m_showColor)

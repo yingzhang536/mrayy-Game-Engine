@@ -59,7 +59,7 @@ TCPClient::TCPClient(int portnum, char *ipaddr){
 	// 接続先指定用構造体の準備
 	server.sin_family = AF_INET;
 	server.sin_port = htons(portnum);
-	server.sin_addr.S_un.S_addr = inet_addr(ipaddr);
+	server.sin_addr.S_un.S_addr = InetPton(AF_INET,ipaddr,0);
 	// ソケットの作成
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	// サーバに接続
@@ -192,7 +192,7 @@ bool UDPClient::Connect(int portnum, const char *ipaddr){
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(portnum);
-	addr.sin_addr.S_un.S_addr = inet_addr(ipaddr);
+	addr.sin_addr.S_un.S_addr = InetPton(AF_INET, ipaddr, 0); //inet_addr(ipaddr);
 	// 送信用変数の初期化
 	buffer = "";
 	buffcount = 0;

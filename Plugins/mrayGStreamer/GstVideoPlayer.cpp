@@ -465,7 +465,7 @@ static gboolean read_data_tobuffer(gst_app_t *app, GstBuffer** b)
 #else
 	GstMapInfo mapinfo;
 	gst_buffer_map(buffer, &mapinfo, GST_MAP_WRITE);
-	mapinfo.data = ptr;
+	mapinfo.data = (guint8*)TmpPacket[app->index];
 	mapinfo.size = size;
 	mapinfo.maxsize = size;
 	gst_buffer_unmap(buffer, &mapinfo);
@@ -683,17 +683,19 @@ bool	GstVideoPlayer::Connect(const core::string& ip, int videoPort, int audioPor
 			" ! rtpvp8depay !   vp8dec  ! ffmpegcolorspace   !  appsink name=sink sync=false ";//"appsink name = sink sync = false";
 	}
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+
+	//Audio - Stream in 
+	if (true)
+		gstString += " mysrc name=audioSrc !  audio/x-flac, channels=1, rate=1600! flacdec ! audioconvert ! autoaudiosink name=audioSink sync=false ";
+
 #else
-	gstString = "appsrc name=src ! application/x-rtp, media=video, clock-rate=90000, payload=96, encoding-name=H264 !  rtph264depay name=depay !"
+	//application/x-rtp,media=video,clock-rate=90000,payload=96,encoding-name=H264
+	gstString = "appsrc name=src ! gdpdepay !  rtph264depay name=depay !"
 		" avdec_h264 name=dec max-threads=0 ! videoconvert   ! appsink name=sink sync=false " ;//"appsink name=sink sync=false";
 	//" mysrc name=audioSrc !  audio/x-flac, channels=1, rate=8000! flacdec ! audio/x-raw-int,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! autoaudiosink name=audioSink sync=false ";
 
 
 #endif
-	//Audio - Stream in 
-	if(true)
-		gstString += " mysrc name=audioSrc !  audio/x-flac, channels=1, rate=1600! flacdec ! audioconvert ! autoaudiosink name=audioSink sync=false ";
-
 
 	//Audio - Stream out
 	if (false)
@@ -1017,8 +1019,8 @@ bool GstVideoPlayer::allocate(int bpp){
 
 	nFrames = 0;
 	if (GstPad* pad = gst_element_get_static_pad(videoUtils->getSink(), "sink")){
+		int width = 0, height = 0;
 #if GST_VERSION_MAJOR==0
-		int width, height;
 		if (gst_video_get_size(GST_PAD(pad), &width, &height)){
 			if (!videoUtils->allocate(width, height, bpp)) return false;
 		}
@@ -1055,6 +1057,8 @@ bool GstVideoPlayer::allocate(int bpp){
 
 			fps_n = info.fps_n;
 			fps_d = info.fps_d;
+			width = info.width;
+			height = info.height;
 			nFrames = (float)(durationNanos / GST_SECOND) * (float)fps_n / (float)fps_d;
 			gst_caps_unref(caps);
 			bIsAllocated = true;

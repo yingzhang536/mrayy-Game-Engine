@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "VideoGrabberTexture.h"
+#include "Engine.h"
 
 
 namespace mray
@@ -24,6 +25,10 @@ void VideoGrabberTexture::Set(const GCPtr<IVideoGrabber>& grabber,ITextureCRef t
 {
 	m_grabber=grabber;
 	m_texture=tex;
+	if (!m_texture)
+	{
+		m_texture = gEngine.getDevice()->createEmptyTexture2D(false);
+	}
 }
 
 

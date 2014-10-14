@@ -27,15 +27,16 @@ class IGStreamerPlayer:public IVideoGrabber
 {
 protected:
 	bool m_isStreaming;
-	virtual void _SetPipeline(const core::string& pipeline, bool stream);
 public:
 	IGStreamerPlayer(){}
 	virtual~IGStreamerPlayer(){}
 
 	virtual bool IsStream() = 0;
+	virtual void SetVolume(float vol) = 0;
 
 	virtual void Play() = 0;
 	virtual void Pause() = 0;
+	virtual void Stop() = 0;
 	virtual bool IsLoaded() = 0;
 	virtual bool IsPlaying() = 0;
 	virtual void Close() = 0;

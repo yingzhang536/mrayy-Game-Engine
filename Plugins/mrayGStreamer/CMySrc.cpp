@@ -74,13 +74,12 @@ gst_mysrc_class_init(GstMySrcClass * klass)
 	gstbasesrc_class = (GstBaseSrcClass *)klass;
 	gstpushsrc_class = (GstPushSrcClass *)klass;
 
-	GST_DEBUG_CATEGORY_INIT(mysrc_debug, "mysrc", 0, "My src");
 
  	gobject_class->set_property = gst_mysrc_set_property;
  	gobject_class->get_property = gst_mysrc_get_property;
  	gobject_class->finalize = gst_mysrc_finalize;
 
-
+	GST_DEBUG_CATEGORY_INIT(mysrc_debug, "mysrc", 0, "My src");
 
 	gst_element_class_add_pad_template(gstelement_class,
 		gst_static_pad_template_get(&mysrc_template));
@@ -90,12 +89,11 @@ gst_mysrc_class_init(GstMySrcClass * klass)
 		"Source",
 		"Custom App Source",
 		"MHD Yamen Saraiji <mrayyamen@gmail.com>");
-	
+	 
 	g_object_class_install_property(gobject_class, PROP_CAPS,
 		g_param_spec_boxed("caps", "Caps",
 		"The caps of the source pad", GST_TYPE_CAPS,
 		GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
-
 
 	gstbasesrc_class->start = gst_mysrc_start;
 	gstbasesrc_class->stop = gst_mysrc_stop;
