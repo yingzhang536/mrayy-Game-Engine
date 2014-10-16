@@ -29,6 +29,7 @@ struct _GstMyUDPSink {
 	guint16 port;
 
 	mray::network::IUDPClient* m_client;
+	void SetPort(const mray::core::string &host,guint16 port);
 
 	//void CreateClient(const core::string& host, guint16 port);
 };

@@ -293,7 +293,7 @@ namespace network
 		bool result=Win32Network::inner_connect(handle,theAddress);
 		if (false == result)
 		{
-			TRACE("Win32UDPClient::Connect() WSAConnect() error: (%d)\n",
+			TRACE("Win32UDPClient::Connect()  error: (%d)\n",
 				WSAGetLastError());
 			Disconnect();
 			return false;
@@ -319,7 +319,7 @@ namespace network
 			NULL, NULL, NULL, NULL);
 		if (SOCKET_ERROR == result)
 		{
-			TRACE("Win32UDPClient::Disconnect() WSAConnect() error: (%d)\n",
+			TRACE("Win32UDPClient::Disconnect()  error: (%d)\n",
 				WSAGetLastError());
 		}
 #endif  // WIN32

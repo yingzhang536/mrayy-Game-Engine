@@ -99,6 +99,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mrayGLDevice", "Plugins\mrayGLDevice\mrayGLDevice.vcxproj", "{4E3B7074-0A47-4767-93B2-6A7D84BD7B34}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mrayWin32", "Engine\mrayWin32\mrayWin32.vcxproj", "{E8A2E5C1-C2BD-4A2B-9FE4-4A246FE29BC0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A8517FB2-C74E-43BD-B3C6-B05D3FC11ECD} = {A8517FB2-C74E-43BD-B3C6-B05D3FC11ECD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mrayWinApp", "Engine\mrayWinApp\mrayWinApp.vcxproj", "{6FAB3F6F-5A7E-48B8-A3DF-C6D96BE762BB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -379,6 +382,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TelubeeRobotAgent", "Projects\TelubeeRobotAgent\TelubeeRobotAgent.vcxproj", "{E11D2D94-6BA8-48DF-810B-CCD779EE3584}"
 	ProjectSection(ProjectDependencies) = postProject
 		{02180E1A-6445-43CE-92E3-B5A36C972374} = {02180E1A-6445-43CE-92E3-B5A36C972374}
+		{A3BB9F46-E552-48A2-8D04-637B8E420568} = {A3BB9F46-E552-48A2-8D04-637B8E420568}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TelubeeRobotDLL", "Projects\TelubeeRobotDLL\TelubeeRobotDLL.vcxproj", "{932D0B94-E40C-40A6-AB9F-D6970DD699CB}"

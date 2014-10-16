@@ -30,7 +30,6 @@ protected:
 
 	video::ImageInfo m_pixels;				// 24 bit: rgb
 	video::ImageInfo m_backPixels;
-	video::ImageInfo m_eventPixels;
 	bool			m_IsFrameNew;			// if we are new
 	bool			m_HavePixelsChanged;
 	bool			m_BackPixelsChanged;

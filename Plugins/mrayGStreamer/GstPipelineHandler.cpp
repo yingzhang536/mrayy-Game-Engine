@@ -28,7 +28,7 @@ namespace video
 		GStreamerCore::Instance()->Unref();
 	}
 
-	bool GstPipelineHandler::StartPipeline()
+	bool GstPipelineHandler::CreatePipeline()
 	{
 		if (!m_gstPipeline)
 			return false;

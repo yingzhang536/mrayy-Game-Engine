@@ -16,6 +16,8 @@ static gboolean gst_MyUDPSrc_stop(GstBaseSrc * bsrc);
 static gboolean gst_MyUDPSrc_unlock(GstBaseSrc * bsrc);
 
 static gboolean gst_MyUDPSrc_unlock_stop(GstBaseSrc * bsrc);
+static GstStateChangeReturn
+gst_myudpsrc_change_state(GstElement * element, GstStateChange transition);
 
 static void gst_MyUDPSrc_finalize(GObject * object);
 
@@ -128,6 +130,7 @@ gst_MyUDPSrc_class_init(GstMyUDPSrcClass * klass)
 		"The caps of the source pad", GST_TYPE_CAPS,
 		GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
 
+	gstelement_class->change_state = gst_myudpsrc_change_state;
 
 	gstbasesrc_class->start = gst_MyUDPSrc_start;
 	gstbasesrc_class->stop = gst_MyUDPSrc_stop;
@@ -160,11 +163,20 @@ gst_MyUDPSrc_start(GstBaseSrc * bsrc)
 
 	src = GST_MyUDPSrc(bsrc);
 
+	return TRUE;
+
+}
+
+static gboolean 
+gst_MyUDPSrc_Open(GstMyUDPSrc * src)
+{
+
 	if (src->m_client)
 	{
 		GST_DEBUG_OBJECT(src, "binding socket");
-		if (src->m_client->Open(src->port)==network::UDP_SOCKET_ERROR_NONE)
+		if (src->m_client->Open(src->port) == network::UDP_SOCKET_ERROR_NONE)
 		{
+			printf("UDP Socket bound to: %d\n", src->m_client->Port());
 			GST_DEBUG_OBJECT(src, "UDP Socket bound to %d", src->port);
 		}
 		else
@@ -173,9 +185,18 @@ gst_MyUDPSrc_start(GstBaseSrc * bsrc)
 			return FALSE;
 		}
 	}
+	return true;
+}
+static gboolean
+gst_MyUDPSrc_Close(GstMyUDPSrc * src)
+{
 
-	return TRUE;
-
+	if (src->m_client)
+	{
+		GST_DEBUG_OBJECT(src, "closing socket");
+		src->m_client->Close();
+	}
+	return true;
 }
 
 static void
@@ -219,6 +240,7 @@ gst_MyUDPSrc_create(GstPushSrc * psrc, GstBuffer ** buf)
 			gst_buffer_map(outbuf, &map, GST_MAP_WRITE);
 			memcpy(map.data, Buffer, len);
 			gst_buffer_unmap(outbuf, &map);
+			//printf("%d  ", len);
 			/*
 			gst_buffer_append_memory(outbuf,
 				gst_memory_new_wrapped(GST_MEMORY_FLAG_READONLY, Buffer, len, 0, len, 0, g_free));
@@ -257,6 +279,20 @@ gst_MyUDPSrc_create(GstPushSrc * psrc, GstBuffer ** buf)
 	return ret;
 }
 
+void _GstMyUDPSrc::SetPort(guint16 p)
+{
+	if ( port == p)
+		return;
+	port = p;
+	if (m_client && m_client->IsOpen())
+	{
+		m_client->Close();
+		// restart socket
+		gst_MyUDPSrc_Open(this);
+	}
+
+}
+
 
 static void
 gst_MyUDPSrc_set_property(GObject * object, guint prop_id, const GValue * value,
@@ -290,6 +326,8 @@ GParamSpec * pspec)
 		}
 		break;
 	case PROP_PORT:
+		if (MyUDPSrc->port == g_value_get_int(value))
+			break;
 		MyUDPSrc->port = g_value_get_int(value);
 		if (MyUDPSrc->m_client && MyUDPSrc->m_client->IsConnected())
 		{
@@ -357,6 +395,58 @@ gst_MyUDPSrc_stop(GstBaseSrc * bsrc)
 	return TRUE;
 }
 
+static GstStateChangeReturn 
+gst_myudpsrc_change_state (GstElement * element, GstStateChange transition)
+{
+	GstMyUDPSrc *src;
+  GstStateChangeReturn result;
+
+  src = GST_MyUDPSrc (element);
+
+  switch (transition) {
+    case GST_STATE_CHANGE_NULL_TO_READY:
+      if (!gst_MyUDPSrc_Open (src))
+        goto open_failed;
+      break;
+    default:
+      break;
+  }
+  if ((result =
+          GST_ELEMENT_CLASS (parent_class)->change_state (element,
+              transition)) == GST_STATE_CHANGE_FAILURE)
+    goto failure;
+
+  switch (transition) {
+    case GST_STATE_CHANGE_READY_TO_NULL:
+      gst_MyUDPSrc_Close (src);
+      break;
+    default:
+      break;
+  }
+  return result;
+  /* ERRORS */
+open_failed:
+  {
+    GST_DEBUG_OBJECT (src, "failed to open socket");
+    return GST_STATE_CHANGE_FAILURE;
+  }
+failure:
+  {
+    GST_DEBUG_OBJECT (src, "parent failed state change");
+    return result;
+  }
+}
+
+
+
+
+/*** GSTURIHANDLER INTERFACE *************************************************/
+
+static GstURIType
+gst_udpsrc_uri_get_type (GType type)
+{
+  return GST_URI_SRC;
+}
 gboolean
 _GstMyUDPSrcClass::plugin_init(GstPlugin * plugin)
 {

@@ -25,7 +25,7 @@ public:
 	GstPipelineHandler();
 	virtual ~GstPipelineHandler();
 
-	virtual bool StartPipeline();
+	virtual bool CreatePipeline();
 	virtual void SetPaused(bool p);
 	virtual void Stop();
 	virtual bool IsLoaded();

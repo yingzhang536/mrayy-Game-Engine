@@ -34,7 +34,7 @@ void VideoAppSinkHandler::Close()
 	m_IsAllocated = false;
 	m_pixels.clear();
 	m_backPixels.clear();
-	m_eventPixels.clear();
+//	m_eventPixels.clear();
 }
 
 
@@ -76,16 +76,32 @@ GstFlowReturn VideoAppSinkHandler::process_sample(std::shared_ptr<GstSample> sam
 	GstBuffer * _buffer = gst_sample_get_buffer(sample.get());
 
 
+
+	GstVideoInfo vinfo = getVideoInfo(sample.get());
+	video::EPixelFormat fmt = getVideoFormat(vinfo.finfo->format);
+	if (fmt == video::EPixel_Unkown)
+	{
+		return GST_FLOW_ERROR;
+	}
+	if (m_pixels.imageData && (m_pixels.Size.x != vinfo.width || m_pixels.Size.y != vinfo.height || m_pixels.format != fmt))
+	{
+		m_IsAllocated = false;
+		m_pixels.clear();
+		m_backPixels.clear();
+	}
+
 	gst_buffer_map(_buffer, &mapinfo, GST_MAP_READ);
 	guint size = mapinfo.size;
 	int pxSize = video::PixelUtil::getPixelDescription(m_pixels.format).elemSizeB;
 	int stride = 0;
 	int dataSize = m_pixels.Size.x*m_pixels.Size.y * pxSize;
+
 	if (m_pixels.imageData && dataSize != (int)size){
 		GstVideoInfo vinfo = getVideoInfo(sample.get());
 		stride = vinfo.stride[0];
 
 		if (stride == (m_pixels.Size.x * pxSize)) {
+			gst_buffer_unmap(_buffer, &mapinfo);
 			gLogManager.StartLog(ELL_WARNING) << "VideoAppSinkHandler::process_sample(): error on new buffer, buffer size: " << size << "!= init size: " << dataSize;
 			gLogManager.flush();
 			return GST_FLOW_ERROR;
@@ -96,13 +112,13 @@ GstFlowReturn VideoAppSinkHandler::process_sample(std::shared_ptr<GstSample> sam
 
 	if (m_pixels.imageData){
 		++m_frameID;
-		if (stride > 0) {
+		//if (stride > 0) {
 			m_backPixels.setData(mapinfo.data, m_pixels.Size, m_pixels.format);
-		}
-		else {
-			m_backPixels.setData(mapinfo.data, m_pixels.Size, m_pixels.format);
-			m_eventPixels.setData(mapinfo.data, m_pixels.Size, m_pixels.format);
-		}
+// 		}
+// 		else {
+// 			m_backPixels.setData(mapinfo.data, m_pixels.Size, m_pixels.format);
+// 			m_eventPixels.setData(mapinfo.data, m_pixels.Size, m_pixels.format);
+// 		}
 
 		m_BackPixelsChanged = true;
 		m_mutex->unlock();
@@ -112,8 +128,7 @@ GstFlowReturn VideoAppSinkHandler::process_sample(std::shared_ptr<GstSample> sam
 	}
 	else{
 
-		GstVideoInfo vinfo = getVideoInfo(sample.get());
-		_Allocate(vinfo.width, vinfo.height, getVideoFormat(vinfo.finfo->format));
+		_Allocate(vinfo.width, vinfo.height, fmt);
 
 		m_mutex->unlock();
 		FIRE_LISTENR_METHOD(OnStreamPrepared, (this));

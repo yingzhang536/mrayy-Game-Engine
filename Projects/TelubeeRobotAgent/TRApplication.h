@@ -27,7 +27,7 @@
 #include "IUDPClient.h"
 #include "OpenNIManager.h"
 #include "CameraProfile.h"
-#include "GstNetworkStreamer.h"
+#include "GstStreamBin.h"
 
 namespace mray
 {
@@ -65,7 +65,8 @@ protected:
 
 	GCPtr<video::ICameraVideoGrabber> m_cameras[2];
 	GCPtr<video::IVideoGrabber> m_combinedCameras;
-	GCPtr<video::GstNetworkStreamer> m_streamer;
+	GCPtr<video::GstStreamBin> m_streamers;
+	//GCPtr<video::GstNetworkVideoStreamer> m_streamer;
 
 	video::VideoGrabberTexture m_cameraTextures[3];
 
@@ -73,8 +74,6 @@ protected:
 	video::IRenderTargetPtr m_renderTarget;;
 
 
-	GstVideoProvider* m_videoProvider;
-	GstVideoGrabberImpl* m_videoGrabber;
 
 	RobotCommunicator* m_robotCommunicator;
 
@@ -94,6 +93,7 @@ protected:
 	bool m_isLocal;
 	bool m_streamAudio;
 	bool m_depthSend;
+	bool m_isStarted;
 
 	int m_videoPort;
 

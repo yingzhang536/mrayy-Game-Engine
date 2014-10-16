@@ -66,8 +66,8 @@ public:
 		dataCommunicator = 0;
 		cameraProvider = 0;
 
-		TargetVideoPort = 5000;
-		TargetAudioPort = 5002;
+		TargetVideoPort = 7000;
+		TargetAudioPort = 7005;
 		TargetCommunicationPort = 5003;
 	}
 	Application* App;

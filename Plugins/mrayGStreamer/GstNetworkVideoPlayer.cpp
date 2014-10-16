@@ -1,7 +1,7 @@
 
 
 #include "stdafx.h"
-#include "GstNetworkPlayer.h"
+#include "GstNetworkVideoPlayer.h"
 
 #include "ILogManager.h"
 
@@ -22,12 +22,10 @@ namespace mray
 namespace video
 {
 
-class GstNetworkPlayerImpl :public GstPipelineHandler
+class GstNetworkVideoPlayerImpl :public GstPipelineHandler
 {
 	core::string m_ipAddr;
 	int m_videoPort;
-	int m_audioPort;
-	int m_rtcpPort;
 
 	core::string m_pipeLineString;
 
@@ -35,21 +33,16 @@ class GstNetworkPlayerImpl :public GstPipelineHandler
 	GstMyUDPSrc* m_videoRtcpSrc;
 	GstMyUDPSink* m_videoRtcpSink;
 
-	GstMyUDPSrc* m_audioSrc;
-	GstMyUDPSrc* m_audioRtcpSrc;
-	GstMyUDPSink* m_audioRtcpSink;
-
 	GstAppSink* m_videoSink;
 
 	VideoAppSinkHandler m_videoHandler;
 
 public:
-	GstNetworkPlayerImpl()
+	GstNetworkVideoPlayerImpl()
 	{
 		m_ipAddr = "127.0.0.1";
 		m_videoPort = 5000;
-		m_audioPort = 5002;
-		m_rtcpPort = 5004;
+		m_gstPipeline = 0;
 		m_pipeLineString =
 		{
 			"rtpbin "
@@ -92,31 +85,41 @@ public:
 		};
 
 	}
-	virtual ~GstNetworkPlayerImpl()
+	virtual ~GstNetworkVideoPlayerImpl()
 	{
 
 	}
 
-	void SetIPAddress(const core::string& ip, int videoPort, int audioPort = 0, int rtcpPort = 0)
+	void _UpdatePorts()
+	{
+		if (!m_gstPipeline)
+			return;
+#define SET_SRC(name,p) m_##name=GST_MyUDPSrc(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->SetPort(p);}
+#define SET_SINK(name,p) m_##name=GST_MyUDPSink(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->SetPort(m_ipAddr,p);}
+
+		SET_SRC(videoSrc, m_videoPort);
+		SET_SINK(videoRtcpSink, (m_videoPort + 1));
+		SET_SRC(videoRtcpSrc, (m_videoPort + 2));
+
+	}
+
+	void SetIPAddress(const core::string& ip, int videoPort)
 	{
 		m_ipAddr = ip;
 		m_videoPort = videoPort;
-		m_audioPort = audioPort;
-		m_rtcpPort = rtcpPort;
 
-		if (!m_audioPort)
-			m_audioPort = m_videoPort + 2;
-		if (!m_rtcpPort)
-			m_rtcpPort = m_audioPort + 2;
+		//set src and sinks elements
+		_UpdatePorts();
 	}
-	bool StartStream()
+	bool CreateStream()
 	{
-
+		if (m_Loaded)
+			return true;
 		{
 			core::string videoStr;
 			videoStr = "myudpsrc name=videoSrc  "
 				"caps=application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 ! "
-				" rtph264depay ! h264parse ! avdec_h264 ! "
+				" rtpjitterbuffer  drop-on-latency=true latency=500  !   rtph264depay ! h264parse ! avdec_h264 ! "
 				"videoconvert ! video/x-raw,format=RGB  !"
 				"appsink name=videoSink ";
 
@@ -127,22 +130,12 @@ public:
 		m_gstPipeline = gst_parse_launch(m_pipeLineString.c_str(), &err);
 		if (err)
 		{
-			printf("GstNetworkPlayer: Pipeline error: %s", err->message);
+			printf("GstNetworkVideoPlayer: Pipeline error: %s", err->message);
 		}
 		if (!m_gstPipeline)
 			return false;
 
-#define SET_SRC(name,p) m_##name=GST_MyUDPSrc(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->port=p;}
-#define SET_SINK(name,p) m_##name=GST_MyUDPSink(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->host=m_ipAddr;m_##name->port=p;}
-
-		SET_SRC(videoSrc, m_videoPort);
-		SET_SINK(videoRtcpSink, (m_videoPort + 1));
-		SET_SRC(videoRtcpSrc, m_rtcpPort);
-
-
-		SET_SRC(audioSrc, m_audioPort);
-		SET_SINK(audioRtcpSink, (m_audioPort + 1));
-		SET_SRC(audioRtcpSrc, (m_rtcpPort + 1));
+		_UpdatePorts();
 
 		m_videoSink = GST_APP_SINK(gst_bin_get_by_name(GST_BIN(m_gstPipeline), "videoSink"));
 
@@ -164,7 +157,7 @@ public:
 		gst_app_sink_set_callbacks(GST_APP_SINK(m_videoSink), &gstCallbacks, &m_videoHandler, NULL);
 
 
-		return StartPipeline();
+		return CreatePipeline();
 
 	}
 
@@ -212,86 +205,86 @@ public:
 };
 
 
-GstNetworkPlayer::GstNetworkPlayer()
+GstNetworkVideoPlayer::GstNetworkVideoPlayer()
 {
-	m_impl = new GstNetworkPlayerImpl();
+	m_impl = new GstNetworkVideoPlayerImpl();
 }
 
-GstNetworkPlayer::~GstNetworkPlayer()
+GstNetworkVideoPlayer::~GstNetworkVideoPlayer()
 {
 	delete m_impl;
 }
-void GstNetworkPlayer::SetIPAddress(const core::string& ip, int videoPort, int audioPort , int rtcpPort )
+void GstNetworkVideoPlayer::SetIPAddress(const core::string& ip, int videoPort )
 {
-	m_impl->SetIPAddress(ip, videoPort, audioPort, rtcpPort);
+	m_impl->SetIPAddress(ip, videoPort);
 }
-bool GstNetworkPlayer::StartStream()
+bool GstNetworkVideoPlayer::CreateStream()
 {
-	return m_impl->StartStream();
+	return m_impl->CreateStream();
 }
 
-void GstNetworkPlayer::SetVolume(float vol)
+void GstNetworkVideoPlayer::SetVolume(float vol)
 {
 	m_impl->SetVolume(vol);
 }
-bool GstNetworkPlayer::IsStream()
+bool GstNetworkVideoPlayer::IsStream()
 {
 	return m_impl->IsStream();
 }
 
-void GstNetworkPlayer::Play()
+void GstNetworkVideoPlayer::Play()
 {
 	m_impl->Play();
 }
-void GstNetworkPlayer::Stop()
+void GstNetworkVideoPlayer::Stop()
 {
 	m_impl->Stop();
 }
-void GstNetworkPlayer::Pause()
+void GstNetworkVideoPlayer::Pause()
 {
 	m_impl->Pause();
 }
-bool GstNetworkPlayer::IsLoaded()
+bool GstNetworkVideoPlayer::IsLoaded()
 {
 	return m_impl->IsLoaded();
 }
-bool GstNetworkPlayer::IsPlaying()
+bool GstNetworkVideoPlayer::IsPlaying()
 {
 	return m_impl->IsPlaying();
 }
-void GstNetworkPlayer::Close()
+void GstNetworkVideoPlayer::Close()
 {
 	m_impl->Close();
 
 }
 
-const math::vector2di& GstNetworkPlayer::GetFrameSize()
+const math::vector2di& GstNetworkVideoPlayer::GetFrameSize()
 {
 	return m_impl->GetFrameSize();
 }
 
-video::EPixelFormat GstNetworkPlayer::GetImageFormat()
+video::EPixelFormat GstNetworkVideoPlayer::GetImageFormat()
 {
 	return m_impl->GetImageFormat();
 }
 
-bool GstNetworkPlayer::GrabFrame()
+bool GstNetworkVideoPlayer::GrabFrame()
 {
 	return m_impl->GrabFrame();
 }
 
-bool GstNetworkPlayer::HasNewFrame()
+bool GstNetworkVideoPlayer::HasNewFrame()
 {
 	return m_impl->HasNewFrame();
 }
 
-ulong GstNetworkPlayer::GetBufferID()
+ulong GstNetworkVideoPlayer::GetBufferID()
 {
 	return m_impl->GetBufferID();
 }
 
 
-const ImageInfo* GstNetworkPlayer::GetLastFrame()
+const ImageInfo* GstNetworkVideoPlayer::GetLastFrame()
 {
 	return m_impl->GetLastFrame();
 }

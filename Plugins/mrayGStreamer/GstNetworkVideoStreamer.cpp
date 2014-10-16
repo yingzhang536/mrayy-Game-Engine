@@ -1,26 +1,25 @@
 
 
 #include "stdafx.h"
-#include "GstNetworkStreamer.h"
+#include "GstNetworkVideoStreamer.h"
 
 #include "GstPipelineHandler.h"
 
 #include "CMyUDPSrc.h"
 #include "CMyUDPSink.h"
 
+#include "StringConverter.h"
 
 namespace mray
 {
 namespace video
 {
 
-class GstNetworkStreamerImpl :public GstPipelineHandler
+class GstNetworkVideoStreamerImpl :public GstPipelineHandler
 {
 protected:
 	core::string m_ipAddr;
 	int m_videoPort;
-	int m_audioPort;
-	int m_rtcpPort;
 
 	int m_cam0, m_cam1;
 	int m_bitRate;
@@ -33,19 +32,13 @@ protected:
 	GstMyUDPSink* m_videoRtcpSink;
 	GstMyUDPSrc* m_videoRtcpSrc;
 
-	GstMyUDPSink* m_audioSink;
-	GstMyUDPSink* m_audioRtcpSink;
-	GstMyUDPSrc* m_audioRtcpSrc;
-
 public:
-	GstNetworkStreamerImpl()
+	GstNetworkVideoStreamerImpl()
 	{
 		m_ipAddr = "127.0.0.1";
 		m_videoPort = 5000;
-		m_audioPort = 5002;
-		m_rtcpPort = 5004;
 
-		m_bitRate = 3000;
+		m_bitRate = 5000;
 		m_cam0 = 0;
 		m_cam1 = 1;
 		m_streamAudio = true;
@@ -53,7 +46,7 @@ public:
 		m_frameSize.set(1280, 720);
 	}
 
-	virtual ~GstNetworkStreamerImpl()
+	virtual ~GstNetworkVideoStreamerImpl()
 	{
 	}
 	void BuildString()
@@ -110,7 +103,7 @@ public:
 
 
 		m_pipeLineString = videoStr + " ! "
-			"x264enc name=videoEnc  speed-preset=superfast tune=zerolatency sync-lookahead=0 !  rtph264pay config-interval=1 !"
+			"x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency pass=qual ! rtph264pay ! "
 			"myudpsink name=videoSink ";
 
 
@@ -122,59 +115,65 @@ public:
 	}
 	void SetCameras(int cam0, int cam1)
 	{
-		m_cam0 = 0;
-		m_cam1 = 1;
+		m_cam0 = cam0;
+		m_cam1 = cam1;
 	}
+	bool IsStereo()
+	{
+		return m_cam0 != m_cam1;
+	}
+
 	void SetResolution(int width, int height)
 	{
 		m_frameSize.set(width, height);
 	}
 
-	void BindPorts(const core::string& addr, int videoPort, int audioPort = 0, int rtcpPort = 0)
+	void _UpdatePorts()
+	{
+
+		if (!m_gstPipeline)
+			return;
+#define SET_SRC(name,p) m_##name=GST_MyUDPSrc(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->SetPort(p);}
+#define SET_SINK(name,p) m_##name=GST_MyUDPSink(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->SetPort(m_ipAddr,p);}
+
+		SET_SINK(videoSink, m_videoPort);
+		SET_SRC(videoRtcpSrc, (m_videoPort + 1));
+		SET_SINK(videoRtcpSink, (m_videoPort + 2));
+
+
+	}
+
+	void BindPorts(const core::string& addr, int videoPort)
 	{
 		m_ipAddr = addr;
 		m_videoPort = videoPort;
-		m_audioPort = audioPort;
-		m_rtcpPort = rtcpPort;
 
-		if (!m_audioPort)
-			m_audioPort = m_videoPort + 2;
-		if (!m_rtcpPort)
-			m_rtcpPort = m_audioPort + 2;
+		_UpdatePorts();
 	}
-	bool StartStream()
+	bool CreateStream()
 	{
 		GError *err = 0;
 		BuildString();
 		m_gstPipeline = gst_parse_launch(m_pipeLineString.c_str(), &err);
 		if (err)
 		{
-			printf("GstNetworkPlayer: Pipeline error: %s", err->message);
+			printf("GstNetworkVideoStreamer: Pipeline error: %s", err->message);
 		}
 		if (!m_gstPipeline)
 			return false;
+		_UpdatePorts();
 
-#define SET_SRC(name,p) m_##name=GST_MyUDPSrc(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->port=p;}
-#define SET_SINK(name,p) m_##name=GST_MyUDPSink(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->host=m_ipAddr;m_##name->port=p;}
-
-		SET_SINK(videoSink, m_videoPort);
-		SET_SINK(videoRtcpSink, m_rtcpPort);
-		SET_SRC(videoRtcpSrc, (m_videoPort + 1));
-
-
-		SET_SINK(audioSink, m_audioPort);
-		SET_SINK(audioRtcpSink, (m_rtcpPort + 1));
-		SET_SRC(audioRtcpSrc, (m_audioPort + 1));
-
-
-		return StartPipeline();
+		return CreatePipeline();
 
 	}
-	void Play()
+	void Stream()
 	{
 		SetPaused(false);
 	}
-
+	bool IsStreaming()
+	{
+		return !m_paused;
+	}
 	virtual void Close()
 	{
 		GstPipelineHandler::Close();
@@ -184,49 +183,64 @@ public:
 };
 
 
-GstNetworkStreamer::GstNetworkStreamer()
+GstNetworkVideoStreamer::GstNetworkVideoStreamer()
 {
-	m_impl = new GstNetworkStreamerImpl();
+	m_impl = new GstNetworkVideoStreamerImpl();
 }
 
-GstNetworkStreamer::~GstNetworkStreamer()
+GstNetworkVideoStreamer::~GstNetworkVideoStreamer()
 {
 	delete m_impl;
 }
-void GstNetworkStreamer::Play()
+void GstNetworkVideoStreamer::Stream()
 {
-	m_impl->Play();
+	m_impl->Stream();
 }
-void GstNetworkStreamer::Stop()
+void GstNetworkVideoStreamer::Stop()
 {
 	m_impl->Stop();
 }
 
 
-void GstNetworkStreamer::BindPorts(const core::string& addr, int videoPort, int audioPort, int rtcpPort)
+void GstNetworkVideoStreamer::BindPorts(const core::string& addr, int videoPort)
 {
-	m_impl->BindPorts(addr,videoPort, audioPort, rtcpPort);
+	m_impl->BindPorts(addr,videoPort);
 }
 
-bool GstNetworkStreamer::StartStream()
+bool GstNetworkVideoStreamer::CreateStream()
 {
-	return m_impl->StartStream();
+	return m_impl->CreateStream();
 }
 
-void GstNetworkStreamer::Close()
+void GstNetworkVideoStreamer::Close()
 {
 	m_impl->Close();
 }
-void GstNetworkStreamer::SetBitRate(int bitRate)
+bool GstNetworkVideoStreamer::IsStreaming()
+{
+	return m_impl->IsStreaming();
+}
+
+void GstNetworkVideoStreamer::SetResolution(int width, int height)
+{
+	m_impl->SetResolution(width, height);
+}
+
+void GstNetworkVideoStreamer::SetBitRate(int bitRate)
 {
 	m_impl->SetBitRate(bitRate);
 }
 
 
-void GstNetworkStreamer::SetCameras(int cam0, int cam1)
+void GstNetworkVideoStreamer::SetCameras(int cam0, int cam1)
 {
 	m_impl->SetCameras(cam0, cam1);
 }
+bool GstNetworkVideoStreamer::IsStereo()
+{
+	return m_impl->IsStereo();
+}
+
 
 }
 }

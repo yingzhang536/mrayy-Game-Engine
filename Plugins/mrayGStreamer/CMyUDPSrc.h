@@ -44,6 +44,7 @@ struct _GstMyUDPSrc {
 
 	mray::network::IUDPClient* m_client;
 
+	void SetPort(guint16 port);
 };
 
 struct _GstMyUDPSrcClass {

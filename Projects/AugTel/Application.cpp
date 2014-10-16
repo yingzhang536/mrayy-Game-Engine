@@ -50,6 +50,7 @@
 #include "LocalCameraVideoSource.h"
 #include "LocalSingleCameraVideoSource.h"
 #include "GstStereoNetVideoSource.h"
+#include "GstStreamerVideoSource.h"
 #include "GstSingleNetVideoSource.h"
 #include "DataCommunicator.h"
 
@@ -235,7 +236,7 @@ void Application::_initStates()
 		ip = ifo->IP;
 
 	if (m_remoteCamera)
-		remote = new AugCameraRenderState(new TBee::GstStereoNetVideoSource(ip), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new AugCameraRenderState(new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
   	else
 		remote = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
 	m_renderingState->AddState(remote);
@@ -246,7 +247,7 @@ void Application::_initStates()
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
 
-	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStereoNetVideoSource(ip));
+	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort));
 	m_renderingState->AddState(latency);
 
 // 	vtRs = new VTelesarRenderingState("Telesar");

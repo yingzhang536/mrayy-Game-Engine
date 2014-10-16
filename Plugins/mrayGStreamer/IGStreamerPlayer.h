@@ -15,7 +15,6 @@
 #ifndef __IGStreamerPlayer__
 #define __IGStreamerPlayer__
 
-#include "IVideoGrabber.h"
 
 
 namespace mray
@@ -23,7 +22,7 @@ namespace mray
 namespace video
 {
 
-class IGStreamerPlayer:public IVideoGrabber
+class IGStreamerPlayer
 {
 protected:
 	bool m_isStreaming;

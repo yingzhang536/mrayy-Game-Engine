@@ -22,6 +22,9 @@
 #include "CMemoryStream.h"
 #include "DynamicFontGenerator.h"
 
+#include "GstNetworkVideoStreamer.h"
+#include "GstNetworkAudioStreamer.h"
+
 #define COMMUNICATION_PORT 6000
 #define VIDEO_PORT 5000
 #define AUDIO_PORT 5002
@@ -101,8 +104,6 @@ TRApplication::TRApplication()
 {
 	m_robotCommunicator = 0;
 	m_startVideo = 0;
-	m_videoProvider = 0;
-	m_videoGrabber = 0;
 	m_communicatorListener = new AppRobotCommunicatorListener(this);
 	m_msgSink = new AppRobotMessageSink(this);
 	m_openNi = 0;
@@ -113,14 +114,14 @@ TRApplication::TRApplication()
 	m_robotInited = false;
 
 	m_cameraProfileManager = new CameraProfileManager();
+
+	m_streamers = new video::GstStreamBin();
 }
 
 TRApplication::~TRApplication()
 {
-	if (m_videoProvider)
-		m_videoProvider->Stop();
-	delete m_videoProvider;
-	delete m_videoGrabber;
+	m_streamers->ClearStreams(true);
+	m_streamers = 0;
 	delete m_robotCommunicator;
 	delete m_communicatorListener;
 	delete m_msgSink;
@@ -217,12 +218,6 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	m_limitFps = true;
 	network::createWin32Network();
 
-	{
-		m_streamer = new video::GstNetworkStreamer();
-		m_streamer->BindPorts("127.0.0.1", 6000);
-		m_streamer->StartStream();
-		m_streamer->Play();
-	}
 
 	{
 		std::vector<sound::InputStreamDeviceInfo> lst;
@@ -307,6 +302,46 @@ void TRApplication::init(const OptionContainer &extraOptions)
 			}
 		}
 	}
+
+	uint bitRate[] =
+	{
+		1000,
+		2000,
+		3500,
+		5000,
+		7000
+	};
+
+	{
+		video::GstNetworkVideoStreamer* streamer;
+		streamer = new video::GstNetworkVideoStreamer();
+
+		streamer->SetResolution(m_resolution.x, m_resolution.y);
+		streamer->SetCameras(m_cameraIfo[0].ifo.index, m_cameraIfo[1].ifo.index);
+		streamer->SetBitRate(bitRate[(int)m_quality]);
+
+		streamer->CreateStream();
+
+		m_streamers->AddStream(streamer, "Video");
+	}
+	{
+		video::GstNetworkAudioStreamer* streamer;
+		streamer = new video::GstNetworkAudioStreamer();
+
+		streamer->CreateStream();
+		m_streamers->AddStream(streamer, "Audio");
+	}
+	m_robotCommunicator = new RobotCommunicator();
+	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
+	m_robotCommunicator->SetListener(m_communicatorListener);
+	m_robotCommunicator->SetMessageSink(m_msgSink);
+
+
+	m_commChannel = network::INetwork::getInstance().createUDPClient();
+	m_commChannel->Open();
+
+	m_isStarted = false;
+
 	return;
 	m_combinedCameras = new CombineVideoGrabber();
 	/*if (m_quality==EStreamingQuality::UltraLow)
@@ -320,26 +355,18 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	else if (m_quality == EStreamingQuality::UltraHigh)*/
 	m_combinedCameras->SetFrameSize(m_resolution.x, m_resolution.y);
 	((CombineVideoGrabber*)m_combinedCameras.pointer())->SetGrabbers(m_cameras[0], m_cameras[1]);
-	m_cameraTextures[2].Set(m_combinedCameras, getDevice()->createEmptyTexture2D(true));
-	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
-
-	m_videoProvider = new GstVideoProvider();
-	m_videoProvider->SetCameras(m_cameraIfo[0].ifo, m_cameraIfo[1].ifo);
-	m_videoProvider->SetTargetResolution(m_resolution);
-	m_videoProvider->SetNetworkType(m_isLocal);
-	m_videoProvider->EnableAudio(m_streamAudio);
-	m_videoProvider->SetDataSource(m_videoGrabber);
-	m_videoProvider->StreamDataTo(network::NetAddress(m_ip, m_videoPort), m_videoPort, AUDIO_PORT);
+ 	m_cameraTextures[2].Set(m_combinedCameras, getDevice()->createEmptyTexture2D(true));
+// 	m_videoGrabber = new GstVideoGrabberImpl(m_combinedCameras);
+// 
+// 	m_videoProvider = new GstVideoProvider();
+// 	m_videoProvider->SetCameras(m_cameraIfo[0].ifo, m_cameraIfo[1].ifo);
+// 	m_videoProvider->SetTargetResolution(m_resolution);
+// 	m_videoProvider->SetNetworkType(m_isLocal);
+// 	m_videoProvider->EnableAudio(m_streamAudio);
+// 	m_videoProvider->SetDataSource(m_videoGrabber);
+// 	m_videoProvider->StreamDataTo(network::NetAddress(m_ip, m_videoPort), m_videoPort, AUDIO_PORT);
 //	m_videoProvider->Start();
 
-	m_robotCommunicator = new RobotCommunicator();
-	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
-	m_robotCommunicator->SetListener(m_communicatorListener);
-	m_robotCommunicator->SetMessageSink(m_msgSink);
-
-
-	m_commChannel = network::INetwork::getInstance().createUDPClient();
-	m_commChannel->Open();
 
 
 }
@@ -356,7 +383,6 @@ void TRApplication::WindowPostRender(video::RenderWindow* wnd)
 void TRApplication::update(float dt)
 {
 	CMRayApplication::update(dt);
-	return;
 
 	if (m_debugData.userConnected && !m_robotInited)
 	{
@@ -367,7 +393,7 @@ void TRApplication::update(float dt)
 	if (m_startVideo || m_debugData.debug)
 	{
 		//m_cameraTextures[2].Blit();
- 		m_videoGrabber->Lock();
+ 		//m_videoGrabber->Lock();
 	//	m_videoGrabber->GetGrabber()->GrabFrame();
 		
 	/*	if (m_debugData.debug)
@@ -375,10 +401,10 @@ void TRApplication::update(float dt)
 		else
 			m_cameraTextures[2].GetGrabber()->GrabFrame();
  		*/
-		m_videoGrabber->Unlock();
+		//m_videoGrabber->Unlock();
 
 
-		if (m_startVideo && !m_videoProvider->IsConnected())
+		if (m_startVideo && !m_isStarted)
 		{
 			/*
 			if (!m_debugData.debug )
@@ -389,19 +415,22 @@ void TRApplication::update(float dt)
 					if (m_cameraIfo[i].id >= 0)
 						grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
 				}
-			}*/
-			m_videoProvider->Start(m_quality);
+				}*/	
+			m_streamers->Stream();
+			m_isStarted = true;
+
 			//m_openNi->Start(320,240);
 		}
-		if (!m_startVideo && m_videoProvider->IsConnected())
+	}
+	if (!m_startVideo && m_isStarted)
+	{
+		//m_openNi->Close();
+		m_isStarted = false;
+		m_streamers->Stop();
+		if (!m_debugData.debug)
 		{
-			//m_openNi->Close();
-			m_videoProvider->Stop();
-			if (!m_debugData.debug)
-			{
-				m_cameras[0]->Stop();
-				m_cameras[1]->Stop();
-			}
+			m_cameras[0]->Stop();
+			m_cameras[1]->Stop();
 		}
 	}
 
@@ -451,7 +480,6 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 	math::rectf texCoords(0,1,1,0);
 	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
 	*/
-	return;
 
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 	if (font){
@@ -526,7 +554,15 @@ void TRApplication::OnUserConnected(const network::NetAddress& address, int vide
 	if (m_remoteAddr.address != address.address)
 		printf("User Connected : %s\n", address.toString().c_str());
 	m_remoteAddr.address = address.address;
-	m_videoProvider->StreamDataTo(address,videoPort,audioPort);
+	//m_videoProvider->StreamDataTo(address,videoPort,audioPort);
+	int ip[4];
+	address.getIP(ip);
+	core::string ipaddr = core::StringConverter::toString(ip[0]) + "."+
+		core::StringConverter::toString(ip[1]) + "." +
+		core::StringConverter::toString(ip[2]) + "." +
+		core::StringConverter::toString(ip[3]);
+	m_streamers->GetStream("Video")->BindPorts(ipaddr, videoPort);
+	m_streamers->GetStream("Audio")->BindPorts(ipaddr, audioPort);
 	m_debugData.userAddress = address;
 	m_debugData.userConnected = true;
 
@@ -540,7 +576,7 @@ void TRApplication::OnUserConnected(const network::NetAddress& address, int vide
 	{
 		int reply = (int)EMessages::IsStereo;
 		int len = stream.write(&reply, sizeof(reply));
-		bool stereo = m_videoProvider->IsStereoCameras();
+		bool stereo = ((video::GstNetworkVideoStreamer*)m_streamers->GetStream("Video"))->IsStereo();
 		len += stream.write(&stereo, sizeof(stereo));
 		m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
 	}

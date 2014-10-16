@@ -315,9 +315,6 @@ void AugCameraRenderState::InitState()
 		m_screenLayout = new GUI::GUIAugTelScreen(m_guiManager);
 		screenOverlay->CreateElements(m_guiManager, m_guiroot, 0, m_screenLayout);
 	}
-	{
-		m_camVideoSrc->Init();
-	}
 
 	{
 		m_effects = new SceneEffectManager();

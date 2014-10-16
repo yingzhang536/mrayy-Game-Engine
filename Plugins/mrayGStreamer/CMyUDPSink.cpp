@@ -191,20 +191,41 @@ no_data:
 }
 
 
+void GstMyUDPSink::SetPort(const mray::core::string &host,guint16 p)
+{
+	if (this->host == host && port == p)
+		return;
+	this->host = host;
+	port = p;
+	if (m_client && m_client->IsConnected())
+	{
+		m_client->Disconnect();
+		// restart socket
+		gst_MyUDPSink_start(GST_BASE_SINK(this));
+	}
+
+}
 static void
 gst_MyUDPSink_set_property(GObject * object, guint prop_id,
 const GValue * value, GParamSpec * pspec)
 {
 	GstMyUDPSink *sink = GST_MyUDPSink(object);
 
+	bool update = false;
 
 	switch (prop_id) {
 	case PROP_HOST:
 	{
+		if (sink->host == g_value_get_string(value))
+			break;
 		sink->host = g_value_get_string(value);
+		update = true;
 		break;
 	}
 	case PROP_PORT:
+		if (sink->port == g_value_get_int(value))
+			break;
+		update = true;
 		sink->port = g_value_get_int(value);
 		break;
 	default:
@@ -212,7 +233,7 @@ const GValue * value, GParamSpec * pspec)
 		break;
 	}
 
-	if (sink->m_client && sink->m_client->IsConnected())
+	if (update && sink->m_client && sink->m_client->IsConnected())
 	{
 		sink->m_client->Disconnect();
 		// restart socket

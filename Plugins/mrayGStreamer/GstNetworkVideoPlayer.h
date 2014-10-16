@@ -1,32 +1,31 @@
 
 
-#ifndef GstNetworkPlayer_h__
-#define GstNetworkPlayer_h__
+#ifndef GstNetworkVideoPlayer_h__
+#define GstNetworkVideoPlayer_h__
 
 
 #include "IGStreamerPlayer.h"
+#include "IVideoGrabber.h"
 
 namespace mray
 {
 namespace video
 {
 
-	class GstNetworkPlayerImpl;
+class GstNetworkVideoPlayerImpl;
 
-class GstNetworkPlayer :public IGStreamerPlayer
+class GstNetworkVideoPlayer :public IGStreamerPlayer, public IVideoGrabber
 {
 protected:
-	GstNetworkPlayerImpl* m_impl;
+	GstNetworkVideoPlayerImpl* m_impl;
 public:
-	GstNetworkPlayer();
-	virtual ~GstNetworkPlayer();
+	GstNetworkVideoPlayer();
+	virtual ~GstNetworkVideoPlayer();
 
 	//set ip address for the target host
-	// videoport: port for the video stream, video rtcp is allocated as videoPort+1
-	// audioport: port for the audio stream (0 --> videoPort+2) , audio rtcp is allocated as audioPort+1
-	// rtcpPort: port for realtime control protocol stream, 0 --> audioPort+2
-	void SetIPAddress(const core::string& ip, int videoPort, int audioPort = 0, int rtcpPort = 0);
-	bool StartStream();
+	// videoport: port for the video stream, video rtcp is allocated as videoPort+1 and videoPort+2
+	void SetIPAddress(const core::string& ip, int videoPort);
+	bool CreateStream();
 
 	virtual bool IsStream() ;
 
@@ -58,4 +57,4 @@ public:
 }
 }
 
-#endif // GstNetworkPlayer_h__
+#endif // GstNetworkVideoPlayer_h__

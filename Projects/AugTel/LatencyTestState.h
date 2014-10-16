@@ -7,8 +7,6 @@
 #include "ICameraVideoSource.h"
 #include "CRobotConnector.h"
 
-#include "GstNetworkPlayer.h"
-#include "GstNetworkStreamer.h"
 #include "VideoGrabberTexture.h"
 
 namespace mray
@@ -29,11 +27,6 @@ protected:
 	float m_minLatency, m_maxLatency;
 
 	std::vector<float> m_latency;
-
-	GCPtr<video::GstNetworkPlayer> m_player;
-	GCPtr<video::GstNetworkStreamer> m_streamer;
-
-	GCPtr<video::VideoGrabberTexture> m_playerGrabber;
 
 public:
 	LatencyTestState(const core::string& name, TBee::ICameraVideoSource* src);
