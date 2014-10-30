@@ -27,6 +27,8 @@
 #include "DataCommunicator.h"
 #include "SceneEffectManager.h"
 #include "LoadingScreen.h"
+#include "GUIInterfaceScreenImpl.h"
+#include "GstStreamBin.h"
 
 namespace mray
 {
@@ -77,6 +79,7 @@ protected:
 	HandsMap m_handsMap;
 
 	TBee::ICameraVideoSource* m_camVideoSrc;
+	GCPtr<video::GstStreamBin> m_streamer;
 
 	core::string m_optiProvider;
 
@@ -90,16 +93,21 @@ protected:
 
 	LoadingScreen* m_loadScreen;
 
+	GCPtr<GUI::GUIInterfaceScreenImpl> m_interfaceUI;
+
 	bool m_viewDepth;
 
 	bool m_takeScreenShot;
 
 	float m_depthTime;
-	bool m_showScene;
+	bool m_enableHands;
+	bool m_enableVideo;
+	bool m_enableMic;
 
 	float m_focus;
 
 	bool m_showDebug;
+	bool m_showScene;
 
 	scene::LightNode* m_lightSrc;
 
@@ -113,6 +121,14 @@ protected:
 
 	void _GenerateLightMap();
 	virtual void _RenderUI(const math::rectf& rc, math::vector2d& pos);
+
+	void _EnableHands(bool e);
+	void _EnableVideo(bool e);
+	void _EnableMic(bool e);
+	bool _IsHandsEnabled(){ return m_enableHands; }
+	bool _IsVideoEnabled(){ return m_enableVideo; }
+	bool _IsMicEnabled(){ return m_enableMic; }
+
 public:
 	AugCameraRenderState(TBee::ICameraVideoSource* src, TBee::IRobotCommunicator* comm, const core::string& name);
 	virtual~AugCameraRenderState();

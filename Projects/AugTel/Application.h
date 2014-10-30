@@ -65,6 +65,8 @@ protected:
 	TBee::RenderingStateManager* m_renderingState;
 	GCPtr<controllers::WiimoteManager> m_wiiManager;
 
+	GCPtr<GUI::IGUIManager> m_previewGUI;
+
 	int m_cam1;
 	int m_cam2;
 
@@ -101,6 +103,8 @@ public:
 	GCPtr<video::IVideoClipManager> GetVideoManager(){ return m_videoManager; }
 
 	virtual void OnRendererDraw(TBeeRenderer* r, const math::rectf& rc, video::IRenderTarget* rt, ETargetEye eye);
+	video::RenderWindow* GetPreviewWindow(){ return m_previewWnd; }
+	GCPtr<GUI::IGUIManager> GetPreviewGUIManager(){ return m_previewGUI; }
 
 };
 

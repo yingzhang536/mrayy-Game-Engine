@@ -79,7 +79,7 @@ RobotCommunicator::~RobotCommunicator()
 	}
 	StopServer();
 	delete m_client;
-	delete m_robotController;
+	//delete m_robotController;
 	libDestroyPtr();
 	delete m_dataMutex;
 }
@@ -138,17 +138,18 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 		m_robotStatus.rotation = atof(vals[0].c_str());
 		m_robotStatus.rotation = math::clamp<float>(m_robotStatus.rotation, -1, 1);
 	}
-	else if (name == "Connect" && vals.size() == 3)
+	else if (name == "Connect" && vals.size() == 4)
 	{
 		int videoPort = atoi(vals[1].c_str());
 		int audioPort = atoi(vals[2].c_str());
+		bool rtcp = core::StringConverter::toBool(vals[3].c_str());
 		network::NetAddress addr = network::NetAddress(vals[0], videoPort);
 		//if (addr.address != m_userStatus.address.address || addr.port!=m_userStatus.address.port)
 		{
 			m_userStatus.address = addr;
 			if (m_listener)
 			{
-				m_listener->OnUserConnected(this, m_userStatus.address,videoPort,audioPort);
+				m_listener->OnUserConnected(this, m_userStatus.address, videoPort, audioPort, rtcp);
 			}
 		}
 	}

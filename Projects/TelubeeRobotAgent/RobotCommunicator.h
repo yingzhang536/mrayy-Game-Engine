@@ -37,7 +37,7 @@ namespace mray
 	public:
 
 		virtual void OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address){}
-		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort){};
+		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort,bool rtcp){};
 		virtual void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status){};
 
 		virtual void OnCalibrationDone(RobotCommunicator* sender){};
@@ -87,6 +87,7 @@ public:
 
 	virtual void GetRobotStatus(RobotStatus& st)const ;
 
+	IRobotController* GetRobotController(){ return m_robotController; }
 
 	void StartServer(int port);
 	void StopServer();

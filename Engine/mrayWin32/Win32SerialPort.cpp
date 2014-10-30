@@ -1,6 +1,8 @@
 
 #include "stdafx.h"
 #include "Win32SerialPort.h"
+#include "IThreadFunction.h"
+#include "IThreadManager.h"
 
 
 namespace mray
@@ -8,72 +10,107 @@ namespace mray
 namespace OS
 {
 
+	class Win32SerialPortImpl :public CSerialEx
+	{
+		Win32SerialPort* m_owner;
+	public:
+		Win32SerialPortImpl(Win32SerialPort* o)
+		{
+			m_owner = o;
+		}
+	protected:
+		virtual void OnEvent(EEvent eEvent, EError eError)
+		{
+			m_owner->__OnSerialEvent(eEvent, eError);
+		}
+
+	};
+
 Win32SerialPort::Win32SerialPort()
 {
-	m_port = new serial::Serial();
+	m_port = new Win32SerialPortImpl(this);
 	m_stream=new SerialPortStream(this);
 }
 Win32SerialPort::~Win32SerialPort()
 {
+	Close();
 	delete m_port;
 	delete m_stream;
 }
 
 
-bool Win32SerialPort::OpenByName(const core::string& port,int baudRate)
+bool Win32SerialPort::OpenByName(const core::string& port, ISerialPort::EBaudRate baudRate)
 {
-	if (m_port->isOpen())
+	if (m_port->IsOpen())
 		Close();
-	m_port->setPort(port);
-	m_port->setBaudrate(baudRate);
-	m_port->open();
-	return m_port->isOpen();
+	m_port->Open(port.c_str(), 0, 0, true);
+	m_port->Setup((CSerial::EBaudrate)baudRate);
+
+	 m_port->SetMask(CSerial::EEventBreak |
+		CSerial::EEventCTS |
+		CSerial::EEventDSR |
+		CSerial::EEventError |
+		CSerial::EEventRing |
+		CSerial::EEventRLSD |
+		CSerial::EEventRecv);
+	 m_port->SetupReadTimeouts(CSerial::EReadTimeoutNonblocking);
+	return m_port->IsOpen();
 }
 void Win32SerialPort::Close()
 {
-	m_port->close();
+	m_port->Close();
 
+}
+bool Win32SerialPort::WaitForData()
+{
+	return false;
 }
 
 uint Win32SerialPort::GetBaudRate()
 {
-	return m_port->getBaudrate();
+	return m_port->GetBaudrate();
 }
 
 void Win32SerialPort::SetTimeOut(uint read_timeout, uint write_timeout)
 {
-	m_port->setTimeout(serial::Timeout::max(), read_timeout, 0, write_timeout, 0);
+	//m_port->SetupReadTimeouts( serial::Timeout::max(), read_timeout, 0, write_timeout, 0);
 }
 void Win32SerialPort::GetTimeOut(uint &read_timeout, uint &write_timeout)
 {
+/*
 	serial::Timeout to= m_port->getTimeout();
 	read_timeout = to.read_timeout_constant;
-	write_timeout = to.write_timeout_constant;
+	write_timeout = to.write_timeout_constant;*/
 }
 
 int Win32SerialPort::Write(const void* data,size_t size)
 {
-	return m_port->write((const unsigned char*)data, size);
+	DWORD pdwWritten = 0;
+	 m_port->Write((const unsigned char*)data, size, &pdwWritten);
+	 return pdwWritten;
 }
 int Win32SerialPort::Read(void* data,size_t size)
 {
-	return m_port->read((unsigned char*)data, size);
+	DWORD readed = 0;
+	m_port->Read((unsigned char*)data, size, &readed);
+	return readed;
 }
 
 uint Win32SerialPort::AvailableData()
 {
-	return m_port->available();
+	return m_port->AvailableBytes();
 }
 bool Win32SerialPort::IsOpen()
 {
-	return m_port->isOpen();
+	return m_port->IsOpen();
 }
 void Win32SerialPort::Flush(bool flushIn,bool flushOut)
 {
+	/*
 	if (flushIn)
 		m_port->flushInput();
 	if (flushOut)
-		m_port->flushOutput();
+		m_port->flushOutput();*/
 }
 
 IStream* Win32SerialPort::GetStream()
@@ -81,7 +118,13 @@ IStream* Win32SerialPort::GetStream()
 	return m_stream;
 }
 
-
+void Win32SerialPort::__OnSerialEvent(CSerial::EEvent eEvent, CSerial::EError eError)
+{
+	if (eEvent == CSerial::EEventRecv)
+	{
+		OnDataArrived(this);
+	}
+}
 
 Win32SerialPortService::Win32SerialPortService()
 {
@@ -93,7 +136,7 @@ std::vector<SerialPortInfo> Win32SerialPortService::EnumAvaliablePorts(bool resc
 		return devices;
 	devices.clear();
 
-	std::vector<serial::PortInfo> ports=serial::list_ports();
+	std::vector<CSerial::SerialPortInfo> ports = CSerial::ListPorts();
 
 	for (int i = 0; i < ports.size(); ++i)
 	{

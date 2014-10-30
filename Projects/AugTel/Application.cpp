@@ -126,7 +126,7 @@ Application::Application()
 }
 Application::~Application()
 {
-
+	m_previewGUI = 0;
 	delete m_tbRenderer;
 	m_appStateManager = 0;
 	delete ATAppGlobal::Instance()->dataCommunicator;
@@ -145,6 +145,7 @@ void Application::_InitResources()
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
 
+	gImageSetResourceManager.loadImageSet(mT("Icons\\VideoIcons.imageset"));
 	gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
 	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 	GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
@@ -236,7 +237,7 @@ void Application::_initStates()
 		ip = ifo->IP;
 
 	if (m_remoteCamera)
-		remote = new AugCameraRenderState(new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
+		remote = new AugCameraRenderState(new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.RtcpStream), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
   	else
 		remote = new AugCameraRenderState(new TBee::LocalCameraVideoSource(m_cam1, m_cam2), new TBee::RemoteRobotCommunicator(), "CameraRemote");//GstSingleNetVideoSource,new TBee::GstStereoNetVideoSource(ip),LocalCameraVideoSource(m_cam1,m_cam2)
 	m_renderingState->AddState(remote);
@@ -247,7 +248,7 @@ void Application::_initStates()
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
 
-	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort));
+	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.RtcpStream));
 	m_renderingState->AddState(latency);
 
 // 	vtRs = new VTelesarRenderingState("Telesar");
@@ -325,6 +326,8 @@ void Application::init(const OptionContainer &extraOptions)
 			AppData::Instance()->robotController = ERobotControllerType::Joystick;
 		else if (v == "Wiiboard")
 			AppData::Instance()->robotController = ERobotControllerType::Wiiboard;
+		else if (v == "Oculus")
+			AppData::Instance()->robotController = ERobotControllerType::Oculus;
 
 
 		m_cam1 = extraOptions.GetOptionByName("Camera0")->getValueIndex();
@@ -410,8 +413,6 @@ void Application::init(const OptionContainer &extraOptions)
 		packer.PackTextures(&textures[0], 5);
 		packer.AddTexture(textures[0]);
 	}
-	m_renderingState->InitStates();
-
 	gLogManager.log("Starting Application", ELL_INFO);
 
 	{
@@ -437,8 +438,17 @@ void Application::init(const OptionContainer &extraOptions)
 			m_previewRT = gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0);
 
 		}
+		{
+
+			m_previewGUI = new GUI::GUIManager(getDevice());
+			GUI::IGUIPanelElement* m_guiroot = (GUI::IGUIPanelElement*)new GUI::IGUIPanelElement(core::string(""), m_previewGUI);
+			m_guiroot->SetDocking(GUI::EED_Fill);
+			m_previewGUI->SetRootElement(m_guiroot);
+		}
 
 	}
+	//finally, init states
+	m_renderingState->InitStates();
 
 }
 
@@ -506,7 +516,11 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 			m_previewRT->GetColorTexture()->createTexture(math::vector3d(wnd->GetSize().x, wnd->GetSize().y, 1), video::EPixel_R8G8B8);
 		}
 		m_appStateManager->Draw(rc, m_previewRT, TBee::Eye_Right);
+		getDevice()->useShader(0);
 		RenderUI(rc);
+
+		m_previewGUI->DrawAll(&rc);
+
 		getDevice()->setRenderTarget(0);
 		//	tex.SetTexture(m_tbRenderer->GetEyeImage(0)->GetColorTexture());
 		tex.SetTexture(m_previewRT->GetColorTexture());
@@ -551,6 +565,8 @@ void Application::update(float dt)
 	m_tbRenderer->Update(dt);
 
 	m_wiiManager->PollEvents();
+
+	m_previewGUI->Update(dt);
 
 	m_screenShotTimer += dt;
 	//OS::IThreadManager::getInstance().sleep(1000/30);

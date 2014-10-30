@@ -93,7 +93,7 @@ void RemoteCameraRenderingState::OnEnter(IRenderingState*prev)
 	{
 		m_cameraSource->SetIP(ifo->IP);
 		m_cameraSource->Open();
-		m_robotConnector->ConnectRobotIP(ifo->IP, 5000, 5002, 5003);
+		m_robotConnector->ConnectRobotIP(ifo->IP, 5000, 5002, 5003,5000);
 	}
 	m_frameCounter = 0;
 }

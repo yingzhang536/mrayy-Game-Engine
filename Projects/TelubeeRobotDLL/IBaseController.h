@@ -20,8 +20,19 @@ public:
 	virtual bool IsConnected() = 0;
 	virtual void Disconnect()=0;
 
+	virtual void Start() {}
+	virtual void Stop() {}
+
 	virtual void Drive(const math::vector2di& speed, int rotationSpeed)=0;
 	virtual void DriveStop()=0;
+
+	virtual void UpdateSensors(){}
+
+	virtual std::string ExecCommand(const core::string& cmd, const core::string& args) { return ""; }
+
+	virtual int GetSensorCount() = 0;
+	virtual float GetSensorValue(int s) = 0;
+	virtual int GetBatteryLevel() = 0;
 };
 
 }

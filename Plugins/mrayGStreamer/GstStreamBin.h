@@ -28,6 +28,7 @@ public:
 
 	void Stream();
 	void Stop();
+	void CloseAll();
 
 	void StartStream(const core::string& name);
 	void StopStream(const core::string& name);

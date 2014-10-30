@@ -23,7 +23,7 @@ protected:
 
 	int m_cam0, m_cam1;
 	int m_bitRate;
-	bool m_streamAudio;
+	bool m_rtcp;
 
 	math::vector2di m_frameSize;
 
@@ -41,7 +41,6 @@ public:
 		m_bitRate = 5000;
 		m_cam0 = 0;
 		m_cam1 = 1;
-		m_streamAudio = true;
 
 		m_frameSize.set(1280, 720);
 	}
@@ -80,32 +79,27 @@ public:
 			videoStr += " mix. ";
 
 		}
-		m_pipeLineString = "rtpbin  name=rtpbin " + 
-			videoStr + "! "
-			//encoder string
-			"x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency sync-lookahead=0 ! rtph264pay "
-			"! rtpbin.send_rtp_sink_0 "
-			"rtpbin.send_rtp_src_0 ! "
-			"myudpsink name=videoSink "
-			"rtpbin.send_rtcp_src_0 ! "
-			"myudpsink name=videoRtcpSink sync=false async=false "
-			"myudpsrc name=videoRtcpSrc ! rtpbin.recv_rtcp_sink_0 ";
 
-		if (m_streamAudio)
+		//encoder string
+		videoStr +="! x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency sync-lookahead=0 pass=qual ! rtph264pay ";
+		if (m_rtcp)
 		{
-			m_pipeLineString+= " directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! amrnbenc ! rtpamrpay !"
-				"rtpbin.send_rtp_sink_1 "
-				"rtpbin.send_rtp_src_1 ! myudpsink name=audioSink "
-				"rtpbin.send_rtcp_src_1 ! "
-				"myudpsink name=audioRtcpSink sync=false async=false "
-				"myudpsrc name=audioRtcpSrc ! rtpbin.recv_rtcp_sink_1 ";
+			m_pipeLineString = "rtpbin  name=rtpbin " +
+				videoStr +
+				"! rtpbin.send_rtp_sink_0 "
+
+				"rtpbin.send_rtp_src_0 ! "
+				"myudpsink name=videoSink  "
+
+				"rtpbin.send_rtcp_src_0 ! "
+				"myudpsink name=videoRtcpSink sync=false async=false "
+				"myudpsrc name=videoRtcpSrc ! rtpbin.recv_rtcp_sink_0 ";
 		}
-
-
-		m_pipeLineString = videoStr + " ! "
-			"x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency pass=qual ! rtph264pay ! "
-			"myudpsink name=videoSink ";
-
+		else
+		{
+			m_pipeLineString = videoStr + " ! "
+				"myudpsink name=videoSink ";
+		}
 
 	}
 
@@ -137,16 +131,18 @@ public:
 #define SET_SINK(name,p) m_##name=GST_MyUDPSink(gst_bin_get_by_name(GST_BIN(m_gstPipeline), #name)); if(m_##name){m_##name->SetPort(m_ipAddr,p);}
 
 		SET_SINK(videoSink, m_videoPort);
-		SET_SRC(videoRtcpSrc, (m_videoPort + 1));
-		SET_SINK(videoRtcpSink, (m_videoPort + 2));
-
+		if (m_rtcp){
+			SET_SRC(videoRtcpSrc, (m_videoPort + 1));
+			SET_SINK(videoRtcpSink, (m_videoPort + 2));
+		}
 
 	}
 
-	void BindPorts(const core::string& addr, int videoPort)
+	void BindPorts(const core::string& addr, int videoPort, bool rtcp)
 	{
 		m_ipAddr = addr;
 		m_videoPort = videoPort;
+		m_rtcp = rtcp;
 
 		_UpdatePorts();
 	}
@@ -202,9 +198,9 @@ void GstNetworkVideoStreamer::Stop()
 }
 
 
-void GstNetworkVideoStreamer::BindPorts(const core::string& addr, int videoPort)
+void GstNetworkVideoStreamer::BindPorts(const core::string& addr, int videoPort, bool rtcp)
 {
-	m_impl->BindPorts(addr,videoPort);
+	m_impl->BindPorts(addr,videoPort,rtcp);
 }
 
 bool GstNetworkVideoStreamer::CreateStream()

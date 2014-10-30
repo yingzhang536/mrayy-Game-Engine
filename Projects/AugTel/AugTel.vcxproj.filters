@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Hands">
       <UniqueIdentifier>{f6e3314d-2343-4d4d-bda0-c275391f6e7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Leap">
+      <UniqueIdentifier>{6168697b-048b-4035-8773-1924e26e613c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,9 +165,6 @@
     <ClInclude Include="GUIGraphPlotElement.h">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClInclude>
-    <ClInclude Include="CameraTextureSource.h">
-      <Filter>Source Files\DataSource</Filter>
-    </ClInclude>
     <ClInclude Include="VTBaseState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
@@ -216,14 +216,32 @@
     <ClInclude Include="VirtualHandsController.h">
       <Filter>Source Files\Hands</Filter>
     </ClInclude>
-    <ClInclude Include="LeapMotionController.h">
-      <Filter>Source Files\DataSource</Filter>
-    </ClInclude>
     <ClInclude Include="LeapMotionHandsController.h">
       <Filter>Source Files\Hands</Filter>
     </ClInclude>
+    <ClInclude Include="GUIInterfaceScreen.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIInterfaceScreenImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapMotionController.h">
+      <Filter>Source Files\Leap</Filter>
+    </ClInclude>
     <ClInclude Include="LeapMotionImageRetrival.h">
-      <Filter>Source Files\DataSource</Filter>
+      <Filter>Source Files\Leap</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapFinger.h">
+      <Filter>Source Files\Leap</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapHand.h">
+      <Filter>Source Files\Leap</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapHandController.h">
+      <Filter>Source Files\Leap</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapFunctions.h">
+      <Filter>Source Files\Leap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,9 +338,6 @@
     <ClCompile Include="GUIGraphPlotElement.cpp">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClCompile>
-    <ClCompile Include="CameraTextureSource.cpp">
-      <Filter>Source Files\DataSource</Filter>
-    </ClCompile>
     <ClCompile Include="VTBaseState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
@@ -362,11 +377,17 @@
     <ClCompile Include="LeapMotionHandsController.cpp">
       <Filter>Source Files\Hands</Filter>
     </ClCompile>
+    <ClCompile Include="GUIInterfaceScreenImpl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="LeapMotionController.cpp">
-      <Filter>Source Files\DataSource</Filter>
+      <Filter>Source Files\Leap</Filter>
     </ClCompile>
     <ClCompile Include="LeapMotionImageRetrival.cpp">
-      <Filter>Source Files\DataSource</Filter>
+      <Filter>Source Files\Leap</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapHand.cpp">
+      <Filter>Source Files\Leap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +407,9 @@
       <Filter>Source Files\GUI</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoadingScreenLayout.gui">
+      <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIInterfaceScreen.gui">
       <Filter>Source Files\GUI</Filter>
     </Overlay>
   </ItemGroup>

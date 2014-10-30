@@ -29,6 +29,7 @@ protected:
 	GstMyUDPSink* m_audioSink;
 	GstMyUDPSink* m_audioRtcpSink;
 	GstMyUDPSrc* m_audioRtcpSrc;
+	bool m_rtcp;
 public:
 	GstNetworkAudioStreamerImpl()
 	{
@@ -42,8 +43,24 @@ public:
 	void BuildString()
 	{
 		core::string audioStr="directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! amrnbenc ! rtpamrpay";
-		m_pipeLineString = audioStr + " ! "
-			"myudpsink name=audioSink ";
+		if (m_rtcp)
+		{
+			m_pipeLineString = "rtpbin  name=rtpbin " + audioStr + " ! "
+				" rtpbin.send_rtp_sink_0 "
+
+				"rtpbin.send_rtp_src_0 ! "
+				"myudpsink name=audioSink  "
+
+				"rtpbin.send_rtcp_src_0 ! "
+				"myudpsink name=audioRtcpSink sync=false async=false "
+				"myudpsrc name=audioRtcpSrc ! rtpbin.recv_rtcp_sink_0 ";
+		}
+		else
+		{
+			m_pipeLineString = audioStr + " ! "
+				"myudpsink name=audioSink  ";
+
+		}
 
 
 	}
@@ -64,10 +81,11 @@ public:
 
 	// addr: target address to stream video to
 	// audioport: port for the audio stream , audio rtcp is allocated as audioPort+1 and audioPort+2
-	void BindPorts(const core::string& addr, int audioPort)
+	void BindPorts(const core::string& addr, int audioPort, bool rtcp)
 	{
 		m_ipAddr = addr;
 		m_audioPort = audioPort;
+		m_rtcp = rtcp;
 		_UpdatePorts();
 	}
 
@@ -122,9 +140,9 @@ void GstNetworkAudioStreamer::Stop()
 }
 
 
-void GstNetworkAudioStreamer::BindPorts(const core::string& addr,  int audioPort)
+void GstNetworkAudioStreamer::BindPorts(const core::string& addr, int audioPort, bool rtcp)
 {
-	m_impl->BindPorts(addr,  audioPort);
+	m_impl->BindPorts(addr, audioPort, rtcp);
 }
 
 bool GstNetworkAudioStreamer::CreateStream()

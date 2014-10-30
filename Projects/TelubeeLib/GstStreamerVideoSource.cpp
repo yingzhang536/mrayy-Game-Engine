@@ -9,13 +9,12 @@
 
 
 
-
 namespace mray
 {
 namespace TBee
 {
 
-GstStreamerVideoSource::GstStreamerVideoSource(const core::string& ip, int videoport, int audioport)
+GstStreamerVideoSource::GstStreamerVideoSource(const core::string& ip, int videoport, int audioport, bool rtcp)
 {
 	m_player = new video::GstPlayerBin();
 
@@ -27,7 +26,7 @@ GstStreamerVideoSource::GstStreamerVideoSource(const core::string& ip, int video
 
 
 	m_playerGrabber = new video::VideoGrabberTexture();
-	SetIP(ip, videoport,audioport);
+	SetIP(ip, videoport, audioport, rtcp);
 	m_isStereo = true;
 }
 
@@ -43,11 +42,13 @@ void GstStreamerVideoSource::Init()
 }
 void GstStreamerVideoSource::Open()
 {
-	((video::GstNetworkVideoPlayer*)m_player->GetPlayer("Video"))->SetIPAddress(m_ip, m_vport);
-	((video::GstNetworkAudioPlayer*)m_player->GetPlayer("Audio"))->SetIPAddress(m_ip, m_aport);
+	((video::GstNetworkVideoPlayer*)m_player->GetPlayer("Video"))->SetIPAddress(m_ip, m_vport, m_rtcp);
+	((video::GstNetworkAudioPlayer*)m_player->GetPlayer("Audio"))->SetIPAddress(m_ip, m_aport,m_rtcp);
 
 	((video::GstNetworkVideoPlayer*)m_player->GetPlayer("Video"))->CreateStream();
 	((video::GstNetworkAudioPlayer*)m_player->GetPlayer("Audio"))->CreateStream();
+
+
 	m_player->Play();
 }
 void GstStreamerVideoSource::Close()

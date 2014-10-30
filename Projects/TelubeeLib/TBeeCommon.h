@@ -37,6 +37,7 @@ namespace mray
 			None,
 			Keyboard,
 			Joystick,
+			Oculus,
 			Wiiboard
 		};
 		enum class ERenderStereoMode

@@ -64,6 +64,14 @@ namespace AugTel
 		void setEnabled(bool e)
 		{
 			enabled = e;
+			if (enabled)
+			{
+				m_controller->AddListener(this);
+			}
+			else
+			{
+				m_controller->RemoveListener(this);
+			}
 			for (int i = 0; i < entLst.size(); ++i)
 			{
 				entLst[i]->SetEnabled(e);
@@ -189,7 +197,8 @@ namespace AugTel
 
 		void Start()
 		{
-			m_controller->AddListener(this);
+			if (enabled)
+				m_controller->AddListener(this);
 		}
 		void End()
 		{
@@ -198,7 +207,10 @@ namespace AugTel
 
 		void OnRender(const math::rectf& rc, TBee::ETargetEye eye)
 		{
+			if (!enabled)
+				return;
 			Leap::Frame frame = m_controller->GetController()->frame();
+
 			if (images[eye]->Capture(frame))
 			{
 				float palmY = frame.hands().rightmost().palmPosition().y;
@@ -211,6 +223,14 @@ namespace AugTel
 
 			m_screenNode[eye]->setVisible(true);
 			m_screenNode[1-eye]->setVisible(false);
+		}
+
+		void Update(float dt)
+		{
+			if (!enabled)
+				return;
+			Leap::Frame frame = m_controller->GetController()->frame();
+			frame.hand(0).confidence();
 		}
 	};
 
@@ -244,6 +264,8 @@ void LeapMotionHandsController::Update(float dt)
 {
 	if (!m_enabled)
 		return;
+
+	m_data->Update(dt);
 
 	controllers::IKeyboardController* kb = gAppData.inputMngr->getKeyboard();
 

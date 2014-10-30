@@ -4,9 +4,10 @@
 
 #include <string>
 
+
+
 class ITelubeeRobotListener;
 struct RobotStatus;
-
 
 struct RobotStatus
 {
@@ -43,6 +44,15 @@ public:
 
 class IRobotController
 {
+public:
+
+	static const std::string CMD_Start;
+	static const std::string CMD_Stop;
+	static const std::string CMD_GetSensorCount;
+	static const std::string CMD_GetSensorValue;
+	static const std::string CMD_GetBatteryLevel;
+	static const std::string CMD_GetBatteryCharge;
+
 protected:
 public:
 	IRobotController(){}
@@ -55,7 +65,11 @@ public:
 	virtual bool IsConnected() = 0;
 	virtual void UpdateRobotStatus(const RobotStatus& st) = 0;
 
+	virtual std::string ExecCommand(const std::string& cmd, const std::string& args){ return ""; }
+
 };
+
+
 
 
 #endif // IRobotController_h__

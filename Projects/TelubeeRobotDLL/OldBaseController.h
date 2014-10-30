@@ -27,6 +27,10 @@ public:
 
 	virtual void Drive(const math::vector2di& speed, int rotationSpeed);
 	virtual void DriveStop();
+
+	virtual int GetSensorCount() { return 0; }
+	virtual float GetSensorValue() { return 0; }
+	virtual int GetBatteryLevel() { return 100; }
 };
 
 }

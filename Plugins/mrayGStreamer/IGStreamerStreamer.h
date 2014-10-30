@@ -17,7 +17,7 @@ public:
 	IGStreamerStreamer(){}
 	virtual ~IGStreamerStreamer(){}
 
-	virtual void BindPorts(const core::string& addr, int port) = 0;
+	virtual void BindPorts(const core::string& addr, int port,bool rtcp) = 0;
 
 	virtual bool CreateStream() = 0;
 	virtual void Stream() = 0;

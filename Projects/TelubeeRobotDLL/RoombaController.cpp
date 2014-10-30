@@ -4,10 +4,134 @@
 #include "RoombaController.h"
 #include "IOSystem.h"
 
+#include "IThreadManager.h"
+#include "IRobotController.h"
 #include <windows.h>
 
 namespace mray
 {
+
+	static const int s_PacketGroupSize[]=
+	{
+		26,
+		10,
+		6,
+		10,
+		14,
+		12,
+		52,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		2,
+		2,
+		1,
+		2,
+		2,
+		1,
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+		1,
+		2,
+		1,
+		1,
+		1,
+		1,
+		1,
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+		1,
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+		1,
+		1,
+		2,
+		2,
+		2,
+		2,
+		1,
+	};
+	static const int s_PacketGroupSize100[] =
+	{
+		80,
+		28,
+		0,
+		0,
+		0,
+		0,
+		12,
+		9,
+	};
+
+	static void SendByte(OS::ISerialPort* s, uchar b)
+	{
+		if (!s->IsOpen())
+			return;
+		try
+		{
+			s->Write(&b, sizeof(b));
+		}
+		catch (std::exception* e)
+		{
+		}
+	}
+
+	/// Push a 16 bits integer (high byte first) in a stream.
+	static void
+		sendInt16(OS::ISerialPort* s, short i)
+	{
+		if (!s->IsOpen())
+			return;
+		const unsigned char v[] = { (i & 0xFFFF) >> 8, i & 0xFFFF };
+		try
+		{
+			s->Write(v, sizeof(v));
+		}
+		catch (std::exception* e)
+		{
+		}
+	}
+
+	#define MAKE_ONE(v1, v2) ((v1 << 8) + v2)
+
+	/// Receive a 16 bits integer (high byte first) in a stream.
+	static short
+		receiveInt16(OS::ISerialPort* s)
+	{
+		if (!s->IsOpen())
+			return 0;
+		unsigned char v[2];
+		try
+		{
+			s->Read(v, sizeof(v));
+		}
+		catch (std::exception* e)
+		{
+		}
+		return MAKE_ONE(v[1] , v[0]);
+	}
 
 #define INITIALIZE_SENSORS()                    \
   streamedSensors_ (),                          \
@@ -63,65 +187,262 @@ INITIALIZE_SENSORS(), currentMode_(IROBOT_CREATE_OFF)
 {
 	m_serialPort = OS::IOSystem::getInstance().GetSerialPortService()->CreateSerialPort();
 
+	m_serialPort->OnDataArrived += CreateDataArrivedDelegate(RoombaControllerImpl, this, OnSerialPortDataArrived);
+
+	m_toProcessMutex = OS::IThreadManager::getInstance().createMutex();
+
 }
 RoombaControllerImpl::~RoombaControllerImpl()
 {
 	Disconnect();
 	delete m_serialPort;
+	delete m_toProcessMutex;
+}
+uchar* RoombaControllerImpl::_GetPacketData(int size)
+{
+	int avail = 0;
+	std::vector<DataPacket> tmp;
+	m_toProcessMutex->lock();
+	for (int i = 0; i < toProcess_.size(); ++i)
+	{
+		tmp.push_back(toProcess_[i]);
+		avail += toProcess_[i].size;
+		if (avail >= size)
+			break;
+	}
+	if (avail < size)
+	{
+		m_toProcessMutex->unlock();
+		return 0; // no enough data
+	}
+
+	uchar* data = new uchar[size];
+	avail = 0;
+	int idx = 0;
+	DataPacket rPacket;
+	rPacket.size = 0;
+	rPacket.data = 0;
+	for (int i = 0; i < tmp.size(); ++i)
+	{
+		int remain = size - avail;
+		avail += tmp[i].size;
+		int len = min(tmp[i].size,remain);
+		memcpy(data + idx, tmp[i].data, len);
+		idx += len;
+		if (avail >= size)
+		{
+			//we are done
+			if (tmp[i].size > len)
+			{
+				//we need to push back the remaining data
+				rPacket.size = tmp[i].size - len;
+				rPacket.data = new uchar[rPacket.size];
+				memcpy(rPacket.data, tmp[i].data + len, rPacket.size);
+			}
+
+			break;
+		}
+	}
+	for (int i = 0; i < tmp.size(); ++i)
+	{
+		toProcess_.erase(toProcess_.begin());
+		delete [] tmp[i].data;
+	}
+	if (rPacket.size>0)
+		toProcess_.insert(toProcess_.begin(), rPacket);
+	m_toProcessMutex->unlock();
+
+	return data;
+
+}
+uchar* RoombaControllerImpl::_ParseSensorPacket(SensorPacket p, uchar* data)
+{
+	uchar* ptr = data;
+#define CASE_PARSE_GROUP(group,start,end)case group:{for(int i=start;i<=end;++i){ptr=_ParseSensorPacket((SensorPacket)i,ptr);}break;}
+#define CASE_PARSE_SINGLE(S,val)case S:{val=*ptr++;break;}
+#define CASE_PARSE_SINGLE_TYPED(S,val,Type)case S:{val=static_cast<Type>(*ptr++);break;}
+#define CASE_PARSE_DOUBLE(S,val)case S:{uchar v1,v2;v2=*ptr++;v1=*ptr++; val=MAKE_ONE(v2,v1); break;}
+
+#define TEST(v,b)(v&(1<<b))
+	switch (p)
+	{
+		CASE_PARSE_GROUP(SENSOR_GROUP_0, 7, 26)
+		CASE_PARSE_GROUP(SENSOR_GROUP_1, 7, 16)
+		CASE_PARSE_GROUP(SENSOR_GROUP_2, 17, 20)
+		CASE_PARSE_GROUP(SENSOR_GROUP_3, 21, 26)
+		CASE_PARSE_GROUP(SENSOR_GROUP_4, 27, 34)
+		CASE_PARSE_GROUP(SENSOR_GROUP_5, 35, 42)
+		CASE_PARSE_GROUP(SENSOR_GROUP_6, 7, 42)
+		CASE_PARSE_GROUP(SENSOR_GROUP_100, 7, 58)
+		CASE_PARSE_GROUP(SENSOR_GROUP_101, 43, 58)
+		CASE_PARSE_GROUP(SENSOR_GROUP_106, 46, 51)
+		CASE_PARSE_GROUP(SENSOR_GROUP_107, 54, 58)
+
+	case SENSOR_BUMPS_WHEELS_DROPS:
+		{
+			uchar v = *ptr++;
+			wheeldropCaster_ = TEST(v ,SENSOR_BIT_WHEELDROP_CASTER);
+			wheeldropLeft_ = TEST(v, SENSOR_BIT_WHEELDROP_LEFT);
+			wheeldropRight_ = TEST(v, SENSOR_BIT_WHEELDROP_RIGHT);
+			bumpLeft_ = TEST(v, SENSOR_BIT_BUMP_LEFT);
+			bumpRight_ = TEST(v, SENSOR_BIT_BUMP_RIGHT);
+		}break;
+
+	CASE_PARSE_SINGLE(SENSOR_WALL, wall_);
+	CASE_PARSE_SINGLE(SENSOR_CLIFF_LEFT, cliffLeft_);
+	CASE_PARSE_SINGLE(SENSOR_CLIFF_FRONT_LEFT, cliffFrontLeft_);
+	CASE_PARSE_SINGLE(SENSOR_CLIFF_FRONT_RIGHT, cliffFrontRight_);
+	CASE_PARSE_SINGLE(SENSOR_CLIFF_RIGHT, cliffRight_);
+	CASE_PARSE_SINGLE(SENSOR_VIRTUAL_WALL, virtualWall_);
+
+	case SENSOR_OVERCURRENTS:
+	{
+		uchar v = *ptr++;
+		leftWheelOvercurrent_ = TEST(v , SENSOR_BIT_LEFTWHEELOVERCURRENT);
+		rightWheelOvercurrent_ = TEST(v , SENSOR_BIT_RIGHTWHEELOVERCURRENT);
+		ld2Overcurrent_ = TEST(v , SENSOR_BIT_LD2OVERCURRENT);
+		ld1Overcurrent_ = TEST(v , SENSOR_BIT_LD1OVERCURRENT);
+		ld0Overcurrent_ = TEST(v , SENSOR_BIT_LD0OVERCURRENT);
+		break;
+	}
+
+	case 15:
+	case 16:
+	{
+		uchar v = *ptr++;
+		break;
+	}
+	CASE_PARSE_SINGLE(SENSOR_IR, ir_);
+
+	case SENSOR_BUTTONS:
+	{
+		uchar v = *ptr++;
+		advanceButton_ = TEST(v , SENSOR_BIT_ADVANCEBUTTON);
+		playButton_ = TEST(v , SENSOR_BIT_PLAYBUTTON);
+		break;
+	}
+
+	CASE_PARSE_DOUBLE(SENSOR_DISTANCE, distance_);
+	CASE_PARSE_DOUBLE(SENSOR_ANGLE, angle_);
+
+	CASE_PARSE_SINGLE_TYPED(SENSOR_CHARGING_STATE, chargingState_,ChargingState);
+	
+
+	CASE_PARSE_DOUBLE(SENSOR_VOLTAGE, batteryVoltage_);
+	CASE_PARSE_DOUBLE(SENSOR_CURRENT, batteryCurrent_);
+	CASE_PARSE_SINGLE(SENSOR_BATTERY_TEMPERATURE, batteryTemperature_);
+	CASE_PARSE_DOUBLE(SENSOR_BATTERY_CHARGE, batteryCharge_);
+	CASE_PARSE_DOUBLE(SENSOR_BATTERY_CAPACITY, batteryCapacity_);
+	CASE_PARSE_DOUBLE(SENSOR_WALL_SIGNAL, wallSignal_);
+	CASE_PARSE_DOUBLE(SENSOR_CLIFF_LEFT_SIGNAL, cliffLeftSignal_);
+	CASE_PARSE_DOUBLE(SENSOR_CLIFF_FRONT_LEFT_SIGNAL, cliffFrontLeftSignal_);
+	CASE_PARSE_DOUBLE(SENSOR_CLIFF_FRONT_RIGHT_SIGNAL, cliffFrontRightSignal_);
+	CASE_PARSE_DOUBLE(SENSOR_CLIFF_RIGHT_SIGNAL, cliffRightSignal_);
+
+
+	case SENSOR_CARGO_BAY_DIGITAL_INPUT:
+	{
+		uchar v = *ptr++;
+		deviceDetect_ = TEST(v , SENSOR_BIT_DEVICEDETECT);
+		digitalInput3_ = TEST(v, SENSOR_BIT_DIGITALINPUT3);
+		digitalInput2_ = TEST(v, SENSOR_BIT_DIGITALINPUT2);
+		digitalInput1_ = TEST(v, SENSOR_BIT_DIGITALINPUT1);
+		digitalInput0_ = TEST(v, SENSOR_BIT_DIGITALINPUT0);
+		break;
+	}
+
+		CASE_PARSE_DOUBLE(SENSOR_CARGO_BAY_ANALOG_SIGNAL, analogSignal_);
+
+	case SENSOR_CHARGING_SOURCES_AVAILABLE:
+	{
+		uchar v = *ptr++;
+		homeBaseChargerAvailable_ =
+			TEST(v , SENSOR_BIT_HOMEBASECHARGERAVAILABLE);
+		internalChargerAvailable_ =
+			TEST(v , SENSOR_BIT_INTERNALCHARGERAVAILABLE);
+		break;
+	}
+
+		CASE_PARSE_SINGLE_TYPED(SENSOR_OI_MODE, currentMode_, Mode);
+
+		CASE_PARSE_SINGLE(SENSOR_SONG_NUMBER, songNumber_);
+		CASE_PARSE_SINGLE(SENSOR_SONG_PLAYING, songPlaying_);
+		CASE_PARSE_SINGLE(SENSOR_NUMBER_STREAM_PACKETS, streamPackets_);
+
+		CASE_PARSE_DOUBLE(SENSOR_REQUESTED_VELOCITY, requestedVelocity_);
+		CASE_PARSE_DOUBLE(SENSOR_REQUESTED_RADIUS, requestedRadius_);
+		CASE_PARSE_DOUBLE(SENSOR_REQUESTED_LEFT_VELOCITY, requestedLeftVelocity_);
+		CASE_PARSE_DOUBLE(SENSOR_REQUESTED_RIGHT_VELOCITY, requestedRightVelocity_);
+
+		CASE_PARSE_DOUBLE(SENSOR_ENCODER_COUNTS_LEFT, encoderCountsLeft_);
+		CASE_PARSE_DOUBLE(SENSOR_ENCODER_COUNTS_RIGHT, encoderCountsRight_);
+
+		CASE_PARSE_SINGLE(SENSOR_LIGHT_BUMPER, lightBumper_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_LEFT, lightBumpLeft_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_FRONT_LEFT, lightBumpFrontLeft_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_CENTER_LEFT, lightBumpCenterLeft_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_CENTER_RIGHT, lightBumpCenterRight_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_FRONT_RIGHT, lightBumpFrontRight_);
+		CASE_PARSE_DOUBLE(SENSOR_LIGHT_BUMP_RIGHT, lightBumpRight_);
+
+		CASE_PARSE_SINGLE(SENSOR_IR_OPCODE_LEFT, irOpcodeLeft_);
+		CASE_PARSE_SINGLE(SENSOR_IR_OPCODE_RIGHT, irOpcodeRight_);
+
+		CASE_PARSE_DOUBLE(SENSOR_LEFT_MOTOR_CURRENT, leftMotorCurrent_);
+		CASE_PARSE_DOUBLE(SENSOR_RIGHT_MOTOR_CURRENT, rightMotorCurrent_);
+		CASE_PARSE_DOUBLE(SENSOR_MAIN_BRUSH_CURRENT, mainBrushCurrent_);
+		CASE_PARSE_DOUBLE(SENSOR_SIDE_BRUSH_CURRENT, sideBrushCurrent_);
+
+	case SENSOR_STASIS:
+	{
+		uchar v = *ptr++;
+		stasis_ =
+			TEST(v, 0);
+		break;
+	}
+	default:
+		break;
+	}
+	return ptr;
+}
+
+void RoombaControllerImpl::_ProcessPacket(uchar* p)
+{
+
+	if (queriedSensors_.size() != 0)
+	{
+		SensorPacket q = queriedSensors_[0];
+		queriedSensors_.erase(queriedSensors_.begin());
+		_ParseSensorPacket(q, p);
+	}
 }
 
 
-static void SendByte(OS::ISerialPort* s, uchar b)
+void RoombaControllerImpl::OnSerialPortDataArrived(OS::ISerialPort* sp)
 {
-	if (!s->IsOpen())
+	int count = m_serialPort->AvailableData();
+	if (!count)
 		return;
-	try
-	{
-		s->Write(&b, sizeof(b));
-	}
-	catch (std::exception* e)
-	{
-	}
+
+	uchar* data = new uchar[count];
+	int n=m_serialPort->Read(data, count);
+	DataPacket p;
+	p.size = n;
+	p.data = data;
+
+
+	m_toProcessMutex->lock();
+	toProcess_.push_back(p);
+	m_toProcessMutex->unlock();
+
 }
 
-/// Push a 16 bits integer (high byte first) in a stream.
-static void
-sendInt16(OS::ISerialPort* s, short i)
-{
-	if (!s->IsOpen())
-		return;
-	const unsigned char v[] = { (i & 0xFFFF) >> 8, i & 0xFFFF };
-	try
-	{
-		s->Write(v, sizeof(v));
-	}
-	catch (std::exception* e)
-	{
-	}
-}
-
-/// Receive a 16 bits integer (high byte first) in a stream.
-static short
-receiveInt16(OS::ISerialPort* s)
-{
-	if (!s->IsOpen())
-		return 0;
-	 unsigned char v[2] ;
-	 try
-	 {
-		s->Read(v, sizeof(v));
-	 }
-	 catch (std::exception* e)
-	 {
-	 }
-	return (v[1] << 8) + v[0];
-}
 bool RoombaControllerImpl::Connect(const core::string& port)
 {
 	Disconnect();
 	try
 	{
-		m_serialPort->OpenByName(port, 115200);
+		m_serialPort->OpenByName(port, OS::ISerialPort::EBaud115200);
 	}
 	catch (std::exception* e)
 	{
@@ -130,7 +451,10 @@ bool RoombaControllerImpl::Connect(const core::string& port)
 	SendStartCommand();
 	Sleep(100);	
 	if (IsConnected())
-		SendFullModeCommand();
+	{
+	//	SendFullModeCommand();
+
+	}
 	return IsConnected();
 }
 bool RoombaControllerImpl::IsConnected()
@@ -139,15 +463,22 @@ bool RoombaControllerImpl::IsConnected()
 }
 void RoombaControllerImpl::Disconnect()
 {
+	if (IsConnected())
+		SendStartCommand();//switch to passive mode before disconnecting
 	m_serialPort->Close();
+
+	queriedSensors_.clear();
+	for (int i = 0; i < toProcess_.size(); ++i)
+		delete [] toProcess_[i].data;
+	toProcess_.clear();
 }
 
 //Switch to passive mode.
 void RoombaControllerImpl::SendStartCommand()
 {
 
-	if (currentMode_ != IROBOT_CREATE_OFF)
-		return;
+// 	if (currentMode_ != IROBOT_CREATE_OFF)
+// 		return;
 	const unsigned char op = OPCODE_START;
 	SendByte(m_serialPort, op);
 	currentMode_ = IROBOT_CREATE_PASSIVE;
@@ -266,45 +597,51 @@ void RoombaControllerImpl::RequestSensorPacket(SensorPacket packet)
 {
 	if (currentMode_ < IROBOT_CREATE_PASSIVE)
 		return;
-	if (packet < SENSOR_GROUP_0
-		|| packet > SENSOR_REQUESTED_LEFT_VELOCITY)
-		return;
+// 	if (packet < SENSOR_GROUP_0
+// 		|| packet > SENSOR_REQUESTED_LEFT_VELOCITY)
+// 		return;
+
+	for (int i = 0; i < queriedSensors_.size(); ++i)
+	{
+	//	if (queriedSensors_[i] == packet)
+	//		return;
+	}
 
 	const unsigned char p = packet;
 	const unsigned char op[] = { OPCODE_SENSORS, p };
 	m_serialPort->Write(op, sizeof(op));
-	queriedSensors_.push(packet);
+	queriedSensors_.push_back(packet);
 
 }
 
-/// Internal macro.
-#define MAKE_SENSOR_CMD(OP, CMD)                                \
-  if (currentMode_ < IROBOT_CREATE_PASSIVE)                     \
-    return;                               \
-  if (packets.size () > 255)                                    \
-    return;                                   \
-                                                                \
-  std::stringstream ss;                                         \
-  for (sensorPackets_t::const_iterator it = packets.begin ();   \
-       it != packets.end (); ++it)                              \
-    {                                                           \
-      if (*it < SENSOR_GROUP_0                                  \
-          || *it > SENSOR_REQUESTED_LEFT_VELOCITY)              \
-        continue;                               \
-      const unsigned char p = *it;                              \
-      ss << p;                                                  \
-      CMD;                                                      \
-    }                                                           \
-                                                                \
-	const unsigned char size = packets.size();                   \
-	const unsigned char op[] = { (OP),size};\
-	m_serialPort->Write(op, sizeof(op));\
-	m_serialPort->Write(ss.str().c_str(), size);
 
 void RoombaControllerImpl::QueryListCommand(const sensorPackets_t& packets)
 {
-	MAKE_SENSOR_CMD(OPCODE_QUERY_LIST,
-		queriedSensors_.push(*it));
+
+	if (currentMode_ < IROBOT_CREATE_PASSIVE)
+		return;
+	if (packets.size() > 255)
+		return;
+	std::stringstream ss;
+	for (sensorPackets_t::const_iterator it = packets.begin();
+		it != packets.end(); ++it)
+	{
+		if (*it < SENSOR_GROUP_0
+			|| *it > SENSOR_REQUESTED_LEFT_VELOCITY)
+			continue;
+// 		bool flag = false;
+// 		for (int i = 0; i < queriedSensors_.size(); ++i)if (queriedSensors_[i] == *it){ flag = true; break; }
+// 		if (flag)continue;
+// 		++total;
+		const unsigned char p = *it;
+		ss << p;
+		queriedSensors_.push_back(*it);
+	}
+	const unsigned char size = packets.size();
+	const unsigned char op[] = { (OPCODE_QUERY_LIST), size };
+	m_serialPort->Write(op, sizeof(op));
+	m_serialPort->Write(ss.str().c_str(), size);
+
 
 }
 
@@ -321,14 +658,34 @@ void RoombaControllerImpl::RobotWait(uchar t)
 
 void RoombaControllerImpl::UpdateSensors()
 {
+	while (true)
+	{
+		if (queriedSensors_.empty())
+			break;
+		SensorPacket q = queriedSensors_[0];
+		int packetSize = 0;
+		if (q >= SENSOR_GROUP_100 && q <= SENSOR_GROUP_107)
+			packetSize = s_PacketGroupSize100[q - SENSOR_GROUP_100];
+		else
+		{
+			packetSize= s_PacketGroupSize[q];
+		}
+		uchar* p = _GetPacketData(packetSize);
+		if (!p)
+			break;
+		_ParseSensorPacket(q, p);
+		queriedSensors_.erase(queriedSensors_.begin());
+		delete[] p;
+	}
 
+	RequestSensorPacket(SENSOR_GROUP_0);
+	RequestSensorPacket(SENSOR_GROUP_106);
 }
 
 #define MK_SENSOR_GETTER(TYPE, NAME)            \
   TYPE                                          \
   RoombaControllerImpl::NAME ()                               \
   {                                             \
-    UpdateSensors ();                           \
     return NAME##_;                             \
   }
 
@@ -380,6 +737,14 @@ MK_SENSOR_GETTER(short, requestedRadius)
 MK_SENSOR_GETTER(short, requestedLeftVelocity)
 MK_SENSOR_GETTER(short, requestedRightVelocity)
 
+MK_SENSOR_GETTER(unsigned short, lightBumper);
+MK_SENSOR_GETTER(unsigned short, lightBumpLeft)
+MK_SENSOR_GETTER(unsigned short, lightBumpFrontLeft)
+MK_SENSOR_GETTER(unsigned short, lightBumpCenterLeft)
+MK_SENSOR_GETTER(unsigned short, lightBumpCenterRight)
+MK_SENSOR_GETTER(unsigned short, lightBumpFrontRight)
+MK_SENSOR_GETTER(unsigned short, lightBumpRight)
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -399,11 +764,67 @@ void RoombaController::Disconnect()
 
 }
 
+void RoombaController::Start()
+{
+	m_impl->SendFullModeCommand();
+}
+void RoombaController::Stop()
+{
+	m_impl->SendStartCommand();
+}
 void RoombaController::Drive(const math::vector2di& speed, int rotationSpeed)
 {
 	int l = 0;
 	int r = 0;
-	l = r = speed.x;
+
+	bool bl = m_impl->bumpLeft();
+	bool br = m_impl->bumpRight();
+
+	const math::vector2d frontVec = math::vector2d(1, 0);
+
+	float angle = 180;
+	float step = 160.0f / 5.0f;
+	angle -= 10.0f;//starting angle
+	math::vector2d lightVec[6];
+	unsigned short irLight[6] = {
+		m_impl->lightBumpLeft(),
+		m_impl->lightBumpFrontLeft(),
+		m_impl->lightBumpCenterLeft(),
+		m_impl->lightBumpCenterRight(),
+		m_impl->lightBumpFrontRight(),
+		m_impl->lightBumpRight()
+	};
+	for (int i = 0; i < 6; ++i)
+	{
+		lightVec[i].x = math::sind(angle);
+		lightVec[i].y = math::cosd(angle);
+		angle -= step;
+	}
+
+
+
+	math::vector2d antiVec ;
+	math::vector2d antiVec2;
+	float totalW = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		float w = (float)irLight[i] / 4095.0f;
+		antiVec2 += lightVec[i] * w;
+		totalW += w;
+	}
+	if (totalW > 0.2)
+		antiVec2 /= totalW;
+//	antiVec.Normalize();
+	
+	antiVec = antiVec2;
+	if (bl || br)
+		antiVec = frontVec;
+	math::vector2d s = speed ;
+	antiVec = antiVec*s.Length();
+
+	s -= antiVec;
+
+	l = r = s.x;
 	l -= rotationSpeed;
 	r += rotationSpeed;
 
@@ -418,7 +839,68 @@ void RoombaController::DriveStop()
 }
 
 
+void RoombaController::UpdateSensors()
+{
+	m_impl->UpdateSensors();
+}
 
+int RoombaController::GetSensorCount(){ 
+	return 2; 
+}
+float RoombaController::GetSensorValue(int s){
+	switch (s)
+	{
+	case 0:
+		return m_impl->bumpLeft();
+	case 1:
+		return m_impl->bumpRight();
+	case 2:
+		return m_impl->lightBumpLeft();
+	case 3:
+		return m_impl->lightBumpFrontLeft();
+	case 4:
+		return m_impl->lightBumpCenterLeft();
+	case 5:
+		return m_impl->lightBumpCenterRight();
+	case 6:
+		return m_impl->lightBumpFrontRight();
+	case 7:
+		return m_impl->lightBumpRight();
+	}
+	return 0; 
+}
+int RoombaController::GetBatteryLevel(){ 
+
+	short cap = m_impl->batteryCapacity();
+	short charge= m_impl->batteryCharge();
+	if (cap == 0)
+		return 1;
+	return 100 * (float)charge / (float)cap;
+}
+
+
+std::string RoombaController::ExecCommand(const core::string& cmd, const core::string& args)
+{
+	if (cmd == IRobotController::CMD_GetBatteryCharge)
+	{
+		switch (m_impl->chargingState())
+		{
+		case RoombaControllerImpl::CHARGING_STATE_NOT_CHARGING:
+			return "NotCharging";
+		case RoombaControllerImpl::CHARGING_STATE_RECONDITIONING_CHARGING:
+			return "Recondition";
+		case RoombaControllerImpl::CHARGING_STATE_FULL_CHARGING:
+			return "FullCharging";
+		case RoombaControllerImpl::CHARGING_STATE_TRICKLE_CHARGING:
+			return "TrickleCharging";
+		case RoombaControllerImpl::CHARGING_STATE_WAITING:
+			return "Waiting";
+		case RoombaControllerImpl::CHARGING_STATE_CHARGING_FAULT_CONDITION:
+			return "Fault";
+		}
+	}
+	return "";
+}
 
 }
 

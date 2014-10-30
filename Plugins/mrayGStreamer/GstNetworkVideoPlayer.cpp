@@ -34,6 +34,7 @@ class GstNetworkVideoPlayerImpl :public GstPipelineHandler
 	GstMyUDPSink* m_videoRtcpSink;
 
 	GstAppSink* m_videoSink;
+	bool m_rtcp;
 
 	VideoAppSinkHandler m_videoHandler;
 
@@ -43,51 +44,43 @@ public:
 		m_ipAddr = "127.0.0.1";
 		m_videoPort = 5000;
 		m_gstPipeline = 0;
-		m_pipeLineString =
-		{
-			"rtpbin "
-				"name=rtpbin "
-
-			//video rtp
-			"myudpsrc "
-				"name=videoSrc "
-				"caps=application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 "
-			"! rtpbin.recv_rtp_sink_0 "
-			"rtpbin. ! rtph264depay ! avdec_h264 "
-			"! appsink name=videoSink "
-			"myudpsrc name=videoRtcpSrc !"
-			"rtpbin.recv_rtcp_sink_0 "
-
-			//video rtcp
-			"rtpbin.send_rtcp_src_0 ! "
-			"myudpsink "
-				"name=videoRtcpSink "
-				"sync=false "
-				"async=false "
-			
-			//audio rtp
-			"myudpsrc "
-				"name=audioSrc "
-				"caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 "
-			"! rtpbin.recv_rtp_sink_1 "
-			"rtpbin. ! rtpamrdepay ! amrnbdec "
-			"! directsoundsink "
-			"myudpsrc name=audioRtcpSrc !"
-			"rtpbin.recv_rtcp_sink_1 "
-
-			//audio rtcp
-			"rtpbin.send_rtcp_src_1 ! "
-			"myudpsink "
-				"name=audioRtcpSink "
-				"sync=false "
-				"async=false "
-
-		};
 
 	}
 	virtual ~GstNetworkVideoPlayerImpl()
 	{
 
+	}
+
+	void _BuildPipeline()
+	{
+		core::string videoStr =
+			//video rtp
+			"myudpsrc "
+			"name=videoSrc "
+			"caps=application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 ";
+		if (m_rtcp)
+		{
+			m_pipeLineString =
+				"rtpbin "
+				"name=rtpbin "
+				+ videoStr +
+				"! rtpbin.recv_rtp_sink_0 "
+				"rtpbin. ! rtph264depay !  avdec_h264 ! "
+				"videoconvert ! video/x-raw,format=RGB  !"
+				" appsink name=videoSink "
+
+				//video rtcp
+				"myudpsrc name=videoRtcpSrc ! rtpbin.recv_rtcp_sink_0 "
+				"rtpbin.send_rtcp_src_0 !  myudpsink name=videoRtcpSink sync=false async=false ";
+		}
+		else
+		{
+			m_pipeLineString = videoStr + "!"
+				"rtph264depay !  avdec_h264 ! "
+				"videoconvert ! video/x-raw,format=RGB  !"
+				" appsink name=videoSink ";
+
+		}
 	}
 
 	void _UpdatePorts()
@@ -103,10 +96,11 @@ public:
 
 	}
 
-	void SetIPAddress(const core::string& ip, int videoPort)
+	void SetIPAddress(const core::string& ip, int videoPort,bool rtcp)
 	{
 		m_ipAddr = ip;
 		m_videoPort = videoPort;
+		m_rtcp = rtcp;
 
 		//set src and sinks elements
 		_UpdatePorts();
@@ -115,16 +109,7 @@ public:
 	{
 		if (m_Loaded)
 			return true;
-		{
-			core::string videoStr;
-			videoStr = "myudpsrc name=videoSrc  "
-				"caps=application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 ! "
-				" rtpjitterbuffer  drop-on-latency=true latency=500  !   rtph264depay ! h264parse ! avdec_h264 ! "
-				"videoconvert ! video/x-raw,format=RGB  !"
-				"appsink name=videoSink ";
-
-			m_pipeLineString = videoStr ;
-		}
+		_BuildPipeline();
 
 		GError *err = 0;
 		m_gstPipeline = gst_parse_launch(m_pipeLineString.c_str(), &err);
@@ -214,9 +199,9 @@ GstNetworkVideoPlayer::~GstNetworkVideoPlayer()
 {
 	delete m_impl;
 }
-void GstNetworkVideoPlayer::SetIPAddress(const core::string& ip, int videoPort )
+void GstNetworkVideoPlayer::SetIPAddress(const core::string& ip, int videoPort, bool rtcp)
 {
-	m_impl->SetIPAddress(ip, videoPort);
+	m_impl->SetIPAddress(ip, videoPort,rtcp);
 }
 bool GstNetworkVideoPlayer::CreateStream()
 {

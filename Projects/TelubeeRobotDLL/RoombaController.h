@@ -48,6 +48,10 @@ public:
 		SENSOR_GROUP_5 = 5,
 		/// Groups packets 7 to 42.
 		SENSOR_GROUP_6 = 6,
+		SENSOR_GROUP_100 = 100,
+		SENSOR_GROUP_101 = 101,
+		SENSOR_GROUP_106 = 106,
+		SENSOR_GROUP_107 = 107,
 		/// Wheel and bumper states.
 		SENSOR_BUMPS_WHEELS_DROPS = 7,
 		/// Wall sensor state.
@@ -115,7 +119,23 @@ public:
 		/// Requested right velocity.
 		SENSOR_REQUESTED_RIGHT_VELOCITY = 41,
 		/// Requested left velocity.
-		SENSOR_REQUESTED_LEFT_VELOCITY = 42
+		SENSOR_REQUESTED_LEFT_VELOCITY = 42,
+		SENSOR_ENCODER_COUNTS_LEFT = 43,
+		SENSOR_ENCODER_COUNTS_RIGHT = 44,
+		SENSOR_LIGHT_BUMPER = 45,
+		SENSOR_LIGHT_BUMP_LEFT = 46,
+		SENSOR_LIGHT_BUMP_FRONT_LEFT = 47,
+		SENSOR_LIGHT_BUMP_CENTER_LEFT = 48,
+		SENSOR_LIGHT_BUMP_CENTER_RIGHT = 49,
+		SENSOR_LIGHT_BUMP_FRONT_RIGHT = 50,
+		SENSOR_LIGHT_BUMP_RIGHT = 51,
+		SENSOR_IR_OPCODE_LEFT = 52,
+		SENSOR_IR_OPCODE_RIGHT = 53,
+		SENSOR_LEFT_MOTOR_CURRENT = 54,
+		SENSOR_RIGHT_MOTOR_CURRENT = 55,
+		SENSOR_MAIN_BRUSH_CURRENT = 56,
+		SENSOR_SIDE_BRUSH_CURRENT = 57,
+		SENSOR_STASIS = 58
 	};
 	enum ChargingState
 	{
@@ -154,7 +174,8 @@ public:
 	/// \see note_t
 	typedef std::vector<note_t> song_t;
 	typedef std::vector<SensorPacket> sensorPackets_t;
-	typedef std::queue<SensorPacket> queriedPackets_t;
+	typedef std::vector<SensorPacket> queriedPackets_t;
+
 public:
 	RoombaControllerImpl();
 	virtual ~RoombaControllerImpl();
@@ -251,7 +272,20 @@ public:
 	short requestedLeftVelocity();
 	short requestedRightVelocity();
 
+	unsigned short lightBumper();
+	unsigned short lightBumpLeft();
+	unsigned short lightBumpFrontLeft();
+	unsigned short lightBumpCenterLeft();
+	unsigned short lightBumpCenterRight();
+	unsigned short lightBumpFrontRight();
+	unsigned short lightBumpRight();
+
 protected:
+
+	void OnSerialPortDataArrived(OS::ISerialPort* sp);
+	uchar* _ParseSensorPacket(SensorPacket p, uchar* data);
+	void _ProcessPacket(uchar* p);
+	uchar* _GetPacketData(int size);
 
 	OS::ISerialPort* m_serialPort;
 	queriedPackets_t queriedSensors_;
@@ -260,6 +294,13 @@ protected:
 	sensorPackets_t streamedSensors_;
 
 	Mode currentMode_;
+	struct DataPacket
+	{
+		uchar* data;
+		int size;
+	};
+	std::vector<DataPacket> toProcess_;
+	OS::IMutex* m_toProcessMutex;
 
 	/// Wheeldrop caster
 	bool wheeldropCaster_;
@@ -356,7 +397,22 @@ protected:
 	/// Last requested right velocity (drive direct command).
 	short requestedRightVelocity_;
 
-
+	unsigned short encoderCountsLeft_;
+	unsigned short encoderCountsRight_;
+	unsigned char lightBumper_;
+	unsigned short lightBumpLeft_;
+	unsigned short lightBumpFrontLeft_;
+	unsigned short lightBumpCenterLeft_;
+	unsigned short lightBumpCenterRight_;
+	unsigned short lightBumpFrontRight_;
+	unsigned short lightBumpRight_;
+	unsigned char irOpcodeLeft_;
+	unsigned char irOpcodeRight_;
+	short leftMotorCurrent_;
+	short rightMotorCurrent_;
+	short mainBrushCurrent_;
+	short sideBrushCurrent_;
+	bool stasis_;
 
 	/// \brief Enumerate available opcodes.
 	/// Opcode are the basics instructions that the protocol
@@ -536,10 +592,20 @@ public:
 	}
 	virtual bool Connect(const core::string& port) ;
 	virtual bool IsConnected() ;
-	virtual void Disconnect() ;
+	virtual void Disconnect();
+	virtual void Start();
+	virtual void Stop();
 
 	virtual void Drive(const math::vector2di& speed, int rotationSpeed) ;
-	virtual void DriveStop() ;
+	virtual void DriveStop();
+
+	virtual void UpdateSensors();
+
+	virtual int GetSensorCount();
+	virtual float GetSensorValue(int s);
+	virtual int GetBatteryLevel();
+
+	virtual std::string ExecCommand(const core::string& cmd, const core::string& args);
 };
 }
 

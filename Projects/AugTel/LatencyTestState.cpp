@@ -12,9 +12,6 @@ namespace mray
 {
 namespace AugTel
 {
-#define VIDEO_PORT 5000
-#define AUDIO_PORT 5002
-#define COMMUNICATION_PORT 5003
 
 LatencyTestState::LatencyTestState(const core::string& name, TBee::ICameraVideoSource* src)
 :IRenderingState(name)
@@ -68,11 +65,11 @@ void LatencyTestState::OnEnter(IRenderingState*prev)
 	m_camVideoSrc->Open();
 
 
-	gAppData.dataCommunicator->Start(COMMUNICATION_PORT);
+	gAppData.dataCommunicator->Start(gAppData.TargetCommunicationPort);
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	if (ifo)
-		m_robotConnector->ConnectRobotIP(ifo->IP, VIDEO_PORT, AUDIO_PORT, COMMUNICATION_PORT);
+		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort, gAppData.RtcpStream);
 	//m_robotConnector->EndUpdate();
 	m_robotConnector->ConnectRobot();
 

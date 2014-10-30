@@ -30,6 +30,7 @@ class GstNetworkAudioPlayerImpl :public GstPipelineHandler
 	GstMyUDPSrc* m_audioSrc;
 	GstMyUDPSrc* m_audioRtcpSrc;
 	GstMyUDPSink* m_audioRtcpSink;
+	bool m_rtcp;
 
 public:
 	GstNetworkAudioPlayerImpl()
@@ -37,36 +38,41 @@ public:
 		m_ipAddr = "127.0.0.1";
 		m_audioPort = 5005;
 		m_gstPipeline = 0;
-		m_pipeLineString =
-		{
-			"rtpbin "
-			"name=rtpbin "
-
-			//audio rtp
-			"myudpsrc "
-			"name=audioSrc "
-			"caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 "
-			"! rtpbin.recv_rtp_sink_0 "
-			"rtpbin. ! rtpamrdepay ! amrnbdec "
-			"! directsoundsink "
-			"myudpsrc name=audioRtcpSrc !"
-			"rtpbin.recv_rtcp_sink_0 "
-
-			//audio rtcp
-			"rtpbin.send_rtcp_src_0 ! "
-			"myudpsink "
-			"name=audioRtcpSink "
-			"sync=false "
-			"async=false "
-
-		};
-
 	}
 	virtual ~GstNetworkAudioPlayerImpl()
 	{
 
 	}
 
+
+	void _BuildPipeline()
+	{
+		core::string audioStr =
+			"myudpsrc name=audioSrc "
+			"caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 ";
+		if (m_rtcp)
+		{
+			m_pipeLineString =
+				"rtpbin name=rtpbin "
+				+ audioStr +
+				//audio rtp
+				"! rtpbin.recv_rtp_sink_0 "
+
+				"rtpbin. ! rtpamrdepay ! amrnbdec ! directsoundsink "
+
+				"myudpsrc name=audioRtcpSrc ! rtpbin.recv_rtcp_sink_0 "
+
+				//audio rtcp
+				"rtpbin.send_rtcp_src_0 ! myudpsink name=audioRtcpSink sync=false async=false ";
+		}
+		else
+		{
+			m_pipeLineString = audioStr + " ! "
+				"rtpbin. ! rtpamrdepay ! amrnbdec ! directsoundsink ";
+
+		}
+
+	}
 	void _UpdatePorts()
 	{
 		if (!m_gstPipeline)
@@ -81,10 +87,11 @@ public:
 
 	}
 
-	void SetIPAddress(const core::string& ip,  int audioPort)
+	void SetIPAddress(const core::string& ip, int audioPort, bool rtcp)
 	{
 		m_ipAddr = ip;
 		m_audioPort = audioPort;
+		m_rtcp = rtcp;
 
 		//set src and sinks elements
 		_UpdatePorts();
@@ -93,16 +100,8 @@ public:
 	{
 		if (m_Loaded)
 			return true;
-		{
-			core::string audioStr;
-			audioStr =
-				"myudpsrc name=audioSrc "
-				"caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 "
-				" ! rtpamrdepay ! amrnbdec "
-				"! directsoundsink ";
 
-			m_pipeLineString = audioStr;
-		}
+		_BuildPipeline();
 
 		GError *err = 0;
 		m_gstPipeline = gst_parse_launch(m_pipeLineString.c_str(), &err);
@@ -156,9 +155,9 @@ GstNetworkAudioPlayer::~GstNetworkAudioPlayer()
 {
 	delete m_impl;
 }
-void GstNetworkAudioPlayer::SetIPAddress(const core::string& ip, int audioPort)
+void GstNetworkAudioPlayer::SetIPAddress(const core::string& ip, int audioPort,bool rtcp)
 {
-	m_impl->SetIPAddress(ip, audioPort);
+	m_impl->SetIPAddress(ip, audioPort,rtcp);
 }
 bool GstNetworkAudioPlayer::CreateStream()
 {

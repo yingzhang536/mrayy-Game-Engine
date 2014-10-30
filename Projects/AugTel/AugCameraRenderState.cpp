@@ -70,6 +70,10 @@
 #include "VirtualHandsController.h"
 #include "LeapMotionHandsController.h"
 #include "JoystickDefinitions.h"
+#include "IInputController.h"
+
+#include "GstNetworkAudioStreamer.h"
+#include "GstNetworkVideoStreamer.h"
 
 
 namespace mray
@@ -102,6 +106,9 @@ namespace AugTel
 
 	m_viewDepth = false;
 
+	m_enableHands = false;
+	m_enableMic = false;
+	m_enableVideo = false;
 	m_showScene = false;
 
 	m_showDebug = false;
@@ -113,11 +120,13 @@ namespace AugTel
 	m_context->videoSource = src;
 	
 
+	m_streamer = new video::GstStreamBin();
 
 
 }
 AugCameraRenderState::~AugCameraRenderState()
 {
+	m_streamer->ClearStreams(true);
 	delete m_loadScreen;
 	delete m_vtState;
 	m_gameManager = 0;
@@ -189,12 +198,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				m_showDebug = !m_showDebug;
 				ok = true;
 			}
-			else
-			if (evt->key == KEY_H && evt->ctrl)//Show/Hide arms
-			{
-				m_showScene = !m_showScene;
-				ok = true;
-			}
+			
 			else if (evt->Char==43 || evt->key==KEY_SPACE)
 			{
 				 if (m_status == EWaitStart)
@@ -214,6 +218,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				m_vtState->CalibratePosition();
 
 				m_robotConnector->GetHeadController()->Recalibrate();
+				m_robotConnector->GetRobotController()->Recalibrate();
 				ok = true;
 			}else if ( evt->key == KEY_F12 && evt->ctrl)
 			{
@@ -229,6 +234,21 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				{
 					m_hands[i]->SetEnabled(i == idx);
 				}
+				ok = true;
+			}
+			else if (evt->key == KEY_V && evt->ctrl) //enable video
+			{
+				_EnableVideo(!_IsVideoEnabled());
+				ok = true;
+			}
+			else if (evt->key == KEY_H && evt->ctrl)//Show/Hide arms
+			{
+				_EnableHands(!_IsHandsEnabled());
+				ok = true;
+			}
+			else if (evt->key == KEY_M && evt->ctrl) //enable video
+			{
+				_EnableMic(!_IsMicEnabled());
 				ok = true;
 			}
 		}
@@ -284,6 +304,32 @@ void AugCameraRenderState::_createHands()
 {
 }
 
+void AugCameraRenderState::_EnableHands(bool e)
+{
+	m_enableHands = e;
+	m_interfaceUI->EnableHand(m_enableHands);
+	m_hands[0]->SetEnabled(m_enableHands);
+}
+void AugCameraRenderState::_EnableVideo(bool e)
+{
+	m_enableVideo = e;
+	m_interfaceUI->EnableVideo(m_enableVideo);
+	if (m_enableVideo)
+		m_streamer->GetStream("Video")->Stream();
+	else
+		m_streamer->GetStream("Video")->Stop();
+
+}
+void AugCameraRenderState::_EnableMic(bool e)
+{
+	m_enableMic = e;
+	m_interfaceUI->EnableMic(m_enableMic);
+	if (m_enableMic)
+		m_streamer->GetStream("Audio")->Stream();
+	else
+		m_streamer->GetStream("Audio")->Stop();
+
+}
 void AugCameraRenderState::InitState()
 {
 	Parent::InitState();
@@ -303,7 +349,7 @@ void AugCameraRenderState::InitState()
 		m_gameManager->SetPhysicsManager(m_phManager);
 		m_gameManager->SetSceneManager(m_sceneManager);
 
-		m_showScene = false;
+		m_showScene = true;
 
 		gAppData.guiManager = m_guiManager;
 
@@ -337,6 +383,9 @@ void AugCameraRenderState::InitState()
 	{
 		gShaderResourceManager.parseShaderXML(gFileSystem.openFile("AT_Shaders.shd"));
 		gMaterialResourceManager.parseMaterialXML(gFileSystem.openFile("AT_materials.mtrl"));
+	}
+	{
+		m_interfaceUI = new GUI::GUIInterfaceScreenImpl(gAppData.App->GetPreviewGUIManager());
 	}
 	{
 		m_loadScreen->Init();
@@ -459,6 +508,16 @@ void AugCameraRenderState::InitState()
 
 	}
 
+	{
+		//init streamers
+		video::GstNetworkAudioStreamer* as = new video::GstNetworkAudioStreamer();
+		m_streamer->AddStream(as, "Audio");
+		video::GstNetworkVideoStreamer* vs = new video::GstNetworkVideoStreamer();
+		vs->SetCameras(0, 0);
+		vs->SetResolution(1280, 720);
+		vs->SetBitRate(700);
+		m_streamer->AddStream(vs, "Video");
+	}
 }
 
 void AugCameraRenderState::OnEnter(IRenderingState*prev)
@@ -482,7 +541,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 
 	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
 	if(ifo)
-		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort);
+		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort, gAppData.RtcpStream);
 	m_robotConnector->SetData("depthSize", "", false);
 	//m_robotConnector->EndUpdate();
 
@@ -494,14 +553,29 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	m_status = ENone;
 	m_loadScreen->Start();
 
-
+	gAppData.App->GetPreviewGUIManager()->GetRootElement()->AddElement(m_interfaceUI);
 	{
 
 		for (int i = 0; i < m_hands.size(); ++i)
 		{
 			m_hands[i]->Start(m_context);
 		}
+	}
+	{
+		m_streamer->GetStream("Audio")->BindPorts(ifo->IP, gAppData.TargetAudioPort, gAppData.RtcpStream);
+		m_streamer->GetStream("Audio")->CreateStream();
 
+		m_streamer->GetStream("Video")->BindPorts(ifo->IP, gAppData.TargetVideoPort, gAppData.RtcpStream);
+		m_streamer->GetStream("Video")->CreateStream();
+
+		m_streamer->Stream();
+	}
+	if (false)
+	{
+		//enable hands,video and mic
+		_EnableHands(true);
+		_EnableMic(true);
+		_EnableVideo(true);
 	}
 }
 
@@ -515,11 +589,13 @@ void AugCameraRenderState::OnExit()
 
 	gAppData.dataCommunicator->Stop();
 	gAppData.dataCommunicator->RemoveListener(this);
+	gAppData.App->GetPreviewGUIManager()->GetRootElement()->RemoveElement(m_interfaceUI);
 
 	gAppData.cameraProvider = 0;
 	
 	m_loadScreen->End();
 
+	m_streamer->CloseAll();
 	{
 
 		for (int i = 0; i < m_hands.size(); ++i)

@@ -41,6 +41,8 @@ public:
 	virtual bool IsButtonPressed(EInputButton button) = 0;
 	virtual math::vector2d GetSpeed() = 0;
 	virtual float GetRotation() = 0;
+
+	virtual void Recalibrate() = 0;
 };
 
 }

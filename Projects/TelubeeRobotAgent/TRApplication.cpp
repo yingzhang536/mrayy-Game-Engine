@@ -24,10 +24,10 @@
 
 #include "GstNetworkVideoStreamer.h"
 #include "GstNetworkAudioStreamer.h"
+#include "GstNetworkAudioPlayer.h"
+#include "GstNetworkVideoPlayer.h"
 
 #define COMMUNICATION_PORT 6000
-#define VIDEO_PORT 5000
-#define AUDIO_PORT 5002
 
 namespace mray
 {
@@ -67,9 +67,9 @@ namespace mray
 		{
 			m_app = app;
 		}
-		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort)
+		virtual void OnUserConnected(RobotCommunicator* sender, const network::NetAddress& address, int videoPort, int audioPort,bool rtcp)
 		{
-			m_app->OnUserConnected(address, videoPort, audioPort);
+			m_app->OnUserConnected(address, videoPort, audioPort, rtcp);
 		}
 		virtual void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status)
 		{
@@ -116,12 +116,17 @@ TRApplication::TRApplication()
 	m_cameraProfileManager = new CameraProfileManager();
 
 	m_streamers = new video::GstStreamBin();
+	m_players = new video::GstPlayerBin();
+
+	m_isRobotActive = false;
 }
 
 TRApplication::~TRApplication()
 {
+	m_players->ClearPlayers(true);
 	m_streamers->ClearStreams(true);
 	m_streamers = 0;
+	m_players = 0;
 	delete m_robotCommunicator;
 	delete m_communicatorListener;
 	delete m_msgSink;
@@ -139,6 +144,7 @@ void TRApplication::_InitResources()
 	(gLogManager.StartLog(ELL_INFO) << "Initing Resources").flush();;
 
 	gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
+	gImageSetResourceManager.loadImageSet(mT("Icons\\icons.imageset"));
 	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 	GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
 	GUI::GUIThemeManager::getInstance().setActiveTheme(mT("VistaCG_Dark"));
@@ -171,6 +177,18 @@ void TRApplication::onEvent(Event* e)
 			{
 				m_robotCommunicator->SetLocalControl(!m_robotCommunicator->IsLocalControl());
 			}
+		}
+	}
+	else if (e->getType() == ET_Keyboard)
+	{
+		KeyboardEvent* evt = (KeyboardEvent*)e;
+		if (evt->press && evt->key == KEY_S)
+		{
+			if (m_isRobotActive)
+				m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_Stop,"");
+			else
+				m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_Start,"");
+			m_isRobotActive = !m_isRobotActive;
 		}
 	}
 }
@@ -320,7 +338,6 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		streamer->SetCameras(m_cameraIfo[0].ifo.index, m_cameraIfo[1].ifo.index);
 		streamer->SetBitRate(bitRate[(int)m_quality]);
 
-		streamer->CreateStream();
 
 		m_streamers->AddStream(streamer, "Video");
 	}
@@ -328,8 +345,22 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		video::GstNetworkAudioStreamer* streamer;
 		streamer = new video::GstNetworkAudioStreamer();
 
-		streamer->CreateStream();
 		m_streamers->AddStream(streamer, "Audio");
+	}
+	{
+		video::GstNetworkAudioPlayer* player;
+		player = new video::GstNetworkAudioPlayer();
+
+		m_players->AddPlayer(player, "Audio");
+	}
+	{
+		video::GstNetworkVideoPlayer* player;
+		player = new video::GstNetworkVideoPlayer();
+
+		m_players->AddPlayer(player, "Video");
+
+		m_playerGrabber = new video::VideoGrabberTexture();
+		m_playerGrabber->Set(player, 0);
 	}
 	m_robotCommunicator = new RobotCommunicator();
 	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
@@ -416,7 +447,13 @@ void TRApplication::update(float dt)
 						grabber->InitDevice(m_cameraIfo[i].id, m_cameraIfo[i].w, m_cameraIfo[i].h, m_cameraIfo[i].fps);//1280, 720
 				}
 				}*/	
+			m_streamers->GetStream("Video")->CreateStream();
+			m_streamers->GetStream("Audio")->CreateStream();
 			m_streamers->Stream();
+
+			((video::GstNetworkAudioPlayer*)m_players->GetPlayer("Audio"))->CreateStream();
+			((video::GstNetworkVideoPlayer*)m_players->GetPlayer("Video"))->CreateStream();
+			m_players->Play();
 			m_isStarted = true;
 
 			//m_openNi->Start(320,240);
@@ -426,7 +463,8 @@ void TRApplication::update(float dt)
 	{
 		//m_openNi->Close();
 		m_isStarted = false;
-		m_streamers->Stop();
+		m_streamers->CloseAll();
+		m_players->CloseAll();
 		if (!m_debugData.debug)
 		{
 			m_cameras[0]->Stop();
@@ -474,12 +512,13 @@ void TRApplication::onDone()
 void TRApplication::onRenderDone(scene::ViewPort*vp)
 {
 	getDevice()->set2DMode();
-/*	video::TextureUnit tex;
-	tex.SetTexture(m_cameraTextures[2].GetTexture());
+	video::TextureUnit tex;
+	m_playerGrabber->Blit();
+	tex.SetTexture(m_playerGrabber->GetTexture());
 	getDevice()->useTexture(0, &tex);
 	math::rectf texCoords(0,1,1,0);
 	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
-	*/
+/*	*/
 
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
 	if (font){
@@ -540,6 +579,26 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 
 				}
 
+				msg = "Bump Left: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "0");
+				LOG_OUT(msg, 100, 100);
+				msg = "Bump Right: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "1");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Left: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "2");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Front Left: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "3");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Center Left: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "4");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Center Right: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "5");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Front Right: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "6");
+				LOG_OUT(msg, 100, 100);
+				msg = "Sensor Light Right: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "7");
+				LOG_OUT(msg, 100, 100);
+				msg = "Battery Level: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetBatteryLevel, "");
+				LOG_OUT(msg, 100, 100);
+				msg = "Battery Status: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetBatteryCharge, "");
+				LOG_OUT(msg, 100, 100);
 			}
 		}
 
@@ -549,7 +608,7 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 	m_guiRender->Flush();
 	getDevice()->useShader(0);
 }
-void TRApplication::OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort)
+void TRApplication::OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort, bool rtcp)
 {
 	if (m_remoteAddr.address != address.address)
 		printf("User Connected : %s\n", address.toString().c_str());
@@ -561,8 +620,12 @@ void TRApplication::OnUserConnected(const network::NetAddress& address, int vide
 		core::StringConverter::toString(ip[1]) + "." +
 		core::StringConverter::toString(ip[2]) + "." +
 		core::StringConverter::toString(ip[3]);
-	m_streamers->GetStream("Video")->BindPorts(ipaddr, videoPort);
-	m_streamers->GetStream("Audio")->BindPorts(ipaddr, audioPort);
+	m_streamers->GetStream("Video")->BindPorts(ipaddr, videoPort, rtcp);
+	m_streamers->GetStream("Audio")->BindPorts(ipaddr, audioPort, rtcp);
+
+	((video::GstNetworkAudioPlayer*)m_players->GetPlayer("Audio"))->SetIPAddress(ipaddr, audioPort, rtcp);
+	((video::GstNetworkVideoPlayer*)m_players->GetPlayer("Video"))->SetIPAddress(ipaddr, videoPort, rtcp);
+
 	m_debugData.userAddress = address;
 	m_debugData.userConnected = true;
 

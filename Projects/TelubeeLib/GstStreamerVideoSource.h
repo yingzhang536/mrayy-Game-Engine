@@ -22,12 +22,13 @@ protected:
 	core::string m_ip;
 	int m_vport;
 	int m_aport;
+	bool m_rtcp;
 	bool m_isStereo;
 public:
-	GstStreamerVideoSource(const core::string& ip , int videoport , int audioport );
+	GstStreamerVideoSource(const core::string& ip , int videoport , int audioport,bool rtcp );
 	virtual ~GstStreamerVideoSource();
 
-	void SetIP(const core::string& ip, int videoport, int audioport){ m_ip = ip; m_vport = videoport; m_aport = audioport; }
+	void SetIP(const core::string& ip, int videoport, int audioport, bool rtcp){ m_ip = ip; m_vport = videoport; m_aport = audioport; m_rtcp = rtcp; }
 
 	void Init();
 	void Open();

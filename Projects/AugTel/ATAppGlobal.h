@@ -68,15 +68,19 @@ public:
 
 		TargetVideoPort = 7000;
 		TargetAudioPort = 7005;
-		TargetCommunicationPort = 5003;
+		TargetCommunicationPort = 6000;
+
+		RtcpStream = false;
 	}
 	Application* App;
 	core::string ServerIP;
 
-
+	//enable video/audio rtcp connection
+	bool RtcpStream;
 	uint TargetVideoPort;
 	uint TargetAudioPort;
 	uint TargetCommunicationPort;
+
 
 	core::string DVIPort;
 	EController m_controller;

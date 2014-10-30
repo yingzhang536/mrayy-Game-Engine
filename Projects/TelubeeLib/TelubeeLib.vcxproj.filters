@@ -228,6 +228,12 @@
     <ClInclude Include="GstStreamerVideoSource.h">
       <Filter>Source Files\VideoSource</Filter>
     </ClInclude>
+    <ClInclude Include="OculusBaseController.h">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTextureSource.h">
+      <Filter>Source Files\DataSource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -346,6 +352,15 @@
     </ClCompile>
     <ClCompile Include="GstStreamerVideoSource.cpp">
       <Filter>Source Files\VideoSource</Filter>
+    </ClCompile>
+    <ClCompile Include="OculusBaseController.cpp">
+      <Filter>Source Files\Input Controller\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTextureSource.cpp">
+      <Filter>Source Files\DataSource</Filter>
+    </ClCompile>
+    <ClCompile Include="IRobotController.cpp">
+      <Filter>Source Files\Robot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -17,7 +17,9 @@
 
 
 #include "ISerialPort.h"
-#include "serial/serial.h"
+#include "IThread.h"
+#include "SerialEx.h"
+
 
 namespace mray
 {
@@ -27,16 +29,17 @@ namespace OS
 class Win32SerialPort:public ISerialPort
 {
 protected:
-	serial::Serial* m_port;
+	CSerialEx* m_port;
 	IStream* m_stream;
 public:
 	Win32SerialPort();
 	virtual~Win32SerialPort();
 
 
-	virtual bool OpenByName(const core::string& port,int baudRate);
+	virtual bool OpenByName(const core::string& port, EBaudRate baudRate);
 
 	virtual void Close();
+	virtual bool WaitForData() ;
 
 	virtual void SetTimeOut(uint read_timeout, uint write_timeout);
 	virtual void GetTimeOut(uint &read_timeout, uint &write_timeout);
@@ -49,6 +52,9 @@ public:
 	virtual void Flush(bool flushIn,bool flushOut);
 
 	virtual IStream* GetStream();
+
+	//internal
+	void __OnSerialEvent(CSerial::EEvent eEvent, CSerial::EError eError);
 
 };
 

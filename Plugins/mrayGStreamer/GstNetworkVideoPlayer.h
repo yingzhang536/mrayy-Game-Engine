@@ -24,7 +24,7 @@ public:
 
 	//set ip address for the target host
 	// videoport: port for the video stream, video rtcp is allocated as videoPort+1 and videoPort+2
-	void SetIPAddress(const core::string& ip, int videoPort);
+	void SetIPAddress(const core::string& ip, int videoPort,bool rtcp);
 	bool CreateStream();
 
 	virtual bool IsStream() ;

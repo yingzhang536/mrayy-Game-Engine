@@ -20,6 +20,7 @@
 #include "ICameraVideoSource.h"
 
 #include "WiiboardInputController.h"
+#include "OculusBaseController.h"
 #include "JoystickInputController.h"
 #include "KeyboardHeadController.h"
 #include "NodeHeadController.h"
@@ -69,6 +70,9 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 	switch (AppData::Instance()->robotController)
 	{
 	case ERobotControllerType::Keyboard:
+		break;;
+	case ERobotControllerType::Oculus:
+		m_robotConnector->SetRobotController(new OculusBaseController);
 		break;;
 	case ERobotControllerType::Joystick:
 		m_robotConnector->SetRobotController(new JoystickInputController);

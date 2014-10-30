@@ -47,6 +47,15 @@ void GstStreamBin::Stop()
 	}
 
 }
+void GstStreamBin::CloseAll()
+{
+	StreamMap::iterator it = m_Streamers.begin();
+	for (; it != m_Streamers.end(); ++it)
+	{
+		it->second->Close();
+	}
+
+}
 void GstStreamBin::StartStream(const core::string& name)
 {
 	StreamMap::iterator it = m_Streamers.find(name);

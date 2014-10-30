@@ -40,9 +40,9 @@ protected:
 	math::quaternion m_headRotation;
 	math::vector3d m_headPosition;
 	float m_rotation;
-
 	int m_videoPort;
 	int m_audioPort;
+	bool m_rtcp;
 	int m_commPort;
 public:
 	CRobotConnector();
@@ -58,7 +58,7 @@ public:
 
 	bool IsRobotConnected();
 	void ConnectRobot();
-	void ConnectRobotIP(const core::string& ip,int videport,int audioPort,int commPort);
+	void ConnectRobotIP(const core::string& ip, int videport, int audioPort, int commPort, bool rtcp);
 	void DisconnectRobot();
 	void StartUpdate();
 	void EndUpdate();

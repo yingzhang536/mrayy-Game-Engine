@@ -11,7 +11,6 @@ namespace mray
 {
 namespace TBee
 {
-#define  ROBOT_PORT 6000
 CRobotConnector::CRobotConnector()
 {
 	m_connected = false;
@@ -22,6 +21,7 @@ CRobotConnector::CRobotConnector()
 
 	m_videoPort = -1;
 	m_audioPort = -1;
+	m_rtcp = false;
 }
 CRobotConnector::~CRobotConnector()
 {
@@ -38,7 +38,7 @@ void CRobotConnector::ConnectRobot()
 		return;
 	if (m_connected)
 		m_communicator->Disconnect();
-	m_connected = m_communicator->Connect(m_robotIP, ROBOT_PORT);
+	m_connected = m_communicator->Connect(m_robotIP, m_commPort);
 	m_communicator->ClearData(true);
 	//	m_roboComm->Connect("127.0.0.1",3000);
 	m_communicator->SetUserID("yamens");
@@ -51,17 +51,19 @@ void CRobotConnector::ConnectRobot()
 	core::string addrStr = addr.toString();
 	addrStr += "," + core::StringConverter::toString(m_videoPort);
 	addrStr += "," + core::StringConverter::toString(m_audioPort);
+	addrStr += "," + core::StringConverter::toString(m_rtcp);
 	m_communicator->SetData("Connect", addrStr,true);
 
 	addrStr =  core::StringConverter::toString(m_commPort);
 	m_communicator->SetData("CommPort", addrStr, true);
 
 }
-void CRobotConnector::ConnectRobotIP(const core::string& ip, int videoport, int audioPort,int commPort)
+void CRobotConnector::ConnectRobotIP(const core::string& ip, int videoport, int audioPort, int commPort, bool rtcp)
 {
 	m_commPort = commPort;
 	m_videoPort = videoport;
 	m_audioPort = audioPort;
+	m_rtcp = rtcp;
 	m_robotIP = ip;
 	ConnectRobot();
 }

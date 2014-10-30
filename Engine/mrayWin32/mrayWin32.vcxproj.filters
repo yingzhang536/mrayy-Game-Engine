@@ -22,6 +22,9 @@
     <Filter Include="Source Files\SerialPort">
       <UniqueIdentifier>{889a4c89-d05f-4aca-b7c1-f22e0ef464da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SerialPort\Internal">
+      <UniqueIdentifier>{003b6f64-b6d5-4544-b05f-e7f2e428911f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompileConfig.h">
@@ -108,6 +111,12 @@
     <ClInclude Include="WinMonitorFileInformation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Serial.h">
+      <Filter>Source Files\SerialPort\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialEx.h">
+      <Filter>Source Files\SerialPort\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinErrorDialog.cpp">
@@ -184,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="WinMonitorFileInformation.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Serial.cpp">
+      <Filter>Source Files\SerialPort\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialEx.cpp">
+      <Filter>Source Files\SerialPort\Internal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

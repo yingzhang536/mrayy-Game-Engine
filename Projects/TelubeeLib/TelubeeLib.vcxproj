@@ -100,6 +100,7 @@
     <ClInclude Include="BaseRenderState.h" />
     <ClInclude Include="AppData.h" />
     <ClInclude Include="CameraConfigurationManager.h" />
+    <ClInclude Include="CameraTextureSource.h" />
     <ClInclude Include="FlyingTelubeeRobotCommunicator.h" />
     <ClInclude Include="GstSingleNetVideoSource.h" />
     <ClInclude Include="GstStereoStreamVideoSource.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="GeomDepthRect.h" />
     <ClInclude Include="LocalSingleCameraVideoSource.h" />
     <ClInclude Include="NodeHeadController.h" />
+    <ClInclude Include="OculusBaseController.h" />
     <ClInclude Include="RemoteCameraRenderingState.h" />
     <ClInclude Include="GstFileVideoSource.h" />
     <ClInclude Include="GstStereoNetVideoSource.h" />
@@ -159,10 +161,12 @@
     <ClCompile Include="BaseAppState.cpp" />
     <ClCompile Include="BaseRenderState.cpp" />
     <ClCompile Include="CameraConfigurationManager.cpp" />
+    <ClCompile Include="CameraTextureSource.cpp" />
     <ClCompile Include="FlyingTelubeeRobotCommunicator.cpp" />
     <ClCompile Include="GstSingleNetVideoSource.cpp" />
     <ClCompile Include="GstStereoStreamVideoSource.cpp" />
     <ClCompile Include="GstStreamerVideoSource.cpp" />
+    <ClCompile Include="IRobotController.cpp" />
     <ClCompile Include="KeyboardHeadController.cpp" />
     <ClCompile Include="CRobotConnector.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
@@ -173,6 +177,7 @@
     <ClCompile Include="GeomDepthRect.cpp" />
     <ClCompile Include="LocalSingleCameraVideoSource.cpp" />
     <ClCompile Include="NodeHeadController.cpp" />
+    <ClCompile Include="OculusBaseController.cpp" />
     <ClCompile Include="RemoteCameraRenderingState.cpp" />
     <ClCompile Include="GstFileVideoSource.cpp" />
     <ClCompile Include="GstStereoNetVideoSource.cpp" />

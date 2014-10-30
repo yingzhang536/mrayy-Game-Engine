@@ -111,10 +111,11 @@ EntryPoint
 	}
 	{
 		op.name = "Robot";
-		op.value = "Joystick";
+		op.value = "Oculus";
 		op.valueSet.insert("Keyboard");
 		op.valueSet.insert("Joystick");
 		op.valueSet.insert("Wiiboard");
+		op.valueSet.insert("Oculus");
 		extraOptions.push_back(op);
 		op.valueSet.clear();
 	}

@@ -31,6 +31,10 @@ protected:
 	int robot_vx, robot_vy, robot_rot;
 	float pan, tilt, roll;
 	bool baseConnected;
+
+	HANDLE m_headThread;
+	HANDLE m_baseThread;
+
 	int omni_control(int velocity_x, int velocity_y, int rotation, int control);
 // 	int yamahaInitialize();
 // 	int yamahaXY_control(float pos_x, float pos_y, int control);
@@ -52,7 +56,10 @@ public:
 	bool IsConnected();
 	void UpdateRobotStatus(const RobotStatus& st);
 
+	virtual std::string ExecCommand(const std::string& cmd, const std::string& args);
 };
+
+
 
 
 

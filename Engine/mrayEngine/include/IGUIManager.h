@@ -16,6 +16,7 @@
 
 #include "GUID.h"
 #include "IGUIElement.h"
+#include "IGUIPanelElement.h"
 #include "IDelegate.h"
 #include "IEventReciver.h"
 #include "ListenerContainer.h"
@@ -54,7 +55,7 @@ class MRAY_DLL IGUIManager:public ListenerContainer<IGUIManagerListener*>
 protected:
 	video::IVideoDevice* m_device;
 
-	GCPtr<IGUIElement>	m_rootElement;
+	GCPtr<IGUIPanelElement>	m_rootElement;
 	IGUIElement*	m_focusElement;
 	IGUIElement*	m_MouseOnElement;
 
@@ -80,8 +81,8 @@ public:
 	virtual void SetDevice(video::IVideoDevice* dev);
 	video::IVideoDevice* GetDevice();
 
-	virtual void SetRootElement(IGUIElement*  elem);
-	virtual IGUIElement* GetRootElement();
+	virtual void SetRootElement(IGUIPanelElement*  elem);
+	virtual IGUIPanelElement* GetRootElement();
 
 	virtual void AddPostDrawElement(IGUIElement* e){m_postDrawElements.push_back(e);}
 

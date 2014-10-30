@@ -28,6 +28,7 @@
 #include "OpenNIManager.h"
 #include "CameraProfile.h"
 #include "GstStreamBin.h"
+#include "GstPlayerBin.h"
 
 namespace mray
 {
@@ -66,9 +67,11 @@ protected:
 	GCPtr<video::ICameraVideoGrabber> m_cameras[2];
 	GCPtr<video::IVideoGrabber> m_combinedCameras;
 	GCPtr<video::GstStreamBin> m_streamers;
+	GCPtr<video::GstPlayerBin> m_players;
 	//GCPtr<video::GstNetworkVideoStreamer> m_streamer;
 
 	video::VideoGrabberTexture m_cameraTextures[3];
+	video::VideoGrabberTexture* m_playerGrabber;
 
 	video::ITexturePtr m_rtTexture;
 	video::IRenderTargetPtr m_renderTarget;;
@@ -94,6 +97,8 @@ protected:
 	bool m_streamAudio;
 	bool m_depthSend;
 	bool m_isStarted;
+
+	bool m_isRobotActive;
 
 	int m_videoPort;
 
@@ -143,7 +148,7 @@ public:
 
 	virtual void onRenderDone(scene::ViewPort*vp);
 
-	void OnUserConnected(const network::NetAddress& address,int videoPort,int audioPort);
+	void OnUserConnected(const network::NetAddress& address, int videoPort, int audioPort, bool rtcp);
 	void OnRobotStatus(RobotCommunicator* sender, const RobotStatus& status);
 	void OnCollisionData(RobotCommunicator* sender, float left, float right);
 	void OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address);

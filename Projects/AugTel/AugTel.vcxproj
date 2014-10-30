@@ -106,7 +106,6 @@
     <ClInclude Include="ATGameComponents.h" />
     <ClInclude Include="AugCameraRenderState.h" />
     <ClInclude Include="AugTelSceneContext.h" />
-    <ClInclude Include="CameraTextureSource.h" />
     <ClInclude Include="CompositeBoneComponent.h" />
     <ClInclude Include="DataCommunicator.h" />
     <ClInclude Include="DepthRequesterComponent.h" />
@@ -121,6 +120,8 @@
     <ClInclude Include="GUIConnectingScreen.h" />
     <ClInclude Include="GUIConnectingScreenImpl.h" />
     <ClInclude Include="GUIGraphPlotElement.h" />
+    <ClInclude Include="GUIInterfaceScreen.h" />
+    <ClInclude Include="GUIInterfaceScreenImpl.h" />
     <ClInclude Include="GUILoadingElement.h" />
     <ClInclude Include="GUILoadingScreen.h" />
     <ClInclude Include="GUILoadingScreenLayout.h" />
@@ -135,6 +136,10 @@
     <ClInclude Include="IHandsController.h" />
     <ClInclude Include="ISceneEffect.h" />
     <ClInclude Include="LatencyTestState.h" />
+    <ClInclude Include="LeapFinger.h" />
+    <ClInclude Include="LeapFunctions.h" />
+    <ClInclude Include="LeapHand.h" />
+    <ClInclude Include="LeapHandController.h" />
     <ClInclude Include="LeapMotionController.h" />
     <ClInclude Include="LeapMotionHandsController.h" />
     <ClInclude Include="LeapMotionImageRetrival.h" />
@@ -167,7 +172,6 @@
     <ClCompile Include="ATGameComponents.cpp" />
     <ClCompile Include="AugTel.cpp" />
     <ClCompile Include="AugCameraRenderState.cpp" />
-    <ClCompile Include="CameraTextureSource.cpp" />
     <ClCompile Include="CompositeBoneComponent.cpp" />
     <ClCompile Include="DataCommunicator.cpp" />
     <ClCompile Include="FadeSceneEffect.cpp" />
@@ -178,6 +182,7 @@
     <ClCompile Include="GUICalibrationItem.cpp" />
     <ClCompile Include="GUIConnectingScreenImpl.cpp" />
     <ClCompile Include="GUIGraphPlotElement.cpp" />
+    <ClCompile Include="GUIInterfaceScreenImpl.cpp" />
     <ClCompile Include="GUILoadingElement.cpp" />
     <ClCompile Include="GUILoadingScreen.cpp" />
     <ClCompile Include="GUIMotorConnectionPanel.cpp" />
@@ -186,6 +191,7 @@
     <ClCompile Include="HeadCameraComponent.cpp" />
     <ClCompile Include="ConnectingState.cpp" />
     <ClCompile Include="LatencyTestState.cpp" />
+    <ClCompile Include="LeapHand.cpp" />
     <ClCompile Include="LeapMotionController.cpp" />
     <ClCompile Include="LeapMotionHandsController.cpp" />
     <ClCompile Include="LeapMotionImageRetrival.cpp" />
@@ -220,6 +226,9 @@
       <FileType>Document</FileType>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIConnectingScreen.gui">
+      <SubType>Designer</SubType>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIInterfaceScreen.gui">
       <SubType>Designer</SubType>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoadingScreenLayout.gui" />

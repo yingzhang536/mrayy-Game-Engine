@@ -27,6 +27,7 @@ bool threadStart = false;
 bool isDone = false;
 bool upCount = true;
 
+using namespace mray;
 
 DWORD RobotSerialPort::timerThreadHead(RobotSerialPort *robot, LPVOID pdata){
 	int count = 0;
@@ -63,7 +64,7 @@ DWORD RobotSerialPort::timerThreadBase(RobotSerialPort *robot, LPVOID pdata){
 			//robot->yamahaXY_control(robot->robotX, robot->robotY, RUN);
 		}
 
-		Sleep(20);
+		Sleep(30);
 	}
 }
 
@@ -166,6 +167,8 @@ class RobotSerialPortImpl
 	}
 
 
+
+
 RobotSerialPort::RobotSerialPort()
 {
 
@@ -179,8 +182,8 @@ RobotSerialPort::RobotSerialPort()
 		m_impl->mvRobot[HEAD][i] = new MovAvg();
 	}
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)timerThreadHead, this, NULL, NULL);
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&timerThreadBase, this, NULL, NULL);
+	m_headThread=CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)timerThreadHead, this, NULL, NULL);
+	m_baseThread=CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&timerThreadBase, this, NULL, NULL);
 
 	ConnectRobot();
 
@@ -188,9 +191,12 @@ RobotSerialPort::RobotSerialPort()
 
 RobotSerialPort::~RobotSerialPort()
 {
+	isDone = true;
+	Sleep(100);
+	TerminateThread(m_baseThread, 0);
+	TerminateThread(m_headThread, 0);
 	DisconnectRobot();
 	delete m_impl;
-	isDone = true;
 }
 
 
@@ -291,6 +297,8 @@ void RobotSerialPort::DisconnectRobot()
 
 int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, int control){
 
+	static int counter = 0;
+
 	if (!m_impl->m_baseController->IsConnected())
 		return FALSE;
 	if (abs(rotation) < 5)
@@ -299,6 +307,14 @@ int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, 
 		m_impl->m_baseController->Drive(mray::math::vector2di(velocity_x, velocity_y), rotation);
 	else if (control == STOP)
 		m_impl->m_baseController->DriveStop();
+
+	//if (counter == 0)
+	{
+		counter = 0;
+		m_impl->m_baseController->UpdateSensors();
+	}
+	counter++;
+
 	return true;
 
 }
@@ -519,5 +535,37 @@ void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 void RobotSerialPort::SetListener(ITelubeeRobotListener* l)
 {
 	m_impl->listener = l;
+}
+
+std::string RobotSerialPort::ExecCommand(const std::string& cmd, const std::string& args)
+{
+	if (!m_impl->m_baseController || !m_impl->m_baseController->IsConnected())
+		return "";
+	if (cmd == CMD_Start)
+	{
+		m_impl->m_baseController->Start();
+		return "";
+	}
+	if (cmd == CMD_Stop)
+	{
+		m_impl->m_baseController->Stop();
+		return "";
+	}
+	if (cmd == CMD_GetSensorCount)
+	{
+		return core::StringConverter::toString(m_impl->m_baseController->GetSensorCount());
+
+	}
+	else if (cmd == CMD_GetSensorValue)
+	{
+		return core::StringConverter::toString(m_impl->m_baseController->GetSensorValue(core::StringConverter::toInt(args)));
+	}
+	else if (cmd == CMD_GetBatteryLevel)
+	{
+		return core::StringConverter::toString(m_impl->m_baseController->GetBatteryLevel());
+	}
+	else
+		return m_impl->m_baseController->ExecCommand(cmd, args);
+	return "";
 }
 

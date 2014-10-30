@@ -15,6 +15,7 @@ namespace ImageSetGenerator
 
         class TreeNode
         {
+            int margin;
             public ImageInfo image;
             public TreeNode LeftNode;
             public TreeNode RightNode;
@@ -29,27 +30,29 @@ namespace ImageSetGenerator
                     RightNode.DrawTo(p, g);
             }
 
-            public bool Insert(ImageInfo img)
+            public bool Insert(ImageInfo img,int margin)
             {
-                if (img.img.Width > Rect.Width ||
-                    img.img.Height > Rect.Height)
+                if (img.img.Width + margin > Rect.Width ||
+                    img.img.Height +  margin > Rect.Height)
                     return false;
                 if (image == null)
                 {
+                    this.margin = margin;
                     image = img;
                     image.targetRect.X = Rect.X;
-                    image.targetRect.Y = Rect.Y;
+                    image.targetRect.Y = Rect.Y ;
 
-                    image.targetRect.Width = image.img.Width;
-                    image.targetRect.Height = image.img.Height;
+                    image.targetRect.Width = image.img.Width + margin;
+                    image.targetRect.Height = image.img.Height + margin;
 
-                    int w = Rect.Width - image.img.Width;
-                    int h = Rect.Height - image.img.Height;
+                    int w = Rect.Width - image.targetRect.Width;
+                    int h = Rect.Height - image.targetRect.Height;
 
-                    Rectangle rect1 = new Rectangle(Rect.X + image.img.Width,
-                        Rect.Y, w, image.img.Height);
+
+                    Rectangle rect1 = new Rectangle(Rect.X + image.targetRect.Width,
+                        Rect.Y, w, image.targetRect.Height);
                     Rectangle rect2 = new Rectangle(Rect.X ,
-                        Rect.Y + image.img.Height, Rect.Width, h);
+                        Rect.Y + image.targetRect.Height, Rect.Width, h);
 
                     if (rect1.Width > 5 && rect1.Height> 5)
                     {
@@ -67,12 +70,12 @@ namespace ImageSetGenerator
                 {
                     if(LeftNode!=null)
                     {
-                        if (LeftNode.Insert(img))
+                        if (LeftNode.Insert(img,margin))
                             return true;
                     }
                     if(RightNode!=null)
                     {
-                        if (RightNode.Insert(img))
+                        if (RightNode.Insert(img, margin))
                             return true;
                     }
                 }
@@ -120,14 +123,14 @@ namespace ImageSetGenerator
         TreeNode root;
 
 
-        bool TrySize(int width,int height)
+        bool TrySize(int width,int height,int margin)
         {
             root = new TreeNode();
             root.Rect.Width = width;
             root.Rect.Height = height;
             for (int i = 0; i < m_images.Length; ++i)
             {
-                if (!root.Insert(m_images[i]))
+                if (!root.Insert(m_images[i],margin))
                     return false;
             }
             return true;
@@ -188,7 +191,8 @@ namespace ImageSetGenerator
             Point sz = new Point();//= EstimateSize();
             sz.X = int.Parse(widthTxt.Text);
             sz.Y = int.Parse(heightTxt.Text);
-            if (!TrySize(sz.X, sz.Y))
+            int margin = int.Parse(txtMargin.Text);
+            if (!TrySize(sz.X, sz.Y,margin))
             {
                 MessageBox.Show("Not Enough image size");
                 return;
@@ -211,7 +215,9 @@ namespace ImageSetGenerator
             Point sz =new Point();//= EstimateSize();
             sz.X = int.Parse(widthTxt.Text);
             sz.Y = int.Parse(heightTxt.Text);
-            if(!TrySize(sz.X,sz.Y))
+            int margin = int.Parse(txtMargin.Text);
+
+            if (!TrySize(sz.X, sz.Y, margin))
             {
                 MessageBox.Show("Not Enough image size");
                 return;
@@ -244,8 +250,8 @@ namespace ImageSetGenerator
                 {
                     maxHeight = m_images[i].img.Height;
                 }*/
-                g.DrawImage(m_images[i].img, m_images[i].targetRect.X, m_images[i].targetRect.Y,
-                    m_images[i].targetRect.Width, m_images[i].targetRect.Height);
+                g.DrawImage(m_images[i].img, m_images[i].targetRect.X , m_images[i].targetRect.Y ,
+                    m_images[i].targetRect.Width - margin , m_images[i].targetRect.Height - margin );
             }
             g.Dispose();
             result.Save(path, System.Drawing.Imaging.ImageFormat.Png);
@@ -271,7 +277,7 @@ namespace ImageSetGenerator
                 w.WriteAttributeString("Name", m_images[i].name);
                 string str = m_images[i].targetRect.X.ToString() + "," + m_images[i].targetRect.Y.ToString();
                 w.WriteAttributeString("SourceRectPos", str);
-                str = m_images[i].targetRect.Width.ToString() + "," + m_images[i].targetRect.Height.ToString();
+                str = m_images[i].img.Width.ToString() + "," + m_images[i].img.Height.ToString();
                 w.WriteAttributeString("SourceRectSize", str);
 
                 float x;
@@ -282,8 +288,8 @@ namespace ImageSetGenerator
 
                 w.WriteAttributeString("TexcoordPos", x.ToString() + "," + y.ToString());
 
-                x = m_images[i].targetRect.Width / (float)width;
-                y = m_images[i].targetRect.Height / (float)height;
+                x = m_images[i].img.Width / (float)width;
+                y = m_images[i].img.Height / (float)height;
 
                 w.WriteAttributeString("TexcoordSize", x.ToString() + "," + y.ToString());
 
@@ -324,6 +330,8 @@ namespace ImageSetGenerator
                     }
                 }
             }
+
+            
 
             SaveImage(path + "\\"+ImageSetNameTxt.Text+".png");
             SaveImageSet(ImageSetNameTxt.Text+".png",path + "\\"+ImageSetNameTxt.Text+".imageset");

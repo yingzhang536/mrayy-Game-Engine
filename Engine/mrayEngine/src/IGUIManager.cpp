@@ -18,11 +18,11 @@ IGUIManager::~IGUIManager()
 	m_rootElement=0;
 }
 
-void IGUIManager::SetRootElement(IGUIElement*  elem)
+void IGUIManager::SetRootElement(IGUIPanelElement*  elem)
 {
 	m_rootElement=elem;
 }
-IGUIElement* IGUIManager::GetRootElement()
+IGUIPanelElement* IGUIManager::GetRootElement()
 {
 	return m_rootElement;
 }
