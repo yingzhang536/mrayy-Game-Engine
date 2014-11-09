@@ -1,6 +1,6 @@
 
-#ifndef OldBaseController_h__
-#define OldBaseController_h__
+#ifndef OmniBaseController_h__
+#define OmniBaseController_h__
 
 #include "IBaseController.h"
 #include "Tserial_event.h"
@@ -9,14 +9,14 @@
 namespace mray
 {
 	
-class OldBaseController:public IBaseController
+class OmniBaseController:public IBaseController
 {
 protected:
 	Tserial_event *comROBOT;	// Serial Port
 	bool connected;
 public:
-	OldBaseController();
-	virtual ~OldBaseController();
+	OmniBaseController();
+	virtual ~OmniBaseController();
 
 	Tserial_event *GetComEvent(){ return comROBOT; }
 
@@ -29,12 +29,12 @@ public:
 	virtual void DriveStop();
 
 	virtual int GetSensorCount() { return 0; }
-	virtual float GetSensorValue() { return 0; }
+	virtual float GetSensorValue(int s) { return 0; }
 	virtual int GetBatteryLevel() { return 100; }
 };
 
 }
 
-#endif // OldBaseController_h__
+#endif // OmniBaseController_h__
 
 

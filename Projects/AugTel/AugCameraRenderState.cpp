@@ -508,14 +508,15 @@ void AugCameraRenderState::InitState()
 
 	}
 
+	//if (false)
 	{
 		//init streamers
 		video::GstNetworkAudioStreamer* as = new video::GstNetworkAudioStreamer();
 		m_streamer->AddStream(as, "Audio");
 		video::GstNetworkVideoStreamer* vs = new video::GstNetworkVideoStreamer();
 		vs->SetCameras(0, 0);
-		vs->SetResolution(1280, 720);
-		vs->SetBitRate(700);
+		vs->SetResolution(640, 480);
+		vs->SetBitRate(500);
 		m_streamer->AddStream(vs, "Video");
 	}
 }
@@ -561,6 +562,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 			m_hands[i]->Start(m_context);
 		}
 	}
+//	if (false)
 	{
 		m_streamer->GetStream("Audio")->BindPorts(ifo->IP, gAppData.TargetAudioPort, gAppData.RtcpStream);
 		m_streamer->GetStream("Audio")->CreateStream();
@@ -751,7 +753,7 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 	math::rectf vp(0, m_renderTarget[index]->GetSize());
 	m_guiManager->DrawAll(&vp);
 
-
+	if (gAppData.IsDebugging)
 	{
 
 		for (int i = 0; i < m_hands.size(); ++i)

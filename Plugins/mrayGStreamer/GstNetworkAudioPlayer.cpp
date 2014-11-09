@@ -11,6 +11,8 @@
 #include "CMySrc.h"
 #include "CMySink.h"
 #include "GstPipelineHandler.h"
+#include "IFileSystem.h"
+#include "StreamReader.h"
 
 #include <gst/gst.h>
 #include <gst/app/gstappsink.h>
@@ -44,21 +46,55 @@ public:
 
 	}
 
-
+#define VORBIS_ENC
 	void _BuildPipeline()
 	{
-		core::string audioStr =
-			"myudpsrc name=audioSrc "
-			"caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 ";
+#ifdef FLAC_ENC
+		core::string audiocaps = " caps=application/x-rtp,media=application,clock-rate=90000,encoding-name=X-GST,payload=96 ";
+		core::string audioStr = " rtpgstdepay ! audio/x-flac,rate=8000,channels=1! flacdec !  audioconvert ! audioresample  ";
+#else 
+#ifdef VORBIS_ENC
+
+		core::string audiocaps = "caps=application/x-rtp,media=(string)audio,clock-rate=22000,encoding-name=VORBIS,payload=96,encoding-params=2 ";
+
+		if (false)
+		{
+			OS::IStreamPtr capsFile = gFileSystem.openFile("audio.caps");
+			if (capsFile)
+			{
+				OS::StreamReader rdr(capsFile);
+				audiocaps = "caps=";
+
+				while (!capsFile->eof())
+				{
+					audiocaps += rdr.readLine();
+				}
+
+				//audiocaps += "\"";
+			}
+		}
+
+		core::string audioStr = " rtpvorbisdepay ! vorbisdec ! audioconvert ! audioresample  ";
+
+#else
+#ifdef SPEEX_ENC
+		core::string audiocaps = "caps=application/x-rtp,media=(string)audio,clock-rate=(int)22000,encoding-name=(string)SPEEX ";
+		core::string audioStr = " rtpspeexdepay ! speexdec ! audioconvert ! audioresample  ";
+#else
+		core::string audiocaps = "caps=application/x-rtp,media=(string)audio,clock-rate=(int)8000,encoding-name=(string)AMR,encoding-params=(string)1,octet-align=(string)1 ";
+		core::string audioStr = " rtpamrdepay ! amrnbdec  ";
+#endif
+#endif
+#endif
 		if (m_rtcp)
 		{
 			m_pipeLineString =
 				"rtpbin name=rtpbin "
-				+ audioStr +
+				"myudpsrc name=audioSrc "+ audiocaps +
 				//audio rtp
 				"! rtpbin.recv_rtp_sink_0 "
 
-				"rtpbin. ! rtpamrdepay ! amrnbdec ! directsoundsink "
+				"rtpbin. ! " + audioStr+ " ! directsoundsink "
 
 				"myudpsrc name=audioRtcpSrc ! rtpbin.recv_rtcp_sink_0 "
 
@@ -67,8 +103,8 @@ public:
 		}
 		else
 		{
-			m_pipeLineString = audioStr + " ! "
-				"rtpbin. ! rtpamrdepay ! amrnbdec ! directsoundsink ";
+			m_pipeLineString =
+				"myudpsrc name=audioSrc " + audiocaps +"!"+ audioStr  + " !directsoundsink ";
 
 		}
 

@@ -39,10 +39,23 @@ public:
 		m_ipAddr = "127.0.0.1";
 		m_audioPort = 5005;
 	}
-
+#define VORBIS_ENC
 	void BuildString()
 	{
-		core::string audioStr="directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! amrnbenc ! rtpamrpay";
+#ifdef FLAC_ENC
+
+		core::string audioStr = "directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1 ! audioconvert ! flacenc quality=2 ! rtpgstpay ";
+#else 
+#ifdef VORBIS_ENC
+		core::string audioStr = "directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=22000,channels=2   ! audioconvert ! vorbisenc quality=0.7 ! rtpvorbispay config-interval=3 ";
+#else
+#ifdef SPEEX_ENC
+		core::string audioStr = "directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=22000,channels=2   ! speexenc ! rtpspeexpay";
+#else
+		core::string audioStr = "directsoundsrc! audio/x-raw,endianness=1234,signed=true,width=16,depth=16,rate=8000,channels=1   ! amrnbenc ! rtpamrpay";
+#endif
+#endif
+#endif
 		if (m_rtcp)
 		{
 			m_pipeLineString = "rtpbin  name=rtpbin " + audioStr + " ! "

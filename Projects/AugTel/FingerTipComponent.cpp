@@ -158,6 +158,8 @@ void FingerTipComponent::DebugRender(scene::IDebugDrawManager* renderer)
 	video::SColor clr[2] = { video::DefaultColors::Red, video::DefaultColors::Green };
 
 	pos = GetAbsolutePosition();
+	renderer->AddCross(pos, 1, 1);
+
 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(m_avgVelocity.x,0,0), video::DefaultColors::Red);
 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, m_avgVelocity.y, 0), video::DefaultColors::Green);
 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, 0, m_avgVelocity.z), video::DefaultColors::Blue);

@@ -16,13 +16,19 @@
 #include "RenderPass.h"
 #include "LeapMotionImageRetrival.h"
 
+#include "LeapHandController.h"
+#include "LeapHand.h"
+#include "LeapFinger.h"
+
+#include "FontResourceManager.h"
+#include "GUIBatchRenderer.h"
 
 namespace mray
 {
 namespace AugTel
 {
 
-	class LeapMotionHandsControllerImpl:public Leap::Listener
+	class LeapMotionHandsControllerImpl:public Leap::Listener,public ILeapHandControllerListener
 	{
 	public:
 
@@ -33,6 +39,7 @@ namespace AugTel
 
 
 		LeapMotionController* m_controller;
+		LeapHandController* m_handController;
 		
 
 		AugTelSceneContext* context;
@@ -51,11 +58,14 @@ namespace AugTel
 		{
 			enabled = true;
 			m_controller = new LeapMotionController();
-			images[0] = new LeapMotionImageRetrival(1);
-			images[1] = new LeapMotionImageRetrival(0);
+			images[0] = new LeapMotionImageRetrival(0);
+			images[1] = new LeapMotionImageRetrival(1);
+			m_handController = new LeapHandController(m_controller);
+			m_handController->AddListener(this);
 		}
 		~LeapMotionHandsControllerImpl()
 		{
+			delete m_handController;
 			delete m_controller;
 			delete images[0];
 			delete images[1];
@@ -118,10 +128,10 @@ namespace AugTel
 					math::vector3d(-1, +1, 0)
 				};
 				math::vector2d tcPtr[4] = {
-					math::vector2d(0, 1),
-					math::vector2d(1, 1),
 					math::vector2d(1, 0),
 					math::vector2d(0, 0),
+					math::vector2d(0, 1),
+					math::vector2d(1, 1),
 				};
 
 				math::matrix3x3 rotMat;
@@ -167,25 +177,69 @@ namespace AugTel
 
 			context->entManager->loadFromFile(m_model, &entLst);
 			GenerateSurface();
-			return;
 			game::GameEntity* ent = entLst[0];
-			AugTel::HeadCameraComponent* eyes = ent->RetriveComponent<AugTel::HeadCameraComponent>(ent, "Head");
-			VT::CameraComponent* cameraComponent = ent->RetriveComponent<VT::CameraComponent>(ent, "stereoCamera");
-			
+			VT::CameraComponent* eyesComponent = ent->RetriveComponent<VT::CameraComponent>(ent, "eyes");
+			LeapHand* hands[] = {
+				m_handController->GetleftHand(),
+				m_handController->GetRightHand()
+			};
 
-			if (eyes)
+			core::string LRStr[] = { "L", "R" };
+			for (int i = 0; i < 2; ++i)
 			{
-				eyes->GetNode()->addChild(context->headNode);
-				context->headNode->setPosition(eyes->GetOffset());
+				std::stringstream str;
+				str << LRStr[i] << "Wrist" ;
+				game::SceneComponent*wrist = ent->RetriveComponent<game::SceneComponent>(ent, str.str());
+				str.str(std::string());
+				str.clear();
+				str << LRStr[i] << "Elbow";
+				game::SceneComponent*elbow = ent->RetriveComponent<game::SceneComponent>(ent, str.str());
+
+				if (wrist)
+				{
+					hands[i]->SetWristJoint(wrist->GetSceneNode());
+				}
+				if (elbow)
+				{
+					hands[i]->SetForeamNode(elbow->GetSceneNode());
+				}
+
+				for (int j = 0; j < 5; ++j)
+				{
+					for (int k = 0; k < 3; ++k)
+					{
+						str.str(std::string());
+						str.clear();
+						str << LRStr[i] << "Finger_" << j << "_" << k;
+						game::SceneComponent*comp= ent->RetriveComponent<game::SceneComponent>(ent, str.str());
+						if (comp)
+						{
+							comp->GetSceneNode()->setScale(100);
+							hands[i]->GetFinger((ELeapFinger)j)->SetNode(comp->GetSceneNode(), k+1);
+						}
+					}
+				}
 			}
-			else if (cameraComponent)
+
+			 if (eyesComponent)
 			{
-				cameraComponent->MountCamera(context->headNode, 0);
+				 eyesComponent->GetNode()->addChild(context->headNode);
+				 context->headNode->setPosition(eyesComponent->GetOffset());
+				// m_handController->SetTransform(context->headNode);
+				eyesComponent->MountCamera(context->headNode, 0);
 			}
+
 
 		}
 
-
+		virtual void OnHandCreated(LeapHandController* c, LeapHand* hand)
+		{
+			printf("Hand Created: %s\n", hand->GetHand().isLeft()?"Left":"Right");
+		}
+		virtual void OnHandRemoved(LeapHandController* c, LeapHand* hand)
+		{
+			printf("Hand Removed: %s\n", hand->GetHand().isLeft() ? "Left" : "Right");
+		}
 		void Init(AugTelSceneContext* c)
 		{
 			context = c;
@@ -209,6 +263,13 @@ namespace AugTel
 		{
 			if (!enabled)
 				return;
+			if (!m_controller->GetController()->isConnected())
+			{
+
+				m_screenNode[0]->setVisible(false);
+				m_screenNode[1]->setVisible(false);
+				return;
+			}
 			Leap::Frame frame = m_controller->GetController()->frame();
 
 			if (images[eye]->Capture(frame))
@@ -231,6 +292,8 @@ namespace AugTel
 				return;
 			Leap::Frame frame = m_controller->GetController()->frame();
 			frame.hand(0).confidence();
+
+			m_handController->Update(dt);
 		}
 	};
 
@@ -285,19 +348,71 @@ void LeapMotionHandsController::RenderStart(const math::rectf& rc, TBee::ETarget
 	if (!m_enabled)
 		return;
 	m_data->OnRender(rc, eye);
-
 }
 
 void LeapMotionHandsController::DebugRender(const math::rectf& rc, TBee::ETargetEye eye)
 {
 	if (!m_enabled)
 		return;
+
+	gEngine.getDevice()->set2DMode();
 	video::TextureUnit tu;
 	tu.SetTexture(m_data->images[eye]->GetResult());
 	gEngine.getDevice()->useTexture(0,&tu);
 	//gEngine.getDevice()->draw2DImage(rc, 1);
 
 	gEngine.getDevice()->useTexture(0,0);
+
+	LeapHand* leftHand = m_data->m_handController->GetRightHand();
+	LeapHand* rightHand = m_data->m_handController->GetRightHand();
+
+	leftHand->DrawDebug();
+	rightHand->DrawDebug();
+	for (int i = 0; i < 5; ++i)
+	{
+		std::stringstream str;
+		math::vector3d p = rightHand->GetFinger((ELeapFinger)i)->GetTipPosition();
+
+	}
+
+
+	GUI::IFont* font = gFontResourceManager.getDefaultFont();
+	GUI::FontAttributes attr;
+
+	math::vector2d pos;
+	GUI::GUIBatchRenderer m_guiRenderer;
+	m_guiRenderer.SetDevice(gEngine.getDevice());
+	pos.x = 20;
+	pos.y = 200;
+	if (font)
+	{
+		attr.fontColor.Set(1, 1, 1, 1);
+		attr.fontAligment = GUI::EFA_MiddleLeft;
+		attr.fontSize = 18;
+		attr.hasShadow = true;
+		attr.shadowColor.Set(0, 0, 0, 1);
+		attr.shadowOffset = math::vector2d(2);
+		attr.spacing = 2;
+		attr.wrap = 0;
+		attr.RightToLeft = 0;
+
+		math::rectf r = rc;
+		r.ULPoint = pos;
+
+		core::string msg = mT("Hand Position:") + core::StringConverter::toString(rightHand->GetWristPosition());
+		font->print(r, &attr, 0, msg, &m_guiRenderer);
+		r.ULPoint.y += attr.fontSize + 5;
+		for (int i = 0; i < 5; ++i)
+		{
+			std::stringstream str;
+			math::vector3d p = rightHand->GetFinger((ELeapFinger)i)->GetTipPosition();
+			str << "Finger[" << i << "] Position: " << core::StringConverter::toString(p);
+			core::string msg = str.str();
+			font->print(r, &attr, 0, msg, &m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+		}
+		m_guiRenderer.Flush();
+	}
 }
 
 

@@ -95,6 +95,9 @@ void Tserial_event::disconnect(void){
 
 	if (thread_handle!=0)
 		WaitForSingleObject(thread_handle, 2000);
+	if (serial_handle != INVALID_HANDLE_VALUE)
+		CloseHandle(serial_handle);
+	serial_handle = 0;
 	thread_handle = 0;
 }
 

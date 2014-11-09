@@ -185,6 +185,7 @@ namespace mray
 RoombaControllerImpl::RoombaControllerImpl():
 INITIALIZE_SENSORS(), currentMode_(IROBOT_CREATE_OFF)
 {
+	m_leftWheel = m_rightWheel = 0;
 	m_serialPort = OS::IOSystem::getInstance().GetSerialPortService()->CreateSerialPort();
 
 	m_serialPort->OnDataArrived += CreateDataArrivedDelegate(RoombaControllerImpl, this, OnSerialPortDataArrived);
@@ -531,6 +532,10 @@ void RoombaControllerImpl::DriveWheels(int leftWheel, int rightWheel)
 {
 	if (currentMode_ < IROBOT_CREATE_SAFE)
 		return;
+	if (leftWheel == m_leftWheel && rightWheel == m_rightWheel)
+		return;
+	m_leftWheel = leftWheel;
+	m_rightWheel = rightWheel;
 	leftWheel = math::clamp(leftWheel, VELOCITY_MIN, VELOCITY_MAX);
 	rightWheel = math::clamp(rightWheel, VELOCITY_MIN, VELOCITY_MAX);
 
@@ -810,10 +815,21 @@ void RoombaController::Drive(const math::vector2di& speed, int rotationSpeed)
 	{
 		float w = (float)irLight[i] / 4095.0f;
 		antiVec2 += lightVec[i] * w;
-		totalW += w;
+		totalW += sqrtf(w)*lightVec[i].x;
 	}
-	if (totalW > 0.2)
-		antiVec2 /= totalW;
+	//if (totalW > 0.1)
+	//	antiVec2 /= totalW;
+	if (totalW>0.2)
+	{
+		if (totalW < 0.5)
+		{
+			antiVec2 = frontVec*(totalW + 0.5);
+		}
+		else
+		{
+			antiVec2 = frontVec;
+		}
+	}
 //	antiVec.Normalize();
 	
 	antiVec = antiVec2;
@@ -828,8 +844,8 @@ void RoombaController::Drive(const math::vector2di& speed, int rotationSpeed)
 	l -= rotationSpeed;
 	r += rotationSpeed;
 
-	l /= 2;
-	r /= 2;
+// 	l /= 2;
+// 	r /= 2;
 	 m_impl->DriveWheels(l,r);
 
 }

@@ -389,6 +389,12 @@
     <ClCompile Include="LeapHand.cpp">
       <Filter>Source Files\Leap</Filter>
     </ClCompile>
+    <ClCompile Include="LeapFinger.cpp">
+      <Filter>Source Files\Leap</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapHandController.cpp">
+      <Filter>Source Files\Leap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">

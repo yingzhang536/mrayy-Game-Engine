@@ -302,6 +302,9 @@ protected:
 	std::vector<DataPacket> toProcess_;
 	OS::IMutex* m_toProcessMutex;
 
+	int m_leftWheel;
+	int m_rightWheel;
+
 	/// Wheeldrop caster
 	bool wheeldropCaster_;
 	/// Wheeldrop left

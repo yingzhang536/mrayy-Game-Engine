@@ -18,7 +18,6 @@
 
 #include <string>
 #include "IRobotController.h"
-#include "RoombaController.h"
 #include <windows.h>
 
 class RobotSerialPortImpl;

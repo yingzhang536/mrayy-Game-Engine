@@ -119,6 +119,8 @@ TRApplication::TRApplication()
 	m_players = new video::GstPlayerBin();
 
 	m_isRobotActive = false;
+
+	m_debugging = false;
 }
 
 TRApplication::~TRApplication()
@@ -189,6 +191,10 @@ void TRApplication::onEvent(Event* e)
 			else
 				m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_Start,"");
 			m_isRobotActive = !m_isRobotActive;
+		}
+		if (evt->press && evt->key == KEY_F9)
+		{
+			m_debugging = !m_debugging;
 		}
 	}
 }
@@ -360,7 +366,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		m_players->AddPlayer(player, "Video");
 
 		m_playerGrabber = new video::VideoGrabberTexture();
-		m_playerGrabber->Set(player, 0);
+		m_playerGrabber->Set(new video::GstNetworkVideoPlayerGrabber(player), 0);
 	}
 	m_robotCommunicator = new RobotCommunicator();
 	m_robotCommunicator->StartServer(COMMUNICATION_PORT);
@@ -516,12 +522,12 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 	m_playerGrabber->Blit();
 	tex.SetTexture(m_playerGrabber->GetTexture());
 	getDevice()->useTexture(0, &tex);
-	math::rectf texCoords(0,1,1,0);
+	math::rectf texCoords(1,0,0,1);
 	getDevice()->draw2DImage(vp->getAbsRenderingViewPort(), 1,0,&texCoords);
 /*	*/
 
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
-	if (font){
+	if (font && m_debugging){
 		m_guiRender->Prepare();
 
 		float yoffset = 50;

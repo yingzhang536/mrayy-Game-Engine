@@ -104,6 +104,8 @@ protected:
 
 	math::vector2di m_resolution;
 
+	bool m_debugging;
+
 
 	core::string m_ip;
 

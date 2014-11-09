@@ -150,7 +150,7 @@ public:
                  ~Tserial_event();
     int           connect          (char *port, int rate, int parity,
 		char ByteSize, bool modem_events, bool flowControl);
-
+	bool isconnected(){ return serial_handle != 0; }
     void          setManager       (type_myCallBack manager);
     void          setRxSize        (int size);
     void          sendData         (char *buffer, int size);

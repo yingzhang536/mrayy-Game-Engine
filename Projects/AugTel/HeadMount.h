@@ -51,8 +51,8 @@ public:
 			{
 				m_parentOffset = getPosition();
 				m_parent->removeChild(this,true);
-				setPosition(math::vector3d(-1.684, 1.289, 0.636));
-				setOrintation(math::quaternion(-169, 23, 0));
+			//	setPosition(math::vector3d(-1.684, 1.289, 0.636));
+			//	setOrintation(math::quaternion(-169, 23, 0));
 			}
 		}
 		else

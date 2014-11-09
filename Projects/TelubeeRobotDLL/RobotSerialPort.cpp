@@ -10,6 +10,8 @@
 #include "TelubeeRobotDLL.h"
 #include "Point3d.h"
 #include "quaternion.h"
+#include "RoombaController.h"
+#include "OmniBaseController.h"
 
 float testPosx = 100.00;
 float testPosy = 100.00; 
@@ -76,7 +78,7 @@ class RobotSerialPortImpl
 #ifdef ROOMBA_CONTROLLER
 		mray::RoombaController* m_baseController;
 #else 
-		mray::OldBaseController* m_baseController
+		mray::OmniBaseController* m_baseController;
 #endif
 		Tserial_event *comHEAD;		// Serial Port
 		MovAvg *mvRobot[2][3];		// 1 - base, 2 - head moving avarage 
@@ -87,7 +89,7 @@ class RobotSerialPortImpl
 #ifdef ROOMBA_CONTROLLER
 			m_baseController = new mray::RoombaController;
 #else 
-			m_baseController=new mray::OldBaseController;
+			m_baseController = new mray::OmniBaseController;
 #endif
 			comHEAD = 0;
 			listener = 0;
@@ -105,13 +107,6 @@ class RobotSerialPortImpl
 		}
 };
 
-	void robot_OnDataArrival(int size, char *buffer){
-
-		//todo:handle return
-		//comROBOT->sendData("S", 2);
-
-	}
-
 	void head_OnDataArrival(int size, char *buffer){
 
 		//todo:handle return
@@ -119,29 +114,6 @@ class RobotSerialPortImpl
 
 	}
 
-
-	void robot_SerialEventManager(uint32 object, uint32 event){
-		char *buffer;
-		int   size;
-		Tserial_event *com;
-
-		com = (Tserial_event *)object;
-		if (com != 0){
-			switch (event){
-			case  SERIAL_CONNECTED:
-				//printf("Com Port Connected! \n");
-				break;
-			case  SERIAL_DATA_ARRIVAL:
-				size = com->getDataInSize();
-				buffer = com->getDataInBuffer();
-				robot_OnDataArrival(size, buffer);
-				com->dataHasBeenRead();
-				break;
-			}
-		}
-
-
-	}
 
 
 	void head_SerialEventManager(uint32 object, uint32 event){
@@ -228,9 +200,6 @@ void RobotSerialPort::ConnectRobot()
 	m_impl->comHEAD = new Tserial_event();
 
 	
-#ifndef ROOMBA_CONTROLLER	
-	m_impl->m_baseController->GetComEvent()->setManager(robot_SerialEventManager);
-#endif
 	ret=m_impl->m_baseController->Connect(robotCOM);
 	if (ret){
 
@@ -308,7 +277,7 @@ int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, 
 	else if (control == STOP)
 		m_impl->m_baseController->DriveStop();
 
-	//if (counter == 0)
+	if (counter == 2)
 	{
 		counter = 0;
 		m_impl->m_baseController->UpdateSensors();
@@ -448,8 +417,8 @@ qtomatrix(Matrix m, const mray::math::quaternion& q)
 
 void RobotSerialPort::UpdateRobotStatus(const RobotStatus& st)
 {
-	if (!IsConnected())
-		return;
+// 	if (!IsConnected())
+// 		return;
 	if (IsConnected() && !st.connected)
 	{
 		DisconnectRobot();

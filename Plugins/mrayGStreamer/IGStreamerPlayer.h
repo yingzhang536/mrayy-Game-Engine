@@ -25,7 +25,6 @@ namespace video
 class IGStreamerPlayer
 {
 protected:
-	bool m_isStreaming;
 public:
 	IGStreamerPlayer(){}
 	virtual~IGStreamerPlayer(){}

@@ -14,7 +14,7 @@ namespace video
 
 class GstNetworkVideoPlayerImpl;
 
-class GstNetworkVideoPlayer :public IGStreamerPlayer, public IVideoGrabber
+class GstNetworkVideoPlayer :public IGStreamerPlayer
 {
 protected:
 	GstNetworkVideoPlayerImpl* m_impl;
@@ -52,6 +52,27 @@ public:
 
 	virtual const ImageInfo* GetLastFrame() ;
 
+};
+
+class GstNetworkVideoPlayerGrabber :public IVideoGrabber
+{
+	GstNetworkVideoPlayer* m_player;
+public:
+	GstNetworkVideoPlayerGrabber(GstNetworkVideoPlayer * p)
+	{
+		m_player = p;
+	}
+	virtual void SetFrameSize(int w, int h) { m_player->SetFrameSize(w, h); }
+	virtual const math::vector2di& GetFrameSize() { return m_player->GetFrameSize(); }
+
+	virtual void SetImageFormat(video::EPixelFormat fmt)  { m_player->SetImageFormat(fmt); }
+	virtual video::EPixelFormat GetImageFormat() { return m_player->GetImageFormat(); }
+
+	virtual bool GrabFrame() { return m_player->GrabFrame(); }
+	virtual bool HasNewFrame() { return m_player->HasNewFrame(); }
+	virtual ulong GetBufferID() { return m_player->GetBufferID(); }
+
+	virtual const ImageInfo* GetLastFrame() { return m_player->GetLastFrame(); }
 };
 
 }

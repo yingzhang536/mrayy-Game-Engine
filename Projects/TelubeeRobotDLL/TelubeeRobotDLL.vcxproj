@@ -95,7 +95,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(MRAY_ENGINE)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mrayMath.lib;mrayEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mrayMath.lib;mrayEngine.lib;TelubeeLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(OutDir)$(TargetFileName) $(MRAY_ENGINE)\bin\$(Configuration)\Robot.dll</Command>
@@ -108,7 +108,7 @@
     <ClInclude Include="agent.h" />
     <ClInclude Include="IBaseController.h" />
     <ClInclude Include="movingAverage.h" />
-    <ClInclude Include="OldBaseController.h" />
+    <ClInclude Include="OmniBaseController.h" />
     <ClInclude Include="RobotSerialPort.h" />
     <ClInclude Include="RoombaController.h" />
     <ClInclude Include="stdafx.h" />
@@ -126,7 +126,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="movingAverage.cpp" />
-    <ClCompile Include="OldBaseController.cpp" />
+    <ClCompile Include="OmniBaseController.cpp" />
     <ClCompile Include="RobotSerialPort.cpp" />
     <ClCompile Include="RoombaController.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -219,6 +219,8 @@ IMovable* ISceneNode::getParent(){return m_parent;}
 
 void ISceneNode::setParent(IMovable*p){
 	m_parent=p;
+	if (!m_parent && m_sceneMngr)
+		m_sceneMngr->getRootNode()->addChild(this);
 }
 
 std::list<IAnimatorsPtr>* ISceneNode::getAnimators()

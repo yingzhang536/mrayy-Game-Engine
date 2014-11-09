@@ -32,13 +32,13 @@ GstStreamerVideoSource::GstStreamerVideoSource(const core::string& ip, int video
 
 GstStreamerVideoSource::~GstStreamerVideoSource()
 {
-	m_player->ClearPlayers(true);
 	delete m_playerGrabber;
+	m_player->ClearPlayers(true);
 }
 
 void GstStreamerVideoSource::Init()
 {
-	m_playerGrabber->Set(((video::GstNetworkVideoPlayer*)m_player->GetPlayer("Video")), 0);
+	m_playerGrabber->Set(new video::GstNetworkVideoPlayerGrabber((video::GstNetworkVideoPlayer*)m_player->GetPlayer("Video")), 0);
 }
 void GstStreamerVideoSource::Open()
 {

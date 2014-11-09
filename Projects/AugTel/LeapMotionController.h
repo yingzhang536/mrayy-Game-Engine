@@ -7,7 +7,8 @@
 
 namespace mray
 {
-	
+	class LeapHand;
+
 class LeapMotionController
 {
 protected:

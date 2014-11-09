@@ -51,7 +51,7 @@
     <ClInclude Include="IBaseController.h">
       <Filter>Source Files\Robot</Filter>
     </ClInclude>
-    <ClInclude Include="OldBaseController.h">
+    <ClInclude Include="OmniBaseController.h">
       <Filter>Source Files\Robot</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,7 +77,7 @@
     <ClCompile Include="RoombaController.cpp">
       <Filter>Source Files\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="OldBaseController.cpp">
+    <ClCompile Include="OmniBaseController.cpp">
       <Filter>Source Files\Robot</Filter>
     </ClCompile>
   </ItemGroup>

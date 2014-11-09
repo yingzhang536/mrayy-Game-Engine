@@ -57,7 +57,7 @@ public:
 		{
 			//ksvideosrc
 			videoStr = "ksvideosrc name=src device-index=" + core::StringConverter::toString(m_cam0) + // device=" + m_cam0.guidPath + "" +//
-				" ! video/x-raw,format=I420,width=" + core::StringConverter::toString(m_frameSize.x) + ",height=" + core::StringConverter::toString(m_frameSize.y) + ",framerate=30/1 ! videoconvert !  videoflip method=4 ";  // videoflip method=1 !   ";
+				" ! video/x-raw,format=I420,width=" + core::StringConverter::toString(m_frameSize.x) + ",height=" + core::StringConverter::toString(m_frameSize.y) + ",framerate=30/1 ! videoconvert  ! videoflip method = 4 ";// !videoflip method = 1  ";
 
 		}
 		else

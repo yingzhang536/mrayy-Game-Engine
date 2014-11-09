@@ -85,6 +85,10 @@ bool SceneComponent::InitComponent()
 	{
 		parent->GetSceneNode()->addChild(m_node);
 	}
+	else
+	{
+		m_sceneMngr->getRootNode()->addChild(m_node);
+	}
 
 	return true;
 }

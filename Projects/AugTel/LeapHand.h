@@ -28,22 +28,37 @@ class LeapHand
 {
 protected:
 	Leap::Controller *m_LeapController;
-	Leap::Hand *m_hand;
+	Leap::Hand m_hand;
 
 	LeapHandController* m_handController;
 
 	LeapFinger* m_fingers[(int)ELeapFinger::Count];
+	scene::IMovable* m_palm;
+	scene::IMovable* m_foream;
+	scene::IMovable* m_wristJoint;
 public:
-	LeapHand();
+	LeapHand(LeapHandController* c);
 	virtual ~LeapHand();
 
-	LeapFinger* GetFinger(ELeapFinger finger);
 
-	Leap::Hand *GetHand(){ return m_hand; }
+	void SetPalmNode(scene::IMovable* p){
+		m_palm = p;
+	}
+	void SetForeamNode(scene::IMovable*f){
+		m_foream = f;
+	}
+	void SetWristJoint(scene::IMovable* w){
+		m_wristJoint = w;
+	}
+
+	LeapFinger* GetFinger(ELeapFinger finger);
+	LeapHandController* Controller(){ return m_handController; }
+
+	void SetHand(Leap::Hand  h);
+	Leap::Hand GetHand(){ return m_hand; }
 
 	math::vector3d GetElbowPosition();
 
-	math::vector3d GetArmCenter();
 	math::vector3d GetArmDirection();
 	math::quaternion GetArmRotation();
 
@@ -55,6 +70,9 @@ public:
 	math::vector3d GetPalmDirection();
 	math::vector3d GetPalmNormal();
 
+	virtual void UpdatePosition();
+
+	virtual void DrawDebug();
 };
 
 }

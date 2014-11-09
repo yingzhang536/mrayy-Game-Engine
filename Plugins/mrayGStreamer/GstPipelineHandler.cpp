@@ -182,7 +182,7 @@ namespace video
 			g_error_free(err);
 			g_free(debug);
 
-			gst_element_set_state(GST_ELEMENT(m_gstPipeline), GST_STATE_NULL);
+		//	gst_element_set_state(GST_ELEMENT(m_gstPipeline), GST_STATE_NULL);
 
 		}break;
 		case GST_MESSAGE_ERROR:
