@@ -6,6 +6,9 @@
 
 #include "ILogManager.h"
 #include "OpenNICaptureDevice.h"
+#include "IOSystem.h"
+#include "IFileSystem.h"
+#include "IDirOS.h"
 #include <NiTE.h>
 
 namespace mray
@@ -27,6 +30,11 @@ namespace mray
 		int Init(int argc,char**argv)
 		{
 			Close();
+
+			{
+				GCPtr<OS::IDirOS> os = OS::IOSystem::getInstance().createDirSystem();
+				os->changeDir(gFileSystem.getAppPath());
+			}
 
 			openni::Status rc = openni::OpenNI::initialize();
 			if (rc != openni::STATUS_OK)

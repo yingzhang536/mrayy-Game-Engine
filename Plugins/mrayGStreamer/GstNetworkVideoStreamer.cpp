@@ -42,6 +42,9 @@ public:
 		m_cam0 = 0;
 		m_cam1 = 1;
 
+		m_videoSink = 0;
+		m_videoRtcpSink = 0;
+		m_videoRtcpSrc = 0;
 		m_frameSize.set(1280, 720);
 	}
 
@@ -81,7 +84,7 @@ public:
 		}
 
 		//encoder string
-		videoStr +="! x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency sync-lookahead=0 pass=qual ! rtph264pay ";
+		videoStr +="! x264enc name=videoEnc bitrate=" + core::StringConverter::toString(m_bitRate) + " speed-preset=superfast tune=zerolatency sync-lookahead=0  pass=qual ! rtph264pay ";
 		if (m_rtcp)
 		{
 			m_pipeLineString = "rtpbin  name=rtpbin " +
@@ -237,6 +240,15 @@ bool GstNetworkVideoStreamer::IsStereo()
 	return m_impl->IsStereo();
 }
 
+void GstNetworkVideoStreamer::SetPaused(bool paused)
+{
+	m_impl->SetPaused(paused);
+}
+
+bool GstNetworkVideoStreamer::IsPaused()
+{
+	return !m_impl->IsPlaying();
+}
 
 }
 }

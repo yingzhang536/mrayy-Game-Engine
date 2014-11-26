@@ -106,7 +106,9 @@ public:
 
 		core::string header;
 
-		header="#include \"IGUISchemeBase.h\"\n";
+		header = "#ifndef __" + o->GetName() + "__\n";
+		header += "#define __" + o->GetName() + "__\n";
+		header +="#include \"IGUISchemeBase.h\"\n";
 
 		for(std::set<core::string>::iterator it=m_types.begin();it!=m_types.end();++it)
 		{
@@ -142,7 +144,8 @@ public:
 
 		header+="\n\t}\n";
 
-		header+="\n};\n}";
+		header+="\n};\n}\n";
+		header += "#endif\n";
 
 		return header;
 	}

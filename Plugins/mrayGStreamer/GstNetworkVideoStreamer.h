@@ -41,6 +41,8 @@ public:
 	void SetCameras(int cam0, int cam1);
 	bool IsStereo();
 
+	virtual void SetPaused(bool paused);
+	virtual bool IsPaused();
 };
 
 }

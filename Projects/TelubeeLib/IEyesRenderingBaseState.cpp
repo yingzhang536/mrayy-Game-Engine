@@ -15,15 +15,8 @@
 #include "SMeshBuffer.h"
 #include "RenderPass.h"
 
-#include "OculusHeadController.h"
-#include "OptiTrackHeadController.h"
 #include "ICameraVideoSource.h"
 
-#include "WiiboardInputController.h"
-#include "OculusBaseController.h"
-#include "JoystickInputController.h"
-#include "KeyboardHeadController.h"
-#include "NodeHeadController.h"
 #include "AppData.h"
 #include "CameraConfigurationManager.h"
 
@@ -41,7 +34,6 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 
 	m_contentsRotation = 0;
 
-	m_robotConnector = new CRobotConnector();
 
 	m_lensCorrectionPP = new video::ParsedShaderPP(Engine::getInstance().getDevice());
 	m_lensCorrectionPP->LoadXML(gFileSystem.openFile("LensCorrection.peff"));
@@ -49,40 +41,6 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 // 	m_correctionValue[0] = m_lensCorrectionPP->GetValue("final.HMDWrapParams1");
 // 	m_correctionValue[1] = m_lensCorrectionPP->GetValue("final.HMDWrapParams2");
 
-	switch (AppData::Instance()->headController)
-	{
-	case EHeadControllerType::Keyboard:
-		m_robotConnector->SetHeadController(new KeyboardHeadController);
-		break;;
-	case EHeadControllerType::Oculus:
-		m_robotConnector->SetHeadController(new OculusHeadController);
-		break;;
-	case EHeadControllerType::OptiTrack:
-		m_robotConnector->SetHeadController(new OptiTrackHeadController(1));
-		break;;
-	case EHeadControllerType::SceneNode:
-		m_robotConnector->SetHeadController(new NodeHeadController());
-		break;;
-	default:
-		break;
-	}
-
-	switch (AppData::Instance()->robotController)
-	{
-	case ERobotControllerType::Keyboard:
-		break;;
-	case ERobotControllerType::Oculus:
-		m_robotConnector->SetRobotController(new OculusBaseController);
-		break;;
-	case ERobotControllerType::Joystick:
-		m_robotConnector->SetRobotController(new JoystickInputController);
-		break;;
-	case ERobotControllerType::Wiiboard:
-		m_robotConnector->SetRobotController(new WiiboardInputController);
-		break;;
-	default:
-		break;
-	}
 
 	GUI::GUIBatchRenderer*r = new GUI::GUIBatchRenderer();
 	r->SetDevice(Engine::getInstance().getDevice());
@@ -101,7 +59,6 @@ IEyesRenderingBaseState::IEyesRenderingBaseState(const core::string& name)
 
 IEyesRenderingBaseState::~IEyesRenderingBaseState()
 {
-	delete m_robotConnector;
 	delete m_videoSource;
 	delete m_guiRenderer;
 }
@@ -185,27 +142,6 @@ bool IEyesRenderingBaseState::OnEvent(Event* e, const math::rectf& rc)
 		}*/
 	}
 	
-	if (e->getType() == ET_Joystick)
-	{
-		JoystickEvent* evt = (JoystickEvent*)e;
-		if (evt->event == JET_BUTTON_PRESSED)
-		{
-			if (evt->button == JOYSTICK_SelectButton)
-			{
-				m_exitCode = STATE_EXIT_CODE;
-				m_robotConnector->EndUpdate();
-				ok = true;
-			}
-			else if (evt->button == JOYSTICK_StartButton)
-			{
-				if (m_robotConnector->IsRobotConnected())
-					m_robotConnector->EndUpdate();
-				else
-					m_robotConnector->StartUpdate();
-				ok = true;
-			}
-		}
-	}
 	return ok;
 }
 
@@ -216,8 +152,6 @@ void IEyesRenderingBaseState::OnEnter(IRenderingState*prev)
 
 	_UpdateCameraParams();
 
-	m_robotConnector->ConnectRobot();
-	m_robotConnector->EndUpdate();
 }
 
 
@@ -225,7 +159,6 @@ void IEyesRenderingBaseState::OnExit()
 {
 	IRenderingState::OnExit();
 	//VCameraType* cam=(VCameraType*)m_video->GetGrabber().pointer();
-	m_robotConnector->DisconnectRobot();
 
 }
 
@@ -306,58 +239,6 @@ void IEyesRenderingBaseState::_RenderUI(const math::rectf& rc, math::vector2d& p
 
 		math::rectf r = rc;
 
-		if (m_robotConnector->GetHeadController())
-		{
-			math::vector3d head;
-			math::quaternion q,q2(m_robotConnector->GetHeadRotation());
-			q = q2;
-			q.x = q2.z;
-			q.y = q2.x;
-			q.z = q2.y;
-			q.toEulerAngles(head);
-			/*
-			math::matrix4x4 m;
-			qtomatrix(m, q);
-
-			char buff[512];
-			sprintf(buff, "%0.2f, %0.2f, %0.2f, %0.2f",)
-
-
-			core::string msg = mT(" ") + core::StringConverter::toString(head);
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-			*/
-
-			core::string msg = mT("Head Rotation: ")+core::StringConverter::toString(head);
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-
-			head = m_robotConnector->GetHeadPosition();
-			msg = mT("Head Position: ") + core::StringConverter::toString(head);
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-			
-		}
-		else
-		{
-			core::string msg = mT("Head: Non") ;
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-		}
-		if (m_robotConnector->GetRobotController())
-		{
-
-			math::vector2d speed;
-			float rot;
-			speed = m_robotConnector->GetSpeed();
-			rot = m_robotConnector->GetRotation();
-			core::string msg = mT("Robot Speed: ") + core::StringConverter::toString(speed);
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-			msg = mT("Robot Rotation: ") + core::StringConverter::toString(rot);
-			font->print(r, &attr, 0, msg, m_guiRenderer);
-			r.ULPoint.y += attr.fontSize + 5;
-		}
 		pos = r.ULPoint;
 		/*
 		math::vector3d correctionX(m_correctionValue[0]->floatParam[0], m_correctionValue[0]->floatParam[1], m_correctionValue[0]->floatParam[2]);
@@ -556,7 +437,6 @@ video::IRenderTarget* IEyesRenderingBaseState::Render(const math::rectf& rc, ETa
 
 void IEyesRenderingBaseState::Update(float dt)
 {
-	m_robotConnector->UpdateStatus();
 
 	if (m_enablePanning)
 	{

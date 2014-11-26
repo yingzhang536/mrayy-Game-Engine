@@ -94,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BrushDrawer.h" />
+    <ClInclude Include="ILineDrawer.h" />
     <ClInclude Include="LineDrawer.h" />
     <ClInclude Include="OptiTrackDataSource.h" />
     <ClInclude Include="stdafx.h" />
@@ -103,8 +105,12 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AugTelWhiteBoard.cpp" />
+    <ClCompile Include="BrushDrawer.cpp" />
+    <ClCompile Include="ILineDrawer.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
-    <ClCompile Include="OptiTrackDataSource.cpp" />
+    <ClCompile Include="OptiTrackDataSource.cpp">
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</SDLCheck>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -15,7 +15,7 @@ namespace GUI
 {
 
 GUIStaticTextComponent::GUIStaticTextComponent():m_backColor(0.9,0.9,0.9,1),
-m_background(true),m_border(true)
+m_background(true),m_border(false)
 {
 }
 GUIStaticTextComponent::~GUIStaticTextComponent()

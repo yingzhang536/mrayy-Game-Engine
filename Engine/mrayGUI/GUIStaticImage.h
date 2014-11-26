@@ -44,6 +44,7 @@ protected:
 	math::rectf m_texCoords;
 	core::string m_source;
 	EImageStretchMode m_stretchMode;
+	bool m_clipping;
 
 	virtual void fillProperties();
 	bool _OnMouseEvent(MouseEvent* e);
@@ -52,6 +53,7 @@ public:
 	DECLARE_PROPERTY_TYPE(StretchMode, EImageStretchMode, MRAYGUI_API);
 	DECLARE_PROPERTY_TYPE(TexCoords, math::rectf, MRAYGUI_API);
 	DECLARE_PROPERTY_TYPE(Source,core::string,MRAYGUI_API);
+	DECLARE_PROPERTY_TYPE(Clipping, bool, MRAYGUI_API);
 public:
 
 	GUIStaticImage(IGUIManager* creator);
@@ -70,6 +72,9 @@ public:
 
 	bool SetSourceImage(const core::string&path);
 	const core::string& GetSourceImage();
+
+	bool SetClipping(bool clipping);
+	bool GetClipping();
 
 	virtual void Draw(const math::rectf*vp);
 

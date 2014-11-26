@@ -62,7 +62,6 @@ protected:
 	GUI::IGUIRenderer* m_guiRenderer;
 
 	GCPtr<video::ParsedShaderPP> m_lensCorrectionPP;
-	CRobotConnector* m_robotConnector;
 	ICameraVideoSource* m_videoSource;
 
 	math::vector2d m_contentsPos,m_contentsOrigin;

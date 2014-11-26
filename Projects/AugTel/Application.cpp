@@ -145,7 +145,7 @@ void Application::_InitResources()
 	CMRayApplication::loadResourceFile(mT("Resources.stg"));
 
 
-	gImageSetResourceManager.loadImageSet(mT("Icons\\VideoIcons.imageset"));
+	gImageSetResourceManager.loadImageSetDirectory(gFileSystem.getAppPath()+ mT("..\\Data\\AugTel\\Icons\\"));
 	gImageSetResourceManager.loadImageSet(mT("VistaCG_Dark.imageset"));
 	GCPtr<OS::IStream> themeStream = gFileSystem.createBinaryFileReader(mT("VistaCG_Dark.xml"));
 	GUI::GUIThemeManager::getInstance().loadTheme(themeStream);
@@ -248,7 +248,11 @@ void Application::_initStates()
 	depth = new GeomDepthState("Depth");
 	m_renderingState->AddState(depth);
 
-	LatencyTestState* latency = new LatencyTestState("Latency", new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.RtcpStream));
+	LatencyTestState* latency = 0;
+
+	if (m_remoteCamera)
+		latency=new LatencyTestState("Latency", new TBee::GstStreamerVideoSource(ip, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.RtcpStream));
+	else latency = new LatencyTestState("Latency", new TBee::LocalCameraVideoSource(m_cam1, m_cam2));
 	m_renderingState->AddState(latency);
 
 // 	vtRs = new VTelesarRenderingState("Telesar");
@@ -263,6 +267,7 @@ void Application::_initStates()
 	//m_renderingState->AddTransition(login, depth, ToDepthView_CODE);
 	m_renderingState->AddTransition(remote, login, STATE_EXIT_CODE);
 	m_renderingState->AddTransition(login, latency, ToDepthView_CODE);
+	m_renderingState->AddTransition(latency, login, STATE_EXIT_CODE);
 //	m_renderingState->AddTransition(camera, login, STATE_EXIT_CODE);
 	m_renderingState->AddTransition(depth, login, STATE_EXIT_CODE);
 	//	m_renderingState->AddTransition(vtRs, login, STATE_EXIT_CODE);

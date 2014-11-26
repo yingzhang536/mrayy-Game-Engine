@@ -1,3 +1,5 @@
+#ifndef __GUIInterfaceScreen__
+#define __GUIInterfaceScreen__
 #include "IGUISchemeBase.h"
 #include "GUIPanel.h"
 #include "GUIStaticImage.h"
@@ -26,3 +28,4 @@ public:
 
 };
 }
+#endif

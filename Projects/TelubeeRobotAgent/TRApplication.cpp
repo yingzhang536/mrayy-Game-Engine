@@ -127,6 +127,7 @@ TRApplication::~TRApplication()
 {
 	m_players->ClearPlayers(true);
 	m_streamers->ClearStreams(true);
+	m_openNi->Close();
 	m_streamers = 0;
 	m_players = 0;
 	delete m_robotCommunicator;
@@ -215,6 +216,8 @@ void TRApplication::init(const OptionContainer &extraOptions)
 		m_debugData.debug = extraOptions.GetOptionByName("Debugging")->getValue() == "Yes";
 		m_depthSend = extraOptions.GetOptionByName("DepthStream")->getValue() == "Yes";
 
+		m_enableStream = extraOptions.GetOptionByName("Stream")->getValue() == "Yes";
+		
 		m_controller = extraOptions.GetOptionByName("Controller")->getValue() == "XBox"? EController::XBox : EController::Logicool;
 
 		m_cameraProfile = extraOptions.GetOptionValue("CameraProfile");
@@ -331,7 +334,7 @@ void TRApplication::init(const OptionContainer &extraOptions)
 	{
 		1000,
 		2000,
-		3500,
+		4000,
 		5000,
 		7000
 	};
@@ -441,7 +444,7 @@ void TRApplication::update(float dt)
 		//m_videoGrabber->Unlock();
 
 
-		if (m_startVideo && !m_isStarted)
+		if (m_startVideo && !m_isStarted && m_enableStream)
 		{
 			/*
 			if (!m_debugData.debug )
@@ -672,6 +675,8 @@ void TRApplication::OnCollisionData(RobotCommunicator* sender, float left, float
 }
 void TRApplication::OnUserDisconnected(RobotCommunicator* sender, const network::NetAddress& address)
 {
+	RobotStatus st;
+	m_robotCommunicator->SetRobotData(st);
 	m_debugData.userConnected = false;
 	m_startVideo = false;
 	printf("User Disconnected : %s\n", address.toString().c_str());

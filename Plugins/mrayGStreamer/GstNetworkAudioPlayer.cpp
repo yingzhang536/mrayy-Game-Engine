@@ -40,6 +40,9 @@ public:
 		m_ipAddr = "127.0.0.1";
 		m_audioPort = 5005;
 		m_gstPipeline = 0;
+		m_audioSrc = 0;
+		m_audioRtcpSrc = 0;
+		m_audioRtcpSink = 0;
 	}
 	virtual ~GstNetworkAudioPlayerImpl()
 	{
@@ -161,6 +164,8 @@ public:
 
 	virtual void Close()
 	{
+		if (m_audioSrc && m_audioSrc->m_client)
+			m_audioSrc->m_client->Close();
 		GstPipelineHandler::Close();
 	}
 

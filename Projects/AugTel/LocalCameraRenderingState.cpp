@@ -27,7 +27,7 @@ namespace AugTel
 	int s_id=0;
 
 LocalCameraRenderingState::LocalCameraRenderingState(const core::string& name)
-	:IEyesRenderingBaseState(name)
+	:IRobotControlState(name)
 {
 	m_exitCode=0;
 

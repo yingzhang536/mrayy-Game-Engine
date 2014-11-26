@@ -46,6 +46,7 @@ public:
 
 	video::ImageSetPtr  getImageSet(const core::string& name);
 	video::ImageSetPtr  loadImageSet(const core::string& path);
+	int loadImageSetDirectory(const core::string& path);
 
 	virtual void writeResourceToDist(const core::string&resName,const core::string&fileName);
 	virtual void writeResourceToDist(const IResourcePtr& resource,const core::string&fileName);

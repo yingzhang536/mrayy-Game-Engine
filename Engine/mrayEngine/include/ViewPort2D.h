@@ -27,6 +27,7 @@ private:
 protected:
 	IGUIElement* m_elem;
 	GCPtr<video::IRenderTarget>m_rt;
+	video::SColor m_clearColor;
 public:
 	ViewPort2D(IGUIElement* elem,const video::IRenderTargetPtr& rt);
 	virtual~ViewPort2D();

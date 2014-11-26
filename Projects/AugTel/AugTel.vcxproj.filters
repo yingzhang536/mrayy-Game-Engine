@@ -46,6 +46,9 @@
     <Filter Include="Source Files\Leap">
       <UniqueIdentifier>{6168697b-048b-4035-8773-1924e26e613c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{b6ecb1f5-52ed-4e2d-b4c1-a3f189cd4a7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -174,9 +177,6 @@
     <ClInclude Include="LatencyTestState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="LocalRobotCommunicator.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
     <ClInclude Include="LocalCameraRenderingState.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
@@ -242,6 +242,27 @@
     </ClInclude>
     <ClInclude Include="LeapFunctions.h">
       <Filter>Source Files\Leap</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILoginMenuImpl.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUINavigationLayout.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUINavigationElement.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="IRobotControlState.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalRobotCommunicator.h">
+      <Filter>Source Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="LeapHandComponent.h">
+      <Filter>Source Files\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardArrowComponent.h">
+      <Filter>Source Files\GameComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +368,6 @@
     <ClCompile Include="LocalCameraRenderingState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="LocalRobotCommunicator.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="FadeSceneEffect.cpp">
       <Filter>Source Files\Effects</Filter>
     </ClCompile>
@@ -395,6 +413,24 @@
     <ClCompile Include="LeapHandController.cpp">
       <Filter>Source Files\Leap</Filter>
     </ClCompile>
+    <ClCompile Include="GUILoginMenuImpl.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUINavigationElement.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="IRobotControlState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalRobotCommunicator.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="LeapHandComponent.cpp">
+      <Filter>Source Files\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardArrowComponent.cpp">
+      <Filter>Source Files\GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
@@ -417,6 +453,9 @@
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIInterfaceScreen.gui">
       <Filter>Source Files\GUI</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUINavigationLayout.gui">
+      <Filter>Source Files\GUI\Elements</Filter>
     </Overlay>
   </ItemGroup>
 </Project>

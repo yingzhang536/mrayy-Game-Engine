@@ -11,7 +11,7 @@ namespace mray
 namespace TBee
 {
 	//http://www.azerdev.com/wp-content/uploads/2013/02/IGS_Report.pdf
-#define NORM_OFFSET 0.0f
+#define NORM_OFFSET -0.3f
 
 GeomDepthCalculator::GeomDepthCalculator()
 {

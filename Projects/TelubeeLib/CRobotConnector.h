@@ -75,6 +75,8 @@ public:
 	void HandleController();
 	void UpdateStatus();
 
+	static void InitController(CRobotConnector* c);
+
 };
 	}
 

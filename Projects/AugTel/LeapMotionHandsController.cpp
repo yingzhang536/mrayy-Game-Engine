@@ -22,12 +22,129 @@
 
 #include "FontResourceManager.h"
 #include "GUIBatchRenderer.h"
+#include "ShaderResourceManager.h"
+#include "ICameraVideoSource.h"
+#include "LeapHandComponent.h"
 
 namespace mray
 {
 namespace AugTel
 {
 
+	class VirtualHandsLightImpl
+	{
+
+	protected:
+
+		void GenerateBRDF()
+		{
+			BRDFTexture = gEngine.getDevice()->createEmptyTexture2D(false);
+			BRDFTexture->setMipmapsFilter(false);
+			BRDFTexture->createTexture(math::vector3d(512, 512, 1), video::EPixel_Float16_R);
+			video::IRenderTargetPtr rt = gEngine.getDevice()->createRenderTarget("", BRDFTexture, 0, 0, 0);
+
+			video::IGPUShaderProgramPtr BRDF_FP = gShaderResourceManager.loadShaderFromFile("BRDF_PreComp.cg", video::EShader_FragmentProgram, "main_fp_PHBeckmann", video::ShaderPredefList(), "cg");
+			gEngine.getDevice()->set2DMode();
+			gEngine.getDevice()->setRenderTarget(rt);
+			gEngine.getDevice()->setFragmentShader(BRDF_FP);
+			gEngine.getDevice()->draw2DImage(math::rectf(0, 0, 512, 512), 1);
+			gEngine.getDevice()->setRenderTarget(0);
+			gEngine.getDevice()->setFragmentShader(0);
+			rt = 0;
+		}
+	public:
+		video::ITexturePtr BRDFTexture;
+
+		AugTelSceneContext* context;
+
+		int m_lightMapTimer;
+
+		video::ParsedShaderPP* m_blurShader;
+		std::vector<game::GameEntity*> entLst;
+
+		LeapHandComponent* leftHand;
+		LeapHandComponent* rightHand;
+
+	public:
+		VirtualHandsLightImpl()
+		{
+			m_lightMapTimer = 0;
+		}
+		~VirtualHandsLightImpl()
+		{
+		}
+
+		void Init()
+		{
+			video::ParsedShaderPP* pp = new video::ParsedShaderPP(gEngine.getDevice());
+			pp->LoadXML(gFileSystem.openFile("blur.peff"));
+			m_blurShader = pp;
+
+			GenerateBRDF();
+		}
+
+		void LoadHands(const core::string& path)
+		{
+			context->entManager->loadFromFile(path, &entLst);
+			game::SceneComponent* modelComp = game::IGameComponent::RetriveComponent<game::SceneComponent>(entLst[0], "SkinnedArms");
+			if (modelComp)
+			{
+				for (int i = 0; i < modelComp->GetSceneNode()->GetAttachedNodesCount(); ++i)
+				{
+					scene::IRenderable* r = modelComp->GetSceneNode()->GetAttachedNode(i);
+					r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_blurShader->getOutput()->GetColorTexture(0), 3);
+					//r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->BRDFTexture, 3);
+				}
+			}
+
+			leftHand = game::IGameComponent::RetriveComponent<LeapHandComponent>(entLst[0], "LeftArm");
+			rightHand = game::IGameComponent::RetriveComponent<LeapHandComponent>(entLst[0], "RightArm");
+		}
+
+		void Update()
+		{
+			if (gEngine.getTimer()->getSeconds() - m_lightMapTimer < 200)
+				return;
+			m_lightMapTimer = gEngine.getTimer()->getSeconds();
+			m_blurShader->Setup(math::rectf(0, 0, 256, 256));
+			ulong currTime = gEngine.getTimer()->getMilliseconds();
+			/*
+			if (m_takeScreenShot)
+			{
+
+			core::string name = gFileSystem.getAppPath() + "screenShots/Image_";
+			name += core::StringConverter::toString(currTime);
+			name += ".png";
+			gTextureResourceManager.writeResourceToDist(m_camVideoSrc->GetEyeTexture(0), name);
+			}*/
+			video::IRenderTarget* prevRT = gEngine.getDevice()->getRenderTarget();
+			video::ITexture* t = context->videoSource->GetEyeTexture(0);
+			for (int i = 0; i < 10; ++i)
+			{
+				m_blurShader->GetParam("Offset")->SetValue((i + 1) * 4);
+				m_blurShader->render(&video::TextureRTWrap(t));
+				t = m_blurShader->getOutput()->GetColorTexture();
+				/*
+
+				if (m_takeScreenShot)
+				{
+				time_t rawtime;
+				struct tm  timeinfo;
+
+				ulong currTime = gEngine.getTimer()->getMilliseconds();
+
+				core::string name = gFileSystem.getAppPath() + "screenShots/ImageDownSample" + core::StringConverter::toString(i) + "_";
+				name += core::StringConverter::toString(currTime);
+				name += ".png";
+				gTextureResourceManager.writeResourceToDist(m_blurShader->getOutput()->GetColorTexture(0), name);
+
+				}*/
+			}
+
+			gEngine.getDevice()->setRenderTarget(prevRT, 0, 0);
+		}
+
+	};
 	class LeapMotionHandsControllerImpl:public Leap::Listener,public ILeapHandControllerListener
 	{
 	public:
@@ -40,14 +157,14 @@ namespace AugTel
 
 		LeapMotionController* m_controller;
 		LeapHandController* m_handController;
+
+		VirtualHandsLightImpl* m_handsImpl;
 		
 
 		AugTelSceneContext* context;
 		LeapMotionImageRetrival* images[2];
 
 		core::string m_model;
-
-		std::vector<game::GameEntity*> entLst;
 
 		bool enabled;
 		scene::MeshRenderableNode* m_surface[2];
@@ -62,6 +179,8 @@ namespace AugTel
 			images[1] = new LeapMotionImageRetrival(1);
 			m_handController = new LeapHandController(m_controller);
 			m_handController->AddListener(this);
+
+			m_handsImpl = new VirtualHandsLightImpl();
 		}
 		~LeapMotionHandsControllerImpl()
 		{
@@ -69,6 +188,7 @@ namespace AugTel
 			delete m_controller;
 			delete images[0];
 			delete images[1];
+			delete m_handsImpl;
 		}
 
 		void setEnabled(bool e)
@@ -82,9 +202,9 @@ namespace AugTel
 			{
 				m_controller->RemoveListener(this);
 			}
-			for (int i = 0; i < entLst.size(); ++i)
+			for (int i = 0; i < m_handsImpl->entLst.size(); ++i)
 			{
-				entLst[i]->SetEnabled(e);
+				m_handsImpl->entLst[i]->SetEnabled(e);
 			}
 
 			m_screenNode[0]->setVisible(e,true);
@@ -159,30 +279,41 @@ namespace AugTel
 				m_screenMtrl[i]->SetAlphaFunction(video::EAF_GreaterEqual);
 				m_screenMtrl[i]->SetAlphaReferenceValue(0.5);
 
+				rnode->SetTargetRenderGroup(scene::RGH_Transparent + 10);
+				rnode->SetHasCustomRenderGroup(true);
 				m_screenNode[i]->AttachNode(rnode);
-				//m_headNode->addChild(m_screenNode[i]);
+				context->headNode->addChild(m_screenNode[i]);
 				m_screenNode[i]->setPosition(math::vector3d(0, 0, 1));
-				m_screenNode[i]->setScale(math::vector3d(3,1.9,1));				
+				m_screenNode[i]->setScale(math::vector3d(2, 2, 1.55));
 				m_screenNode[i]->setVisible(false);
 				m_screenNode[i]->setCullingType(scene::SCT_NONE);
 			}
 
-			context->headNode->GetLeftCamera()->addChild(m_screenNode[0]);
-			context->headNode->GetRightCamera()->addChild(m_screenNode[1]);
+// 			context->headNode->GetLeftCamera()->addChild(m_screenNode[0]);
+// 			context->headNode->GetRightCamera()->addChild(m_screenNode[1]);
 
 
 		}
 		void _loadHands()
 		{
 
-			context->entManager->loadFromFile(m_model, &entLst);
+			//context->entManager->loadFromFile(m_model, &entLst);
 			GenerateSurface();
-			game::GameEntity* ent = entLst[0];
+
+			m_handsImpl->Init();
+			m_handsImpl->context = context;
+			m_handsImpl->LoadHands(m_model);
+			game::GameEntity* ent = m_handsImpl->entLst[0];
 			VT::CameraComponent* eyesComponent = ent->RetriveComponent<VT::CameraComponent>(ent, "eyes");
 			LeapHand* hands[] = {
 				m_handController->GetleftHand(),
 				m_handController->GetRightHand()
 			};
+
+			if (m_handsImpl->leftHand)
+				m_handsImpl->leftHand->SetHand(m_handController->GetleftHand());
+			if (m_handsImpl->rightHand)
+				m_handsImpl->rightHand->SetHand(m_handController->GetRightHand());
 
 			core::string LRStr[] = { "L", "R" };
 			for (int i = 0; i < 2; ++i)
@@ -214,7 +345,7 @@ namespace AugTel
 						game::SceneComponent*comp= ent->RetriveComponent<game::SceneComponent>(ent, str.str());
 						if (comp)
 						{
-							comp->GetSceneNode()->setScale(100);
+						//	comp->GetSceneNode()->setScale(100);
 							hands[i]->GetFinger((ELeapFinger)j)->SetNode(comp->GetSceneNode(), k+1);
 						}
 					}
@@ -225,7 +356,7 @@ namespace AugTel
 			{
 				 eyesComponent->GetNode()->addChild(context->headNode);
 				 context->headNode->setPosition(eyesComponent->GetOffset());
-				// m_handController->SetTransform(context->headNode);
+				 m_handController->SetTransform(context->headNode);
 				eyesComponent->MountCamera(context->headNode, 0);
 			}
 
@@ -294,6 +425,8 @@ namespace AugTel
 			frame.hand(0).confidence();
 
 			m_handController->Update(dt);
+
+			m_handsImpl->Update();
 		}
 	};
 
@@ -333,7 +466,7 @@ void LeapMotionHandsController::Update(float dt)
 	controllers::IKeyboardController* kb = gAppData.inputMngr->getKeyboard();
 
 	math::vector3d s;
-	if (kb->getKeyState(KEY_LCONTROL))
+	if (kb->getKeyState(KEY_RCONTROL))
 	{
 		s.x = (kb->getKeyState(KEY_LEFT) - kb->getKeyState(KEY_RIGHT))*dt*0.5f;
 		s.y = (kb->getKeyState(KEY_UP) - kb->getKeyState(KEY_DOWN))*dt*0.5f;
@@ -350,7 +483,7 @@ void LeapMotionHandsController::RenderStart(const math::rectf& rc, TBee::ETarget
 	m_data->OnRender(rc, eye);
 }
 
-void LeapMotionHandsController::DebugRender(const math::rectf& rc, TBee::ETargetEye eye)
+void LeapMotionHandsController::DebugRender(scene::IDebugDrawManager* dbg, const math::rectf& rc, TBee::ETargetEye eye)
 {
 	if (!m_enabled)
 		return;
@@ -363,11 +496,9 @@ void LeapMotionHandsController::DebugRender(const math::rectf& rc, TBee::ETarget
 
 	gEngine.getDevice()->useTexture(0,0);
 
-	LeapHand* leftHand = m_data->m_handController->GetRightHand();
+	LeapHand* leftHand = m_data->m_handController->GetleftHand();
 	LeapHand* rightHand = m_data->m_handController->GetRightHand();
 
-	leftHand->DrawDebug();
-	rightHand->DrawDebug();
 	for (int i = 0; i < 5; ++i)
 	{
 		std::stringstream str;
@@ -413,6 +544,8 @@ void LeapMotionHandsController::DebugRender(const math::rectf& rc, TBee::ETarget
 		}
 		m_guiRenderer.Flush();
 	}
+	leftHand->DrawDebug(dbg);
+	rightHand->DrawDebug(dbg);
 }
 
 

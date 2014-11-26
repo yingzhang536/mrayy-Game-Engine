@@ -116,6 +116,7 @@ protected:
 	}m_cameraIfo[2];
 
 	EStreamingQuality m_quality;
+	bool m_enableStream;
 
 	struct DebugData
 	{

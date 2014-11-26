@@ -14,6 +14,7 @@
 #include "FontResourceManager.h"
 #include "Application.h"
 #include "GUILoadingElement.h"
+#include "GUILoginMenuImpl.h"
 
 namespace mray
 {
@@ -24,7 +25,7 @@ namespace AugTel
 LoginScreenState::LoginScreenState(const core::string& name)
 	:IRenderingState(name)
 {
-	m_loginMenu=new GUILoginMenu();
+	m_loginMenu = new GUILoginMenuImpl();
 	m_status = EIdle;
 
 	IDelegateContainer::AddDelegate(CreateObjectDelegate(LoginScreenState,this,OnExitPressed));
@@ -34,10 +35,12 @@ LoginScreenState::LoginScreenState(const core::string& name)
 }
 LoginScreenState::~LoginScreenState()
 {
+	delete m_loginMenu;
 }
 
 void LoginScreenState::OnConnectRemotePressed(IObject* caller, void* args)
 {
+	m_loginMenu->UpdateSelectedRobot();
 	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
 	m_exitCode = ToRemoteCamera_CODE;
 	m_status = EDone;
@@ -46,6 +49,7 @@ void LoginScreenState::OnConnectRemotePressed(IObject* caller, void* args)
 }
 void LoginScreenState::OnConnectLocalPressed(IObject* caller, void* args)
 {
+	m_loginMenu->UpdateSelectedRobot();
 	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
 	m_exitCode = ToLocalCamera_CODE;
 	m_status = EDone;
@@ -54,6 +58,7 @@ void LoginScreenState::OnConnectLocalPressed(IObject* caller, void* args)
 }
 void LoginScreenState::OnDepthViewerPressed(IObject* caller, void* args)
 {
+	m_loginMenu->UpdateSelectedRobot();
 	m_loginMenu->MessageLbl->SetText(core::string("Done!!"));
 	m_exitCode = ToDepthView_CODE;
 	m_status = EDone;
@@ -86,6 +91,8 @@ void LoginScreenState::InitState()
 	{
 		o->CreateElements(m_guiManager,m_guiroot,this,m_loginMenu);
 	}
+
+	m_loginMenu->UpdateRobotList();
 }
 
 bool LoginScreenState::OnEvent(Event* e,const math::rectf& rc)

@@ -15,7 +15,7 @@
 #define ___LocalCameraRenderingState___
 
 
-#include "IEyesRenderingBaseState.h"
+#include "IRobotControlState.h"
 #include "IRenderTarget.h"
 #include "ParsedShaderPP.h"
 
@@ -33,7 +33,7 @@ namespace mray
 	using namespace TBee;
 	namespace AugTel
 {
-class LocalCameraRenderingState:public TBee::IEyesRenderingBaseState
+class LocalCameraRenderingState:public TBee::IRobotControlState
 {
 protected:
 

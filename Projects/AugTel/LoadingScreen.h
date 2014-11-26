@@ -21,6 +21,7 @@ protected:
 	GUI::IGUIPanelElement* m_guiroot;
 	GUI::GUILoadingScreen* m_screenLayout;
 	bool m_done;
+	float m_startTime;
 public:
 	LoadingScreen();
 	virtual ~LoadingScreen();

@@ -52,12 +52,14 @@ void LoadingScreen::Start()
 	m_video->SetVisible(true);
 
 	//m_screenLayout->SetInfo("");
-	m_screenLayout->SetInfo("Location: Keio Media Design");
+	m_screenLayout->SetInfo("Location: Shenzhen Exhibition Center");
 	m_screenLayout->SetText("Connecting Robot", true);
 	math::vector2d pos = m_screenLayout->Status->GetPosition();
 	pos.x = 100;
 	m_screenLayout->Status->SetPosition(pos);
 	m_done = false;
+
+	m_startTime = gEngine.getTimer()->getSeconds();
 
 }
 
@@ -101,8 +103,9 @@ void LoadingScreen::End()
 
 bool LoadingScreen::IsDone()
 {
+	float dt = gEngine.getTimer()->getSeconds() - m_startTime;
 	return true;
-	return m_done|| m_video->IsDone();
+	return m_done || m_video->IsDone() || dt>4000;
 }
 
 

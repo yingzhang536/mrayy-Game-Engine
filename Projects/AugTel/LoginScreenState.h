@@ -26,7 +26,7 @@ namespace mray
 		class IGUIManager;
 		class IGUIPanelElement;
 	}
-	class GUILoginMenu;
+	class GUILoginMenuImpl;
 namespace AugTel
 {
 #define ToMap_CODE 0x100
@@ -47,7 +47,7 @@ protected:
 	GCPtr<GUI::IGUIManager> m_guiManager;
 	GUI::IGUIPanelElement* m_guiroot;
 
-	GCPtr<GUILoginMenu> m_loginMenu;
+	GUILoginMenuImpl* m_loginMenu;
 
 	void OnExitPressed(IObject* caller,void* args);
 	void OnConnectRemotePressed(IObject* caller, void* args);

@@ -32,6 +32,8 @@ public:
 	void Stop();
 	virtual void Close();
 
+	virtual void SetPaused(bool paused) ;
+	virtual bool IsPaused() ;
 };
 
 }

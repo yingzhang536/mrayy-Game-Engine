@@ -36,6 +36,8 @@ namespace TBee
 {
 	class OpenNIHandler;
 	class ICameraVideoSource;
+	class TBRobotInfo;
+	class CRobotConnector;
 }
 using namespace TBee;
 namespace AugTel
@@ -44,7 +46,6 @@ namespace AugTel
 class Application;
 class RobotInfoManager;
 class HeadMount;
-class TBRobotInfo;
 class DataCommunicator;
 
 enum class EController
@@ -101,6 +102,7 @@ public:
 
 	TBee::ICameraVideoSource* cameraProvider;
 	DataCommunicator* dataCommunicator;
+	TBee::CRobotConnector* robotConnector;
 
 	static ATAppGlobal* Instance(){ return (ATAppGlobal*)s_instance; }
 };

@@ -218,9 +218,17 @@ const MovableNodeList& ISceneNode::getChildren(){
 IMovable* ISceneNode::getParent(){return m_parent;}
 
 void ISceneNode::setParent(IMovable*p){
-	m_parent=p;
-	if (!m_parent && m_sceneMngr)
+	if (!p && m_sceneMngr && m_parent != m_sceneMngr->getRootNode())
+	{
+		m_parent = 0;
 		m_sceneMngr->getRootNode()->addChild(this);
+	}
+	else if (p && m_parent == m_sceneMngr->getRootNode())
+	{
+		m_parent->removeChild(this);
+		m_parent = p;
+	}else
+		m_parent = p;
 }
 
 std::list<IAnimatorsPtr>* ISceneNode::getAnimators()
@@ -456,7 +464,7 @@ void ISceneNode::removeFromParent(bool parentSpace)
 {
 	if(m_parent){
 		m_parent->removeChild(this,parentSpace);
-		m_parent=0;
+		//m_parent=0;
 	}
 }
 
@@ -488,9 +496,10 @@ void ISceneNode::addChild(IMovableCRef elem,bool parentSpace)
 {
 	if(elem)
 	{
-		if(elem->getParent())
+		if (elem->getParent())
+		{
 			elem->removeFromParent();
-
+		}
 		if(parentSpace)
 		{
 			elem->setPosition(elem->getAbsolutePosition()-getAbsolutePosition());

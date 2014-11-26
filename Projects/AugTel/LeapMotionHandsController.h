@@ -26,7 +26,7 @@ public:
 	virtual void End(AugTelSceneContext* context);
 	virtual void Update(float dt);
 	virtual void RenderStart(const math::rectf& rc, TBee::ETargetEye eye);
-	virtual void DebugRender(const math::rectf& rc, TBee::ETargetEye eye);
+	virtual void DebugRender(scene::IDebugDrawManager* dbg, const math::rectf& rc, TBee::ETargetEye eye);
 
 	virtual math::vector3d GetHandPosition(EHandType hand);
 	virtual math::quaternion GetHandRotation(EHandType hand);

@@ -15,7 +15,7 @@
 #ifndef __AugCameraRenderState__
 #define __AugCameraRenderState__
 
-#include "IEyesRenderingBaseState.h"
+#include "IRobotControlState.h"
 #include "SceneManager.h"
 #include "ViewPort.h"
 #include "GameEntityManager.h"
@@ -46,9 +46,9 @@ namespace AugTel
 	class IHandsController;
 	class AugTelSceneContext;
 
-class AugCameraRenderState :public TBee::IEyesRenderingBaseState,public scene::IViewportListener,public IDataCommunicatorListener
+class AugCameraRenderState :public TBee::IRobotControlState,public scene::IViewportListener,public IDataCommunicatorListener
 {
-	typedef TBee::IEyesRenderingBaseState Parent;
+	typedef TBee::IRobotControlState Parent;
 protected:
 
 	enum EStatus
@@ -71,6 +71,7 @@ protected:
 	GCPtr<GUI::IGUIPanelElement> m_guiroot;
 	scene::CameraNode* m_camera[2];
 
+
 	VTBaseState* m_vtState;
 	
 	AugTelSceneContext* m_context;
@@ -78,7 +79,7 @@ protected:
 	std::vector<IHandsController*> m_hands;
 	HandsMap m_handsMap;
 
-	TBee::ICameraVideoSource* m_camVideoSrc;
+//	TBee::ICameraVideoSource* m_camVideoSrc;
 	GCPtr<video::GstStreamBin> m_streamer;
 
 	core::string m_optiProvider;

@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "OptiTrackDataSource.h"
 #include "OptiTrackClient.h"
+#define  _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <winsock2.h>		// for struct in_addr
 
@@ -53,7 +54,7 @@ void OptiTrackDataSource::Connect(const core::string& serverIP,const core::strin
 			return;
 		}
 
-		struct hostent *phe = gethostbyname(ac);
+		struct hostent *phe =  gethostbyname(ac);
 		if (phe == 0) {
 			printf("Bad host lookup.\n");
 			return;

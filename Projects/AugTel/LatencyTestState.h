@@ -23,10 +23,14 @@ protected:
 	bool m_changed;
 
 	float m_startTime;
+	float m_autoTesterTimer;
 
 	float m_minLatency, m_maxLatency;
 
 	std::vector<float> m_latency;
+
+	OS::IStreamPtr m_outValues;
+
 
 public:
 	LatencyTestState(const core::string& name, TBee::ICameraVideoSource* src);

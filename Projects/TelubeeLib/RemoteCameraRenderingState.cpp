@@ -25,7 +25,7 @@ RemoteCameraRenderingState::RemoteCameraRenderingState(const core::string& name)
 
 	m_fps = 0;
 	m_timeAcc = 0;
-	m_robotConnector->SetCommunicator(new RemoteRobotCommunicator());
+//	m_robotConnector->SetCommunicator(new RemoteRobotCommunicator());
 
 	m_cameraSource = new GstStereoNetVideoSource();
 // 	m_eyes[0].flip90 = true;
@@ -66,15 +66,16 @@ bool RemoteCameraRenderingState::OnEvent(Event* e, const math::rectf &rc)
 			if (evt->key == KEY_ESCAPE)
 			{
 				m_exitCode = STATE_EXIT_CODE;
-				m_robotConnector->EndUpdate();
+		//		m_robotConnector->EndUpdate();
 				ok = true;
 			}
 			else if (evt->key == KEY_SPACE)
 			{
+				/*
 				if (m_robotConnector->IsRobotConnected())
 					m_robotConnector->EndUpdate();
 				else
-					m_robotConnector->StartUpdate();
+					m_robotConnector->StartUpdate();*/
 				ok = true;
 			}
 		}
@@ -93,7 +94,7 @@ void RemoteCameraRenderingState::OnEnter(IRenderingState*prev)
 	{
 		m_cameraSource->SetIP(ifo->IP);
 		m_cameraSource->Open();
-		m_robotConnector->ConnectRobotIP(ifo->IP, 5000, 5002, 5003,5000);
+		//m_robotConnector->ConnectRobotIP(ifo->IP, 5000, 5002, 5003,5000);
 	}
 	m_frameCounter = 0;
 }

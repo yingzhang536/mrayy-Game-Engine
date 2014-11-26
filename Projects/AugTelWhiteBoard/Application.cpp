@@ -8,6 +8,7 @@
 #include "win32NetInterface.h"
 #include "OptiTrackDataSource.h"
 #include "TextureResourceManager.h"
+#include "BrushDrawer.h"
 
 #include <windows.h>
 
@@ -19,17 +20,20 @@ Application::Application()
 {
 	m_optiProvider = new OptiTrackDataSource;
 	this->m_limitFps = true;
+	m_lineDrawer = 0;
 }
 
 Application::~Application()
 {
 	delete m_optiProvider;
+	delete m_lineDrawer;
 }
 
 void Application::onEvent(Event* event)
 {
 	CMRayApplication::onEvent(event);
-	m_lineDrawer.OnEvent(event);
+	if (m_lineDrawer)
+		m_lineDrawer->OnEvent(event);
 }
 
 
@@ -53,6 +57,7 @@ void Application::init(const OptionContainer &extraOptions)
 
 		gLogManager.log("Resources Loaded", ELL_SUCCESS);
 	}
+	m_lineDrawer = new BrushDrawer();
 	m_mainVP = GetRenderWindow()->CreateViewport("MainVP", 0, 0, math::rectf(0, 0, 1, 1), 0);
 	m_mainVP->SetClearColor(video::DefaultColors::White);
 	{
@@ -65,7 +70,7 @@ void Application::init(const OptionContainer &extraOptions)
 	}
 	network::createWin32Network();
 
-	m_lineDrawer.StartReciver(5123);
+	m_lineDrawer->StartReciver(5123);
 	core::string optiIp=extraOptions.GetOptionValue("OptiServer");
 	m_optiProvider->Connect(optiIp);
 
@@ -83,7 +88,7 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 	video::TextureUnit tu;
 	//getDevice()->setRenderTarget(m_rt);
 	getDevice()->set2DMode();
-	m_lineDrawer.Draw(m_mainVP->getAbsRenderingViewPort());
+	m_lineDrawer->Draw(m_mainVP->getAbsRenderingViewPort());
 
 	tu.SetTexture(gTextureResourceManager.loadTexture2D("FPV.png"));
 	getDevice()->useTexture(0, &tu);
@@ -101,9 +106,9 @@ void Application::WindowPostRender(video::RenderWindow* wnd)
 void Application::update(float dt)
 {
 	CMRayApplication::update(dt);
-	m_lineDrawer.Update(dt);
+	m_lineDrawer->Update(dt);
 
-	Sleep(10);
+	//Sleep(10);
 }
 
 void Application::onDone()

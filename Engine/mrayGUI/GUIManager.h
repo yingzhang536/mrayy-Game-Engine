@@ -17,6 +17,11 @@ namespace video
 	class ITexture;
 }
 
+namespace scene
+{
+	class UI3DRenderNode;
+}
+
 namespace GUI
 {
 
@@ -42,12 +47,17 @@ protected:
 	BenchmarkItem* m_renderBI;
 	BenchmarkItem* m_updateBI;
 
+	// adding support to 3d space UI
+	scene::UI3DRenderNode* m_parentNode;
+
 	void _loadDefaultFactories();
 
 public:
 
 	GUIManager(video::IVideoDevice*dev);
 	virtual ~GUIManager();
+
+	void Set3DUI(scene::UI3DRenderNode* parent, const math::vector2d& size, video::IRenderTargetPtr rt);
 
 	virtual void SetDevice(video::IVideoDevice* dev);
 

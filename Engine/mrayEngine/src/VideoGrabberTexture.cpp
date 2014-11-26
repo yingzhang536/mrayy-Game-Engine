@@ -28,6 +28,7 @@ void VideoGrabberTexture::Set(const GCPtr<IVideoGrabber>& grabber,ITextureCRef t
 	if (!m_texture)
 	{
 		m_texture = gEngine.getDevice()->createEmptyTexture2D(false);
+		m_texture->setMipmapsFilter(false);
 	}
 }
 

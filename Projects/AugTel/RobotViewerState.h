@@ -4,7 +4,7 @@
 #define RobotViewerState_h__
 
 
-#include "IEyesRenderingBaseState.h"
+#include "IRobotControlState.h"
 #include "ViewPort.h"
 #include "DataCommunicator.h"
 #include "TBeeCommon.h"
@@ -14,9 +14,9 @@ namespace mray
 namespace AugTel
 {
 	
-class RobotViewerState :public TBee::IEyesRenderingBaseState, public scene::IViewportListener, public IDataCommunicatorListener
+class RobotViewerState :public TBee::IRobotControlState, public scene::IViewportListener, public IDataCommunicatorListener
 {
-	typedef TBee::IEyesRenderingBaseState Parent;
+	typedef TBee::IRobotControlState Parent;
 protected:
 	bool m_takeScreenShot;
 	TBee::ICameraVideoSource* m_camVideoSrc;

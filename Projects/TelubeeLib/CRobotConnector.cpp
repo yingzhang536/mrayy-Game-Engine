@@ -7,6 +7,15 @@
 #include "IHeadController.h"
 #include "IInputController.h"
 
+
+#include "WiiboardInputController.h"
+#include "OculusBaseController.h"
+#include "JoystickInputController.h"
+#include "KeyboardHeadController.h"
+#include "NodeHeadController.h"
+#include "OculusHeadController.h"
+#include "OptiTrackHeadController.h"
+
 namespace mray
 {
 namespace TBee
@@ -139,6 +148,8 @@ void CRobotConnector::HandleController()
 		return;
 	}
 	m_speed = m_robotController->GetSpeed();
+	if (m_speed.x < 0)
+		m_speed *= 0.1f;
 	m_rotation = m_robotController->GetRotation();;
 }
 void CRobotConnector::UpdateStatus()
@@ -163,6 +174,44 @@ void CRobotConnector::UpdateStatus()
 	m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation), false);
 }
 
+void CRobotConnector::InitController(CRobotConnector* c)
+{
+	switch (AppData::Instance()->headController)
+	{
+	case EHeadControllerType::Keyboard:
+		c->SetHeadController(new KeyboardHeadController);
+		break;;
+	case EHeadControllerType::Oculus:
+		c->SetHeadController(new OculusHeadController);
+		break;;
+	case EHeadControllerType::OptiTrack:
+		c->SetHeadController(new OptiTrackHeadController(1));
+		break;;
+	case EHeadControllerType::SceneNode:
+		c->SetHeadController(new NodeHeadController());
+		break;;
+	default:
+		break;
+	}
+
+	switch (AppData::Instance()->robotController)
+	{
+	case ERobotControllerType::Keyboard:
+		break;;
+	case ERobotControllerType::Oculus:
+		c->SetRobotController(new OculusBaseController);
+		break;;
+	case ERobotControllerType::Joystick:
+		c->SetRobotController(new JoystickInputController);
+		break;;
+	case ERobotControllerType::Wiiboard:
+		c->SetRobotController(new WiiboardInputController);
+		break;;
+	default:
+		break;
+	}
+
+}
 
 }
 }

@@ -39,7 +39,7 @@ public:
 	virtual void Start(AugTelSceneContext* context) = 0;
 	virtual void End(AugTelSceneContext* context) = 0;
 	virtual void Update(float dt) = 0;
-	virtual void DebugRender(const math::rectf& rc, TBee::ETargetEye eye) = 0;
+	virtual void DebugRender(scene::IDebugDrawManager* dbg, const math::rectf& rc, TBee::ETargetEye eye) = 0;
 	virtual void RenderStart(const math::rectf& rc, TBee::ETargetEye eye) = 0;
 
 	virtual math::vector3d GetHandPosition(EHandType hand) = 0;

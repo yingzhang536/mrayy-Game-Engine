@@ -81,6 +81,7 @@ void OmniBaseController::Disconnect()
 	if (!comROBOT)
 		return;
 
+	Drive(0, 0);
 	comROBOT->disconnect();
 	connected = FALSE;
 	delete comROBOT;
@@ -94,7 +95,7 @@ void OmniBaseController::Drive(const math::vector2di& speed, int rotationSpeed)
 		return;
 	int packet_size;
 	char sCommand[128];
-	sprintf_s(sCommand, 128, "V,%d,%d,%d\r\n", speed.x, speed.y, rotationSpeed);
+	sprintf_s(sCommand, 128, "V,%d,%d,%d\r\n", speed.x * 2 / 3, speed.y * 2 / 3, rotationSpeed * 3 / 3);
 // 	
 // 	sprintf_s(sCommand, 128, "q\r\n");
 

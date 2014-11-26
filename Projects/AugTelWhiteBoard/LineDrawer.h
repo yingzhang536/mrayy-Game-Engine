@@ -15,14 +15,11 @@
 #ifndef __LineDrawer__
 #define __LineDrawer__
 
-#include "StreamReader.h"
-#include "IUDPClient.h"
-#include "SurfaceWrapper.h"
+#include "ILineDrawer.h"
 
 
 namespace mray
 {
-	class UDPLineReceivingThread;
 	class MovingAverage;
 
 	enum class EDrawMessages
@@ -33,7 +30,7 @@ namespace mray
 		CurrentPos = 4
 	};
 
-class LineDrawer
+class LineDrawer:public ILineDrawer
 {
 protected:
 	struct LineInfo
@@ -44,49 +41,38 @@ protected:
 			width = 2;
 		}
 		std::vector<math::vector2d> points;
-		video::SColor clr;
 		float width;
+		video::SColor clr;
 	};
 
-	std::list<LineInfo> m_localLines;
-	std::list<LineInfo> m_remoteLines;
+	struct GroupInfo
+	{
+		int id;
+		std::list<LineInfo> lines;
+		LineInfo currentLine;
+		math::vector2di currentPos;
+		math::vector2di lastPos;
+	};
 
-	math::vector2di m_currentPos;
-	math::vector2di m_lastPos;
-	LineInfo m_currentLine;
-	LineInfo m_currentRemoteLine;
-	math::vector2di m_currentRemotePos;
+	std::map<int, GroupInfo> m_groups;
 
-	OS::IMutex* m_mutex;
-	network::IUDPClient* m_rcvClient;
-	UDPLineReceivingThread* m_rcvThreadFunc;
-	OS::IThread* m_rcvThread;
-
-	AugTel::SurfaceWrapper m_wrapper;
-	MovingAverage* m_movingAverage;
-
-	bool m_drawing;
-
-	int m_calibPoint;
-	math::vector2d m_calibPoints[4];
-
-	friend class UDPLineReceivingThread;
 
 	void _readLine(OS::StreamReader& stream, LineInfo& ret);
-	void _ReceiveData(OS::IStream* stream);
-
+	virtual void _ReceiveData(OS::IStream* stream) ;
 	void _DrawLine(LineInfo* line);
-
-	bool _getProjPos(math::vector2d& pos);
-
 public:
 	LineDrawer();
 	virtual~LineDrawer();
 
+	void AddGroup(int group) ;
+
+	void RemoveAt(const math::vector2d& pos) ;
+
+	bool RemoveLast(int group) ;
+
+	void DrawAt(const math::vector2d& pos, int group, const video::SColor& clr);
 
 	bool OnEvent(Event* e);
-
-	void StartReciver(int port);
 
 	void Draw(const math::rectf& vp);
 

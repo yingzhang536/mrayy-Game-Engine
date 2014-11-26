@@ -24,6 +24,9 @@ public:
 	virtual bool IsStreaming() = 0;
 	virtual void Stop() = 0;
 	virtual void Close()=0;
+
+	virtual void SetPaused(bool paused) = 0;
+	virtual bool IsPaused() = 0;
 };
 
 }

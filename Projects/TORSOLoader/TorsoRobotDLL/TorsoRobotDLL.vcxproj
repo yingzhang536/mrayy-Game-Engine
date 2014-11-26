@@ -97,7 +97,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(OutDir)$(TargetFileName) ..\bin\$(Configuration)</Command>
+      <Command>copy $(OutDir)$(TargetFileName) $(MRAY_ENGINE)\bin\$(Configuration)\Robot.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

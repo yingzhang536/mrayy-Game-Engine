@@ -44,6 +44,10 @@ public:
 		m_ipAddr = "127.0.0.1";
 		m_videoPort = 5000;
 		m_gstPipeline = 0;
+		m_videoSrc = 0;
+		m_videoRtcpSrc = 0;
+		m_videoRtcpSink = 0;
+		m_videoSink = 0;
 
 	}
 	virtual ~GstNetworkVideoPlayerImpl()
@@ -120,6 +124,8 @@ public:
 		if (!m_gstPipeline)
 			return false;
 
+		printf("Connecting Video stream with IP:%s\n", m_ipAddr.c_str());
+
 		_UpdatePorts();
 
 		m_videoSink = GST_APP_SINK(gst_bin_get_by_name(GST_BIN(m_gstPipeline), "videoSink"));
@@ -153,6 +159,8 @@ public:
 
 	virtual void Close()
 	{
+		if (m_videoSrc && m_videoSrc->m_client)
+			m_videoSrc->m_client->Close();
 		GstPipelineHandler::Close();
 		m_videoHandler.Close();
 	}

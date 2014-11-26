@@ -71,6 +71,21 @@ namespace AugTel
 			GenerateBRDF();
 		}
 
+		void LoadHands(const core::string& path)
+		{
+			context->entManager->loadFromFile(path, &entLst);
+			game::SceneComponent* modelComp = game::IGameComponent::RetriveComponent<game::SceneComponent>(entLst[0], "SkinnedArms");
+			if (modelComp)
+			{
+				for (int i = 0; i < modelComp->GetSceneNode()->GetAttachedNodesCount(); ++i)
+				{
+					scene::IRenderable* r = modelComp->GetSceneNode()->GetAttachedNode(i);
+					r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_blurShader->getOutput()->GetColorTexture(0), 3);
+					//r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->BRDFTexture, 3);
+				}
+			}
+
+		}
 
 		void _GenerateLightMap()
 		{
@@ -135,17 +150,8 @@ void VirtualHandsController::Init(AugTelSceneContext* context)
 	m_data->Init();
 	m_data->context = context;
 
-	context->entManager->loadFromFile(m_model, &m_data->entLst);
-	game::SceneComponent* modelComp = game::IGameComponent::RetriveComponent<game::SceneComponent>(m_data->entLst[0], "SkinnedArms");
-	if (modelComp)
-	{
-		for (int i = 0; i < modelComp->GetSceneNode()->GetAttachedNodesCount(); ++i)
-		{
-			scene::IRenderable* r = modelComp->GetSceneNode()->GetAttachedNode(i);
-			r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->m_blurShader->getOutput()->GetColorTexture(0), 3);
-			//r->getMaterial(0)->GetTechniqueAt(0)->GetPassAt(0)->setTexture(m_data->BRDFTexture, 3);
-		}
-	}
+	m_data->LoadHands(m_model);
+
 	m_data->robotCommunicator = 0;
 	const std::list<IObjectComponent*>& compLst = m_data->entLst[0]->GetComponent(VT::RobotCommunicatorComponent::getClassRTTI());
 	if (compLst.size() != 0)
@@ -198,7 +204,7 @@ void VirtualHandsController::RenderStart(const math::rectf& rc, TBee::ETargetEye
 
 }
 
-void VirtualHandsController::DebugRender(const math::rectf& rc, TBee::ETargetEye eye)
+void VirtualHandsController::DebugRender(scene::IDebugDrawManager* dbg, const math::rectf& rc, TBee::ETargetEye eye)
 {
 
 }

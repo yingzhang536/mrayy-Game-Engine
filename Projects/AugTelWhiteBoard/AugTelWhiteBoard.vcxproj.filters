@@ -36,6 +36,12 @@
     <ClInclude Include="SurfaceWrapper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ILineDrawer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BrushDrawer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SurfaceWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BrushDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ILineDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

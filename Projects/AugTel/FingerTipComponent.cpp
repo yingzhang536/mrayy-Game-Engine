@@ -122,12 +122,12 @@ bool FingerTipComponent::_calculateForce(float dt)
 	}
 	if (m_ggDriver)
 	{
-		const bool threeType = false;
+		const bool threeType = false; // true if using shearing forces
 		if (threeType)
 		{
-			m_ggDriver->SetChannelValue(m_channel * 3 + 0, m_force.x);//shearing force
-			m_ggDriver->SetChannelValue(m_channel * 3 + 1, 0);				//always zero
-			m_ggDriver->SetChannelValue(m_channel * 3 + 2, m_force.z);//pressure force
+			m_ggDriver->SetChannelValue(m_channel * 2 + 0, m_force.x);//shearing force
+			//m_ggDriver->SetChannelValue(m_channel * 3 + 1, 0);				//always zero
+			m_ggDriver->SetChannelValue(m_channel * 2 + 1, m_force.z);//pressure force
 		}
 		else
 		{
@@ -158,11 +158,13 @@ void FingerTipComponent::DebugRender(scene::IDebugDrawManager* renderer)
 	video::SColor clr[2] = { video::DefaultColors::Red, video::DefaultColors::Green };
 
 	pos = GetAbsolutePosition();
-	renderer->AddCross(pos, 1, 1);
+	renderer->AddCross(pos, 0.01, 1);
 
-	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(m_avgVelocity.x,0,0), video::DefaultColors::Red);
-	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, m_avgVelocity.y, 0), video::DefaultColors::Green);
-	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, 0, m_avgVelocity.z), video::DefaultColors::Blue);
+	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(m_force.x, 0, 0), video::DefaultColors::Red);
+	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, 0, m_force.z), video::DefaultColors::Blue);
+// 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(m_avgVelocity.x,0,0), video::DefaultColors::Red);
+// 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, m_avgVelocity.y, 0), video::DefaultColors::Green);
+// 	renderer->AddArrow(pos, pos + GetAbsoluteOrientation()* math::vector3d(0, 0, m_avgVelocity.z), video::DefaultColors::Blue);
 	//renderer->AddArrow(pos, pos +  m_avgVelocity.z, video::DefaultColors::LightPink,2);
 }
 void FingerTipComponent::OnGUIRender(GUI::IGUIRenderer* renderer, const math::rectf& vp)

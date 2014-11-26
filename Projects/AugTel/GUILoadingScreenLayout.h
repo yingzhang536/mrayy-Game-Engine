@@ -1,3 +1,5 @@
+#ifndef __GUILoadingScreenLayout__
+#define __GUILoadingScreenLayout__
 #include "IGUISchemeBase.h"
 #include "GUIListBox.h"
 #include "GUIPanel.h"
@@ -28,3 +30,4 @@ public:
 
 };
 }
+#endif

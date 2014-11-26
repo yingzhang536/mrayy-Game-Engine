@@ -40,7 +40,9 @@ void GUIListBoxComponent::_increaseStartItem(int c,int itmsCount)
 	m_startItem+=c;
 	int lastItem=math::Min<int>(m_startItem+m_currentPageSize,itmsCount);
 	if(lastItem-m_startItem<m_currentPageSize)
-		m_startItem=lastItem-m_currentPageSize;
+		m_startItem = lastItem - m_currentPageSize;
+	if (m_startItem < 0)
+		m_startItem = 0;
 }
 
 
@@ -182,6 +184,8 @@ GUIListBoxComponent::EResultEvent GUIListBoxComponent::LBOnKeyboardEvent(Keyboar
 			if(m_selectedItem>=0 && m_selectedItem<m_startItem)
 			{
 				m_startItem=m_selectedItem;
+				if (m_startItem < 0)
+					m_startItem = 0;
 			}
 			res=ESelectionChange;
 			break;

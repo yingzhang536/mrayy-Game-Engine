@@ -5,6 +5,7 @@
 #include "LeapFinger.h"
 #include "LeapHandController.h"
 #include "LeapFunctions.h"
+#include "IDebugDrawManager.h"
 
 
 
@@ -55,8 +56,9 @@ void LeapHand::SetHand(Leap::Hand  h)
 math::vector3d LeapHand::GetElbowPosition()
 {
 	math::vector3d pos = LeapToVector3d(m_hand.arm().elbowPosition());
-	if (m_handController->GetTransform())
-		pos = m_handController->GetTransform()->getAbsoluteTransformation()*pos;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		pos = trans->getAbsoluteOrintation()*pos + trans->getAbsolutePosition();
 	return pos;
 }
 
@@ -66,8 +68,9 @@ math::vector3d LeapHand::GetArmDirection()
 {
 	math::vector3d dir = LeapToVector3d(m_hand.arm().direction());
 
-	if (m_handController->GetTransform())
-		dir = m_handController->GetTransform()->getAbsoluteOrintation()*dir;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		dir = trans->getAbsoluteOrintation()*dir;
 	return dir;
 
 }
@@ -79,8 +82,9 @@ math::quaternion LeapHand::GetArmRotation()
 	LeapToMatrix(m_hand.arm().basis(), m);
 	q.fromMatrix(m);
 
-	if (m_handController->GetTransform())
-		q = m_handController->GetTransform()->getAbsoluteOrintation()*q;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		q = trans->getAbsoluteOrintation()*q;
 	return q;
 }
 
@@ -88,8 +92,9 @@ math::quaternion LeapHand::GetArmRotation()
 math::vector3d LeapHand::GetWristPosition()
 {
 	math::vector3d pos = LeapToVector3d(m_hand.arm().wristPosition());
-	if (m_handController->GetTransform())
-		pos = m_handController->GetTransform()->getAbsoluteTransformation()*pos;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		pos = trans->getAbsoluteOrintation()*pos + trans->getAbsolutePosition();
 	return pos;
 }
 
@@ -97,8 +102,9 @@ math::vector3d LeapHand::GetWristPosition()
 math::vector3d LeapHand::GetPalmPosition()
 {
 	math::vector3d pos = LeapToVector3d(m_hand.palmPosition());
-	if (m_handController->GetTransform())
-		pos = m_handController->GetTransform()->getAbsoluteTransformation()*pos;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		pos = trans->getAbsoluteOrintation()*pos + trans->getAbsolutePosition();
 	pos+=GetPalmOffset();
 	return pos;
 }
@@ -107,8 +113,9 @@ math::vector3d LeapHand::GetPalmOffset()
 {
 	math::vector3d additionalMovement = m_handController->GetHandMovementScale()-math::vector3d(1);
 	math::vector3d scaledPosition = LeapToVector3d(m_hand.palmPosition())*additionalMovement;
-	if (m_handController->GetTransform())
-		scaledPosition=m_handController->GetTransform()->getAbsoluteTransformation()*scaledPosition - m_handController->GetTransform()->getAbsolutePosition();
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		scaledPosition = trans->getAbsoluteOrintation()*scaledPosition;// trans->getAbsoluteTransformation()*scaledPosition - trans->getAbsolutePosition();
 
 	return scaledPosition;
 }
@@ -120,8 +127,9 @@ math::quaternion LeapHand::GetPalmRotation()
 	LeapToMatrix(m_hand.basis(), m);
 	q.fromMatrix(m);
 
-	if (m_handController->GetTransform())
-		q=m_handController->GetTransform()->getAbsoluteOrintation()*q;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		q = trans->getAbsoluteOrintation()*q;
 	return q;
 }
 
@@ -129,8 +137,9 @@ math::vector3d LeapHand::GetPalmDirection()
 {
 	math::vector3d dir= LeapToVector3d(m_hand.direction());
 
-	if (m_handController->GetTransform())
-		dir = m_handController->GetTransform()->getAbsoluteOrintation()*dir;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		dir = trans->getAbsoluteOrintation()*dir;
 	return dir;
 }
 
@@ -138,8 +147,9 @@ math::vector3d LeapHand::GetPalmNormal()
 {
 	math::vector3d dir = LeapToVector3d(m_hand.palmNormal());
 
-	if (m_handController->GetTransform())
-		dir = m_handController->GetTransform()->getAbsoluteOrintation()*dir;
+	scene::IMovable* trans = m_handController->GetTransform();
+	if (trans)
+		dir = trans->getAbsoluteOrintation()*dir;
 	return dir;
 
 }
@@ -147,27 +157,31 @@ math::vector3d LeapHand::GetPalmNormal()
  void LeapHand::UpdatePosition()
 {
 	 if (!m_hand.isValid())
-		 return;
+		 return; 
+	 math::quaternion palm = (GetPalmRotation());
+	 math::quaternion arm = (GetArmRotation());
 	 if (m_palm)
 	 {
-		 m_palm->setPosition(GetPalmPosition());
-		 m_palm->setOrintation(GetPalmRotation());
+		 //	 m_palm->setPosition(GetPalmPosition());
+		// m_palm->setOrintation(GetPalmRotation());
 	 }
 	 if (m_foream)
 	 {
-		 m_foream->setPosition(GetElbowPosition());
-		 m_foream->setOrintation(GetArmRotation());
+	//	 m_foream->setPosition(GetElbowPosition());
+	//	 m_foream->setOrintation(arm);
 	 }
+	 else
+		 arm = math::quaternion::Identity;
 	 if (m_wristJoint)
 	 {
-		 m_wristJoint->setPosition(GetWristPosition());
-		 m_wristJoint->setOrintation(GetPalmRotation());
+	//	 m_wristJoint->setPosition(GetWristPosition());
+	//	 m_wristJoint->setOrintation(palm*arm.inverse());
 	 }
 	 for (int i = 0; i < (int)ELeapFinger::Count; ++i)
 		 m_fingers[i]->UpdatePosition();
 }
 
- void LeapHand::DrawDebug()
+ void LeapHand::DrawDebug(scene::IDebugDrawManager* dbg)
  {
 	 if (!m_hand.isValid())
 		 return;
@@ -180,13 +194,12 @@ math::vector3d LeapHand::GetPalmNormal()
 	 dev->set3DMode();
 	 dev->setTransformationState(video::TS_WORLD, math::matrix4x4::Identity);
 	 dev->unuseShader();
-	 dev->draw3DLine(elbow, wrist, video::SColor(1, 0, 0, m_hand.confidence()));
-	 dev->draw3DLine(wrist, palm, video::SColor(0, 1, 0, m_hand.confidence()));
+	 dbg->AddLine(elbow, wrist, video::SColor(1, 1, 0, m_hand.confidence()), 1, 0);
 
 	 for (int i = 0; i < (int)ELeapFinger::Count; ++i)
 	 {
-		 dev->draw3DLine(palm, m_fingers[i]->GetJointPosition(0), video::SColor(1, 1, 0, m_hand.confidence()));
-		 m_fingers[i]->DrawDebug();
+		 dbg->AddLine(wrist, m_fingers[i]->GetJointPosition(0), video::SColor(1, 1, 0, m_hand.confidence()), 1, 0);
+		 m_fingers[i]->DrawDebug(dbg);
 
 	 }
  }

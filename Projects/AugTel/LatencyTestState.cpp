@@ -6,6 +6,8 @@
 #include "RobotInfoManager.h"
 #include "DataCommunicator.h"
 #include "RemoteRobotCommunicator.h"
+#include "IFileSystem.h"
+#include "StreamWriter.h"
 
 
 namespace mray
@@ -23,10 +25,13 @@ LatencyTestState::LatencyTestState(const core::string& name, TBee::ICameraVideoS
 	m_minLatency = 99999;
 	m_maxLatency = 0;
 
-
+	m_autoTesterTimer = 0;
 }
 LatencyTestState::~LatencyTestState()
 {
+	if (m_outValues)
+		m_outValues->close();
+	delete m_outValues;
 	delete m_camVideoSrc;
 	delete m_robotConnector;
 }
@@ -55,6 +60,11 @@ bool LatencyTestState::OnEvent(Event* e, const math::rectf& rc)
 				}
 				ok = true;
 			}
+			else if (evt->key == KEY_ESCAPE)// && evt->lshift)
+			{
+				m_exitCode = STATE_EXIT_CODE;
+				ok = true;
+			}
 		}
 	}
 	return ok;
@@ -63,15 +73,18 @@ void LatencyTestState::OnEnter(IRenderingState*prev)
 {
 	IRenderingState::OnEnter(prev);
 	m_camVideoSrc->Open();
-
+	m_latency.clear();
+	m_changed = false;
 
 	gAppData.dataCommunicator->Start(gAppData.TargetCommunicationPort);
 
-	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
+	TBee::TBRobotInfo* ifo = gAppData.selectedRobot;
 	if (ifo)
 		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort, gAppData.RtcpStream);
 	//m_robotConnector->EndUpdate();
 	m_robotConnector->ConnectRobot();
+
+	m_outValues = gFileSystem.createBinaryFileWriter(gFileSystem.getAppPath() + "\\Latency\\Latency.txt");
 
 }
 void LatencyTestState::OnExit()
@@ -79,6 +92,7 @@ void LatencyTestState::OnExit()
 	IRenderingState::OnExit();
 	m_camVideoSrc->Close();
 	m_robotConnector->DisconnectRobot();
+	m_outValues->close();
 }
 video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETargetEye eye)
 {
@@ -97,18 +111,19 @@ video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETar
 	tex.SetTexture(m_camVideoSrc->GetEyeTexture(0));
 	if (!tex.GetTexture()->getSurfaceCount())
 		return rt;
-	video::LockedPixelBox pbb = tex.GetTexture()->getSurface(0)->lock(math::box3d(0, 0, 0, 128, 128, 1), video::IHardwareBuffer::ELO_ReadOnly);
+	video::IHardwarePixelBuffer* s = tex.GetTexture()->getSurface(0);
+	video::LockedPixelBox pbb = s->lock(math::box3d(s->getWidth() / 2, s->getHeight()/2, 0, 1,1, 1), video::IHardwareBuffer::ELO_ReadOnly);
 
 	struct CRgb
 	{
 		uchar r, g, b;
 	};
 
-	CRgb* rgb = (CRgb*)pbb.data;
+	CRgb* rgb = ((CRgb*)pbb.data);// +(s->getWidth()*s->getHeight() + s->getWidth()) / 2;
 	video::SColor clr(rgb->r*math::i255, rgb->g*math::i255, rgb->b*math::i255, 1);
 	Engine::getInstance().getDevice()->draw2DRectangle(math::rectf(0, 100, 100, 200), clr);
 
-	tex.GetTexture()->getSurface(0)->unlock();
+	s->unlock();
 
 
 	if (m_showColor && !m_changed)
@@ -120,8 +135,13 @@ video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETar
 
 			m_minLatency = math::Min<float>(m_minLatency, latency);
 			m_maxLatency = math::Min<float>(m_maxLatency, latency);
-			printf("Latency= %f ms\n", latency);
+			printf("Latency[%d]= %f ms\n", m_latency.size(), latency);
 			m_latency.push_back(latency);
+			if (m_outValues)
+			{
+				OS::StreamWriter wrtr(m_outValues);
+				wrtr.writeLine(core::StringConverter::toString(latency));
+			}
 		}
 	}
 
@@ -152,6 +172,22 @@ video::IRenderTarget* LatencyTestState::Render(const math::rectf& rc, TBee::ETar
 void LatencyTestState::Update(float dt)
 {
 	m_robotConnector->UpdateStatus();
+	
+	float t = gEngine.getTimer()->getSeconds();
+	if (t - m_autoTesterTimer > 500)
+	{
+		if (m_showColor && m_changed)
+		{
+			m_showColor = false;
+		}
+		else if (!m_showColor && m_changed)
+		{
+			m_showColor = true;
+			m_changed = false;
+			m_startTime = t;
+		}
+		m_autoTesterTimer = t;
+	}
 
 }
 

@@ -5,6 +5,7 @@
 #include "LeapFunctions.h"
 #include "LeapHand.h"
 #include "LeapHandController.h"
+#include "IDebugDrawManager.h"
 
 namespace mray
 {
@@ -16,6 +17,13 @@ LeapFinger::LeapFinger(LeapHand* hand, Leap::Finger::Type type)
 	m_type = type;
 	for (int i = 0; i < BoneCount; ++i)
 		m_nodes[i] = 0;
+
+	math::vector3d fingerPointing = math::vector3d::XAxis;
+	math::vector3d palmFacing = -math::vector3d::YAxis;
+
+	math::quaternion q = QuatLookRotation(fingerPointing, -palmFacing);
+ //	m_reorient = q.inverse();
+
 }
 
 LeapFinger::~LeapFinger()
@@ -78,10 +86,7 @@ math::vector3d LeapFinger::GetBoneDirection(int boneType)
 
 math::quaternion LeapFinger::GetBoneRotation(int boneType)
 {
-	math::matrix4x4 m;
-	math::quaternion q;
-	LeapToMatrix(m_finger.bone((Leap::Bone::Type)boneType).basis(), m);
-	q.fromMatrix(m);
+	math::quaternion q=LeapToQuaternion(m_finger.bone((Leap::Bone::Type)boneType).basis());
 
 
 	if (m_hand->Controller()->GetTransform())
@@ -98,12 +103,15 @@ void LeapFinger::UpdatePosition()
 		if (m_nodes[i])
 		{
 			m_nodes[i]->setPosition(GetJointPosition(i));
-			m_nodes[i]->setOrintation(GetBoneRotation(i));
+			math::quaternion parentInv;
+			if (m_nodes[i]->getParent())
+				parentInv = m_nodes[i]->getParent()->getAbsoluteOrintation().inverse();
+			m_nodes[i]->setOrintation(GetBoneRotation(i)*m_reorient);// m_baseMat[i] * m_reorient);// GetBoneRotation(i)*m_reorient);
 		}
 	}
 }
 
-void LeapFinger::DrawDebug()
+void LeapFinger::DrawDebug(scene::IDebugDrawManager* dbg)
 {
 	if (!m_finger.isValid())
 		return;
@@ -114,7 +122,7 @@ void LeapFinger::DrawDebug()
 		math::vector3d p1, p2;
 		p1 = GetJointPosition(i);
 		p2 = GetJointPosition(i+1);
-		dev->draw3DLine(p1, p2, video::SColor(1, 1, 1, 1));
+		dbg->AddLine(p1, p2, video::SColor(1, 1, 1, 1), 1, 0);
 	}
 }
 

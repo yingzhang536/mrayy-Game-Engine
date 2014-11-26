@@ -310,6 +310,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\3DSLoader.cpp" />
+    <ClCompile Include="UI3DRenderNode.cpp" />
     <ClInclude Include="..\..\Dependencies\include\huffman\huffman.h" />
     <ClInclude Include="HuffmanCompression.h" />
     <ClInclude Include="include\3DSLoader.h" />
@@ -392,6 +393,7 @@
     <ClInclude Include="include\ITextureSource.h" />
     <ClInclude Include="include\TextureRTWrap.h" />
     <ClInclude Include="include\TextureSourceFactory.h" />
+    <ClInclude Include="include\UI3DRenderNode.h" />
     <ClInclude Include="include\UniqueIDGenerator.h" />
     <ClInclude Include="include\ValueControllerManager.h" />
     <ClInclude Include="include\VideoResourceManager.h" />

@@ -1,3 +1,5 @@
+#ifndef __JointValue__
+#define __JointValue__
 #include "IGUISchemeBase.h"
 #include "Panel.h"
 #include "SliderBar.h"
@@ -26,3 +28,4 @@ public:
 
 };
 }
+#endif

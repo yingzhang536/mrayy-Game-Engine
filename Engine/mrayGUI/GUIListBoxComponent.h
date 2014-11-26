@@ -87,9 +87,9 @@ public:
 
 	void SetStartItem(int i)
 	{
-		if (i < 0)i = 0;
 		if (i>=items.size())
 			i = items.size() - 1;
+		if (i < 0)i = 0;
 		m_startItem = i;
 	}
 	int GetSelectedItem();

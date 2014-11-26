@@ -70,7 +70,7 @@ DWORD RobotSerialPort::timerThreadBase(RobotSerialPort *robot, LPVOID pdata){
 	}
 }
 
-#define ROOMBA_CONTROLLER
+//#define ROOMBA_CONTROLLER
 
 class RobotSerialPortImpl
 	{
@@ -252,6 +252,7 @@ void RobotSerialPort::DisconnectRobot()
 	int ret = 0;
 	if (debug_print)
 		printf("Disconnecting Robot\n", ret);
+	m_impl->m_baseController->DriveStop();
 	m_impl->m_baseController->Disconnect();
 
 	if (m_impl->comHEAD != 0){

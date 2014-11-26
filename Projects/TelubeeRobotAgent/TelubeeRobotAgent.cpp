@@ -128,6 +128,14 @@ EntryPoint
 		extraOptions.push_back(op);
 		op.valueSet.clear();
 	}
+	{
+		op.name = "Stream";
+		op.value = "Yes";
+		op.valueSet.insert("Yes");
+		op.valueSet.insert("No");
+		extraOptions.push_back(op);
+		op.valueSet.clear();
+	}
 	//VLDEnable();
 	app->loadResourceFile(mT("tbdataPath.stg"));
 	if (app->startup(mT("TELUBee Robot Agent 1.00"), vector2di(800, 600), false, extraOptions, resFileName, 0, true, true, true))

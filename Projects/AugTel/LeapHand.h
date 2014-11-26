@@ -72,7 +72,7 @@ public:
 
 	virtual void UpdatePosition();
 
-	virtual void DrawDebug();
+	virtual void DrawDebug(scene::IDebugDrawManager* dbg);
 };
 
 }

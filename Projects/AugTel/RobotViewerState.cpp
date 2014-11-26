@@ -17,7 +17,7 @@ namespace AugTel
 {
 
 RobotViewerState::RobotViewerState(TBee::ICameraVideoSource* src, TBee::IRobotCommunicator* comm, const core::string& name)
-	:IEyesRenderingBaseState(name)
+	:IRobotControlState(name)
 {
 
 	m_camVideoSrc = src;

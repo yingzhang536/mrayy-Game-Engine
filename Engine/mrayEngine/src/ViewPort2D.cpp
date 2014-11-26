@@ -3,6 +3,7 @@
 #include "ViewPort2D.h"
 #include "IVideoDevice.h"
 #include "IGUIElement.h"
+#include "Engine.h"
 
 namespace mray{
 namespace GUI{
@@ -16,6 +17,18 @@ ViewPort2D::~ViewPort2D(){
 }
 
 void ViewPort2D::draw(){
+	if (!m_elem || !m_rt)return;
+	video::IVideoDevice*dev = gEngine.getDevice();
+
+	video::IRenderTargetPtr oldRt = dev->getRenderTarget();
+	dev->set2DMode();
+	dev->setRenderTarget(m_rt, true, true, m_clearColor);
+	m_elem->Draw(&math::rectf(0, m_rt->GetSize()));
+
+	dev->setRenderTarget(oldRt, false, false);
+
+
+
 	/*
 	if(!m_elem || !m_rt)return;
 	video::IVideoDevice*dev=m_elem->getDevice();

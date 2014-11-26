@@ -21,7 +21,11 @@ namespace TBee
 	m_cameraSource[1].id = c2;
 
 	m_cameraSource[0].videoGrabber = new video::VideoGrabberTexture();
-	m_cameraSource[1].videoGrabber = new video::VideoGrabberTexture();
+	
+	if (c1 != c2)
+		m_cameraSource[1].videoGrabber = new video::VideoGrabberTexture();
+	else
+		m_cameraSource[1].videoGrabber = 0;
 
 	m_started = false;
 }
@@ -55,6 +59,8 @@ void LocalCameraVideoSource::Init()
 {
 	for (int i = 0; i < 2; ++i)
 	{
+		if (!m_cameraSource[i].videoGrabber)
+			continue;
 		//m_eyes[i].flip90 = true;
 		m_cameraSource[i].camera = new VCameraType();
 		video::ITexturePtr tex = Engine::getInstance().getDevice()->createEmptyTexture2D(true);
@@ -104,10 +110,14 @@ void LocalCameraVideoSource::SetCameraID(int i, int cam)
 }
 math::vector2d LocalCameraVideoSource::GetEyeResolution(int i)
 {
+	if (!m_cameraSource[i].camera)
+		return m_cameraSource[0].camera->GetFrameSize();
 	return m_cameraSource[i].camera->GetFrameSize();
 }
 video::ITexturePtr LocalCameraVideoSource::GetEyeTexture(int i)
 {
+	if (!m_cameraSource[i].videoGrabber)
+		return m_cameraSource[0].videoGrabber->GetTexture();
 	return m_cameraSource[i].videoGrabber->GetTexture();
 }
 
@@ -116,11 +126,17 @@ bool LocalCameraVideoSource::Blit(int eye)
 	if (eye < 0)
 	{
 		bool a = m_cameraSource[0].videoGrabber->Blit();
-		bool b = m_cameraSource[1].videoGrabber->Blit();
+		bool b = 0;
+		if (m_cameraSource[1].videoGrabber)
+			m_cameraSource[1].videoGrabber->Blit();
 		return a || b;
 	}
-	else if (eye<2)
+	else if (eye < 2)
+	{
+		if (!m_cameraSource[eye].videoGrabber)
+			return false;
 		return m_cameraSource[eye].videoGrabber->Blit();
+	}
 	return false;
 }
 void LocalCameraVideoSource::LoadFromXML(xml::XMLElement* e)

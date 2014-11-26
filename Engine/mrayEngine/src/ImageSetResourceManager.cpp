@@ -6,6 +6,9 @@
 #include "IFileSystem.h"
 
 #include "ILogManager.h"
+#include "IOSystem.h"
+#include "IDirOS.h"
+#include "StringUtil.h"
 
 namespace mray
 {
@@ -88,6 +91,25 @@ video::ImageSetPtr  ImageSetResourceManager::getImageSet(const core::string& nam
 video::ImageSetPtr  ImageSetResourceManager::loadImageSet(const core::string& path)
 {
 	return create(path);
+}
+int ImageSetResourceManager::loadImageSetDirectory(const core::string& dir)
+{
+	OS::IDirOS* dirOS = OS::IOSystem::getInstance().createDirSystem();
+	dirOS->changeDir(dir);
+	int c = dirOS->getFilesCount();
+	int total = 0;
+	core::string fname, path, ext;
+	for (int i = 0; i < c; ++i)
+	{
+		fname = dirOS->getFullFileName(i);
+		core::StringUtil::SplitPathExt(fname, path, ext);
+		if (ext == "imageset")
+		{
+			if (!loadImageSet(fname).isNull())
+				total++;
+		}
+	}
+	return total;
 }
 
 void ImageSetResourceManager::writeResourceToDist(const core::string&resName,const core::string&fileName)

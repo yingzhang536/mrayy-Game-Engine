@@ -20,6 +20,10 @@ protected:
 	math::vector3d m_offset;
 	Leap::Finger::Type m_type;
 	scene::IMovable* m_nodes[BoneCount];
+
+	math::quaternion m_baseMat[BoneCount];
+
+	math::quaternion m_reorient;
 public:
 	LeapFinger(LeapHand* hand, Leap::Finger::Type type);
 	virtual ~LeapFinger();
@@ -33,6 +37,10 @@ public:
 	Leap::Finger GetFinger(){ return m_finger; }
 	void SetNode(scene::IMovable* n, int boneType){ 
 		m_nodes[boneType] = n;
+		if (n)
+		{
+			m_baseMat[boneType] = n->getOrintation();
+		}
 	}
 	scene::IMovable* GetNode(int boneType){ return  m_nodes[boneType]; }
 
@@ -53,7 +61,7 @@ public:
 
 	void UpdatePosition();
 
-	void DrawDebug();
+	void DrawDebug(scene::IDebugDrawManager* dbg);
 };
 
 }

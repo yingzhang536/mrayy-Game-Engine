@@ -1,3 +1,5 @@
+#ifndef __GUICalibrationItemLayout__
+#define __GUICalibrationItemLayout__
 #include "IGUISchemeBase.h"
 #include "GUIListBox.h"
 #include "GUILoadingElement.h"
@@ -25,3 +27,4 @@ public:
 
 };
 }
+#endif

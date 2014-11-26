@@ -6,6 +6,9 @@
 #include "IVideoDevice.h"
 
 #include "TextureResourceManager.h"
+#include "ImageSetResourceManager.h"
+#include "ImageSet.h"
+#include "StringUtil.h"
 
 namespace mray{
 namespace GUI{
@@ -15,6 +18,7 @@ namespace GUI{
 GUIStaticImage::GUIStaticImage(IGUIManager* creator):
 IGUIStaticImage(creator),m_texCoords(0,0,1,1)
 {
+	m_clipping = false;
 	m_stretchMode = EImage_Stretch;
 	m_textureUnit=new video::TextureUnit();
 	fillProperties();
@@ -65,8 +69,32 @@ const math::rectf&  GUIStaticImage::GetTargetTexCoords()
 bool GUIStaticImage::SetSourceImage(const core::string&path)
 {
 	m_source=path;
-	video::ITexturePtr tex = TextureResourceManager::getInstance().loadTexture2D(path);
-	SetImage(tex);
+	video::ITexturePtr tex;
+	if (m_source.length() > 0 && m_source[0] == '@')
+	{
+		//its an image set. split by ":"
+		std::vector<core::string> splits= core::StringUtil::Split(m_source, ":");
+		if (splits.size() == 2)
+		{
+			splits[0] = splits[0].substr(1, splits[0].length() - 1);
+			video::ImageSet* iset= gImageSetResourceManager.getImageSet(splits[0]);
+			if (iset)
+			{
+				video::ImageRegion* r = iset->GetRegion(splits[1]);
+				if (r)
+				{
+					tex = iset->GetTexture()->GetTexture();
+					SetImage(tex);
+					SetTargetTexCoords(r->GetTextureRect());
+				}
+			}
+		}
+	}
+	else
+	{
+		 tex = TextureResourceManager::getInstance().loadTexture2D(path);
+		SetImage(tex);
+	}
 	return !tex.isNull();
 }
 
@@ -100,12 +128,24 @@ const core::string& GUIStaticImage::GetSourceImage()
 	return m_source;
 }
 
+bool GUIStaticImage::SetClipping(bool clipping)
+{
+	m_clipping = clipping;
+	return true;
+}
+bool GUIStaticImage::GetClipping()
+{
+	return m_clipping;
+}
 void GUIStaticImage::Draw(const math::rectf*vp)
 {
 	if(!IsVisible())return;
 	IGUIManager* creator=GetCreator();
 	const math::rectf& rect=GetDefaultRegion()->GetRect();
-	const math::rectf& clip=GetDefaultRegion()->GetClippedRect();
+	math::rectf clip = rect;
+	
+	if (m_clipping)
+		clip=GetDefaultRegion()->GetClippedRect();
 	video::IVideoDevice*device=creator->GetDevice();
 
 	math::vector2d texSz;

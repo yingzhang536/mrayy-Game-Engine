@@ -1,3 +1,5 @@
+#ifndef __GUIConnectingScreen__
+#define __GUIConnectingScreen__
 #include "IGUISchemeBase.h"
 #include "GUIListBox.h"
 #include "GUILoadingElement.h"
@@ -25,3 +27,4 @@ public:
 
 };
 }
+#endif

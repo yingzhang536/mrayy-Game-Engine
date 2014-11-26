@@ -49,6 +49,7 @@
 #include "RemoteRobotCommunicator.h"
 
 #include "FontResourceManager.h"
+#include "GstStreamerVideoSource.h"
 
 #include "GUIOverlayManager.h"
 #include "GUIOverlay.h"
@@ -75,6 +76,8 @@
 #include "GstNetworkAudioStreamer.h"
 #include "GstNetworkVideoStreamer.h"
 
+#include "UI3DRenderNode.h"
+
 
 namespace mray
 {
@@ -83,7 +86,7 @@ namespace AugTel
 
 
 	AugCameraRenderState::AugCameraRenderState(TBee::ICameraVideoSource* src , TBee::IRobotCommunicator* comm, const core::string& name)
-		:IEyesRenderingBaseState(name)
+		:Parent(name)
 {
 
 // 	m_eyes[0].flip90 = 0;
@@ -93,9 +96,9 @@ namespace AugTel
 // 	m_eyes[1].cw = 1;
 
 	m_status = EConnectingRobot;
-	m_camVideoSrc = src;
+//	m_camVideoSrc = src;
 
-	SetVideoSource(m_camVideoSrc);
+	SetVideoSource(src);
 
 	m_openNiHandler = new TBee::OpenNIHandler();
 	m_openNiHandler->SetScale(0.5);
@@ -162,6 +165,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 		KeyboardEvent* evt = (KeyboardEvent*)e;
 		if (evt->press)
 		{
+	//		printf("Key Pressed : %d, %d\n", evt->key,(int)evt->Char);
 			if (evt->key == KEY_F11)
 			{
 				gTextureResourceManager.writeResourceToDist(m_renderTarget[0]->GetColorTexture(), "depth.tga");
@@ -199,7 +203,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				ok = true;
 			}
 			
-			else if (evt->Char==43 || evt->key==KEY_SPACE)
+			else if (evt->key==82 || evt->key==KEY_SPACE)
 			{
 				 if (m_status == EWaitStart)
 					_ChangeState(EConnectingRobot);
@@ -213,7 +217,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				ok = true;
 			}
 			else
-			if (evt->key == KEY_C)
+			if (evt->key == KEY_C || evt->key==78)
 			{
 				m_vtState->CalibratePosition();
 
@@ -227,7 +231,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				ok = true;
 
 			}
-			else if (evt->key >= KEY_1 && evt->key < KEY_1 + m_hands.size())
+			else if (false && evt->key >= KEY_1 && evt->key < KEY_1 + m_hands.size())
 			{
 				int idx = evt->key - KEY_1;
 				for (int i = 0; i < m_hands.size(); ++i)
@@ -241,7 +245,7 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				_EnableVideo(!_IsVideoEnabled());
 				ok = true;
 			}
-			else if (evt->key == KEY_H && evt->ctrl)//Show/Hide arms
+			else if (evt->key == KEY_H && evt->ctrl || evt->key == 72)//Show/Hide arms
 			{
 				_EnableHands(!_IsHandsEnabled());
 				ok = true;
@@ -251,6 +255,11 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 				_EnableMic(!_IsMicEnabled());
 				ok = true;
 			}
+			else if (evt->key == KEY_N && evt->ctrl || evt->key==71)//show/hide navigation
+			{
+				m_screenLayout->NavElem->SetVisible(!m_screenLayout->NavElem->IsVisible());
+				ok = true;
+			}
 		}
 	}
 	if (e->getType() == ET_Joystick)
@@ -258,11 +267,25 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 		JoystickEvent* evt = (JoystickEvent*)e;
 		if (evt->event == JET_BUTTON_PRESSED)
 		{
-			if (m_status == EWaitStart)
-				_ChangeState(EConnectingRobot);
-			else
-				_ChangeState(EWaitStart);
-			ok = true;
+			if (evt->button == JOYSTICK_SelectButton)
+			{
+				m_exitCode = STATE_EXIT_CODE;
+				m_robotConnector->EndUpdate();
+				ok = true;
+			}
+			else if (evt->button == JOYSTICK_StartButton)
+			{
+				if (m_status == EWaitStart)
+					_ChangeState(EConnectingRobot);
+				else
+					_ChangeState(EWaitStart);
+				/*
+				if (m_robotConnector->IsRobotConnected())
+					m_robotConnector->EndUpdate();
+				else
+					m_robotConnector->StartUpdate();*/
+				ok = true;
+			}
 		}
 	}
 	return ok;
@@ -315,9 +338,9 @@ void AugCameraRenderState::_EnableVideo(bool e)
 	m_enableVideo = e;
 	m_interfaceUI->EnableVideo(m_enableVideo);
 	if (m_enableVideo)
-		m_streamer->GetStream("Video")->Stream();
+		m_streamer->GetStream("Video")->SetPaused(false);
 	else
-		m_streamer->GetStream("Video")->Stop();
+		m_streamer->GetStream("Video")->SetPaused(true);
 
 }
 void AugCameraRenderState::_EnableMic(bool e)
@@ -325,9 +348,9 @@ void AugCameraRenderState::_EnableMic(bool e)
 	m_enableMic = e;
 	m_interfaceUI->EnableMic(m_enableMic);
 	if (m_enableMic)
-		m_streamer->GetStream("Audio")->Stream();
+		m_streamer->GetStream("Audio")->SetPaused(false);
 	else
-		m_streamer->GetStream("Audio")->Stop();
+		m_streamer->GetStream("Audio")->SetPaused(true);
 
 }
 void AugCameraRenderState::InitState()
@@ -460,17 +483,21 @@ void AugCameraRenderState::InitState()
 			c->SetNode(hm);
 			c->SetInitialOrientation(hm->getAbsoluteOrintation());
 		}
-
+		//load arrow
+		{
+			m_gameManager->loadFromFile("FrontArrow.xml", 0);
+		}
 		if (true)
 		{
 			m_lightSrc = m_sceneManager->createLightNode();
 			m_lightSrc->setPosition(math::vector3d(0, 50, 0));
-			m_lightSrc->setCastShadows(true);
-
+			m_lightSrc->setCastShadows(false);
+			/*
 			video::ITexturePtr t = gEngine.getDevice()->createEmptyTexture2D(false);
 			t->setMipmapsFilter(false);
 			t->createTexture(math::vector3di(2048, 2048, 1), video::EPixel_Float16_R);
 			m_lightSrc->setShadowMap(gEngine.getDevice()->createRenderTarget("", t, 0, 0, 0));
+			*/
 		}
 
 		if (false)
@@ -483,6 +510,20 @@ void AugCameraRenderState::InitState()
 				node->AttachNode(n);
 			}
 		}
+
+		{
+			//Setup 3D UI
+
+			scene::UI3DRenderNode* n = new scene::UI3DRenderNode();
+			n->SetUIManager(m_guiManager);
+			n->SetUISize(math::vector2d(1024, 1024));
+			scene::ISceneNode* node = m_sceneManager->createSceneNode();
+			node->AttachNode(n);
+			node->setScale(math::vector3d(1.5, 1.5, 2));
+
+			node->setPosition(math::vector3d(0, 0, 1));
+			m_context->headNode->addChild(node);
+		}
 	}
 	{
 		for (int i = 0; i < m_hands.size();++i)
@@ -493,12 +534,12 @@ void AugCameraRenderState::InitState()
 	{
 		if (m_videoSource->IsLocal())
 		{
+			m_openNiHandler->Init();
 		}
 		else
 		{
-		//	m_openNiHandler->CreateDepthFrame(320, 240);
+			m_openNiHandler->CreateDepthFrame(320, 240);
 		}
-		m_openNiHandler->Init();
 		m_openNiHandler->GetNormalCalculator().SetCalculateNormals(true);
 		math::vector2di sz = m_openNiHandler->GetSize();
 
@@ -523,10 +564,9 @@ void AugCameraRenderState::InitState()
 
 void AugCameraRenderState::OnEnter(IRenderingState*prev)
 {
-	Parent::OnEnter(prev);
 	gAppData.optiDataSource->Connect(m_optiProvider);
 
-	//if (m_videoSource->IsLocal())
+	if (m_videoSource->IsLocal())
 	{
 		m_openNiHandler->Start(320, 240);
 	}
@@ -534,15 +574,24 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 	gAppData.headObject = m_context->headNode;
 	gAppData.depthProvider = m_openNiHandler;
 	gAppData.cameraProvider = m_videoSource;
-
-	m_camVideoSrc->Open();
-	
 	gAppData.dataCommunicator->AddListener(this);
 	gAppData.dataCommunicator->Start(gAppData.TargetCommunicationPort);
+	gAppData.robotConnector = m_robotConnector;
 
-	TBee::TBRobotInfo* ifo = AppData::Instance()->robotInfoManager->GetRobotInfo(0);
-	if(ifo)
+	TBee::TBRobotInfo* ifo = gAppData.selectedRobot;
+	
+	{
+		TBee::GstStreamerVideoSource* src = dynamic_cast<GstStreamerVideoSource*>(m_videoSource);
+		if (src && ifo)
+		{
+			src->SetIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.RtcpStream);
+		}
+		m_videoSource->Open();
+	}
+	
+	if (ifo)
 		m_robotConnector->ConnectRobotIP(ifo->IP, gAppData.TargetVideoPort, gAppData.TargetAudioPort, gAppData.TargetCommunicationPort, gAppData.RtcpStream);
+
 	m_robotConnector->SetData("depthSize", "", false);
 	//m_robotConnector->EndUpdate();
 
@@ -562,7 +611,7 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 			m_hands[i]->Start(m_context);
 		}
 	}
-//	if (false)
+	if (true)
 	{
 		m_streamer->GetStream("Audio")->BindPorts(ifo->IP, gAppData.TargetAudioPort, gAppData.RtcpStream);
 		m_streamer->GetStream("Audio")->CreateStream();
@@ -572,20 +621,23 @@ void AugCameraRenderState::OnEnter(IRenderingState*prev)
 
 		m_streamer->Stream();
 	}
-	if (false)
+//	if (false)
 	{
 		//enable hands,video and mic
 		_EnableHands(true);
 		_EnableMic(true);
 		_EnableVideo(true);
 	}
+
+	Parent::OnEnter(prev);
 }
 
 void AugCameraRenderState::OnExit()
 {
 	Parent::OnExit();
+
 	gAppData.optiDataSource->Disconnect();
-	m_camVideoSrc->Close();
+	m_videoSource->Close();
 
 	m_openNiHandler->Close();
 
@@ -594,7 +646,8 @@ void AugCameraRenderState::OnExit()
 	gAppData.App->GetPreviewGUIManager()->GetRootElement()->RemoveElement(m_interfaceUI);
 
 	gAppData.cameraProvider = 0;
-	
+	gAppData.robotConnector = 0;
+
 	m_loadScreen->End();
 
 	m_streamer->CloseAll();
@@ -631,8 +684,11 @@ void AugCameraRenderState::onRenderBegin(scene::ViewPort*vp)
 }
 void AugCameraRenderState::onRenderDone(scene::ViewPort*vp)
 {
-
-	m_debugRenderer->EndDraw();
+	if (gAppData.IsDebugging)
+	{
+		gEngine.getDevice()->unuseShader();
+		m_debugRenderer->EndDraw();
+	}
 }
 
 void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
@@ -647,10 +703,6 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 	AppData* app = AppData::Instance();
 
 
-	video::TextureUnit tu;
-	tu.SetTexture(m_lightSrc->getShadowMap()->GetColorTexture()); //m_data->BRDFTexture);//
-	dev->useTexture(0, &tu);
-	dev->draw2DImage(math::rectf(0,0,200,200), 1);
 	if (font)
 	{
 		attr.fontColor.Set(1, 1, 1, 1);
@@ -672,6 +724,61 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 		msg = mT("Depth Center:") + core::StringConverter::toString(m_openNiHandler->GetScale());
 		font->print(r, &attr, 0, msg, m_guiRenderer);
 		r.ULPoint.y += attr.fontSize + 5;
+		
+
+		if (m_robotConnector->GetHeadController())
+		{
+			math::vector3d head;
+			math::quaternion q, q2(m_robotConnector->GetHeadRotation());
+			q = q2;
+			q.x = q2.z;
+			q.y = q2.x;
+			q.z = q2.y;
+			q.toEulerAngles(head);
+			/*
+			math::matrix4x4 m;
+			qtomatrix(m, q);
+
+			char buff[512];
+			sprintf(buff, "%0.2f, %0.2f, %0.2f, %0.2f",)
+
+
+			core::string msg = mT(" ") + core::StringConverter::toString(head);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+			*/
+
+			core::string msg = mT("Head Rotation: ") + core::StringConverter::toString(head);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+
+			head = m_robotConnector->GetHeadPosition();
+			msg = mT("Head Position: ") + core::StringConverter::toString(head);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+
+		}
+		else
+		{
+			core::string msg = mT("Head: Non");
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+		}
+		if (m_robotConnector->GetRobotController())
+		{
+
+			math::vector2d speed;
+			float rot;
+			speed = m_robotConnector->GetSpeed();
+			rot = m_robotConnector->GetRotation();
+			core::string msg = mT("Robot Speed: ") + core::StringConverter::toString(speed);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+			msg = mT("Robot Rotation: ") + core::StringConverter::toString(rot);
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+		}
+		
 		m_guiRenderer->Flush();
 	}
 }
@@ -682,9 +789,10 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 	video::IVideoDevice* device = Engine::getInstance().getDevice();
 	int index = GetEyeIndex(eye);
 
-	if (m_depthTime > 0.3)
+	if (m_depthTime > 0.15)
 	{
 		m_depthTime = 0;
+		//request depth data
 		m_robotConnector->SetData("depth#1", core::StringConverter::toString(math::recti(0, 0, 320, 240)), false);
 	}
 
@@ -701,7 +809,12 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 
 	//m_camVideoSrc->Blit();
 
-	if (AppData::Instance()->IsDebugging || m_showDebug)
+	if (m_showScene)
+	{
+		m_viewport[index]->setAbsViewPort(rc);
+		m_viewport[index]->draw();
+	}
+	if (gAppData.IsDebugging || m_showDebug)
 	{
 		m_gameManager->DebugRender(m_debugRenderer);
 		if (DRAW_GRID)
@@ -715,12 +828,6 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 		}
 	}
 
-	if (m_showScene)
-	{
-		m_debugRenderer->StartDraw(m_viewport[index]->getCamera());
-		m_viewport[index]->setAbsViewPort(rc);
-		m_viewport[index]->draw();
-	}
 
 
 	math::rectf vprect = rc;
@@ -749,19 +856,19 @@ void AugCameraRenderState::_RenderStarted(const math::rectf& rc, ETargetEye eye)
 		math::rectf tc = math::rectf(0, 0, 1, 1);
 		device->draw2DImage(vprect, 1, 0, &tc);
 	}
-
-	math::rectf vp(0, m_renderTarget[index]->GetSize());
-	m_guiManager->DrawAll(&vp);
-
 	if (gAppData.IsDebugging)
 	{
-
 		for (int i = 0; i < m_hands.size(); ++i)
 		{
-			m_hands[i]->DebugRender(rc, eye);
+			m_hands[i]->DebugRender(m_debugRenderer, rc, eye);
 		}
 
+		m_debugRenderer->StartDraw(m_viewport[index]->getCamera());
 	}
+
+	//math::rectf vp(0, m_renderTarget[index]->GetSize());
+	//m_guiManager->DrawAll(&vp);
+
 
 	/*video::ITexture* ret= m_effects->Render(m_renderTarget[index]->GetColorTexture(), rc);
 	device->setRenderTarget(m_renderTarget[index],false);
@@ -813,7 +920,7 @@ void AugCameraRenderState::_UpdateStarted(float dt)
 {
 	m_sceneManager->update(dt);
 	m_gameManager->Update(dt);
-	m_guiManager->Update(dt);
+	//m_guiManager->Update(dt);
 	m_phManager->update(dt);
 	m_debugRenderer->Update(dt);
 
@@ -855,6 +962,14 @@ void AugCameraRenderState::_UpdateStarted(float dt)
 	{
 		TBee::LocalCameraVideoSource* src = dynamic_cast<TBee::LocalCameraVideoSource*>(m_videoSource);
 		//	src->GetCamera(0)->SetParameter(video::ICameraVideoGrabber::Param_Focus, core::StringConverter::toString(m_focus));
+	}
+
+	{
+		const math::vector2d &s= m_robotConnector->GetSpeed();
+		float rotation = m_robotConnector->GetRotation();
+		math::vector3d h;
+		m_robotConnector->GetHeadRotation().toEulerAngles(h);
+		m_screenLayout->NavElem->SetSpeed(s.x,s.y,rotation,h.y,h.x);
 	}
 }
 
@@ -933,7 +1048,7 @@ void AugCameraRenderState::Update(float dt)
 void AugCameraRenderState::LoadFromXML(xml::XMLElement* e)
 {
 	IEyesRenderingBaseState::LoadFromXML(e);
-	m_camVideoSrc->LoadFromXML(e);
+	m_videoSource->LoadFromXML(e);
 	{
 		xml::XMLElement* he = e->getSubElement("Hands");
 		int i = 0;

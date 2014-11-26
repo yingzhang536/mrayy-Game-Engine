@@ -31,7 +31,7 @@ class Application :public CMRayApplication, public scene::IViewportListener,publ
 {
 protected:
 	scene::ViewPort* m_mainVP;
-	LineDrawer m_lineDrawer;
+	ILineDrawer *m_lineDrawer;
 
 	OptiTrackDataSource* m_optiProvider;
 

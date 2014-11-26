@@ -33,6 +33,9 @@ protected:
 public:
 	GstNetworkAudioStreamerImpl()
 	{
+		m_audioSink = 0;
+		m_audioRtcpSink = 0;
+		m_audioRtcpSrc = 0;
 	}
 	virtual ~GstNetworkAudioStreamerImpl()
 	{
@@ -170,6 +173,16 @@ void GstNetworkAudioStreamer::Close()
 bool GstNetworkAudioStreamer::IsStreaming()
 {
 	return m_impl->IsStreaming();
+}
+
+void GstNetworkAudioStreamer::SetPaused(bool paused)
+{
+	m_impl->SetPaused(paused);
+}
+
+bool GstNetworkAudioStreamer::IsPaused()
+{
+	return !m_impl->IsPlaying();
 }
 
 }
