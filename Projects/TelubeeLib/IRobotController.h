@@ -48,6 +48,7 @@ public:
 
 	static const std::string CMD_Start;
 	static const std::string CMD_Stop;
+	static const std::string CMD_IsStarted;
 	static const std::string CMD_GetSensorCount;
 	static const std::string CMD_GetSensorValue;
 	static const std::string CMD_GetBatteryLevel;

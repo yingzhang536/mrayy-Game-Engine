@@ -22,6 +22,7 @@ public:
 
 	virtual void Start() {}
 	virtual void Stop() {}
+	virtual bool IsStarted(){ return true; }
 
 	virtual void Drive(const math::vector2di& speed, int rotationSpeed)=0;
 	virtual void DriveStop()=0;

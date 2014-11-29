@@ -170,8 +170,8 @@ void CRobotConnector::UpdateStatus()
 		return;
 	m_communicator->SetData("HeadRotation", core::StringConverter::toString(m_headRotation), false);
 	m_communicator->SetData("HeadPosition", core::StringConverter::toString(m_headPosition), false);
-	m_communicator->SetData("Speed", core::StringConverter::toString(m_speed), false);
-	m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation), false);
+	m_communicator->SetData("Speed", core::StringConverter::toString(math::vector2d(m_speed.x,m_speed.y)), false);
+	m_communicator->SetData("Rotation", core::StringConverter::toString(m_rotation/3), false);
 }
 
 void CRobotConnector::InitController(CRobotConnector* c)

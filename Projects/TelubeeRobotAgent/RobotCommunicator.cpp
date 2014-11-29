@@ -111,7 +111,7 @@ void RobotCommunicator::HandleData(network::NetAddress* addr,const core::string&
 		m_robotStatus.speed[0] = atof(vals[0].c_str());
 		m_robotStatus.speed[1] = atof(vals[1].c_str());
 		//limit the speed
-		m_robotStatus.speed[0] = math::clamp<float>(m_robotStatus.speed[0], -1, 1);
+		m_robotStatus.speed[0] = -math::clamp<float>(m_robotStatus.speed[0], -1, 1);
 		m_robotStatus.speed[1] = math::clamp<float>(m_robotStatus.speed[1], -1, 1);
 	}
 	else if (name == "HeadRotation" && vals.size() == 4)

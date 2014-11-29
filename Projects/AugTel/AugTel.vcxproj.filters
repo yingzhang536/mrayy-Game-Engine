@@ -264,6 +264,12 @@
     <ClInclude Include="ForwardArrowComponent.h">
       <Filter>Source Files\GameComponents</Filter>
     </ClInclude>
+    <ClInclude Include="GUICollisionElement.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUICollisionLayout.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -431,6 +437,9 @@
     <ClCompile Include="ForwardArrowComponent.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GUICollisionElement.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
@@ -455,6 +464,9 @@
       <Filter>Source Files\GUI</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUINavigationLayout.gui">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUICollisionLayout.gui">
       <Filter>Source Files\GUI\Elements</Filter>
     </Overlay>
   </ItemGroup>

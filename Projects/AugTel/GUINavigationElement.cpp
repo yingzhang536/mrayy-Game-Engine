@@ -51,13 +51,13 @@ void GUINavigationElement::Update(float dt)
 	IGUIElement* xElem=0;
 	IGUIElement* yElem=0;
 	float xRef, yRef;
-	if (m_current.speed.x < 0)
+	if (m_current.speed.x > 0)
 	{
 		BackArrow->SetVisible(false);
 		xElem = FrontArrow;
 		xRef = m_frontPos;
 	}
-	else if (m_current.speed.x > 0)
+	else if (m_current.speed.x < 0)
 	{
 		FrontArrow->SetVisible(false);
 		xElem = BackArrow;
@@ -93,7 +93,7 @@ void GUINavigationElement::Update(float dt)
 		xElem->SetAlpha(xFactor);
 
 		math::vector2d pos = xElem->GetPosition();
-		pos.y = xRef + xFactor * 100 * math::sign(m_current.speed.x);
+		pos.y = xRef - xFactor * 100 * math::sign(m_current.speed.x);
 		xElem->SetPosition(pos);
 	}
 	if (yElem)

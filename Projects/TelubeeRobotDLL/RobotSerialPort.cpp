@@ -70,7 +70,7 @@ DWORD RobotSerialPort::timerThreadBase(RobotSerialPort *robot, LPVOID pdata){
 	}
 }
 
-//#define ROOMBA_CONTROLLER
+#define ROOMBA_CONTROLLER
 
 class RobotSerialPortImpl
 	{
@@ -274,7 +274,7 @@ int RobotSerialPort::omni_control(int velocity_x, int velocity_y, int rotation, 
 	if (abs(rotation) < 5)
 		rotation = 0;
 	if (control == RUN)
-		m_impl->m_baseController->Drive(mray::math::vector2di(velocity_x, velocity_y), rotation);
+		m_impl->m_baseController->Drive(mray::math::vector2di(velocity_x, velocity_y) * 2 / 3, rotation * 2 / 3);
 	else if (control == STOP)
 		m_impl->m_baseController->DriveStop();
 
@@ -521,6 +521,11 @@ std::string RobotSerialPort::ExecCommand(const std::string& cmd, const std::stri
 		m_impl->m_baseController->Stop();
 		return "";
 	}
+	 if (cmd == CMD_IsStarted)
+	{
+		return core::StringConverter::toString(m_impl->m_baseController->IsStarted());
+	}
+	
 	if (cmd == CMD_GetSensorCount)
 	{
 		return core::StringConverter::toString(m_impl->m_baseController->GetSensorCount());

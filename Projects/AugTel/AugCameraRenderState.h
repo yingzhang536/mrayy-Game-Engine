@@ -110,6 +110,9 @@ protected:
 	bool m_showDebug;
 	bool m_showScene;
 
+	std::vector<bool> m_bumpSensor;
+	std::vector<float> m_irSensor;
+
 	scene::LightNode* m_lightSrc;
 
 	void _createHands();
@@ -155,6 +158,8 @@ public:
 	virtual void OnRobotCalibrationDone();
 	virtual void OnReportedMessage(int code, const core::string& msg);
 
+	virtual void OnBumpSensor(int count, bool* v);
+	virtual void OnIRSensor(int count, float* v);
 };
 
 }

@@ -453,7 +453,7 @@ bool RoombaControllerImpl::Connect(const core::string& port)
 	Sleep(100);	
 	if (IsConnected())
 	{
-	//	SendFullModeCommand();
+		SendFullModeCommand();
 
 	}
 	return IsConnected();
@@ -767,6 +767,10 @@ void RoombaController::Disconnect()
 {
 	 m_impl->Disconnect();
 
+}
+bool RoombaController::IsStarted()
+{
+	return m_impl->GetMode() == RoombaControllerImpl::IROBOT_CREATE_FULL;
 }
 
 void RoombaController::Start()

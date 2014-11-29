@@ -42,7 +42,7 @@ bool ForwardArrowComponent::InitComponent()
 	{
 		modelComp->InitComponent();
 		m_forwardArrow = modelComp->GetSceneNode();
-
+		m_forwardArrow->setScale(0.5f);
 		const scene::AttachNodesList& lst=m_forwardArrow->GetAttachedNodes();
 		for (scene::AttachNodesList::const_iterator it = lst.begin(); it != lst.end(); ++it)
 		{
@@ -77,8 +77,10 @@ void ForwardArrowComponent::Update(float dt)
 		math::vector3d angles;
 		gAppData.robotConnector->GetHeadRotation().toEulerAngles(angles);
 		q.fromEulerAngles(angles.x, -angles.y, 0);
-
-		m_mtrl->SetAlpha(math::Max<float>(0, gAppData.robotConnector->GetSpeed().x));
+		float s = math::Max<float>(0, gAppData.robotConnector->GetSpeed().x);
+		m_mtrl->SetAlpha(s);
+		m_mtrl->getTextureUnit(0)->trans.y -= gAppData.robotConnector->GetSpeed().x*dt*0.3;
+		m_mtrl->getTextureUnit(0)->updateMatrix();
 
 		m_forwardArrow->setOrintation(q);
 	}

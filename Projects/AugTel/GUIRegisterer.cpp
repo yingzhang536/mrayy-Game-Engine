@@ -7,6 +7,7 @@
 #include "GUIElementFactory.h"
 #include "GUILoadingElement.h"
 #include "GUINavigationElement.h"
+#include "GUICollisionElement.h"
 
 
 namespace mray
@@ -19,6 +20,7 @@ void GUIRegisterer::RegisterElements()
 	REGISTER_GUIElement_FACTORY(GUITypingTextBox);
 	REGISTER_GUIElement_FACTORY(GUILoadingElement);
 	REGISTER_GUIElement_FACTORY(GUINavigationElement);
+	REGISTER_GUIElement_FACTORY(GUICollisionElement);
 }
 
 }

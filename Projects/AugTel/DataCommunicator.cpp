@@ -26,7 +26,9 @@ namespace AugTel
 		IsStereo = 3,
 		CameraConfig = 4,
 		CalibrationDone = 5,
-		ReportMessage = 6
+		ReportMessage = 6,
+		IRSensorMessage = 7,
+		BumpSensorMessage = 8,
 	};
 	class DataCommunicatorThread :public OS::IThreadFunction
 	{
@@ -130,6 +132,31 @@ int DataCommunicator::_Process()
 		core::string msg = rdr.binReadString();
 		FIRE_LISTENR_METHOD(OnReportedMessage, (code,msg));
 		//ATAppGlobal::Instance();
+	}break;
+	case (int)EMessages::BumpSensorMessage:
+	{
+		OS::StreamReader rdr(&stream);
+		int count = rdr.binReadInt();
+		if (count==0)
+			break;
+		bool *v = new bool[count];
+		for (int i = 0; i < count; ++i)
+			stream.read(&v[i], sizeof(v[i]));
+		FIRE_LISTENR_METHOD(OnBumpSensor, (count,v));
+		delete[] v;
+		//ATAppGlobal::Instance();
+	}break;
+	case (int)EMessages::IRSensorMessage:
+	{
+		OS::StreamReader rdr(&stream);
+		int count = rdr.binReadInt();
+		if (count == 0)
+			break;
+		float *v = new float[count];
+		for (int i = 0; i < count; ++i)
+			v[i] = rdr.binReadFloat();
+		FIRE_LISTENR_METHOD(OnIRSensor, (count, v));
+		delete[] v;
 	}break;
 	default:
 		break;

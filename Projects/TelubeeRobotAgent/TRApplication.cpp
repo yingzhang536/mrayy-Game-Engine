@@ -118,7 +118,6 @@ TRApplication::TRApplication()
 	m_streamers = new video::GstStreamBin();
 	m_players = new video::GstPlayerBin();
 
-	m_isRobotActive = false;
 
 	m_debugging = false;
 }
@@ -187,11 +186,11 @@ void TRApplication::onEvent(Event* e)
 		KeyboardEvent* evt = (KeyboardEvent*)e;
 		if (evt->press && evt->key == KEY_S)
 		{
-			if (m_isRobotActive)
+			bool started = core::StringConverter::toBool(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_IsStarted, ""));
+			if (started)
 				m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_Stop,"");
 			else
 				m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_Start,"");
-			m_isRobotActive = !m_isRobotActive;
 		}
 		if (evt->press && evt->key == KEY_F9)
 		{
@@ -507,6 +506,52 @@ void TRApplication::update(float dt)
 		}
 	}
 
+	if (m_robotCommunicator->GetRobotController()->IsConnected() && m_debugData.userConnected)
+	{
+
+		const int BufferLen = 128;
+		uchar buffer[BufferLen];
+		//tell the client if we are sending stereo or single video images
+		OS::CMemoryStream stream("", buffer, BufferLen, false, OS::BIN_WRITE);
+		OS::StreamWriter wrtr(&stream);
+		{
+			int reply = (int)EMessages::BumpSensorMessage;
+			int len = stream.write(&reply, sizeof(reply));
+			bool leftBump = core::StringConverter::toBool(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "0"));
+			bool rightBump = core::StringConverter::toBool(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "1"));
+			int count = 2;
+			len += stream.write(&count, sizeof(count));
+			len += stream.write(&leftBump, sizeof(leftBump));
+			len += stream.write(&rightBump, sizeof(rightBump));
+			m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+		}
+		{
+			stream.seek(0, OS::ESeek_Set);
+			int reply = (int)EMessages::IRSensorMessage;
+			int len = stream.write(&reply, sizeof(reply));
+			float ir[6];
+			ir[0] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "2"));
+			ir[1] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "3"));
+			ir[2] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "4"));
+			ir[3] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "5"));
+			ir[4] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "6"));
+			ir[5] = core::StringConverter::toFloat(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "7"));
+			int count = 6;
+			len += stream.write(&count, sizeof(count));
+			for (int i = 0; i < 6;++i)
+				len += wrtr.binWriteFloat(ir[i]);
+			m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+		}
+		{
+			stream.seek(0, OS::ESeek_Set);
+			int reply = (int)EMessages::BatteryLevel;
+			int len = stream.write(&reply, sizeof(reply));
+			int batt = core::StringConverter::toInt(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetBatteryLevel, ""));
+			len += wrtr.txtWriteInt(batt);
+			m_commChannel->SendTo(&m_remoteAddr, (char*)buffer, len);
+		}
+	}
+
 	if (m_depthSend)
 		m_openNi->Update(dt);
 	Sleep(30);
@@ -530,6 +575,21 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 /*	*/
 
 	GCPtr<GUI::IFont> font = gFontResourceManager.getDefaultFont();
+
+	if (font)
+	{
+
+		GUI::FontAttributes attr;
+		int batt = core::StringConverter::toInt(m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetBatteryLevel, ""));
+		attr.fontColor = video::SColor(0, 1, 0, 1);
+		if (batt<20)
+			attr.fontColor = video::SColor(1, 0, 0, 1);
+		attr.fontSize = 20;
+		core::string msg;
+		msg = core::string("Battery Level : ") + core::StringConverter::toString(batt) + "%";
+		font->print(math::rectf(20, vp->GetSize().y-40, 10, 10), &attr, 0, msg, m_guiRender);
+	}
+
 	if (font && m_debugging){
 		m_guiRender->Prepare();
 
@@ -588,6 +648,8 @@ void TRApplication::onRenderDone(scene::ViewPort*vp)
 
 				}
 
+				msg = "Robot Started: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_IsStarted, "");
+				LOG_OUT(msg, 100, 100);
 				msg = "Bump Left: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "0");
 				LOG_OUT(msg, 100, 100);
 				msg = "Bump Right: " + m_robotCommunicator->GetRobotController()->ExecCommand(IRobotController::CMD_GetSensorValue, "1");

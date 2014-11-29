@@ -118,6 +118,8 @@
     <ClInclude Include="GUIAugTelScreenLayout.h" />
     <ClInclude Include="GUICalibrationItem.h" />
     <ClInclude Include="GUICalibrationItemLayout.h" />
+    <ClInclude Include="GUICollisionElement.h" />
+    <ClInclude Include="GUICollisionLayout.h" />
     <ClInclude Include="GUIConnectingScreen.h" />
     <ClInclude Include="GUIConnectingScreenImpl.h" />
     <ClInclude Include="GUIGraphPlotElement.h" />
@@ -187,6 +189,7 @@
     <ClCompile Include="GloveController5.cpp" />
     <ClCompile Include="GUIAugTelScreen.cpp" />
     <ClCompile Include="GUICalibrationItem.cpp" />
+    <ClCompile Include="GUICollisionElement.cpp" />
     <ClCompile Include="GUIConnectingScreenImpl.cpp" />
     <ClCompile Include="GUIGraphPlotElement.cpp" />
     <ClCompile Include="GUIInterfaceScreenImpl.cpp" />
@@ -238,6 +241,7 @@
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUICalibrationItemLayout.gui">
       <FileType>Document</FileType>
     </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUICollisionLayout.gui" />
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIConnectingScreen.gui">
       <SubType>Designer</SubType>
     </Overlay>

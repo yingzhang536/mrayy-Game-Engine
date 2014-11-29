@@ -521,7 +521,7 @@ void AugCameraRenderState::InitState()
 			node->AttachNode(n);
 			node->setScale(math::vector3d(1.5, 1.5, 2));
 
-			node->setPosition(math::vector3d(0, 0, 1));
+			node->setPosition(math::vector3d(0, 0, 1.5));
 			m_context->headNode->addChild(node);
 		}
 	}
@@ -778,7 +778,14 @@ void AugCameraRenderState::_RenderUI(const math::rectf& rc, math::vector2d& pos)
 			font->print(r, &attr, 0, msg, m_guiRenderer);
 			r.ULPoint.y += attr.fontSize + 5;
 		}
-		
+		for (int i = 0; i < m_irSensor.size(); ++i)
+		{
+			std::stringstream ss;
+			ss << mT("Sensor[") << i << "]: " << m_irSensor[i];
+			msg = ss.str();
+			font->print(r, &attr, 0, msg, m_guiRenderer);
+			r.ULPoint.y += attr.fontSize + 5;
+		}
 		m_guiRenderer->Flush();
 	}
 }
@@ -1121,6 +1128,28 @@ void AugCameraRenderState::OnReportedMessage(int code, const core::string& msg)
 	printf("Message arrived [%d]:%s\n", code, msg.c_str());
 }
 
+void AugCameraRenderState::OnBumpSensor(int count, bool* v)
+{
+	m_bumpSensor.resize(count);
+	for (int i = 0; i < count; ++i)
+	{
+		m_bumpSensor[i] = v[i];
+	}
+
+	if (m_bumpSensor.size())
+		m_screenLayout->CollisionElem->SetBumper(m_bumpSensor.size(), v);
+}
+void AugCameraRenderState::OnIRSensor(int count, float* v)
+{
+	m_irSensor.resize(count);
+	for (int i = 0; i < count; ++i)
+	{
+		m_irSensor[i] = v[i];
+	}
+
+	if (m_irSensor.size())
+		m_screenLayout->CollisionElem->SetSensors(m_irSensor.size(), &m_irSensor[0]);
+}
 }
 }
 

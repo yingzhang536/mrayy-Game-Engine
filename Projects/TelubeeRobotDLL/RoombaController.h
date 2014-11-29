@@ -598,6 +598,7 @@ public:
 	virtual void Disconnect();
 	virtual void Start();
 	virtual void Stop();
+	virtual bool IsStarted();
 
 	virtual void Drive(const math::vector2di& speed, int rotationSpeed) ;
 	virtual void DriveStop();

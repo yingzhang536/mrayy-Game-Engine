@@ -55,6 +55,9 @@ protected:
 		CameraConfig = 4,
 		CalibrationDone = 5,
 		ReportMessage = 6,
+		IRSensorMessage = 7,
+		BumpSensorMessage = 8,
+		BatteryLevel = 9,
 	};
 
 	bool m_robotInited;
@@ -98,7 +101,6 @@ protected:
 	bool m_depthSend;
 	bool m_isStarted;
 
-	bool m_isRobotActive;
 
 	int m_videoPort;
 

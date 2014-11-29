@@ -42,8 +42,8 @@ math::vector2d OculusBaseController::GetSpeed()
 	x = math::sign(x)*math::sqr(math::Min<float>(1.0f, math::Max<float>(0, abs(x) - minOffset) / (maxOffset-minOffset)));
 	y = math::sign(y)*math::sqr(math::Min<float>(1.0f, math::Max<float>(0, abs(y) - minOffset) / (maxOffset - minOffset)));
 
-	m_currentSpeed+= math::vector2d(x, y)*0.1f;
-	m_currentSpeed *= 0.95;
+	m_currentSpeed += math::vector2d(-x, y)*gEngine.getFPS()->dt() * 2;
+	m_currentSpeed -= m_currentSpeed*gEngine.getFPS()->dt()*1;
 	m_currentSpeed.x = math::clamp<float>(m_currentSpeed.x, -1, 1);
 	m_currentSpeed.y = math::clamp<float>(m_currentSpeed.y, -1, 1);
 #endif
@@ -59,13 +59,13 @@ float OculusBaseController::GetRotation()
 	float y = AppData::Instance()->oculusDevice->GetOrientation().getYaw();
 
 
-	float minAngle = 10;
-	float maxAngle = 50;
+	float minAngle = 30;
+	float maxAngle = 80;
 
 	y = math::sign(y)*math::sqr(math::Min<float>(1.0f, math::Max<float>(0, abs(y) - minAngle) / (maxAngle - minAngle)));
 	//m_currentRotation = y;
-	m_currentRotation += math::clamp<float>(2 * y, -1, 1)*0.1f;
-	m_currentRotation *= 0.9f;
+	m_currentRotation += math::clamp<float>(2 * y, -1, 1)*gEngine.getFPS()->dt() * 2;
+	m_currentRotation -= m_currentRotation*gEngine.getFPS()->dt()*1.5f;
 	m_currentRotation = math::clamp<float>(m_currentRotation, -1, 1);
 
 

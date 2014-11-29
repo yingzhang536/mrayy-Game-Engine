@@ -100,8 +100,10 @@ void OpenNIHandler::Start(int w, int h)
 void OpenNIHandler::Close()
 {
 	m_started = false;
-	m_threadFunc->destroy = true;
-	m_openNiCamera->Close();
+	if (m_threadFunc)
+		m_threadFunc->destroy = true;
+	if (m_openNiCamera)
+		m_openNiCamera->Close();
 	OS::IThreadManager::getInstance().killThread(m_thread);
 //	delete m_thread;
 	m_thread = 0;
