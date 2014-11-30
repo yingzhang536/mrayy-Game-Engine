@@ -186,14 +186,9 @@ math::vector3d LeapHand::GetPalmNormal()
 	 if (!m_hand.isValid())
 		 return;
 
-	 video::IVideoDevice* dev= gEngine.getDevice();
-
 	 math::vector3d elbow = GetElbowPosition();
 	 math::vector3d wrist = GetWristPosition();
 	 math::vector3d palm = GetPalmPosition();
-	 dev->set3DMode();
-	 dev->setTransformationState(video::TS_WORLD, math::matrix4x4::Identity);
-	 dev->unuseShader();
 	 dbg->AddLine(elbow, wrist, video::SColor(1, 1, 0, m_hand.confidence()), 1, 0);
 
 	 for (int i = 0; i < (int)ELeapFinger::Count; ++i)

@@ -259,7 +259,13 @@ bool AugCameraRenderState::OnEvent(Event* e, const math::rectf& rc)
 			{
 				m_screenLayout->NavElem->SetVisible(!m_screenLayout->NavElem->IsVisible());
 				ok = true;
+			}else if (evt->key == KEY_N /*|| evt->key == 78*/)
+			{
+				if (!m_screenLayout->ScenarioElem->Next())
+					m_screenLayout->ScenarioElem->Reset();
+				ok = true;
 			}
+			
 		}
 	}
 	if (e->getType() == ET_Joystick)
@@ -686,6 +692,7 @@ void AugCameraRenderState::onRenderDone(scene::ViewPort*vp)
 {
 	if (gAppData.IsDebugging)
 	{
+		gEngine.getDevice()->set3DMode();
 		gEngine.getDevice()->unuseShader();
 		m_debugRenderer->EndDraw();
 	}

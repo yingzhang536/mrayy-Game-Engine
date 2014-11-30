@@ -488,6 +488,9 @@ void LeapMotionHandsController::DebugRender(scene::IDebugDrawManager* dbg, const
 	if (!m_enabled)
 		return;
 
+	LeapHand* leftHand = m_data->m_handController->GetleftHand();
+	LeapHand* rightHand = m_data->m_handController->GetRightHand();
+	/*
 	gEngine.getDevice()->set2DMode();
 	video::TextureUnit tu;
 	tu.SetTexture(m_data->images[eye]->GetResult());
@@ -496,8 +499,6 @@ void LeapMotionHandsController::DebugRender(scene::IDebugDrawManager* dbg, const
 
 	gEngine.getDevice()->useTexture(0,0);
 
-	LeapHand* leftHand = m_data->m_handController->GetleftHand();
-	LeapHand* rightHand = m_data->m_handController->GetRightHand();
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -507,10 +508,10 @@ void LeapMotionHandsController::DebugRender(scene::IDebugDrawManager* dbg, const
 	}
 
 
-	GUI::IFont* font = gFontResourceManager.getDefaultFont();
-	GUI::FontAttributes attr;
 
 	math::vector2d pos;
+	GUI::IFont* font = gFontResourceManager.getDefaultFont();
+	GUI::FontAttributes attr;
 	GUI::GUIBatchRenderer m_guiRenderer;
 	m_guiRenderer.SetDevice(gEngine.getDevice());
 	pos.x = 20;
@@ -543,7 +544,7 @@ void LeapMotionHandsController::DebugRender(scene::IDebugDrawManager* dbg, const
 			r.ULPoint.y += attr.fontSize + 5;
 		}
 		m_guiRenderer.Flush();
-	}
+	}*/
 	leftHand->DrawDebug(dbg);
 	rightHand->DrawDebug(dbg);
 }

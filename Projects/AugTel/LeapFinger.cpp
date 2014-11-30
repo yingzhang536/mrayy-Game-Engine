@@ -115,8 +115,6 @@ void LeapFinger::DrawDebug(scene::IDebugDrawManager* dbg)
 {
 	if (!m_finger.isValid())
 		return;
-
-	video::IVideoDevice* dev = gEngine.getDevice();
 	for (int i = 0; i < BoneCount-1; ++i)
 	{
 		math::vector3d p1, p2;

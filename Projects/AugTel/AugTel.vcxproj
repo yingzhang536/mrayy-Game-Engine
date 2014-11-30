@@ -134,6 +134,7 @@
     <ClInclude Include="GUINavigationElement.h" />
     <ClInclude Include="GUINavigationLayout.h" />
     <ClInclude Include="GUIRegisterer.h" />
+    <ClInclude Include="GUIScenarioElement.h" />
     <ClInclude Include="GUITypingTextBox.h" />
     <ClInclude Include="HeadCameraComponent.h" />
     <ClInclude Include="HeadMount.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="GUIMotorConnectionPanel.cpp" />
     <ClCompile Include="GUINavigationElement.cpp" />
     <ClCompile Include="GUIRegisterer.cpp" />
+    <ClCompile Include="GUIScenarioElement.cpp" />
     <ClCompile Include="GUITypingTextBox.cpp" />
     <ClCompile Include="HeadCameraComponent.cpp" />
     <ClCompile Include="ConnectingState.cpp" />
@@ -255,6 +257,7 @@
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIMainMenu.gui" />
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUINavigationLayout.gui" />
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIScenarioLayout.gui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

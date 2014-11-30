@@ -131,7 +131,7 @@ bool FingerTipComponent::_calculateForce(float dt)
 		}
 		else
 		{
-			m_ggDriver->SetChannelValue(m_channel , m_force.z);//shearing force
+			m_ggDriver->SetChannelValue(m_channel , abs(m_force.z));//shearing force
 		}
 	}
 	return true;

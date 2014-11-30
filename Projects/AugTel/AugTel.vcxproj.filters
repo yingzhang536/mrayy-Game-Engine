@@ -270,6 +270,9 @@
     <ClInclude Include="GUICollisionLayout.h">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClInclude>
+    <ClInclude Include="GUIScenarioElement.h">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -440,6 +443,9 @@
     <ClCompile Include="GUICollisionElement.cpp">
       <Filter>Source Files\GUI\Elements</Filter>
     </ClCompile>
+    <ClCompile Include="GUIScenarioElement.cpp">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUILoginMenu.gui">
@@ -467,6 +473,9 @@
       <Filter>Source Files\GUI\Elements</Filter>
     </Overlay>
     <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUICollisionLayout.gui">
+      <Filter>Source Files\GUI\Elements</Filter>
+    </Overlay>
+    <Overlay Include="..\..\Bin\Data\AugTel\GUI\GUIScenarioLayout.gui">
       <Filter>Source Files\GUI\Elements</Filter>
     </Overlay>
   </ItemGroup>
